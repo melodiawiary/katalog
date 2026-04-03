@@ -10,14 +10,15 @@
             --bg: #f8fafc; 
             --sidebar: #0f172a; 
             --green: #15803d; 
+            --cyan: #06b6d4; /* Jasny cyjan dla wybranych */
             --text-dark: #0f172a;
             --card-bg: #ffffff;
             --card-hover: #f1f5f9;
         }
         
         body { background: var(--bg); color: var(--text-dark); font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; display: flex; min-height: 100vh; transition: font-size 0.2s; }
-        body.standard { --f-size: 16px; --f-btn: 14px; --f-tip: 20px; --f-list-tip: 16px; }
-        body.senior { --f-size: 24px; --f-btn: 20px; --f-tip: 28px; --f-list-tip: 22px; }
+        body.standard { --f-size: 16px; --f-btn: 14px; --f-tip: 22px; --f-list-tip: 16px; }
+        body.senior { --f-size: 24px; --f-btn: 20px; --f-tip: 30px; --f-list-tip: 22px; }
         body { font-size: var(--f-size); }
 
         /* PANEL BOCZNY */
@@ -39,67 +40,46 @@
         /* TREŚĆ GŁÓWNA */
         #main-content { margin-left: 340px; flex: 1; padding: 0 40px; position: relative; }
         .header-sticky { position: sticky; top: 0; z-index: 900; background: var(--bg); padding: 25px 0; border-bottom: 3px solid var(--gold); }
-        .search-box { width: 100%; padding: 18px; border-radius: 40px; border: 3px solid var(--sidebar); background: #fff; color: var(--text-dark); font-size: 1.4em; text-align: center; font-weight: bold; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .search-box { width: 100%; padding: 18px; border-radius: 40px; border: 3px solid var(--sidebar); background: #fff; color: var(--text-dark); font-size: 1.4em; text-align: center; font-weight: bold; margin-bottom: 15px; }
         
         .btn-group { display: flex; gap: 8px; width: 100%; margin-bottom: 10px; }
         .ctrl-btn { flex: 1; padding: 15px 5px; border: 2px solid var(--sidebar); background: #fff; color: var(--sidebar); font-weight: 900; cursor: pointer; border-radius: 10px; text-transform: uppercase; font-size: 15px; transition: 0.2s; }
         .ctrl-btn.active { background: var(--sidebar); color: #fff; }
 
-        /* KARTY Z PODŚWIETLENIEM */
+        /* KARTY */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; margin-top: 30px; }
-        .card { 
-            background: var(--card-bg); 
-            border: 3px solid #e2e8f0; 
-            padding: 15px; 
-            border-radius: 20px; 
-            text-align: center; 
-            display: flex; 
-            flex-direction: column; 
-            transition: all 0.3s ease; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        }
-        
-        /* PODŚWIETLENIE CAŁEJ KARTY */
-        .card:hover { 
-            background: var(--card-hover);
-            border-color: var(--gold); 
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.2);
-        }
+        .card { background: var(--card-bg); border: 3px solid #e2e8f0; padding: 15px; border-radius: 20px; text-align: center; display: flex; flex-direction: column; transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .card:hover { background: var(--card-hover); border-color: var(--gold); transform: translateY(-5px); }
 
         .thumb-container { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; border: 2px solid #ddd; margin-bottom: 10px; cursor: pointer; }
         .thumb { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
         
-        /* GIGANTYCZNY NAPIS NA MINIATURZE */
+        /* POPRAWIONY NAPIS NA MINIATURZE - BEZ ZBĘDNYCH SPACJI */
         .thumb-overlay { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(0, 0, 0, 0.85); color: #fff; 
             display: flex; flex-direction: column; justify-content: center; align-items: center; 
-            opacity: 0; transition: 0.3s; padding: 15px; box-sizing: border-box;
+            opacity: 0; transition: 0.3s; padding: 10px; box-sizing: border-box;
             font-weight: 900; text-transform: uppercase; 
-            font-size: var(--f-tip); line-height: 1.1;
+            font-size: var(--f-tip); line-height: 1.05;
         }
-        .thumb-overlay span { color: var(--gold); display: block; width: 100%; }
+        .thumb-overlay span { color: var(--gold); }
         .thumb-container:hover .thumb-overlay { opacity: 1; }
 
         .card-title { font-weight: 900; margin: 10px 0 15px 0; color: var(--text-dark); line-height: 1.2; flex-grow: 1; text-transform: uppercase; }
 
-        /* WIDOK LISTY - WIELKIE PODPOWIEDZI */
-        .list-header { background: var(--sidebar); color: white; padding: 12px 20px; border-radius: 10px; margin: 30px 0 10px 0; font-weight: 900; text-transform: uppercase; border-left: 8px solid var(--gold); }
-        .list-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 2px solid #e2e8f0; background: #fff; transition: 0.2s; position: relative; }
-        .list-row:hover { background: var(--card-hover); border-color: var(--gold); }
-        
-        .list-item-name { cursor: pointer; font-weight: 800; color: var(--text-dark); text-transform: uppercase; position: relative; display: flex; align-items: center; gap: 15px; }
-        
-        /* DUŻY NAPIS NA LIŚCIE */
-        .list-tip {
-            background: var(--gold); color: black; padding: 8px 15px; border-radius: 8px;
-            font-size: var(--f-list-tip); font-weight: 900; opacity: 0; transition: 0.2s; pointer-events: none;
-        }
-        .list-row:hover .list-tip { opacity: 1; }
-
+        /* PRZYCISKI DODAWANIA / WYBRANE */
         .btn-add { background: var(--gold); color: black; border: none; padding: 15px; border-radius: 10px; font-weight: 900; cursor: pointer; text-transform: uppercase; transition: 0.2s; width: 100%; }
-        .btn-add:hover { background: #000; color: var(--gold); }
+        .btn-add.selected { background: var(--cyan); color: black; }
+        .btn-add:hover { filter: brightness(1.1); transform: scale(1.02); }
+
+        /* LISTA */
+        .list-header { background: var(--sidebar); color: white; padding: 12px 20px; border-radius: 10px; margin: 30px 0 10px 0; font-weight: 900; text-transform: uppercase; border-left: 8px solid var(--gold); }
+        .list-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 2px solid #e2e8f0; background: #fff; transition: 0.2s; }
+        .list-row:hover { background: var(--card-hover); }
+        .list-item-name { cursor: pointer; font-weight: 800; text-transform: uppercase; display: flex; align-items: center; gap: 15px; }
+        .list-tip { background: var(--gold); color: black; padding: 6px 12px; border-radius: 6px; font-size: var(--f-list-tip); font-weight: 900; opacity: 0; transition: 0.2s; pointer-events: none; }
+        .list-row:hover .list-tip { opacity: 1; }
 
         @media (max-width: 900px) { #sidebar { position: relative; width: 100%; height: auto; } #main-content { margin-left: 0; } }
     </style>
@@ -147,7 +127,7 @@
     function updateSize(s) { document.body.className = s; document.getElementById('s-std').classList.toggle('active', s==='standard'); document.getElementById('s-big').classList.toggle('active', s==='senior'); }
 
     async function init() {
-        const saved = localStorage.getItem('mv_cart_v10'); if(saved) cart = JSON.parse(saved);
+        const saved = localStorage.getItem('mv_cart_v11'); if(saved) cart = JSON.parse(saved);
         try {
             const r = await fetch(CSV + '&cb=' + Date.now());
             const text = await r.text();
@@ -155,8 +135,8 @@
             let catsSet = new Set();
             
             songs = rows.map((line, index) => {
-                let c = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                let cArr = (c[1]||"Inne").split(',').map(cat => cat.replace(/^[^a-zA-Z0-6ąęćłńóśźżĄĘĆŁŃÓŚŹŻ]+|[^a-zA-Z0-6ąęćłńóśźżĄĘĆŁŃÓŚŹŻ]+$/g, '').trim()).filter(x => x !== "");
+                let c = line.split(/,(?=(?:(?:[^3]*"){2})*[^"]*$)/);
+                let cArr = (c[1]||"Inne").split(',').map(cat => cat.replace(/^[^a-zA-Z0-9ąęćłńóśźżĄĘĆŁŃÓŚŹŻ]+|[^a-zA-Z0-9ąęćłńóśźżĄĘĆŁŃÓŚŹŻ]+$/g, '').trim()).filter(x => x !== "");
                 cArr.forEach(cat => catsSet.add(cat));
                 return { tytul: c[0].replace(/"/g,''), kategorie: cArr, yt: (c[2]||"").trim(), czas: (c[3]||"0:00").trim(), originalIndex: index };
             });
@@ -170,6 +150,8 @@
             render();
         } catch(e) { console.error(e); }
     }
+
+    function isSelected(t) { return cart.some(x => x.tytul === t); }
 
     function render() {
         const out = document.getElementById('main-display'); out.innerHTML = '';
@@ -189,15 +171,16 @@
         if (displayMode === 'grid') {
             const g = document.createElement('div'); g.className = 'grid';
             list.forEach(s => {
+                const selected = isSelected(s.tytul);
                 g.innerHTML += `<div class="card">
                     <div class="thumb-container" onclick="window.open('https://youtube.com/watch?v=${s.yt}')">
                         <img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb">
-                        <div class="thumb-overlay">
-                            KLIKNIJ<br><span>W OBRAZEK</span><br>ABY OTWORZYĆ<br><span>PIEŚŃ NA</span><br>YOUTUBE
-                        </div>
+                        <div class="thumb-overlay">KLIKNIJ<span>W OBRAZEK</span>ABY OTWORZYĆ<span>PIEŚŃ NA</span>YOUTUBE</div>
                     </div>
                     <div class="card-title">${s.tytul}</div>
-                    <button class="btn-add" onclick="add('${s.tytul.replace(/'/g,"")}')">DODAJ DO MOJEJ LISTY</button>
+                    <button class="btn-add ${selected ? 'selected' : ''}" onclick="toggleSong('${s.tytul.replace(/'/g,"")}')">
+                        ${selected ? 'JUŻ WYBRANO (USUŃ?)' : 'DODAJ DO MOJEJ LISTY'}
+                    </button>
                 </div>`;
             });
             out.appendChild(g);
@@ -207,15 +190,25 @@
             Object.keys(grouped).sort().forEach(cat => {
                 out.innerHTML += `<div class="list-header">${cat}</div>`;
                 grouped[cat].sort((a,b) => a.tytul.localeCompare(b.tytul, 'pl')).forEach(s => {
+                    const selected = isSelected(s.tytul);
                     out.innerHTML += `<div class="list-row">
                         <div class="list-item-name" onclick="window.open('https://youtube.com/watch?v=${s.yt}')">
                             ${s.tytul} <span class="list-tip">▶ KLIKNIJ I OTWÓRZ NA YOUTUBE</span>
                         </div>
-                        <button class="btn-add" style="width:auto; padding:10px 25px" onclick="add('${s.tytul.replace(/'/g,"")}')">DODAJ</button>
+                        <button class="btn-add ${selected ? 'selected' : ''}" style="width:auto; padding:10px 25px" onclick="toggleSong('${s.tytul.replace(/'/g,"")}')">
+                            ${selected ? 'USUŃ' : 'DODAJ'}
+                        </button>
                     </div>`;
                 });
             });
         }
+    }
+
+    function toggleSong(t) {
+        const idx = cart.findIndex(x => x.tytul === t);
+        if(idx > -1) cart.splice(idx, 1);
+        else cart.push(songs.find(x => x.tytul === t));
+        save();
     }
 
     function setSort(type) {
@@ -239,8 +232,9 @@
             else { curSec += sec; groups[curCD].push(s); }
         });
         Object.keys(groups).forEach(n => {
+            if(groups[n].length === 0) return;
             const box = document.createElement('div'); box.className = 'card';
-            box.style.border = "4px solid var(--gold)"; box.style.padding = "25px"; box.style.marginBottom = "30px"; box.style.background = "#fff";
+            box.style.border = "4px solid var(--gold)"; box.style.padding = "25px"; box.style.marginBottom = "30px";
             box.innerHTML = `<div style="display:flex; align-items:center; gap:20px; border-bottom:3px solid var(--gold); padding-bottom:15px; margin-bottom:15px;">
                 <img src="melodia_wiary_logo_400.png" style="width:70px; height:70px; border-radius:50%; border:2px solid var(--gold);">
                 <h2 style="flex-grow:1; color:var(--sidebar); text-transform:uppercase;">PŁYTA NR ${n}</h2>
@@ -250,16 +244,14 @@
                     <img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb">
                 </div>
                 <div style="font-size:0.9em; font-weight:bold; margin-bottom:10px; color:var(--text-dark); text-transform:uppercase;">${s.tytul}</div>
-                <button class="btn-remove" onclick="remove('${s.tytul.replace(/'/g,"")}')" style="background:#be123c; color:white; border:none; padding:10px; border-radius:8px; cursor:pointer; font-weight:900;">USUŃ</button>
+                <button class="btn-add selected" onclick="toggleSong('${s.tytul.replace(/'/g,"")}')" style="padding:8px; border-radius:8px; font-size:0.8em;">USUŃ Z LISTY</button>
             </div>`).join('')}</div>`;
             container.appendChild(box);
         });
         container.innerHTML += `<button class="ctrl-btn active" style="width:100%; margin-top:20px;" onclick="setView('all')">POWRÓT DO KATALOGU</button>`;
     }
 
-    function add(t) { if(cart.find(x=>x.tytul===t)) return; cart.push(songs.find(x=>x.tytul===t)); save(); }
-    function remove(t) { cart = cart.filter(x=>x.tytul!==t); save(); }
-    function save() { localStorage.setItem('mv_cart_v10', JSON.stringify(cart)); render(); }
+    function save() { localStorage.setItem('mv_cart_v11', JSON.stringify(cart)); render(); }
     function doSearch() { query = document.getElementById('search').value.toLowerCase(); render(); }
     init();
 </script>
