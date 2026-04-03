@@ -7,58 +7,47 @@
     <style>
         :root { --gold: #d4af37; --bg: #020617; --sidebar: #0f172a; --green: #22c55e; }
         
-        /* BAZA I ROZMIARY */
         body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; min-height: 100vh; transition: font-size 0.2s; }
         body.standard { --f-size: 16px; --f-btn: 14px; }
         body.senior { --f-size: 24px; --f-btn: 20px; }
         body { font-size: var(--f-size); }
 
-        /* PANEL BOCZNY - ZABLOKOWANY */
+        /* PANEL BOCZNY */
         #sidebar { width: 340px; background: var(--sidebar); border-right: 3px solid var(--gold); display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 1000; }
         .sidebar-top { padding: 20px; border-bottom: 2px solid #333; flex-shrink: 0; text-align: center; }
         .sidebar-scroll { flex-grow: 1; overflow-y: auto; padding: 15px; }
         
         .logo-img { width: 150px; height: 150px; border-radius: 50%; border: 3px solid var(--gold); margin-bottom: 15px; object-fit: cover; }
         
-        .nav-btn { width: 100%; padding: 15px; margin-bottom: 8px; border-radius: 10px; border: 2px solid transparent; cursor: pointer; font-weight: 900; text-align: left; text-transform: uppercase; font-size: var(--f-btn); transition: 0.2s; }
+        .nav-btn { width: 100%; padding: 12px; margin-bottom: 8px; border-radius: 10px; border: 2px solid transparent; cursor: pointer; font-weight: 900; text-align: left; text-transform: uppercase; font-size: var(--f-btn); transition: 0.2s; }
         .nav-btn-main { background: var(--gold); color: black; }
         .nav-btn-cat { background: #1e293b; color: #eee; border-color: #333; font-size: 0.8em; }
-        .nav-btn:hover { border-color: white; transform: translateX(5px); background: #334155; }
+        .nav-btn:hover { border-color: white; background: #334155; }
         .nav-btn.active { background: white; color: black; border-color: var(--gold); }
 
-        /* PRZEŁĄCZNIKI ROZMIARU */
-        .size-btn { width: 100%; padding: 12px; margin-top: 5px; font-weight: 900; text-transform: uppercase; cursor: pointer; border: 2px solid var(--gold); background: #000; color: var(--gold); border-radius: 8px; font-size: 16px; }
+        .size-btn { width: 100%; padding: 10px; margin-top: 5px; font-weight: 900; text-transform: uppercase; cursor: pointer; border: 2px solid var(--gold); background: #000; color: var(--gold); border-radius: 8px; font-size: 14px; }
         .size-btn.active { background: var(--gold); color: black; }
 
         /* TREŚĆ GŁÓWNA */
         #main-content { margin-left: 340px; flex: 1; padding: 0 40px; position: relative; }
-        .header-sticky { position: sticky; top: 0; z-index: 900; background: var(--bg); padding: 25px 0; border-bottom: 2px solid var(--gold); }
-        .search-box { width: 100%; padding: 18px; border-radius: 40px; border: 3px solid var(--gold); background: #000; color: white; font-size: 1.2em; text-align: center; font-weight: bold; }
+        .header-sticky { position: sticky; top: 0; z-index: 900; background: var(--bg); padding: 20px 0; border-bottom: 2px solid var(--gold); }
+        .search-box { width: 100%; padding: 15px; border-radius: 30px; border: 3px solid var(--gold); background: #000; color: white; font-size: 1.2em; text-align: center; font-weight: bold; }
         
-        .view-toggle { display: flex; gap: 10px; margin-top: 15px; }
-        .v-btn { flex: 1; padding: 12px; border: 2px solid var(--gold); background: transparent; color: var(--gold); font-weight: 900; cursor: pointer; border-radius: 10px; text-transform: uppercase; }
-        .v-btn.active { background: var(--gold); color: black; }
+        .controls-row { display: flex; gap: 10px; margin-top: 15px; }
+        .ctrl-btn { flex: 1; padding: 10px; border: 2px solid var(--gold); background: transparent; color: var(--gold); font-weight: 900; cursor: pointer; border-radius: 8px; text-transform: uppercase; font-size: 11px; white-space: nowrap; }
+        .ctrl-btn.active { background: var(--gold); color: black; }
 
         /* WIDOKI */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; margin-top: 30px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; margin-top: 25px; }
         .card { background: #0f172a; border: 2px solid #333; padding: 15px; border-radius: 20px; text-align: center; display: flex; flex-direction: column; }
         .thumb { width: 100%; aspect-ratio: 16/9; border-radius: 12px; cursor: pointer; border: 1px solid var(--gold); margin-bottom: 10px; }
         .card-title { font-weight: 900; margin-bottom: 15px; color: var(--gold); line-height: 1.2; flex-grow: 1; }
 
-        /* WIDOK LISTY */
-        .list-cat-header { background: var(--gold); color: black; padding: 10px 20px; border-radius: 10px; margin: 30px 0 10px 0; font-weight: 900; text-transform: uppercase; }
-        .list-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; border-bottom: 1px solid #333; background: rgba(255,255,255,0.02); }
-        .list-item-name { font-weight: bold; cursor: pointer; color: #fff; }
+        .list-header { background: var(--gold); color: black; padding: 8px 20px; border-radius: 8px; margin: 25px 0 10px 0; font-weight: 900; text-transform: uppercase; }
+        .list-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; border-bottom: 1px solid #333; background: rgba(255,255,255,0.02); }
 
-        /* KOSZYK */
-        .assistant { background: #1e293b; border: 3px solid var(--gold); border-radius: 20px; padding: 20px; margin: 20px 0; text-align: center; }
-        .cd-box { border: 4px solid var(--gold); border-radius: 25px; padding: 25px; margin-bottom: 40px; background: rgba(255,255,255,0.03); }
-        .cd-header { display: flex; align-items: center; gap: 20px; border-bottom: 2px solid var(--gold); padding-bottom: 15px; margin-bottom: 15px; }
-        .qty-box { width: 60px; padding: 8px; background: #000; color: var(--gold); border: 2px solid var(--gold); border-radius: 8px; text-align: center; font-weight: bold; font-size: 1.2em; }
-
-        .btn-add { background: var(--gold); color: black; border: none; padding: 12px; border-radius: 10px; font-weight: 900; cursor: pointer; text-transform: uppercase; }
-        .btn-order { background: var(--green); color: white; padding: 15px 30px; border-radius: 12px; border: none; font-weight: 900; cursor: pointer; }
-        .btn-remove { background: #ff4444; color: white; padding: 8px 15px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; }
+        .btn-add { background: var(--gold); color: black; border: none; padding: 10px; border-radius: 8px; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 0.9em; }
+        .btn-remove { background: #ff4444; color: white; padding: 8px 15px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
         @media (max-width: 900px) { #sidebar { position: relative; width: 100%; height: auto; } #main-content { margin-left: 0; } }
     </style>
@@ -68,12 +57,12 @@
 <div id="sidebar">
     <div class="sidebar-top">
         <img src="melodia_wiary_logo_400.png" class="logo-img" onerror="this.src='https://via.placeholder.com/150?text=LOGO'">
-        <button class="nav-btn nav-btn-main" onclick="location.reload()">🏠 WSZYSTKIE PIEŚNI</button>
+        <button class="nav-btn nav-btn-main" onclick="resetToAll()">🏠 WSZYSTKIE PIEŚNI</button>
         <button class="nav-btn nav-btn-main" id="btn-cart" onclick="setView('cart')" style="margin-top:5px;">⭐ MÓJ WYBÓR (<span id="count">0</span>)</button>
         
         <div style="margin-top:10px;">
-            <button class="size-btn active" id="s-std" onclick="updateSize('standard')">STANDARDOWE LITERY</button>
-            <button class="size-btn" id="s-big" onclick="updateSize('senior')">BARDZO DUŻE LITERY</button>
+            <button class="size-btn active" id="s-std" onclick="updateSize('standard')">STANDARD</button>
+            <button class="size-btn" id="s-big" onclick="updateSize('senior')">DUŻE LITERY</button>
         </div>
     </div>
     <div class="sidebar-scroll" id="cat-list"></div>
@@ -82,9 +71,10 @@
 <div id="main-content">
     <div class="header-sticky" id="toolbar">
         <input type="text" id="search" class="search-box" placeholder="SZUKAJ PIEŚNI..." onkeyup="doSearch()">
-        <div class="view-toggle">
-            <button class="v-btn active" id="m-grid" onclick="setMode('grid')">WIDOK Z OBRAZKAMI</button>
-            <button class="v-btn" id="m-list" onclick="setMode('list')">WIDOK SAMEJ LISTY</button>
+        <div class="controls-row">
+            <button class="ctrl-btn active" id="m-grid" onclick="setMode('grid')">OBRAZKI</button>
+            <button class="ctrl-btn" id="m-list" onclick="setMode('list')">SAMA LISTA</button>
+            <button class="ctrl-btn" id="sort-btn" onclick="toggleSort()">SORTUJ: NOWE</button>
         </div>
     </div>
     <div id="main-display"></div>
@@ -92,26 +82,24 @@
 
 <script>
     const CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTSIMZUO8ZkisiFoqOfypL9hOQBnTbAvtMmBeIuK56_QoiXFu_b7i-de1Jn6Km9symosxJBV6V5PxKO/pub?output=csv';
-    let songs = []; let cart = []; let currentView = 'all'; let displayMode = 'grid'; let query = ""; let organizeMode = 'order';
+    let songs = []; let cart = []; let currentView = 'all'; let displayMode = 'grid'; 
+    let query = ""; let sortType = 'newest'; // newest, az, za
 
     function updateSize(s) { document.body.className = s; document.getElementById('s-std').classList.toggle('active', s==='standard'); document.getElementById('s-big').classList.toggle('active', s==='senior'); }
 
     async function init() {
-        const saved = localStorage.getItem('mv_cart_final'); if(saved) cart = JSON.parse(saved);
+        const saved = localStorage.getItem('mv_cart_v6'); if(saved) cart = JSON.parse(saved);
         try {
             const r = await fetch(CSV + '&cb=' + Date.now());
             const text = await r.text();
             const rows = text.split(/\r?\n/).filter(x => x.trim() !== "").slice(1);
             let catsSet = new Set();
             
-            songs = rows.map(line => {
+            songs = rows.map((line, index) => {
                 let c = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                let cArr = (c[1]||"Inne").split(',').map(cat => {
-                    // CZYŚCZENIE KATEGORII Z MYŚLNIKÓW I ZNAKÓW SPECJALNYCH
-                    return cat.replace(/^[^a-zA-Z0-6ąęćłńóśźżĄĘĆŁŃÓŚŹŻ]+|[^a-zA-Z0-6ąęćłńóśźżĄĘĆŁŃÓŚŹŻ]+$/g, '').trim();
-                }).filter(x => x !== "");
+                let cArr = (c[1]||"Inne").split(',').map(cat => cat.replace(/^[^a-zA-Z0-6ąęćłńóśźżĄĘĆŁŃÓŚŹŻ]+|[^a-zA-Z0-6ąęćłńóśźżĄĘĆŁŃÓŚŹŻ]+$/g, '').trim()).filter(x => x !== "");
                 cArr.forEach(cat => catsSet.add(cat));
-                return { tytul: c[0].replace(/"/g,''), kategorie: cArr, yt: (c[2]||"").trim(), czas: (c[3]||"0:00").trim() };
+                return { tytul: c[0].replace(/"/g,''), kategorie: cArr, yt: (c[2]||"").trim(), czas: (c[3]||"0:00").trim(), originalIndex: index };
             });
 
             const catBox = document.getElementById('cat-list');
@@ -129,85 +117,81 @@
         document.getElementById('count').innerText = cart.length;
         document.getElementById('toolbar').style.display = (currentView === 'cart') ? 'none' : 'block';
 
-        if(currentView === 'cart') {
-            renderCart(out);
-        } else {
-            let list = currentView === 'all' ? songs : songs.filter(s => s.kategorie.includes(currentView));
-            if(query) list = list.filter(s => s.tytul.toLowerCase().includes(query));
+        if(currentView === 'cart') { renderCart(out); return; }
+
+        let list = currentView === 'all' ? [...songs] : songs.filter(s => s.kategorie.includes(currentView));
+        if(query) list = list.filter(s => s.tytul.toLowerCase().includes(query));
+
+        // LOGIKA SORTOWANIA
+        if (displayMode === 'grid') {
+            if(sortType === 'newest') list.sort((a,b) => b.originalIndex - a.originalIndex);
+            else if(sortType === 'az') list.sort((a,b) => a.tytul.localeCompare(b.tytul, 'pl'));
+            else if(sortType === 'za') list.sort((a,b) => b.tytul.localeCompare(a.tytul, 'pl'));
             
-            if(displayMode === 'grid') {
-                const g = document.createElement('div'); g.className = 'grid';
-                list.forEach(s => {
-                    g.innerHTML += `<div class="card">
-                        <img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb" onclick="window.open('https://youtube.com/watch?v=${s.yt}')">
-                        <div class="card-title">${s.tytul}</div>
-                        <button class="btn-add" onclick="add('${s.tytul.replace(/'/g,"")}')">DODAJ DO LISTY</button>
+            const g = document.createElement('div'); g.className = 'grid';
+            list.forEach(s => {
+                g.innerHTML += `<div class="card">
+                    <img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb" onclick="window.open('https://youtube.com/watch?v=${s.yt}')">
+                    <div class="card-title">${s.tytul}</div>
+                    <button class="btn-add" onclick="add('${s.tytul.replace(/'/g,"")}')">DODAJ</button>
+                </div>`;
+            });
+            out.appendChild(g);
+        } else {
+            // WIDOK LISTY: Kategorie A-Z, Tytuły A-Z
+            let grouped = {};
+            list.forEach(s => { let c = s.kategorie[0] || "Inne"; if(!grouped[c]) grouped[c] = []; grouped[c].push(s); });
+            Object.keys(grouped).sort().forEach(cat => {
+                out.innerHTML += `<div class="list-header">${cat}</div>`;
+                grouped[cat].sort((a,b) => a.tytul.localeCompare(b.tytul, 'pl')).forEach(s => {
+                    out.innerHTML += `<div class="list-row">
+                        <span style="cursor:pointer" onclick="window.open('https://youtube.com/watch?v=${s.yt}')">${s.tytul}</span>
+                        <button class="btn-add" onclick="add('${s.tytul.replace(/'/g,"")}')">DODAJ</button>
                     </div>`;
                 });
-                out.appendChild(g);
-            } else {
-                let grouped = {};
-                list.forEach(s => { let c = s.kategorie[0] || "Inne"; if(!grouped[c]) grouped[c] = []; grouped[c].push(s); });
-                Object.keys(grouped).sort().forEach(cat => {
-                    out.innerHTML += `<div class="list-cat-header">${cat}</div>`;
-                    grouped[cat].forEach(s => {
-                        out.innerHTML += `<div class="list-item">
-                            <span class="list-item-name" onclick="window.open('https://youtube.com/watch?v=${s.yt}')">${s.tytul}</span>
-                            <button class="btn-add" style="padding:5px 15px;" onclick="add('${s.tytul.replace(/'/g,"")}')">DODAJ</button>
-                        </div>`;
-                    });
-                });
-            }
+            });
         }
+    }
+
+    function toggleSort() {
+        if(sortType === 'newest') sortType = 'az';
+        else if(sortType === 'az') sortType = 'za';
+        else sortType = 'newest';
+        document.getElementById('sort-btn').innerText = `SORTUJ: ${sortType==='newest' ? 'NOWE' : sortType.toUpperCase()}`;
+        render();
     }
 
     function renderCart(container) {
-        container.innerHTML = `<h1 style="color:var(--gold); text-align:center;">TWOJE PŁYTY</h1>
-        <div class="assistant">
-            <h3 style="margin:0 0 15px 0;">ASYSTENT UKŁADANIA PŁYT</h3>
-            <button class="v-btn" onclick="setOrg('order')">WEDŁUG KOLEJNOŚCI</button>
-            <button class="v-btn" onclick="setOrg('cat')">WEDŁUG KATEGORII</button>
-        </div>`;
-        
-        let groups = {};
-        if(organizeMode === 'order') {
-            let curCD = 1; let curSec = 0; groups[1] = [];
-            cart.forEach(s => {
-                let sec = (parseInt(s.czas.split(':')[0])*60) + (parseInt(s.czas.split(':')[1]||0));
-                if(curSec + sec > 3900) { curCD++; curSec = sec; groups[curCD] = [s]; }
-                else { curSec += sec; groups[curCD].push(s); }
-            });
-        } else {
-            cart.forEach(s => { let c = s.kategorie[0]; if(!groups[c]) groups[c] = []; groups[c].push(s); });
-        }
-
-        Object.keys(groups).forEach((key, idx) => {
+        container.innerHTML = `<h1 style="color:var(--gold); text-align:center;">MÓJ WYBÓR</h1>`;
+        let curCD = 1, curSec = 0, groups = {1: []};
+        cart.forEach(s => {
+            let sec = (parseInt(s.czas.split(':')[0])*60) + (parseInt(s.czas.split(':')[1]||0));
+            if(curSec + sec > 3900) { curCD++; curSec = sec; groups[curCD] = [s]; }
+            else { curSec += sec; groups[curCD].push(s); }
+        });
+        Object.keys(groups).forEach(n => {
             const box = document.createElement('div'); box.className = 'cd-box';
-            box.innerHTML = `
-                <div class="cd-header">
-                    <img src="melodia_wiary_logo_400.png" style="width:70px; height:70px; border-radius:50%; border:2px solid var(--gold);">
-                    <div style="flex-grow:1"><h2 style="margin:0; color:var(--gold);">PŁYTA: ${organizeMode==='cat' ? key : 'NR '+(idx+1)}</h2></div>
-                    <div>SZTUK: <input type="number" class="qty-box" value="1"></div>
-                    <button class="btn-order" onclick="alert('Złożono zamówienie na tę płytę!')">ZAMÓW PŁYTĘ</button>
-                </div>
-                <div class="grid">
-                    ${groups[key].map(s => `<div class="card" style="padding:10px;">
-                        <img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb" style="height:70px; width:auto; margin:0 auto 10px auto;">
-                        <div style="font-size:0.8em; font-weight:bold; margin-bottom:10px;">${s.tytul}</div>
-                        <button class="btn-remove" onclick="remove('${s.tytul.replace(/'/g,"")}')">USUŃ</button>
-                    </div>`).join('')}
-                </div>`;
+            box.style.border = "4px solid var(--gold)"; box.style.padding = "20px"; box.style.marginBottom = "30px";
+            box.innerHTML = `<div style="display:flex; align-items:center; gap:20px; border-bottom:2px solid var(--gold); padding-bottom:15px; margin-bottom:15px;">
+                <img src="melodia_wiary_logo_400.png" style="width:60px; height:60px; border-radius:50%">
+                <h2 style="flex-grow:1; color:var(--gold)">PŁYTA NR ${n}</h2>
+                <button class="btn-order" onclick="alert('Zamówiono!')">ZAMÓW</button>
+            </div><div class="grid">${groups[n].map(s => `<div class="card" style="padding:10px">
+                <img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb" style="height:60px; width:auto; margin:0 auto">
+                <div style="font-size:0.8em; font-weight:bold">${s.tytul}</div>
+                <button class="btn-remove" onclick="remove('${s.tytul.replace(/'/g,"")}')">USUŃ</button>
+            </div>`).join('')}</div>`;
             container.appendChild(box);
         });
-        container.innerHTML += `<button class="v-btn" style="width:100%; margin-top:20px; background:#475569; color:white;" onclick="setView('all')">POWRÓT DO KATALOGU</button>`;
+        container.innerHTML += `<button class="ctrl-btn" style="width:100%; margin-top:20px;" onclick="setView('all')">POWRÓT</button>`;
     }
 
     function setView(v) { currentView = v; render(); window.scrollTo(0,0); }
+    function resetToAll() { currentView = 'all'; query = ""; document.getElementById('search').value = ""; render(); }
     function setMode(m) { displayMode = m; document.getElementById('m-grid').classList.toggle('active', m==='grid'); document.getElementById('m-list').classList.toggle('active', m==='list'); render(); }
-    function setOrg(m) { organizeMode = m; render(); }
     function add(t) { if(cart.find(x=>x.tytul===t)) return; cart.push(songs.find(x=>x.tytul===t)); save(); }
     function remove(t) { cart = cart.filter(x=>x.tytul!==t); save(); }
-    function save() { localStorage.setItem('mv_cart_final', JSON.stringify(cart)); render(); }
+    function save() { localStorage.setItem('mv_cart_v6', JSON.stringify(cart)); render(); }
     function doSearch() { query = document.getElementById('search').value.toLowerCase(); render(); }
     init();
 </script>
