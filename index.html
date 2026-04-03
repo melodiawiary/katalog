@@ -2,19 +2,39 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Melodia Wiary - Katalog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Melodia Wiary - Katalog Utworów</title>
     <style>
-        body { background: #050505; color: #eee; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; }
-        h1 { text-align: center; color: #d4af37; letter-spacing: 2px; text-transform: uppercase; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; padding: 20px; }
-        .card { background: #111; border: 1px solid #222; padding: 10px; border-radius: 12px; transition: 0.3s; }
-        .card:hover { border-color: #d4af37; transform: translateY(-5px); }
-        .thumb { width: 100%; aspect-ratio: 16/9; cursor: pointer; object-fit: cover; border-radius: 8px; }
-        .title { margin: 12px 0 5px; font-weight: bold; font-size: 15px; height: 40px; overflow: hidden; }
-        .cat-tag { background: #d4af37; color: black; font-size: 10px; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; font-weight: bold; }
-        .btn-add { background: none; border: 1px solid #d4af37; color: #d4af37; padding: 8px; width: 100%; margin-top: 10px; cursor: pointer; border-radius: 6px; transition: 0.3s; }
+        body { background: #050505; color: #eee; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; line-height: 1.6; }
+        h1 { text-align: center; color: #d4af37; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 30px; font-weight: 300; }
+        
+        /* Układ siatki */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; padding: 10px; max-width: 1400px; margin: 0 auto; }
+        
+        /* Karta utworu */
+        .card { background: #111; border: 1px solid #222; padding: 15px; border-radius: 15px; transition: all 0.3s ease; display: flex; flex-direction: column; }
+        .card:hover { border-color: #d4af37; transform: translateY(-8px); box-shadow: 0 10px 20px rgba(212, 175, 55, 0.1); }
+        
+        /* Miniatura 16:9 */
+        .thumb-container { position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden; border-radius: 10px; cursor: pointer; }
+        .thumb { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .thumb-container:hover .thumb { transform: scale(1.1); }
+        .play-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.3s; }
+        .thumb-container:hover .play-overlay { opacity: 1; }
+
+        .cat-tag { align-self: flex-start; background: #d4af37; color: black; font-size: 11px; padding: 3px 10px; border-radius: 5px; text-transform: uppercase; font-weight: bold; margin: 15px 0 10px 0; }
+        .title { font-weight: 600; font-size: 16px; margin-bottom: 15px; height: 45px; overflow: hidden; color: #fff; }
+        
+        /* Przyciski */
+        .btn-add { background: none; border: 1px solid #d4af37; color: #d4af37; padding: 10px; width: 100%; cursor: pointer; border-radius: 8px; transition: 0.3s; font-weight: bold; text-transform: uppercase; margin-top: auto; }
         .btn-add:hover { background: #d4af37; color: black; }
-        #cart-counter { position: fixed; bottom: 20px; right: 20px; background: #d4af37; color: black; padding: 15px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.5); z-index: 100; }
+        
+        /* Koszyk pływający */
+        #cart-counter { position: fixed; bottom: 30px; right: 30px; background: #d4af37; color: black; padding: 18px 30px; border-radius: 50px; font-weight: bold; cursor: pointer; box-shadow: 0 8px 25px rgba(0,0,0,0.6); z-index: 1000; transition: 0.3s; border: 2px solid black; }
+        #cart-counter:hover { transform: scale(1.05); background: #fff; }
+
+        /* Komunikaty */
+        #status { text-align: center; margin-top: 50px; font-size: 18px; color: #888; }
     </style>
 </head>
 <body>
@@ -22,25 +42,36 @@
 <div id="cart-counter" onclick="sendOrder()">Wybrano: 0 (Poproś o płyty)</div>
 <h1>MELODIA WIARY - KATALOG</h1>
 
-<div class="grid" id="catalog">Ładowanie piosenek...</div>
+<div class="grid" id="catalog"></div>
+<div id="status">Ładowanie Twoich pieśni...</div>
 
 <script>
-    const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTSIMZU08zkis1FoqDfypL9hOQ8nTbAvMmBeIuK56_Qo1XFu_b71-de1jN6Km9symosx38V6V5PxKO/pub?output=csv'; 
+    // TWOJE DANE Z ARKUSZA
+    const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTSIMZUO8ZkisiFoqOfypL9hOQBnTbAvtMmBeIuK56_QoiXFu_b7i-de1Jn6Km9symosxJBV6V5PxKO/pub?output=csv'; 
 
     let cart = [];
 
     async function loadSongs() {
+        const container = document.getElementById('catalog');
+        const status = document.getElementById('status');
+        
         try {
             const response = await fetch(SHEET_URL);
             const data = await response.text();
             
-            // Rozdzielamy wiersze, biorąc pod uwagę różne formaty (Windows/Mac)
-            const rows = data.split(/\r?\n/).slice(1);
-            const container = document.getElementById('catalog');
+            // Rozdzielanie wierszy i usuwanie pustych linii
+            const rows = data.split(/\r?\n/).filter(row => row.trim() !== "").slice(1);
+            
+            if (rows.length === 0) {
+                status.innerText = "Arkusz jest pusty lub nie zawiera piosenek w wierszach poniżej nagłówka.";
+                return;
+            }
+
+            status.style.display = 'none';
             container.innerHTML = '';
 
             rows.forEach(row => {
-                // To pozwoli na obsługę przecinków wewnątrz cudzysłowów
+                // Obsługa CSV (podział po przecinkach, omijając te w cudzysłowach)
                 const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                 
                 if(cols.length >= 3) {
@@ -48,11 +79,14 @@
                     const kategoria = cols[1].replace(/"/g, '').trim();
                     const idYT = cols[2].replace(/"/g, '').trim();
                     
-                    if(idYT.length > 2) {
+                    if(idYT.length > 5) { // Sprawdzenie czy ID wygląda na poprawne
                         const card = document.createElement('div');
                         card.className = 'card';
                         card.innerHTML = `
-                            <img class="thumb" src="https://img.youtube.com/vi/${idYT}/mqdefault.jpg" onclick="window.open('https://youtube.com/watch?v=${idYT}')">
+                            <div class="thumb-container" onclick="window.open('https://youtube.com/watch?v=${idYT}')">
+                                <img class="thumb" src="https://img.youtube.com/vi/${idYT}/mqdefault.jpg">
+                                <div class="play-overlay"><span style="font-size:40px;">▶</span></div>
+                            </div>
                             <span class="cat-tag">${kategoria}</span>
                             <div class="title">${tytul}</div>
                             <button class="btn-add" onclick="addToCart('${tytul.replace(/'/g, "\\'")}')">Dodaj do zestawu</button>
@@ -61,25 +95,31 @@
                     }
                 }
             });
-            
-            if(container.innerHTML === '') {
-                container.innerHTML = 'Nie znaleziono piosenek w arkuszu. Sprawdź, czy dane są w wierszach 2, 3, 4...';
-            }
 
         } catch (e) {
-            document.getElementById('catalog').innerHTML = 'Błąd połączenia z Arkuszem. Upewnij się, że jest opublikowany jako .csv';
+            status.innerText = 'Błąd połączenia z Arkuszem. Upewnij się, że opublikowałeś go jako .csv';
+            console.error(e);
         }
     }
 
     function addToCart(title) {
         cart.push(title);
         document.getElementById('cart-counter').innerText = `Wybrano: ${cart.length} (Poproś o płyty)`;
+        // Efekt wizualny kliknięcia
+        const btn = event.target;
+        btn.innerText = "✓ Dodano";
+        setTimeout(() => { btn.innerText = "Dodaj do zestawu"; }, 1000);
     }
 
     function sendOrder() {
-        if(cart.length === 0) return alert("Wybierz piosenki klikając przycisk 'Dodaj do zestawu'");
+        if(cart.length === 0) {
+            alert("Najpierw wybierz piosenki, które Cię interesują!");
+            return;
+        }
+        
         const lista = cart.join("%0D%0A- ");
-        const mailto = `mailto:TWOJ_MAIL@GMAIL.COM?subject=Zestaw Melodia Wiary&body=Dzień dobry, poproszę o płyty z utworami:%0D%0A%0D%0A- ${lista}`;
+        const mailto = `mailto:TWOJ_MAIL@GMAIL.COM?subject=Zestaw Melodia Wiary&body=Dzień dobry, poproszę o przygotowanie płyt z następującymi utworami:%0D%0A%0D%0A- ${lista}%0D%0A%0D%0AProszę o informację o kosztach i czasie realizacji.`;
+        
         window.location.href = mailto;
     }
 
