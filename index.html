@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Melodia Wiary - Interaktywny</title>
+    <title>Katalog Melodia Wiary</title>
     <style>
         :root { 
             --gold: #d4af37; 
@@ -27,7 +27,7 @@
             --f-size: 24px; 
             --f-btn: 22px; 
             --f-ctrl: 22px;
-            --f-tip: 19px; /* Nieco mniejsza czcionka na foto w seniorze, by zmieścić 5 linii */
+            --f-tip: 19px; 
             --f-list-tip: 24px; 
             --f-search: 1.8em;
         }
@@ -39,12 +39,10 @@
         .sidebar-scroll { flex-grow: 1; overflow-y: auto; padding: 15px; }
         .logo-img { width: 160px; height: 160px; border-radius: 50%; border: 4px solid var(--gold); margin-bottom: 15px; background: white; object-fit: cover; }
         
-        /* PODŚWIETLENIE KATEGORII NA CYJANOWO */
         .nav-btn { width: 100%; padding: 15px; margin-bottom: 8px; border-radius: 12px; border: 2px solid transparent; cursor: pointer; font-weight: 900; text-align: left; text-transform: uppercase; font-size: var(--f-btn); transition: 0.2s; color: #cbd5e1; background: rgba(255,255,255,0.05); }
         .nav-btn-main { background: var(--gold); color: black; }
-        .nav-btn.active { background: var(--cyan); color: white; border-color: white; box-shadow: 0 0 10px rgba(6,182,212,0.5); }
+        .nav-btn.active { background: var(--cyan) !important; color: white !important; border-color: white; box-shadow: 0 0 10px rgba(6,182,212,0.5); }
 
-        /* PRZYCISKI ROZMIARU Z WYRAŹNĄ RAMKĄ */
         .size-btn { width: 100%; padding: 12px; margin-top: 5px; font-weight: 900; text-transform: uppercase; cursor: pointer; border: 2px solid #555; background: #000; color: #888; border-radius: 8px; font-size: var(--f-btn); transition: 0.3s; }
         .size-btn.active { border: 3px solid var(--cyan); color: white; background: #111; box-shadow: 0 0 15px rgba(6,182,212,0.3); }
 
@@ -56,14 +54,16 @@
         .ctrl-btn { flex: 1; padding: 15px 5px; border: 2px solid var(--sidebar); background: #fff; color: var(--sidebar); font-weight: 900; cursor: pointer; border-radius: 10px; text-transform: uppercase; transition: 0.2s; font-size: var(--f-ctrl); }
         .ctrl-btn.active { background: var(--sidebar); color: #fff; }
 
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; margin-top: 30px; }
+        /* TYTUŁ KATEGORII NAD LISTĄ */
+        .view-title { font-size: 2em; font-weight: 900; color: var(--sidebar); text-transform: uppercase; margin-top: 20px; border-left: 10px solid var(--gold); padding-left: 20px; }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; margin-top: 20px; }
         .card { background: var(--card-bg); border: 3px solid #e2e8f0; padding: 15px; border-radius: 20px; text-align: center; display: flex; flex-direction: column; transition: 0.3s; }
         .card:hover { background: var(--card-hover); border-color: var(--gold); transform: translateY(-5px); }
 
         .thumb-container { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; border: 2px solid #ddd; margin-bottom: 10px; cursor: pointer; }
         .thumb { width: 100%; height: 100%; object-fit: cover; }
         
-        /* NAPRAWIONY NAPIS NA ZDJĘCIU */
         .thumb-overlay { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(0, 0, 0, 0.85); color: #fff; 
@@ -128,7 +128,7 @@
         document.body.className = s; 
         document.getElementById('s-std').classList.toggle('active', s==='standard'); 
         document.getElementById('s-big').classList.toggle('active', s==='senior'); 
-        localStorage.setItem('mv_font_pref', s);
+        localStorage.setItem('mv_font_pref_v17', s);
     }
 
     function parseCSVLine(text) {
@@ -145,8 +145,8 @@
     }
 
     async function init() {
-        const savedCart = localStorage.getItem('mv_storage_stable_v16'); if(savedCart) cart = JSON.parse(savedCart);
-        const savedFont = localStorage.getItem('mv_font_pref'); if(savedFont) updateSize(savedFont);
+        const savedCart = localStorage.getItem('mv_final_storage'); if(savedCart) cart = JSON.parse(savedCart);
+        const savedFont = localStorage.getItem('mv_font_pref_v17'); if(savedFont) updateSize(savedFont);
 
         try {
             const r = await fetch(CSV + '&cb=' + Date.now());
@@ -173,6 +173,7 @@
                 const b = document.createElement('button'); 
                 b.className = 'nav-btn cat-item'; 
                 b.innerText = cat;
+                b.id = "btn-" + cat.replace(/\s/g, '');
                 b.onclick = () => setView(cat);
                 catBox.appendChild(b);
             });
@@ -187,7 +188,7 @@
             const found = songs.find(x => x.tytul === t);
             if(found) cart.push(found);
         }
-        localStorage.setItem('mv_storage_stable_v16', JSON.stringify(cart));
+        localStorage.setItem('mv_final_storage', JSON.stringify(cart));
         render();
     }
 
@@ -196,14 +197,19 @@
         document.getElementById('count').innerText = cart.length;
         document.getElementById('toolbar').style.display = (currentView === 'cart') ? 'none' : 'block';
 
-        // Aktualizacja podświetlenia kategorii
+        // 1. TYTUŁ WIDOKU
+        const head = document.createElement('div');
+        head.className = 'view-title';
+        head.innerText = currentView === 'all' ? 'WSZYSTKIE PIEŚNI' : (currentView === 'cart' ? 'MÓJ WYBÓR' : currentView);
+        out.appendChild(head);
+
+        // 2. PODŚWIETLENIE MENU
         document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
         if(currentView === 'all') document.getElementById('cat-all').classList.add('active');
         else if(currentView === 'cart') document.getElementById('btn-cart').classList.add('active');
         else {
-            document.querySelectorAll('.cat-item').forEach(btn => {
-                if(btn.innerText === currentView) btn.classList.add('active');
-            });
+            const activeBtn = document.getElementById("btn-" + currentView.replace(/\s/g, ''));
+            if(activeBtn) activeBtn.classList.add('active');
         }
 
         if(currentView === 'cart') { renderCart(out); return; }
@@ -253,8 +259,7 @@
     }
 
     function renderCart(container) {
-        container.innerHTML = `<h1 style="text-align:center; font-weight:900; font-size:2em;">TWOJE PŁYTY</h1>`;
-        if(cart.length === 0) { container.innerHTML += `<p style="text-align:center">LISTA JEST PUSTA.</p><button class="ctrl-btn active" style="width:100%" onclick="setView('all')">POWRÓT</button>`; return; }
+        if(cart.length === 0) { container.innerHTML += `<p style="text-align:center; padding:50px;">TWOJA LISTA JEST PUSTA.</p><button class="ctrl-btn active" style="width:100%" onclick="setView('all')">POWRÓT DO KATALOGU</button>`; return; }
         
         let curCD = 1, curSec = 0, groups = {1: []};
         cart.forEach(s => {
