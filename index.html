@@ -5,92 +5,133 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Melodia Wiary - Katalog</title>
     <style>
-        /* TŁO: Elegancki granatowy gradient */
         body { 
             background: linear-gradient(135deg, #0f172a 0%, #020617 100%); 
             background-attachment: fixed;
             color: #eee; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            margin: 0; 
-            padding: 20px; 
+            font-family: 'Segoe UI', sans-serif; 
+            margin: 0; padding: 20px; 
         }
 
-        /* LOGO NA GÓRZE */
-        .logo-container { 
+        .logo-container { text-align: center; margin: 20px auto; max-width: 280px; }
+        .logo-img { width: 100%; height: auto; filter: drop-shadow(0 0 15px rgba(212,175,55,0.3)); }
+
+        /* PASEK KATEGORII */
+        #category-bar { 
             text-align: center; 
-            margin: 20px auto; 
-            max-width: 300px; 
+            margin: 30px 0; 
+            display: flex; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+            gap: 10px; 
         }
-        .logo-img { 
-            width: 100%; 
-            height: auto; 
-            filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.3)); 
+        .cat-btn { 
+            background: rgba(255,255,255,0.05); 
+            border: 1px solid rgba(212,175,55,0.3); 
+            color: #d4af37; 
+            padding: 8px 20px; 
+            border-radius: 20px; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            font-size: 14px;
+            text-transform: uppercase;
         }
+        .cat-btn:hover, .cat-btn.active { background: #d4af37; color: black; border-color: #d4af37; }
 
-        h1 { text-align: center; color: #d4af37; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 30px; font-weight: 300; }
-        
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto; }
-        
         .card { background: rgba(255,255,255,0.05); border: 1px solid rgba(212, 175, 55, 0.2); padding: 15px; border-radius: 15px; transition: 0.3s; display: flex; flex-direction: column; backdrop-filter: blur(5px); }
-        .card:hover { border-color: #d4af37; transform: translateY(-5px); background: rgba(255,255,255,0.1); }
-        
+        .card:hover { border-color: #d4af37; transform: translateY(-5px); }
         .thumb { width: 100%; aspect-ratio: 16/9; cursor: pointer; object-fit: cover; border-radius: 10px; }
-        
-        .cat-tag { align-self: flex-start; background: #d4af37; color: black; font-size: 10px; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; font-weight: bold; margin: 15px 0 8px 0; }
-        
-        .title { font-weight: bold; font-size: 16px; margin-bottom: 15px; min-height: 40px; color: #fff; }
-        
-        .btn-add { background: none; border: 1px solid #d4af37; color: #d4af37; padding: 10px; width: 100%; cursor: pointer; border-radius: 8px; font-weight: bold; margin-top: auto; transition: 0.3s; }
+        .cat-label { align-self: flex-start; background: #d4af37; color: black; font-size: 10px; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; font-weight: bold; margin: 15px 0 8px 0; }
+        .title { font-weight: bold; font-size: 16px; margin-bottom: 15px; min-height: 40px; }
+        .btn-add { background: none; border: 1px solid #d4af37; color: #d4af37; padding: 10px; width: 100%; cursor: pointer; border-radius: 8px; font-weight: bold; margin-top: auto; }
         .btn-add:hover { background: #d4af37; color: black; }
         
         #cart-counter { position: fixed; bottom: 30px; right: 30px; background: #d4af37; color: black; padding: 15px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.5); z-index: 100; border: 2px solid #000; }
-        
-        #status { text-align: center; color: #888; margin-top: 50px; font-size: 18px; }
     </style>
 </head>
 <body>
 
 <div class="logo-container">
-    <img src="https://lh3.googleusercontent.com/u/0/d/1lGrhzfxzTIAlH2iaHahCjWAZYuqxknP7" alt="Melodia Wiary" class="logo-img">
+    <img src="https://lh3.googleusercontent.com/d/1lGrhzfxzTIAlH2iaHahCjWAZYuqxknP7" alt="Melodia Wiary" class="logo-img">
+</div>
+
+<div id="category-bar">
+    <button class="cat-btn active" onclick="filterSongs('Wszystkie')">Wszystkie</button>
 </div>
 
 <div id="cart-counter" onclick="sendOrder()">Wybrano: 0 (Poproś o płyty)</div>
-<h1>KATALOG UTWORÓW</h1>
 
 <div class="grid" id="catalog"></div>
-<div id="status">Wczytywanie pieśni...</div>
 
 <script>
     const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTSIMZUO8ZkisiFoqOfypL9hOQBnTbAvtMmBeIuK56_QoiXFu_b7i-de1Jn6Km9symosxJBV6V5PxKO/pub?output=csv'; 
-
+    let allSongs = [];
     let cart = [];
 
     async function loadSongs() {
-        const container = document.getElementById('catalog');
-        const status = document.getElementById('status');
         try {
-            const response = await fetch(SHEET_URL + '&cache_bust=' + Date.now());
+            const response = await fetch(SHEET_URL + '&cb=' + Date.now());
             const data = await response.text();
-            const rows = data.split(/\r?\n/).filter(row => row.trim() !== "");
-            if (rows.length <= 1) { status.innerHTML = "Nie znaleziono utworów w arkuszu."; return; }
-            status.style.display = 'none';
-            container.innerHTML = '';
-            for (let i = 1; i < rows.length; i++) {
-                const row = rows[i];
+            const rows = data.split(/\r?\n/).filter(row => row.trim() !== "").slice(1);
+            
+            const categories = new Set();
+            allSongs = rows.map(row => {
                 let cols = row.includes(';') ? row.split(';') : row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                if (cols.length >= 3) {
-                    const tytul = cols[0].replace(/"/g, '').trim();
-                    const kategoria = cols[1].replace(/"/g, '').trim();
-                    const idYT = cols[2].replace(/"/g, '').trim();
-                    if (idYT.length > 5) {
-                        const card = document.createElement('div');
-                        card.className = 'card';
-                        card.innerHTML = `<img class="thumb" src="https://img.youtube.com/vi/${idYT}/mqdefault.jpg" onclick="window.open('https://youtube.com/watch?v=${idYT}')"><span class="cat-tag">${kategoria}</span><div class="title">${tytul}</div><button class="btn-add" onclick="addToCart('${tytul.replace(/'/g, "\\'")}')">Dodaj do zestawu</button>`;
-                        container.appendChild(card);
-                    }
+                const song = {
+                    tytul: cols[0].replace(/"/g, '').trim(),
+                    kategoria: cols[1].replace(/"/g, '').trim(),
+                    idYT: cols[2].replace(/"/g, '').trim()
+                };
+                categories.add(song.kategoria);
+                return song;
+            });
+
+            // Tworzenie przycisków kategorii
+            const bar = document.getElementById('category-bar');
+            categories.forEach(cat => {
+                if(cat) {
+                    const btn = document.createElement('button');
+                    btn.className = 'cat-btn';
+                    btn.innerText = cat;
+                    btn.onclick = () => filterSongs(cat, btn);
+                    bar.appendChild(btn);
                 }
+            });
+
+            renderSongs(allSongs);
+        } catch (e) { console.error("Błąd ładowania"); }
+    }
+
+    function renderSongs(songs) {
+        const container = document.getElementById('catalog');
+        container.innerHTML = '';
+        songs.forEach(song => {
+            if (song.idYT.length > 5) {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <img class="thumb" src="https://img.youtube.com/vi/${song.idYT}/mqdefault.jpg" onclick="window.open('https://youtube.com/watch?v=${song.idYT}')">
+                    <span class="cat-label">${song.kategoria}</span>
+                    <div class="title">${song.tytul}</div>
+                    <button class="btn-add" onclick="addToCart('${song.tytul.replace(/'/g, "\\'")}')">Dodaj do zestawu</button>
+                `;
+                container.appendChild(card);
             }
-        } catch (e) { status.innerText = 'Błąd połączenia z Arkuszem.'; }
+        });
+    }
+
+    function filterSongs(category, btn) {
+        // Zmiana wyglądu przycisków
+        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+        if(btn) btn.classList.add('active'); else document.querySelector('.cat-btn').classList.add('active');
+
+        if(category === 'Wszystkie') {
+            renderSongs(allSongs);
+        } else {
+            const filtered = allSongs.filter(s => s.kategoria === category);
+            renderSongs(filtered);
+        }
     }
 
     function addToCart(title) {
@@ -99,11 +140,11 @@
     }
 
     function sendOrder() {
-        if(cart.length === 0) return alert("Najpierw wybierz piosenki!");
-        const lista = cart.join("%0D%0A- ");
-        const mailto = `mailto:TWOJ_MAIL@GMAIL.COM?subject=Zamówienie - Melodia Wiary&body=Dzień dobry,%0D%0A%0D%0AZamawiam płyty z utworami:%0D%0A- ${lista}`;
+        if(cart.length === 0) return alert("Wybierz piosenki!");
+        const mailto = `mailto:TWOJ_MAIL@GMAIL.COM?subject=Zamówienie - Melodia Wiary&body=Dzień dobry,%0D%0AZamawiam utwory:%0D%0A- ${cart.join("%0D%0A- ")}`;
         window.location.href = mailto;
     }
+
     loadSongs();
 </script>
 </body>
