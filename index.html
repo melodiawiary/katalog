@@ -81,7 +81,23 @@
     let cart = [];
     let currentView = 'all';
 
+    // 1. WCZYTYWANIE ZAPISANEJ LISTY PRZY STARCIE
+    function loadCartFromStorage() {
+        const saved = localStorage.getItem('melodiaWiaryCart');
+        if (saved) {
+            cart = JSON.parse(saved);
+            document.getElementById('count').innerText = cart.length;
+        }
+    }
+
+    // 2. ZAPISYWANIE LISTY PRZY KAŻDEJ ZMIANIE
+    function saveCartToStorage() {
+        localStorage.setItem('melodiaWiaryCart', JSON.stringify(cart));
+        document.getElementById('count').innerText = cart.length;
+    }
+
     async function loadData() {
+        loadCartFromStorage(); // Ładujemy starą listę
         try {
             const resp = await fetch(SHEET_URL + '&cb=' + Date.now());
             const text = await resp.text();
@@ -134,21 +150,21 @@
             `;
             grid.appendChild(card);
         });
-        if(displayList.length === 0) grid.innerHTML = "<p>Tutaj jeszcze nic nie ma...</p>";
+        if(displayList.length === 0) grid.innerHTML = "<p style='padding:20px;'>Twoja lista jest pusta. Dodaj coś z katalogu!</p>";
     }
 
     function addToCart(title) {
         const song = allSongs.find(s => s.tytul === title);
         if(song) {
             cart.push(song);
-            document.getElementById('count').innerText = cart.length;
-            alert("Dodano: " + title);
+            saveCartToStorage(); // Zapisujemy trwałe
+            alert("Dodano do Twojej listy!");
         }
     }
 
     function removeFromCart(index) {
         cart.splice(index, 1);
-        document.getElementById('count').innerText = cart.length;
+        saveCartToStorage(); // Aktualizujemy zapis
         render();
     }
 
@@ -161,12 +177,12 @@
 
     function updateNavStyles(activeBtn) {
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        activeBtn.classList.add('active');
+        if(activeBtn) activeBtn.classList.add('active');
     }
 
     function copyToClipboard() {
         const text = "Zamówienie Melodia Wiary:\n- " + cart.map(s => s.tytul).join("\n- ");
-        navigator.clipboard.writeText(text).then(() => alert("Skopiowano do schowka!"));
+        navigator.clipboard.writeText(text).then(() => alert("Lista skopiowana! Możesz ją teraz wkleić w wiadomości."));
     }
 
     function sendOrder() {
