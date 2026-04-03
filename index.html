@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Melodia Wiary - WERSJA FINALNA</title>
+    <title>Katalog Melodia Wiary</title>
     <style>
         :root { 
             --gold: #d4af37; 
@@ -35,8 +35,8 @@
         .header-sticky { position: sticky; top: 0; z-index: 900; background: var(--bg); padding: 20px 0; border-bottom: 3px solid var(--gold); }
         .search-box { width: 100%; padding: 15px; border-radius: 30px; border: 3px solid var(--sidebar); font-size: var(--f-search); text-align: center; font-weight: bold; margin-bottom: 10px; box-sizing: border-box; }
         
-        .btn-group { display: flex; gap: 5px; margin-bottom: 8px; flex-wrap: wrap; }
-        .ctrl-btn { flex: 1; min-width: 120px; padding: 10px; border: 2px solid var(--sidebar); background: #fff; font-weight: 900; cursor: pointer; border-radius: 8px; text-transform: uppercase; font-size: 12px; }
+        .btn-group { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+        .ctrl-btn { flex: 1; min-width: 180px; padding: 12px; border: 2px solid var(--sidebar); background: #fff; font-weight: 900; cursor: pointer; border-radius: 8px; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
         .ctrl-btn.active { background: var(--sidebar); color: #fff; }
 
         .view-title { font-size: 2em; font-weight: 900; margin: 20px 0; border-left: 10px solid var(--gold); padding-left: 20px; text-transform: uppercase; }
@@ -81,14 +81,14 @@
     <div class="header-sticky" id="toolbar">
         <input type="text" id="search" class="search-box" placeholder="SZUKAJ PIEŚNI..." onkeyup="doSearch()">
         <div class="btn-group">
-            <button class="ctrl-btn active" id="m-grid" onclick="setMode('grid')">Z OBRAZKAMI</button>
-            <button class="ctrl-btn" id="m-list" onclick="setMode('list')">SAMA LISTA</button>
+            <button class="ctrl-btn active" id="m-grid" onclick="setMode('grid')">WIDOK Z OBRAZKAMI</button>
+            <button class="ctrl-btn" id="m-list" onclick="setMode('list')">WIDOK SAMEJ LISTY</button>
         </div>
         <div class="btn-group">
-            <button class="ctrl-btn active" id="s-new" onclick="setSort('newest')">NAJNOWSZE</button>
-            <button class="ctrl-btn" id="s-old" onclick="setSort('oldest')">NAJSTARSZE</button>
-            <button class="ctrl-btn" id="s-az" onclick="setSort('az')">A -> Z</button>
-            <button class="ctrl-btn" id="s-za" onclick="setSort('za')">Z -> A</button>
+            <button class="ctrl-btn active" id="s-new" onclick="setSort('newest')">SORTUJ OD NAJNOWSZYCH</button>
+            <button class="ctrl-btn" id="s-old" onclick="setSort('oldest')">SORTUJ OD NAJSTARSZYCH</button>
+            <button class="ctrl-btn" id="s-az" onclick="setSort('az')">SORTUJ OD A DO Z</button>
+            <button class="ctrl-btn" id="s-za" onclick="setSort('za')">SORTUJ OD Z DO A</button>
         </div>
     </div>
     <div id="main-display"></div>
@@ -96,10 +96,9 @@
 
 <script>
     const CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTSIMZUO8ZkisiFoqOfypL9hOQBnTbAvtMmBeIuK56_QoiXFu_b7i-de1Jn6Km9symosxJBV6V5PxKO/pub?output=csv';
-    const STORAGE_KEY = 'mv_PERMANENT_v2';
+    const STORAGE_KEY = 'mv_PERMANENT_v3';
     let songs = [], cart = [], currentView = 'all', displayMode = 'grid', query = "", sortType = 'newest';
 
-    // FUNKCJA ODCZYTU CSV OBSŁUGUJĄCA CUDZYSŁOWY (BŁĄD Z " NAPRAWIONY)
     function parseCSVLine(text) {
         const result = [];
         let cur = '', inQuotes = false;
@@ -123,7 +122,7 @@
     function loadStableCart() {
         const current = localStorage.getItem(STORAGE_KEY);
         if(current) return JSON.parse(current);
-        const oldKeys = ['mv_PERMANENT_v1', 'mv_global_stable_storage', 'mv_final_storage_v18'];
+        const oldKeys = ['mv_PERMANENT_v2', 'mv_PERMANENT_v1', 'mv_global_stable_storage'];
         for(let key of oldKeys) {
             const oldData = localStorage.getItem(key);
             if(oldData) {
@@ -199,7 +198,7 @@
         const g = document.createElement('div'); g.className = (displayMode === 'grid') ? 'grid' : '';
         list.forEach(s => {
             const isSel = cart.some(x => x.tytul === s.tytul);
-            const safeTytul = s.tytul.replace(/'/g,"\\'").replace(/"/g, '&quot;');
+            const jsTytul = s.tytul.replace(/'/g, "\\'").replace(/"/g, '&quot;');
             if(displayMode === 'grid') {
                 g.innerHTML += `<div class="card">
                     <div class="thumb-container" onclick="window.open('https://youtube.com/watch?v=${s.yt}')">
@@ -207,12 +206,12 @@
                         <div class="thumb-overlay">KLIKNIJ<span>W OBRAZEK</span>ABY OTWORZYĆ<span>YOUTUBE</span></div>
                     </div>
                     <div class="card-title">${s.tytul}</div>
-                    <button class="btn-add ${isSel ? 'selected' : ''}" onclick="toggleSong('${safeTytul}')">${isSel ? 'USUŃ' : 'DODAJ'}</button>
+                    <button class="btn-add ${isSel ? 'selected' : ''}" onclick="toggleSong('${jsTytul}')">${isSel ? 'USUŃ' : 'DODAJ'}</button>
                 </div>`;
             } else {
                 g.innerHTML += `<div style="display:flex; justify-content:space-between; padding:15px; border-bottom:1px solid #ddd; background:white; margin-bottom:5px; border-radius:10px;">
                     <span style="font-weight:700; cursor:pointer;" onclick="window.open('https://youtube.com/watch?v=${s.yt}')">${s.tytul}</span>
-                    <button class="btn-add ${isSel ? 'selected' : ''}" style="width:auto; padding:5px 20px" onclick="toggleSong('${safeTytul}')">${isSel ? 'USUŃ' : 'DODAJ'}</button>
+                    <button class="btn-add ${isSel ? 'selected' : ''}" style="width:auto; padding:5px 20px" onclick="toggleSong('${jsTytul}')">${isSel ? 'USUŃ' : 'DODAJ'}</button>
                 </div>`;
             }
         });
@@ -242,18 +241,18 @@
                 <div class="cd-info-text">Czas: ${Math.floor(totalS/60)} min / 65 min — <b>${msg}</b></div>
                 <div class="cd-progress-container"><div class="cd-progress-bar" style="width:${proc}%"></div></div>
                 <div class="grid"></div>
-                <button class="nav-btn nav-btn-main" style="margin-top:20px; width:auto; padding:10px 40px" onclick="alert('Dziękujemy za wybór! Skontaktujemy się w celu realizacji Twojej płyty.')">ZAMÓW TĘ PŁYTĘ</button>
+                <button class="nav-btn nav-btn-main" style="margin-top:20px; width:auto; padding:10px 40px" onclick="alert('Twoje zamówienie zostało zapisane!')">ZAMÓW TĘ PŁYTĘ</button>
             `;
             const g = box.querySelector('.grid');
             groups[n].forEach(s => {
-                const safeTytul = s.tytul.replace(/'/g,"\\'").replace(/"/g, '&quot;');
+                const jsTytul = s.tytul.replace(/'/g, "\\'").replace(/"/g, '&quot;');
                 g.innerHTML += `<div class="card">
                     <div class="thumb-container" onclick="window.open('https://youtube.com/watch?v=${s.yt}')">
                         <img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb">
                         <div class="thumb-overlay">ODTWÓRZ NA<span>YOUTUBE</span></div>
                     </div>
                     <div class="card-title" style="font-size:1.4em;">${s.tytul}</div>
-                    <button class="btn-add selected" onclick="toggleSong('${safeTytul}')">USUŃ Z LISTY</button>
+                    <button class="btn-add selected" onclick="toggleSong('${jsTytul}')">USUŃ Z LISTY</button>
                 </div>`;
             });
             container.appendChild(box);
