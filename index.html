@@ -12,71 +12,53 @@
             --cyan: #06b6d4; 
             --text-dark: #0f172a;
             --card-bg: #ffffff;
-            --card-hover: #f1f5f9;
         }
         
-        body.standard { 
-            --f-size: 16px; 
-            --f-btn: 14px; 
-            --f-ctrl: 15px;
-            --f-tip: 22px; 
-            --f-list-tip: 18px; 
-            --f-search: 1.4em;
-        }
-        body.senior { 
-            --f-size: 24px; 
-            --f-btn: 22px; 
-            --f-ctrl: 22px;
-            --f-tip: 19px; 
-            --f-list-tip: 24px; 
-            --f-search: 1.8em;
-        }
+        body.standard { --f-size: 16px; --f-btn: 14px; --f-ctrl: 15px; --f-tip: 22px; --f-search: 1.4em; }
+        body.senior { --f-size: 24px; --f-btn: 22px; --f-ctrl: 22px; --f-tip: 19px; --f-search: 1.8em; }
 
-        body { background: var(--bg); color: var(--text-dark); font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; display: flex; min-height: 100vh; font-size: var(--f-size); }
+        body { background: var(--bg); color: var(--text-dark); font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; min-height: 100vh; font-size: var(--f-size); }
 
         #sidebar { width: 340px; background: var(--sidebar); border-right: 4px solid var(--gold); display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 1000; }
         .sidebar-top { padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center; }
         .sidebar-scroll { flex-grow: 1; overflow-y: auto; padding: 15px; }
-        .logo-img { width: 160px; height: 160px; border-radius: 50%; border: 4px solid var(--gold); margin-bottom: 15px; background: white; object-fit: cover; }
+        .logo-img { width: 150px; height: 150px; border-radius: 50%; border: 4px solid var(--gold); background: white; object-fit: cover; margin-bottom: 10px; }
         
-        .nav-btn { width: 100%; padding: 15px; margin-bottom: 8px; border-radius: 12px; border: 2px solid transparent; cursor: pointer; font-weight: 900; text-align: left; text-transform: uppercase; font-size: var(--f-btn); transition: 0.2s; color: #cbd5e1; background: rgba(255,255,255,0.05); }
+        .nav-btn { width: 100%; padding: 15px; margin-bottom: 8px; border-radius: 12px; border: 2px solid transparent; cursor: pointer; font-weight: 900; text-align: left; text-transform: uppercase; font-size: var(--f-btn); color: #cbd5e1; background: rgba(255,255,255,0.05); transition: 0.2s; }
         .nav-btn-main { background: var(--gold); color: black; }
-        .nav-btn.active { background: var(--cyan) !important; color: white !important; border-color: white; box-shadow: 0 0 10px rgba(6,182,212,0.5); }
+        .nav-btn.active { background: var(--cyan) !important; color: white !important; border-color: white; }
 
-        .size-btn { width: 100%; padding: 12px; margin-top: 5px; font-weight: 900; text-transform: uppercase; cursor: pointer; border: 2px solid #555; background: #000; color: #888; border-radius: 8px; font-size: var(--f-btn); transition: 0.3s; }
-        .size-btn.active { border: 3px solid var(--cyan); color: white; background: #111; box-shadow: 0 0 15px rgba(6,182,212,0.3); }
+        .size-btn { width: 100%; padding: 10px; margin-top: 5px; font-weight: 900; cursor: pointer; border: 2px solid #555; background: #000; color: #888; border-radius: 8px; font-size: 12px; }
+        .size-btn.active { border-color: var(--cyan); color: white; }
 
         #main-content { margin-left: 340px; flex: 1; padding: 0 40px; }
-        .header-sticky { position: sticky; top: 0; z-index: 900; background: var(--bg); padding: 25px 0; border-bottom: 3px solid var(--gold); }
-        .search-box { width: 100%; padding: 18px; border-radius: 40px; border: 3px solid var(--sidebar); font-size: var(--f-search); text-align: center; font-weight: bold; margin-bottom: 15px; box-sizing: border-box; }
+        .header-sticky { position: sticky; top: 0; z-index: 900; background: var(--bg); padding: 20px 0; border-bottom: 3px solid var(--gold); }
+        .search-box { width: 100%; padding: 15px; border-radius: 30px; border: 3px solid var(--sidebar); font-size: var(--f-search); text-align: center; font-weight: bold; margin-bottom: 10px; box-sizing: border-box; }
         
-        .btn-group { display: flex; gap: 8px; margin-bottom: 10px; }
-        .ctrl-btn { flex: 1; padding: 15px 5px; border: 2px solid var(--sidebar); background: #fff; color: var(--sidebar); font-weight: 900; cursor: pointer; border-radius: 10px; text-transform: uppercase; transition: 0.2s; font-size: var(--f-ctrl); }
+        .btn-group { display: flex; gap: 5px; margin-bottom: 8px; flex-wrap: wrap; }
+        .ctrl-btn { flex: 1; min-width: 120px; padding: 10px; border: 2px solid var(--sidebar); background: #fff; font-weight: 900; cursor: pointer; border-radius: 8px; text-transform: uppercase; font-size: 12px; }
         .ctrl-btn.active { background: var(--sidebar); color: #fff; }
 
-        .view-title { font-size: 2em; font-weight: 900; color: var(--sidebar); text-transform: uppercase; margin-top: 20px; border-left: 10px solid var(--gold); padding-left: 20px; }
+        .view-title { font-size: 2em; font-weight: 900; margin: 20px 0; border-left: 10px solid var(--gold); padding-left: 20px; text-transform: uppercase; }
 
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; margin-top: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; margin-top: 20px; }
         .card { background: var(--card-bg); border: 3px solid #e2e8f0; padding: 15px; border-radius: 20px; text-align: center; display: flex; flex-direction: column; transition: 0.3s; }
-        .card:hover { background: var(--card-hover); border-color: var(--gold); transform: translateY(-5px); }
+        .card:hover { border-color: var(--gold); transform: translateY(-3px); }
 
-        .thumb-container { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; border: 2px solid #ddd; margin-bottom: 10px; cursor: pointer; }
+        .thumb-container { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; cursor: pointer; margin-bottom: 10px; }
         .thumb { width: 100%; height: 100%; object-fit: cover; }
-        
-        .thumb-overlay { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0, 0, 0, 0.85); color: #fff; 
-            display: flex; flex-direction: column; justify-content: center; align-items: center; 
-            opacity: 0; transition: 0.3s; padding: 10px; font-weight: 900; text-transform: uppercase; 
-            font-size: var(--f-tip); line-height: 1.1; text-align: center; box-sizing: border-box;
-        }
-        .thumb-overlay span { color: var(--gold); }
+        .thumb-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; transition: 0.3s; font-size: var(--f-tip); font-weight: 900; text-align: center; padding: 5px; box-sizing: border-box; }
         .thumb-container:hover .thumb-overlay { opacity: 1; }
+        .thumb-overlay span { color: var(--gold); }
 
-        .card-title { font-weight: 900; margin-bottom: 15px; color: var(--text-dark); text-transform: uppercase; flex-grow: 1; line-height: 1.2; font-size: 1.1em; }
-
-        .btn-add { background: var(--gold); color: black; border: none; padding: 15px; border-radius: 10px; font-weight: 900; cursor: pointer; text-transform: uppercase; transition: 0.2s; width: 100%; font-size: var(--f-btn); }
+        .card-title { font-weight: 900; margin-bottom: 10px; text-transform: uppercase; flex-grow: 1; font-size: 1.1em; line-height: 1.2; }
+        .btn-add { background: var(--gold); color: black; border: none; padding: 12px; border-radius: 10px; font-weight: 900; cursor: pointer; text-transform: uppercase; width: 100%; }
         .btn-add.selected { background: var(--cyan); color: white; }
+
+        /* PASEK POSTĘPU PŁYTY */
+        .cd-progress-container { background: #e2e8f0; border-radius: 20px; height: 25px; width: 100%; margin: 15px 0; overflow: hidden; border: 2px solid var(--sidebar); position: relative; }
+        .cd-progress-bar { background: var(--cyan); height: 100%; transition: 0.5s; }
+        .cd-info-text { font-weight: 800; font-size: 14px; margin-bottom: 10px; color: #475569; }
 
         @media (max-width: 900px) { #sidebar { position: relative; width: 100%; height: auto; } #main-content { margin-left: 0; } }
     </style>
@@ -85,12 +67,12 @@
 
 <div id="sidebar">
     <div class="sidebar-top">
-        <img src="melodia_wiary_logo_400.png" class="logo-img" onerror="this.src='https://via.placeholder.com/160?text=LOGO'">
+        <img src="melodia_wiary_logo_400.png" class="logo-img" onerror="this.src='https://via.placeholder.com/150'">
         <button class="nav-btn nav-btn-main" id="cat-all" onclick="setView('all')">🏠 WSZYSTKIE PIEŚNI</button>
-        <button class="nav-btn nav-btn-main" id="btn-cart" onclick="setView('cart')" style="margin-top:5px;">⭐ MÓJ WYBÓR (<span id="count">0</span>)</button>
+        <button class="nav-btn nav-btn-main" id="btn-cart" onclick="setView('cart')">⭐ MÓJ WYBÓR (<span id="count">0</span>)</button>
         <div style="margin-top:10px;">
-            <button class="size-btn active" id="s-std" onclick="updateSize('standard')">Zmień na: STANDARDOWE</button>
-            <button class="size-btn" id="s-big" onclick="updateSize('senior')">Zmień na: DUŻE LITERY</button>
+            <button class="size-btn active" id="s-std" onclick="updateSize('standard')">STANDARDOWE</button>
+            <button class="size-btn" id="s-big" onclick="updateSize('senior')">BARDZO DUŻE</button>
         </div>
     </div>
     <div class="sidebar-scroll" id="cat-list"></div>
@@ -98,10 +80,10 @@
 
 <div id="main-content">
     <div class="header-sticky" id="toolbar">
-        <input type="text" id="search" class="search-box" placeholder="WPISZ NAZWĘ PIEŚNI..." onkeyup="doSearch()">
+        <input type="text" id="search" class="search-box" placeholder="SZUKAJ PIEŚNI..." onkeyup="doSearch()">
         <div class="btn-group">
-            <button class="ctrl-btn active" id="m-grid" onclick="setMode('grid')">WIDOK Z OBRAZKAMI</button>
-            <button class="ctrl-btn" id="m-list" onclick="setMode('list')">WIDOK SAMEJ LISTY</button>
+            <button class="ctrl-btn active" id="m-grid" onclick="setMode('grid')">Z OBRAZKAMI</button>
+            <button class="ctrl-btn" id="m-list" onclick="setMode('list')">SAMA LISTA</button>
         </div>
         <div class="btn-group">
             <button class="ctrl-btn active" id="s-new" onclick="setSort('newest')">NAJNOWSZE</button>
@@ -115,7 +97,7 @@
 
 <script>
     const CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTSIMZUO8ZkisiFoqOfypL9hOQBnTbAvtMmBeIuK56_QoiXFu_b7i-de1Jn6Km9symosxJBV6V5PxKO/pub?output=csv';
-    const STORAGE_KEY = 'mv_global_stable_storage'; // STAŁY KLUCZ PAMIĘCI
+    const STORAGE_KEY = 'mv_global_stable_storage';
     let songs = [], cart = [], currentView = 'all', displayMode = 'grid', query = "", sortType = 'newest';
 
     function updateSize(s) { 
@@ -125,30 +107,9 @@
         localStorage.setItem('mv_font_pref', s);
     }
 
-    function parseCSVLine(text) {
-        const result = [];
-        let cur = '', inQuotes = false;
-        for (let i = 0; i < text.length; i++) {
-            let char = text[i];
-            if (char === '"') inQuotes = !inQuotes;
-            else if (char === ',' && !inQuotes) { result.push(cur); cur = ''; }
-            else cur += char;
-        }
-        result.push(cur);
-        return result;
-    }
-
     async function init() {
-        // Próba odzyskania danych z jakiegokolwiek poprzedniego klucza (migracja)
-        const keys = ['mv_storage_stable_v15', 'mv_storage_stable_v16', 'mv_final_storage', 'mv_final_storage_v18', STORAGE_KEY];
-        for(let k of keys) {
-            const data = localStorage.getItem(k);
-            if(data && cart.length === 0) cart = JSON.parse(data);
-        }
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
-
-        const savedFont = localStorage.getItem('mv_font_pref'); 
-        if(savedFont) updateSize(savedFont);
+        const savedCart = localStorage.getItem(STORAGE_KEY); if(savedCart) cart = JSON.parse(savedCart);
+        const savedFont = localStorage.getItem('mv_font_pref'); if(savedFont) updateSize(savedFont);
 
         try {
             const r = await fetch(CSV + '&cb=' + Date.now());
@@ -157,27 +118,19 @@
             let catsSet = new Set();
             
             songs = rows.map((line, index) => {
-                let columns = parseCSVLine(line);
-                let tyt = (columns[0] || "Bez tytułu").trim();
-                let rawCats = (columns[1] || "Inne").split(',');
-                let cleanCats = rawCats
-                    .map(cat => cat.replace(/[^a-zA-Z0-9ąęćłńóśźżĄĘĆŁŃÓŚŹŻ ]/g, '').trim())
-                    .filter(cat => cat !== "" && isNaN(cat) && cat.length > 2 && !cat.toLowerCase().includes("wykonanie"));
-                
-                if(cleanCats.length === 0) cleanCats = ["Inne"];
-                cleanCats.forEach(cat => catsSet.add(cat));
-                
-                return { tytul: tyt, kategorie: cleanCats, yt: (columns[2] || "").trim(), czas: (columns[3] || "0:00").trim(), originalIndex: index };
+                const cols = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                let tyt = (cols[0] || "Bez tytułu").replace(/"/g, "").trim();
+                let rawCats = (cols[1] || "Inne").split(',');
+                let cleanCats = rawCats.map(c => c.trim()).filter(c => c.length > 2);
+                cleanCats.forEach(c => catsSet.add(c));
+                return { tytul: tyt, kategorie: cleanCats, yt: (cols[2] || "").trim(), czas: (cols[3] || "0:00").trim(), originalIndex: index };
             });
 
             const catBox = document.getElementById('cat-list');
-            Array.from(catsSet).sort((a,b) => a.localeCompare(b, 'pl')).forEach(cat => {
+            Array.from(catsSet).sort().forEach(cat => {
                 const b = document.createElement('button'); 
-                b.className = 'nav-btn cat-item'; 
-                b.innerText = cat;
-                b.id = "btn-" + cat.replace(/\s/g, '');
-                b.onclick = () => setView(cat);
-                catBox.appendChild(b);
+                b.className = 'nav-btn cat-item'; b.innerText = cat; b.id = "btn-" + cat.replace(/\s/g, '');
+                b.onclick = () => setView(cat); catBox.appendChild(b);
             });
             render();
         } catch(e) { console.error(e); }
@@ -186,10 +139,7 @@
     function toggleSong(t) {
         const idx = cart.findIndex(x => x.tytul === t);
         if(idx > -1) cart.splice(idx, 1);
-        else {
-            const found = songs.find(x => x.tytul === t);
-            if(found) cart.push(found);
-        }
+        else { const s = songs.find(x => x.tytul === t); if(s) cart.push(s); }
         localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
         render();
     }
@@ -199,18 +149,14 @@
         document.getElementById('count').innerText = cart.length;
         document.getElementById('toolbar').style.display = (currentView === 'cart') ? 'none' : 'block';
 
-        const head = document.createElement('div');
-        head.className = 'view-title';
+        const head = document.createElement('div'); head.className = 'view-title';
         head.innerText = currentView === 'all' ? 'WSZYSTKIE PIEŚNI' : (currentView === 'cart' ? 'MÓJ WYBÓR (ULUBIONE)' : currentView);
         out.appendChild(head);
 
         document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
         if(currentView === 'all') document.getElementById('cat-all').classList.add('active');
         else if(currentView === 'cart') document.getElementById('btn-cart').classList.add('active');
-        else {
-            const activeBtn = document.getElementById("btn-" + currentView.replace(/\s/g, ''));
-            if(activeBtn) activeBtn.classList.add('active');
-        }
+        else { const b = document.getElementById("btn-" + currentView.replace(/\s/g, '')); if(b) b.classList.add('active'); }
 
         if(currentView === 'cart') { renderCart(out); return; }
 
@@ -222,84 +168,67 @@
         else if(sortType === 'az') list.sort((a,b) => a.tytul.localeCompare(b.tytul, 'pl'));
         else if(sortType === 'za') list.sort((a,b) => b.tytul.localeCompare(a.tytul, 'pl'));
 
-        const g = document.createElement('div'); 
-        g.className = (displayMode === 'grid') ? 'grid' : '';
-
-        if (displayMode === 'grid') {
-            list.forEach(s => {
-                const isSelected = cart.some(x => x.tytul === s.tytul);
+        const g = document.createElement('div'); g.className = (displayMode === 'grid') ? 'grid' : '';
+        list.forEach(s => {
+            const isSel = cart.some(x => x.tytul === s.tytul);
+            if(displayMode === 'grid') {
                 g.innerHTML += `<div class="card">
                     <div class="thumb-container" onclick="window.open('https://youtube.com/watch?v=${s.yt}')">
                         <img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb">
-                        <div class="thumb-overlay">KLIKNIJ<span>W OBRAZEK</span>ABY OTWORZYĆ<span>PIEŚŃ NA</span>YOUTUBE</div>
+                        <div class="thumb-overlay">KLIKNIJ<span>W OBRAZEK</span>ABY OTWORZYĆ<span>YOUTUBE</span></div>
                     </div>
                     <div class="card-title">${s.tytul}</div>
-                    <button class="btn-add ${isSelected ? 'selected' : ''}" onclick="toggleSong('${s.tytul.replace(/'/g,"\\'")}')">
-                        ${isSelected ? 'JUŻ WYBRANO (USUŃ?)' : 'DODAJ DO MOJEJ LISTY'}
-                    </button>
+                    <button class="btn-add ${isSel ? 'selected' : ''}" onclick="toggleSong('${s.tytul.replace(/'/g,"\\'")}')">${isSel ? 'USUŃ' : 'DODAJ'}</button>
                 </div>`;
-            });
-            out.appendChild(g);
-        } else {
-            // Widok listy (z nagłówkami kategorii)
-            let grouped = {};
-            list.forEach(s => { let c = s.kategorie[0] || "Inne"; if(!grouped[c]) grouped[c] = []; grouped[c].push(s); });
-            Object.keys(grouped).sort((a,b) => a.localeCompare(b, 'pl')).forEach(cat => {
-                out.innerHTML += `<div class="list-header" style="background:var(--sidebar); color:white; padding:12px; border-radius:10px; margin-top:20px; font-weight:900;">${cat}</div>`;
-                grouped[cat].forEach(s => {
-                    const isSel = cart.some(x => x.tytul === s.tytul);
-                    out.innerHTML += `<div style="display:flex; justify-content:space-between; align-items:center; padding:15px; border-bottom:1px solid #ddd; background:#fff;">
-                        <div style="cursor:pointer; font-weight:700;" onclick="window.open('https://youtube.com/watch?v=${s.yt}')">${s.tytul}</div>
-                        <button class="btn-add ${isSel ? 'selected' : ''}" style="width:auto; padding:8px 20px" onclick="toggleSong('${s.tytul.replace(/'/g,"\\'")}')">${isSel ? 'USUŃ' : 'DODAJ'}</button>
-                    </div>`;
-                });
-            });
-        }
+            } else {
+                g.innerHTML += `<div style="display:flex; justify-content:space-between; padding:15px; border-bottom:1px solid #ddd; background:white; margin-bottom:5px; border-radius:10px;">
+                    <span style="font-weight:700; cursor:pointer;" onclick="window.open('https://youtube.com/watch?v=${s.yt}')">${s.tytul}</span>
+                    <button class="btn-add ${isSel ? 'selected' : ''}" style="width:auto; padding:5px 20px" onclick="toggleSong('${s.tytul.replace(/'/g,"\\'")}')">${isSel ? 'USUŃ' : 'DODAJ'}</button>
+                </div>`;
+            }
+        });
+        out.appendChild(g);
     }
 
     function renderCart(container) {
-        if(cart.length === 0) { 
-            container.innerHTML += `<p style="text-align:center; padding:50px;">TWOJA LISTA JEST PUSTA.</p><button class="ctrl-btn active" style="width:100%" onclick="setView('all')">POWRÓT DO KATALOGU</button>`; 
-            return; 
-        }
+        if(cart.length === 0) { container.innerHTML += `<p style="text-align:center; padding:40px;">LISTA JEST PUSTA.</p><button class="btn-add" onclick="setView('all')">WRÓĆ DO KATALOGU</button>`; return; }
         
-        let curCD = 1, curSec = 0, groups = {1: []};
+        let groups = {1: []}, curCD = 1, curSec = 0;
         cart.forEach(s => {
-            let p = s.czas.split(':');
-            let sec = (parseInt(p[0])*60) + (parseInt(p[1]||0));
-            if(curSec + sec > 3900) { curCD++; curSec = sec; groups[curCD] = [s]; }
-            else { curSec += sec; groups[curCD].push(s); }
+            let p = s.czas.split(':'); let sCount = (parseInt(p[0])||0)*60 + (parseInt(p[1])||0);
+            if(curSec + sCount > 3900) { curCD++; curSec = sCount; groups[curCD] = [s]; }
+            else { curSec += sCount; groups[curCD].push(s); }
         });
 
         Object.keys(groups).forEach(n => {
-            const box = document.createElement('div'); 
-            box.style.border = "4px solid var(--gold)"; 
-            box.style.marginBottom = "40px"; 
-            box.style.padding = "25px";
-            box.style.borderRadius = "25px";
-            box.style.background = "white";
+            let totalS = 0;
+            groups[n].forEach(s => { let p = s.czas.split(':'); totalS += (parseInt(p[0])||0)*60 + (parseInt(p[1])||0); });
+            let proc = Math.min((totalS / 3900) * 100, 100);
+            let msg = proc < 30 ? "Sporo miejsca! Dodaj więcej pieśni." : (proc < 85 ? "Płyta się zapełnia..." : "Płyta prawie pełna!");
 
-            box.innerHTML = `<div style="display:flex; align-items:center; border-bottom:3px solid var(--gold); padding-bottom:15px; margin-bottom:15px;">
-                <h2 style="flex-grow:1; text-transform:uppercase;">PŁYTA NR ${n} (ULUBIONE)</h2>
-                <button class="nav-btn nav-btn-main" style="width:auto; padding:10px 30px" onclick="alert('Złożono zamówienie!')">ZAMÓW TĘ PŁYTĘ</button>
-            </div>`;
-
-            const g = document.createElement('div');
-            g.className = 'grid';
+            const box = document.createElement('div');
+            box.style = "background:white; padding:25px; border-radius:25px; border:4px solid var(--gold); margin-bottom:40px;";
+            box.innerHTML = `
+                <h2 style="margin:0; text-transform:uppercase;">PŁYTA NR ${n}</h2>
+                <div class="cd-info-text">Czas: ${Math.floor(totalS/60)} min / 65 min — <b>${msg}</b></div>
+                <div class="cd-progress-container"><div class="cd-progress-bar" style="width:${proc}%"></div></div>
+                <div class="grid"></div>
+                <button class="nav-btn nav-btn-main" style="margin-top:20px; width:auto; padding:10px 40px" onclick="alert('Zamówienie wysłane!')">ZAMÓW TĘ PŁYTĘ</button>
+            `;
+            const g = box.querySelector('.grid');
             groups[n].forEach(s => {
                 g.innerHTML += `<div class="card">
                     <div class="thumb-container" onclick="window.open('https://youtube.com/watch?v=${s.yt}')">
                         <img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb">
-                        <div class="thumb-overlay">KLIKNIJ<span>W OBRAZEK</span>ABY OTWORZYĆ<span>PIEŚŃ NA</span>YOUTUBE</div>
+                        <div class="thumb-overlay">ODTWÓRZ NA<span>YOUTUBE</span></div>
                     </div>
-                    <div class="card-title" style="font-size:1.3em;">${s.tytul}</div>
+                    <div class="card-title">${s.tytul}</div>
                     <button class="btn-add selected" onclick="toggleSong('${s.tytul.replace(/'/g,"\\'")}')">USUŃ Z LISTY</button>
                 </div>`;
             });
-            box.appendChild(g);
             container.appendChild(box);
         });
-        container.innerHTML += `<button class="ctrl-btn active" style="width:100%; margin-bottom:50px;" onclick="setView('all')">POWRÓT DO KATALOGU</button>`;
+        container.innerHTML += `<button class="ctrl-btn active" style="width:100%; padding:20px; margin-bottom:50px" onclick="setView('all')">POWRÓT DO KATALOGU</button>`;
     }
 
     function setMode(m) { displayMode = m; document.getElementById('m-grid').classList.toggle('active', m==='grid'); document.getElementById('m-list').classList.toggle('active', m==='list'); render(); }
