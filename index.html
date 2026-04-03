@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Melodia Wiary - Katalog Utworów</title>
+    <style>
+        body { background: #0a0a0a; color: white; font-family: sans-serif; margin: 0; padding: 20px; }
+        h1 { text-align: center; color: #d4af37; font-weight: 300; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .card { background: #1a1a1a; padding: 10px; border-radius: 8px; transition: 0.3s; }
+        .card:hover { transform: scale(1.02); background: #222; }
+        .thumb { width: 100%; aspect-ratio: 16/9; cursor: pointer; object-fit: cover; border-radius: 4px; }
+        .title { margin: 10px 0 5px; font-size: 16px; }
+        .category { color: #888; font-size: 12px; text-transform: uppercase; }
+        .btn-add { background: #d4af37; border: none; padding: 10px; width: 100%; margin-top: 10px; cursor: pointer; border-radius: 4px; }
+        #cart-counter { position: fixed; top: 20px; right: 20px; background: #d4af37; color: black; padding: 10px 20px; border-radius: 50px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div id="cart-counter" onclick="sendOrder()">Wybrano: 0 (Wyślij listę)</div>
+    <h1>Melodia Wiary - Katalog</h1>
+
+    <div class="grid" id="catalog">
+        </div>
+
+    <script>
+        // TUTAJ W PRZYSZŁOŚCI PODPNIEMY TWOJE ARKUSZE GOOGLE
+        const songs = [
+            { title: "Przykładowa Pieśń 1", ytId: "dQw4w9WgXcQ", cat: "Psalmy" },
+            { title: "Przykładowa Pieśń 2", ytId: "dQw4w9WgXcQ", cat: "Pascha" }
+        ];
+
+        let cart = [];
+
+        function render() {
+            const container = document.getElementById('catalog');
+            songs.forEach(song => {
+                const thumbUrl = `https://img.youtube.com/vi/${song.ytId}/mqdefault.jpg`;
+                container.innerHTML += `
+                    <div class="card">
+                        <img class="thumb" src="${thumbUrl}" onclick="window.open('https://youtube.com/watch?v=${song.ytId}')">
+                        <div class="category">${song.cat}</div>
+                        <div class="title">${song.title}</div>
+                        <button class="btn-add" onclick="addToCart('${song.title}')">Dodaj do zestawu</button>
+                    </div>
+                `;
+            });
+        }
+
+        function addToCart(title) {
+            cart.push(title);
+            document.getElementById('cart-counter').innerText = `Wybrano: ${cart.length} (Wyślij listę)`;
+        }
+
+        function sendOrder() {
+            if(cart.length === 0) return alert("Najpierw wybierz piosenki!");
+            const body = encodeURIComponent("Dzień dobry, chciałbym zamówić płytę z następującymi utworami:\n\n" + cart.join("\n"));
+            window.location.href = `mailto:TWOJ@EMAIL.PL?subject=Zamówienie Melodia Wiary&body=${body}`;
+        }
+
+        render();
+    </script>
+</body>
+</html>
