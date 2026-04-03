@@ -27,28 +27,22 @@
         /* TREŚĆ GŁÓWNA */
         #main-content { margin-left: 260px; flex: 1; padding: 30px; }
         
-        /* --- NOWY, POPRAWIONY PASEK NARZĘDZI --- */
         .toolbar { 
-            display: flex; flex-direction: column; align-items: center;  /* Wyśrodkowanie wszystkiego w pionie */
+            display: flex; flex-direction: column; align-items: center; 
             margin-bottom: 30px; border-bottom: 1px solid rgba(212, 175, 55, 0.2); 
-            padding-bottom: 15px; /* Przestrzeń pod tytułem, żeby linia nie zjadała liter */
-            text-align: center;
+            padding-bottom: 15px; text-align: center;
         }
         .view-title { 
             color: var(--gold); text-transform: uppercase; letter-spacing: 3px; 
-            margin: 0 0 15px 0; /* Przestrzeń pod tytułem, przed sortowaniem */
-            font-size: 18px; font-weight: 300; 
+            margin: 0 0 15px 0; font-size: 18px; font-weight: 300; 
         }
         
-        #sort-box {
-            display: flex; align-items: center; gap: 10px; /* Wyśrodkowanie sortowania */
-        }
+        #sort-box { display: flex; align-items: center; gap: 10px; }
         .sort-select { 
             background: #1e293b; color: #eee; border: 1px solid var(--gold); 
             padding: 8px; border-radius: 6px; cursor: pointer; outline: none; font-size: 12px;
         }
 
-        /* SIATKA UTWORÓW */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
         .card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 12px; border-radius: 12px; transition: 0.3s; display: flex; flex-direction: column; }
         .card:hover { transform: translateY(-5px); border-color: var(--gold); background: rgba(255,255,255,0.06); }
@@ -60,13 +54,10 @@
         .btn-remove { border-color: #ef4444; color: #ef4444; }
         .btn-remove:hover { background: #ef4444; color: white; }
 
-        /* MOBILNE DOSTOSOWANIE */
         @media (max-width: 768px) {
             body { flex-direction: column; }
             #sidebar { width: 100%; height: auto; position: relative; border-right: none; border-bottom: 1px solid var(--gold); padding: 15px; box-sizing: border-box; }
             #main-content { margin-left: 0; padding: 15px; }
-            .toolbar { margin-bottom: 20px; padding-bottom: 10px; }
-            .logo-img { max-width: 150px; margin-bottom: 15px; }
         }
     </style>
 </head>
@@ -74,18 +65,15 @@
 
 <div id="sidebar">
     <img src="https://lh3.googleusercontent.com/u/0/d/1lGrhzfxzTIAlH2iaHahCjWAZYuqxknP7" alt="Melodia Wiary" class="logo-img">
-    
     <div class="nav-group">
         <span class="nav-label">Katalog</span>
         <button class="nav-btn active" id="btn-all" onclick="showView('all')">🏠 WSZYSTKIE UTWORY</button>
         <button class="nav-btn" id="btn-my-list" onclick="showView('cart')">⭐ MÓJ WYBÓR (<span id="count">0</span>)</button>
     </div>
-
     <div class="nav-group">
         <span class="nav-label">Kategorie</span>
         <div id="category-list"></div>
     </div>
-
     <div id="order-section" style="display:none; margin-top: auto; padding-top: 15px; border-top: 1px solid rgba(212, 175, 55, 0.2);">
         <button class="nav-btn order-btn" onclick="copyToClipboard()">📋 SKOPIUJ LISTĘ</button>
         <button class="nav-btn order-btn" style="background:#eee;" onclick="sendOrder()">✉ WYŚLIJ E-MAIL</button>
@@ -105,7 +93,6 @@
             </select>
         </div>
     </div>
-    
     <div id="catalog-grid" class="grid"></div>
 </div>
 
@@ -122,24 +109,39 @@
             const resp = await fetch(SHEET_URL + '&cb=' + Date.now());
             const text = await resp.text();
             const rows = text.split(/\r?\n/).filter(r => r.trim() !== "").slice(1);
-            const cats = new Set();
+            
+            const catsSet = new Set();
             rawSongs = rows.map((r, index) => {
                 let cols = r.includes(';') ? r.split(';') : r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                const s = { tytul: cols[0].replace(/"/g, '').trim(), kategoria: cols[1] ? cols[1].replace(/"/g, '').trim() : "Brak", idYT: cols[2] ? cols[2].replace(/"/g, '').trim() : "", order: index };
-                if(s.kategoria) cats.add(s.kategoria);
-                return s;
+                
+                // ROZDZIELANIE KATEGORII PO PRZECINKU
+                let catString = cols[1] ? cols[1].replace(/"/g, '').trim() : "Inne";
+                let categoriesArray = catString.split(',').map(item => item.trim());
+                
+                categoriesArray.forEach(c => { if(c) catsSet.add(c); });
+
+                return { 
+                    tytul: cols[0].replace(/"/g, '').trim(), 
+                    kategorie: categoriesArray, 
+                    idYT: cols[2] ? cols[2].replace(/"/g, '').trim() : "", 
+                    order: index 
+                };
             });
+
+            // Tworzenie listy kategorii w panelu (posortowane alfabetycznie)
             const catDiv = document.getElementById('category-list');
-            cats.forEach(c => {
+            Array.from(catsSet).sort().forEach(c => {
                 const b = document.createElement('button'); b.className = 'nav-btn'; b.innerText = "• " + c;
                 b.onclick = () => { currentView = c; updateNavStyles(b); render(); };
                 catDiv.appendChild(b);
             });
+            
             applySort();
-        } catch (e) { document.getElementById('view-name').innerText = "Błąd Drive"; }
+        } catch (e) { document.getElementById('view-name').innerText = "Błąd bazy danych"; }
     }
 
     function changeSort(val) { currentSort = val; applySort(); }
+    
     function applySort() {
         sortedSongs = [...rawSongs];
         if (currentSort === 'newest') sortedSongs.sort((a, b) => b.order - a.order);
@@ -152,13 +154,26 @@
     function render() {
         const grid = document.getElementById('catalog-grid'); const title = document.getElementById('view-name'); grid.innerHTML = '';
         const isCartView = currentView === 'cart';
-        if (currentView === 'all') { displayList = sortedSongs; title.innerText = "Wszystkie Utwory"; } 
-        else if (isCartView) { displayList = cart; title.innerText = "Twój Wybór"; } 
-        else { displayList = sortedSongs.filter(s => s.kategoria === currentView); title.innerText = "Kategoria: " + currentView; }
+        let displayList = [];
+
+        if (currentView === 'all') { 
+            displayList = sortedSongs; 
+            title.innerText = "Wszystkie Utwory"; 
+        } else if (isCartView) { 
+            displayList = cart; 
+            title.innerText = "Twój Wybór"; 
+        } else { 
+            // FILTROWANIE: sprawdza czy kategoria znajduje się w tablicy kategorii utworu
+            displayList = sortedSongs.filter(s => s.kategorie.includes(currentView)); 
+            title.innerText = "Kategoria: " + currentView; 
+        }
+
         document.getElementById('order-section').style.display = (isCartView && cart.length > 0) ? 'block' : 'none';
         document.getElementById('sort-box').style.visibility = isCartView ? 'hidden' : 'visible';
+
         displayList.forEach((s, idx) => {
-            if(!s.idYT) return; const card = document.createElement('div'); card.className = 'card';
+            if(!s.idYT) return;
+            const card = document.createElement('div'); card.className = 'card';
             card.innerHTML = `<img class="thumb" src="https://img.youtube.com/vi/${s.idYT}/mqdefault.jpg" onclick="window.open('https://youtube.com/watch?v=${s.idYT}')"><div class="title">${s.tytul}</div>
                 ${isCartView ? `<button class="btn-action btn-remove" onclick="removeFromCart(${idx})">USUŃ</button>` : `<button class="btn-action" onclick="addToCart('${s.tytul.replace(/'/g, "\\'")}')">DODAJ</button>`}`;
             grid.appendChild(card);
@@ -166,12 +181,18 @@
         if(displayList.length === 0) grid.innerHTML = "<p style='padding:20px; color:#64748b;'>Lista jest pusta.</p>";
     }
 
-    function addToCart(title) { const song = rawSongs.find(s => s.tytul === title); if(song) { if(cart.find(item => item.tytul === title)) { return alert("Już jest!"); } cart.push(song); saveCart(); alert("Dodano!"); } }
+    function addToCart(title) { 
+        const song = rawSongs.find(s => s.tytul === title); 
+        if(song) { 
+            if(cart.find(item => item.tytul === title)) return alert("Już jest na liście!"); 
+            cart.push(song); saveCart(); alert("Dodano!"); 
+        } 
+    }
     function removeFromCart(index) { cart.splice(index, 1); saveCart(); render(); }
     function showView(view) { currentView = view; const btnId = view === 'all' ? 'btn-all' : 'btn-my-list'; updateNavStyles(document.getElementById(btnId)); render(); }
     function updateNavStyles(activeBtn) { document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); if(activeBtn) activeBtn.classList.add('active'); }
-    function copyToClipboard() { navigator.clipboard.writeText("Zamówienie:\n- " + cart.map(s => s.tytul).join("\n- ")).then(() => alert("Skopiowano!")); }
-    function sendOrder() { window.location.href = `mailto:melodiawiary@gmail.com?subject=Zestaw Pieśni&body=Zamawiam:\n- ${cart.map(s => s.tytul).join("\n- ")}`; }
+    function copyToClipboard() { navigator.clipboard.writeText("Moje zamówienie:\n- " + cart.map(s => s.tytul).join("\n- ")).then(() => alert("Skopiowano listę!")); }
+    function sendOrder() { window.location.href = `mailto:melodiawiary@gmail.com?subject=Zestaw Pieśni&body=Przesyłam listę:\n- ${cart.map(s => s.tytul).join("\n- ")}`; }
     loadData();
 </script>
 </body>
