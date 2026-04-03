@@ -36,19 +36,49 @@
         .controls-wrapper { display: flex; flex-direction: column; gap: 10px; }
         .btn-group { display: flex; gap: 8px; width: 100%; }
         
-        /* PRZYCISKI STERUJĄCE */
         .ctrl-btn { flex: 1; padding: 15px 5px; border: 2px solid var(--gold); background: transparent; color: var(--gold); font-weight: 900; cursor: pointer; border-radius: 10px; text-transform: uppercase; font-size: 15px; white-space: nowrap; transition: 0.2s; }
         .ctrl-btn.active { background: var(--gold); color: black; }
         .ctrl-btn:hover { background: rgba(212, 175, 55, 0.2); }
 
-        /* WIDOKI */
+        /* WIDOK KART (ZDJĘCIE + TYTUŁ) */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; margin-top: 30px; }
-        .card { background: #0f172a; border: 2px solid #333; padding: 15px; border-radius: 20px; text-align: center; display: flex; flex-direction: column; }
-        .thumb { width: 100%; aspect-ratio: 16/9; border-radius: 12px; cursor: pointer; border: 1px solid var(--gold); margin-bottom: 10px; }
-        .card-title { font-weight: 900; margin-bottom: 15px; color: var(--gold); line-height: 1.2; flex-grow: 1; }
+        .card { 
+            background: #0f172a; 
+            border: 2px solid #333; 
+            padding: 15px; 
+            border-radius: 20px; 
+            text-align: center; 
+            display: flex; 
+            flex-direction: column; 
+            transition: all 0.3s ease; /* Płynne animacje */
+            cursor: default;
+        }
+        
+        /* EFEKT PODŚWIETLENIA KARTY */
+        .card:hover { 
+            transform: scale(1.05); 
+            border-color: var(--gold); 
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+            background: #1e293b;
+        }
+
+        .thumb { width: 100%; aspect-ratio: 16/9; border-radius: 12px; cursor: pointer; border: 1px solid var(--gold); margin-bottom: 10px; transition: 0.2s; }
+        .thumb:hover { filter: brightness(1.2); }
+
+        /* TYTUŁY - DRUKOWANE LITERY, BIAŁY KOLOR */
+        .card-title { 
+            font-weight: 900; 
+            margin-bottom: 15px; 
+            color: white; 
+            line-height: 1.2; 
+            flex-grow: 1; 
+            text-transform: uppercase; /* TYLKO DUŻE LITERY */
+        }
 
         .list-header { background: var(--gold); color: black; padding: 10px 20px; border-radius: 10px; margin: 30px 0 10px 0; font-weight: 900; text-transform: uppercase; }
-        .list-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; border-bottom: 1px solid #333; background: rgba(255,255,255,0.02); }
+        .list-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; border-bottom: 1px solid #333; background: rgba(255,255,255,0.02); transition: 0.2s; }
+        .list-row:hover { background: rgba(212, 175, 55, 0.1); }
+        .list-item-name { cursor: pointer; font-weight: bold; color: white; text-transform: uppercase; }
 
         .btn-add { background: var(--gold); color: black; border: none; padding: 12px; border-radius: 10px; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 1em; }
         .btn-remove { background: #ff4444; color: white; padding: 10px 20px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
@@ -102,7 +132,7 @@
     function updateSize(s) { document.body.className = s; document.getElementById('s-std').classList.toggle('active', s==='standard'); document.getElementById('s-big').classList.toggle('active', s==='senior'); }
 
     async function init() {
-        const saved = localStorage.getItem('mv_cart_v8'); if(saved) cart = JSON.parse(saved);
+        const saved = localStorage.getItem('mv_cart_v9'); if(saved) cart = JSON.parse(saved);
         try {
             const r = await fetch(CSV + '&cb=' + Date.now());
             const text = await r.text();
@@ -136,7 +166,6 @@
         let list = currentView === 'all' ? [...songs] : songs.filter(s => s.kategorie.includes(currentView));
         if(query) list = list.filter(s => s.tytul.toLowerCase().includes(query));
 
-        // LOGIKA SORTOWANIA
         if(sortType === 'newest') list.sort((a,b) => b.originalIndex - a.originalIndex);
         else if(sortType === 'oldest') list.sort((a,b) => a.originalIndex - b.originalIndex);
         else if(sortType === 'az') list.sort((a,b) => a.tytul.localeCompare(b.tytul, 'pl'));
@@ -159,7 +188,7 @@
                 out.innerHTML += `<div class="list-header">${cat}</div>`;
                 grouped[cat].sort((a,b) => a.tytul.localeCompare(b.tytul, 'pl')).forEach(s => {
                     out.innerHTML += `<div class="list-row">
-                        <span style="cursor:pointer; font-weight:bold;" onclick="window.open('https://youtube.com/watch?v=${s.yt}')">${s.tytul}</span>
+                        <span class="list-item-name" onclick="window.open('https://youtube.com/watch?v=${s.yt}')">${s.tytul}</span>
                         <button class="btn-add" style="padding:8px 20px" onclick="add('${s.tytul.replace(/'/g,"")}')">DODAJ</button>
                     </div>`;
                 });
@@ -196,7 +225,7 @@
                 <button class="btn-add" style="background:var(--green); color:white;" onclick="alert('Złożono zamówienie!')">ZAMÓW PŁYTĘ</button>
             </div><div class="grid">${groups[n].map(s => `<div class="card" style="padding:10px">
                 <img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb" style="height:70px; width:auto; margin:0 auto">
-                <div style="font-size:0.9em; font-weight:bold; margin-bottom:10px;">${s.tytul}</div>
+                <div style="font-size:0.9em; font-weight:bold; margin-bottom:10px; color:white; text-transform:uppercase;">${s.tytul}</div>
                 <button class="btn-remove" onclick="remove('${s.tytul.replace(/'/g,"")}')">USUŃ Z LISTY</button>
             </div>`).join('')}</div>`;
             container.appendChild(box);
@@ -206,7 +235,7 @@
 
     function add(t) { if(cart.find(x=>x.tytul===t)) return; cart.push(songs.find(x=>x.tytul===t)); save(); }
     function remove(t) { cart = cart.filter(x=>x.tytul!==t); save(); }
-    function save() { localStorage.setItem('mv_cart_v8', JSON.stringify(cart)); render(); }
+    function save() { localStorage.setItem('mv_cart_v9', JSON.stringify(cart)); render(); }
     function doSearch() { query = document.getElementById('search').value.toLowerCase(); render(); }
     init();
 </script>
