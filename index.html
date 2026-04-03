@@ -2,64 +2,77 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Melodia Wiary - Katalog Utworów</title>
+    <title>Melodia Wiary - Katalog</title>
     <style>
-        body { background: #0a0a0a; color: white; font-family: sans-serif; margin: 0; padding: 20px; }
-        h1 { text-align: center; color: #d4af37; font-weight: 300; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-        .card { background: #1a1a1a; padding: 10px; border-radius: 8px; transition: 0.3s; }
-        .card:hover { transform: scale(1.02); background: #222; }
-        .thumb { width: 100%; aspect-ratio: 16/9; cursor: pointer; object-fit: cover; border-radius: 4px; }
-        .title { margin: 10px 0 5px; font-size: 16px; }
-        .category { color: #888; font-size: 12px; text-transform: uppercase; }
-        .btn-add { background: #d4af37; border: none; padding: 10px; width: 100%; margin-top: 10px; cursor: pointer; border-radius: 4px; }
-        #cart-counter { position: fixed; top: 20px; right: 20px; background: #d4af37; color: black; padding: 10px 20px; border-radius: 50px; font-weight: bold; cursor: pointer; }
+        body { background: #050505; color: #eee; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; }
+        h1 { text-align: center; color: #d4af37; letter-spacing: 2px; text-transform: uppercase; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; padding: 20px; }
+        .card { background: #111; border: 1px solid #222; padding: 10px; border-radius: 12px; transition: 0.3s; }
+        .card:hover { border-color: #d4af37; transform: translateY(-5px); }
+        .thumb { width: 100%; aspect-ratio: 16/9; cursor: pointer; object-fit: cover; border-radius: 8px; }
+        .title { margin: 12px 0 5px; font-weight: bold; font-size: 15px; height: 40px; overflow: hidden; }
+        .cat-tag { background: #d4af37; color: black; font-size: 10px; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; font-weight: bold; }
+        .btn-add { background: none; border: 1px solid #d4af37; color: #d4af37; padding: 8px; width: 100%; margin-top: 10px; cursor: pointer; border-radius: 6px; transition: 0.3s; }
+        .btn-add:hover { background: #d4af37; color: black; }
+        #cart-counter { position: fixed; bottom: 20px; right: 20px; background: #d4af37; color: black; padding: 15px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.5); z-index: 100; }
     </style>
 </head>
 <body>
 
-    <div id="cart-counter" onclick="sendOrder()">Wybrano: 0 (Wyślij listę)</div>
-    <h1>Melodia Wiary - Katalog</h1>
+<div id="cart-counter" onclick="sendOrder()">Wybrano: 0 (Poproś o płyty)</div>
+<h1>MELODIA WIARY - KATALOG</h1>
 
-    <div class="grid" id="catalog">
-        </div>
+<div class="grid" id="catalog">Ładowanie Twoich pieśni...</div>
 
-    <script>
-        // TUTAJ W PRZYSZŁOŚCI PODPNIEMY TWOJE ARKUSZE GOOGLE
-        const songs = [
-            { title: "Przykładowa Pieśń 1", ytId: "dQw4w9WgXcQ", cat: "Psalmy" },
-            { title: "Przykładowa Pieśń 2", ytId: "dQw4w9WgXcQ", cat: "Pascha" }
-        ];
+<script>
+    // TWOJE DANE Z NOTATNIKA:
+    const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTSIMZU08zkis1FoqDfypL9hOQ8nTbAvMmBeIuK56_Qo1XFu_b71-de1jN6Km9symosx38V6V5PxKO/pub?output=csv'; 
 
-        let cart = [];
+    let cart = [];
 
-        function render() {
+    async function loadSongs() {
+        try {
+            const response = await fetch(SHEET_URL);
+            const data = await response.text();
+            const rows = data.split('\n').slice(1);
             const container = document.getElementById('catalog');
-            songs.forEach(song => {
-                const thumbUrl = `https://img.youtube.com/vi/${song.ytId}/mqdefault.jpg`;
-                container.innerHTML += `
-                    <div class="card">
-                        <img class="thumb" src="${thumbUrl}" onclick="window.open('https://youtube.com/watch?v=${song.ytId}')">
-                        <div class="category">${song.cat}</div>
-                        <div class="title">${song.title}</div>
-                        <button class="btn-add" onclick="addToCart('${song.title}')">Dodaj do zestawu</button>
-                    </div>
+            container.innerHTML = '';
+
+            rows.forEach(row => {
+                const cols = row.split(',');
+                if(cols.length < 3) return;
+                const tytul = cols[0];
+                const kategoria = cols[1];
+                const idYT = cols[2].trim();
+                
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <img class="thumb" src="https://img.youtube.com/vi/${idYT}/mqdefault.jpg" onclick="window.open('https://youtube.com/watch?v=${idYT}')">
+                    <span class="cat-tag">${kategoria}</span>
+                    <div class="title">${tytul}</div>
+                    <button class="btn-add" onclick="addToCart('${tytul}')">Dodaj do zestawu</button>
                 `;
+                container.appendChild(card);
             });
+        } catch (e) {
+            document.getElementById('catalog').innerHTML = 'Błąd ładowania. Sprawdź, czy Arkusz Google jest opublikowany jako .csv';
         }
+    }
 
-        function addToCart(title) {
-            cart.push(title);
-            document.getElementById('cart-counter').innerText = `Wybrano: ${cart.length} (Wyślij listę)`;
-        }
+    function addToCart(title) {
+        cart.push(title);
+        document.getElementById('cart-counter').innerText = `Wybrano: ${cart.length} (Poproś o płyty)`;
+    }
 
-        function sendOrder() {
-            if(cart.length === 0) return alert("Najpierw wybierz piosenki!");
-            const body = encodeURIComponent("Dzień dobry, chciałbym zamówić płytę z następującymi utworami:\n\n" + cart.join("\n"));
-            window.location.href = `mailto:TWOJ@EMAIL.PL?subject=Zamówienie Melodia Wiary&body=${body}`;
-        }
+    function sendOrder() {
+        if(cart.length === 0) return alert("Wybierz piosenki klikając przycisk 'Dodaj do zestawu'");
+        const lista = cart.join("%0D%0A- ");
+        const mailto = `mailto:TWOJ_MAIL@GMAIL.COM?subject=Zestaw Melodia Wiary&body=Dzień dobry, poproszę o płyty z utworami:%0D%0A%0D%0A- ${lista}`;
+        window.location.href = mailto;
+    }
 
-        render();
-    </script>
+    loadSongs();
+</script>
 </body>
 </html>
