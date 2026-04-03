@@ -8,31 +8,23 @@
         :root { --gold: #d4af37; --bg: #020617; --sidebar: #0f172a; }
         body { background: var(--bg); color: #eee; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; min-height: 100vh; }
 
-        /* PANEL BOCZNY - Z DODANYM PRZEWIJANIEM */
+        /* PANEL BOCZNY */
         #sidebar { 
             width: 280px; background: var(--sidebar); border-right: 1px solid rgba(212, 175, 55, 0.2); 
             padding: 20px; display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 100;
-            box-sizing: border-box;
-            overflow-y: auto; /* To pozwala przewijać kategorie, gdy jest ich dużo */
+            box-sizing: border-box; overflow-y: auto;
         }
-        
-        /* Styl paska przewijania dla elegancji */
         #sidebar::-webkit-scrollbar { width: 5px; }
-        #sidebar::-webkit-scrollbar-track { background: var(--sidebar); }
         #sidebar::-webkit-scrollbar-thumb { background: rgba(212, 175, 55, 0.3); border-radius: 10px; }
 
         .logo-img { width: 100%; height: auto; margin-bottom: 25px; filter: drop-shadow(0 0 10px rgba(212,175,55,0.2)); flex-shrink: 0; }
-        
         .nav-group { margin-bottom: 25px; flex-shrink: 0; }
         .nav-label { font-size: 11px; text-transform: uppercase; color: #64748b; letter-spacing: 1px; margin-bottom: 10px; display: block; font-weight: bold; }
         
-        /* PRZYCISKI W MENU - POWIĘKSZONE I WIELKIE LITERY */
         .nav-btn { 
             width: 100%; background: none; border: 1px solid transparent; color: #ccc; 
-            text-align: left; padding: 12px; border-radius: 8px; cursor: pointer; transition: 0.2s; margin-bottom: 6px; 
-            font-size: 15px; /* Powiększona czcionka */
-            text-transform: uppercase; /* Wszystkie duże litery */
-            font-weight: 500;
+            text-align: left; padding: 12px; border-radius: 8px; cursor: pointer; transition: 0.2s; margin-bottom: 4px; 
+            font-size: 14px; text-transform: uppercase; font-weight: 500;
         }
         .nav-btn:hover, .nav-btn.active { background: rgba(212, 175, 55, 0.1); border-color: var(--gold); color: var(--gold); }
         .nav-btn.order-btn { background: var(--gold); color: black; font-weight: bold; margin-top: 8px; text-align: center; }
@@ -45,53 +37,47 @@
             margin-bottom: 30px; border-bottom: 1px solid rgba(212, 175, 55, 0.2); 
             padding-bottom: 20px; text-align: center;
         }
-        .view-title { 
-            color: var(--gold); text-transform: uppercase; letter-spacing: 3px; 
-            margin: 0 0 15px 0; font-size: 22px; font-weight: bold; 
-        }
+        .view-title { color: var(--gold); text-transform: uppercase; letter-spacing: 3px; margin: 0 0 15px 0; font-size: 22px; font-weight: bold; }
         
-        /* WYSZUKIWARKA */
-        .search-container { margin-bottom: 15px; width: 100%; max-width: 450px; position: relative; }
+        .search-row { display: flex; align-items: center; gap: 15px; width: 100%; max-width: 600px; margin-bottom: 15px; }
+        .search-container { flex: 1; position: relative; }
         .search-input { 
             width: 100%; padding: 14px 45px 14px 20px; border-radius: 30px; 
             border: 1px solid var(--gold); background: #1e293b; color: white; 
             outline: none; font-size: 16px; box-sizing: border-box;
         }
-        .search-icon { position: absolute; right: 20px; top: 14px; color: var(--gold); pointer-events: none; font-size: 18px; }
-
-        #sort-box { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
-        .sort-select { 
-            background: #1e293b; color: #eee; border: 1px solid var(--gold); 
-            padding: 8px; border-radius: 6px; cursor: pointer; outline: none; font-size: 12px;
+        .view-toggle-btns { display: flex; gap: 5px; }
+        .toggle-btn { 
+            background: #1e293b; border: 1px solid var(--gold); color: var(--gold); 
+            padding: 10px 15px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-size: 18px;
         }
+        .toggle-btn.active { background: var(--gold); color: black; }
 
-        /* SIATKA UTWORÓW */
+        /* WIDOK SIATKI */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 25px; }
         .card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; transition: 0.3s; display: flex; flex-direction: column; }
         .card:hover { transform: translateY(-5px); border-color: var(--gold); background: rgba(212, 175, 55, 0.05); }
-        
-        .thumb { 
-            width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 8px; cursor: pointer; 
-            border: 2px solid rgba(212, 175, 55, 0.3); transition: 0.3s;
-        }
+        .thumb { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 8px; cursor: pointer; border: 2px solid rgba(212, 175, 55, 0.3); }
         .card:hover .thumb { border-color: var(--gold); box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
+        .title { font-weight: bold; font-size: 15px; margin: 15px 0; min-height: 40px; color: #fff; line-height: 1.3; text-transform: uppercase; text-align: center; }
 
-        .title { 
-            font-weight: bold; font-size: 16px; 
-            margin: 15px 0; min-height: 45px; color: #fff; line-height: 1.3; 
-            text-transform: uppercase; 
-            text-align: center;
-        }
-        
-        .btn-action { width: 100%; padding: 12px; border-radius: 6px; border: 2px solid var(--gold); background: none; color: var(--gold); cursor: pointer; font-weight: bold; transition: 0.2s; margin-top: auto; text-transform: uppercase; font-size: 14px; }
+        /* WIDOK LISTY */
+        .list-container { max-width: 900px; margin: 0 auto; text-align: left; }
+        .list-category-section { margin-bottom: 40px; border-left: 3px solid var(--gold); padding-left: 20px; }
+        .list-category-title { color: var(--gold); font-size: 20px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; border-bottom: 1px solid rgba(212,175,55,0.1); padding-bottom: 5px; }
+        .list-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .list-link { color: #eee; text-decoration: none; font-size: 16px; text-transform: uppercase; transition: 0.2s; font-weight: 500; }
+        .list-link:hover { color: var(--gold); padding-left: 10px; }
+        .list-add-btn { background: none; border: 1px solid var(--gold); color: var(--gold); padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; text-transform: uppercase; font-weight: bold; }
+        .list-add-btn:hover { background: var(--gold); color: black; }
+
+        .btn-action { width: 100%; padding: 12px; border-radius: 6px; border: 2px solid var(--gold); background: none; color: var(--gold); cursor: pointer; font-weight: bold; transition: 0.2s; margin-top: auto; text-transform: uppercase; }
         .btn-action:hover { background: var(--gold); color: black; }
-        .btn-remove { border-color: #ef4444; color: #ef4444; }
-        .btn-remove:hover { background: #ef4444; color: white; }
 
         @media (max-width: 768px) {
-            body { flex-direction: column; }
-            #sidebar { width: 100%; height: auto; position: relative; border-right: none; border-bottom: 1px solid var(--gold); padding: 15px; }
+            #sidebar { width: 100%; height: auto; position: relative; border-right: none; }
             #main-content { margin-left: 0; padding: 15px; }
+            .search-row { flex-direction: column; }
         }
     </style>
 </head>
@@ -108,7 +94,7 @@
         <span class="nav-label">Kategorie</span>
         <div id="category-list"></div>
     </div>
-    <div id="order-section" style="display:none; margin-top: auto; padding-top: 15px; border-top: 1px solid rgba(212, 175, 55, 0.2); flex-shrink: 0;">
+    <div id="order-section" style="display:none; margin-top: auto; padding-top: 15px; border-top: 1px solid rgba(212, 175, 55, 0.2);">
         <button class="nav-btn order-btn" onclick="copyToClipboard()">📋 SKOPIUJ LISTĘ</button>
         <button class="nav-btn order-btn" style="background:#eee;" onclick="sendOrder()">✉ WYŚLIJ E-MAIL</button>
     </div>
@@ -117,26 +103,32 @@
 <div id="main-content">
     <div class="toolbar">
         <h1 id="view-name" class="view-title">Wszystkie Utwory</h1>
-        <div class="search-container">
-            <input type="text" id="search-input" class="search-input" placeholder="Szukaj piosenki (wpisz tytuł)..." onkeyup="handleSearch()">
-            <span class="search-icon">🔍</span>
+        
+        <div class="search-row">
+            <div class="search-container">
+                <input type="text" id="search-input" class="search-input" placeholder="Wpisz czego szukasz..." onkeyup="handleSearch()">
+            </div>
+            <div class="view-toggle-btns">
+                <button id="mode-grid" class="toggle-btn active" onclick="setViewMode('grid')" title="Widok miniatur">⬜</button>
+                <button id="mode-list" class="toggle-btn" onclick="setViewMode('list')" title="Widok listy">☰</button>
+            </div>
         </div>
+
         <div id="sort-box">
-            <label style="font-size: 11px; color: #64748b;">SORTOWANIE:</label>
             <select class="sort-select" onchange="changeSort(this.value)">
-                <option value="newest">Najnowsze na górze</option>
-                <option value="oldest">Najstarsze na górze</option>
+                <option value="newest">Najnowsze</option>
+                <option value="oldest">Najstarsze</option>
                 <option value="az">Alfabetycznie A-Z</option>
-                <option value="za">Alfabetycznie Z-A</option>
             </select>
         </div>
     </div>
     <div id="catalog-grid" class="grid"></div>
+    <div id="catalog-list" class="list-container" style="display:none;"></div>
 </div>
 
 <script>
     const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTSIMZUO8ZkisiFoqOfypL9hOQBnTbAvtMmBeIuK56_QoiXFu_b7i-de1Jn6Km9symosxJBV6V5PxKO/pub?output=csv'; 
-    let rawSongs = []; let sortedSongs = []; let cart = []; let currentView = 'all'; let currentSort = 'newest'; let searchQuery = "";
+    let rawSongs = []; let sortedSongs = []; let cart = []; let currentView = 'all'; let currentSort = 'newest'; let searchQuery = ""; let viewMode = 'grid';
 
     function loadCart() { const saved = localStorage.getItem('melodiaWiaryCart'); if (saved) { cart = JSON.parse(saved); document.getElementById('count').innerText = cart.length; } }
     function saveCart() { localStorage.setItem('melodiaWiaryCart', JSON.stringify(cart)); document.getElementById('count').innerText = cart.length; }
@@ -147,7 +139,6 @@
             const resp = await fetch(SHEET_URL + '&cb=' + Date.now());
             const text = await resp.text();
             const rows = text.split(/\r?\n/).filter(r => r.trim() !== "").slice(1);
-            
             const catsSet = new Set();
             rawSongs = rows.map((r, index) => {
                 let cols = r.includes(';') ? r.split(';') : r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
@@ -156,7 +147,6 @@
                 categoriesArray.forEach(c => { if(c) catsSet.add(c); });
                 return { tytul: cols[0].replace(/"/g, '').trim(), kategorie: categoriesArray, idYT: cols[2] ? cols[2].replace(/"/g, '').trim() : "", order: index };
             });
-
             const catDiv = document.getElementById('category-list');
             Array.from(catsSet).sort().forEach(c => {
                 const b = document.createElement('button'); b.className = 'nav-btn'; b.innerText = "• " + c;
@@ -164,57 +154,75 @@
                 catDiv.appendChild(b);
             });
             applySort();
-        } catch (e) { document.getElementById('view-name').innerText = "Problem z połączeniem"; }
+        } catch (e) { console.error(e); }
+    }
+
+    function setViewMode(mode) { 
+        viewMode = mode; 
+        document.getElementById('mode-grid').classList.toggle('active', mode === 'grid');
+        document.getElementById('mode-list').classList.toggle('active', mode === 'list');
+        render(); 
     }
 
     function handleSearch() { searchQuery = document.getElementById('search-input').value.toLowerCase(); render(); }
     function changeSort(val) { currentSort = val; applySort(); }
-    
     function applySort() {
         sortedSongs = [...rawSongs];
         if (currentSort === 'newest') sortedSongs.sort((a, b) => b.order - a.order);
         if (currentSort === 'oldest') sortedSongs.sort((a, b) => a.order - b.order);
         if (currentSort === 'az') sortedSongs.sort((a, b) => a.tytul.localeCompare(b.tytul));
-        if (currentSort === 'za') sortedSongs.sort((a, b) => b.tytul.localeCompare(a.tytul));
         render();
     }
 
     function render() {
-        const grid = document.getElementById('catalog-grid'); const title = document.getElementById('view-name'); grid.innerHTML = '';
-        const isCartView = currentView === 'cart';
-        let displayList = [];
+        const grid = document.getElementById('catalog-grid');
+        const listCont = document.getElementById('catalog-list');
+        const title = document.getElementById('view-name');
+        grid.innerHTML = ''; listCont.innerHTML = '';
+        
+        let displayList = currentView === 'all' ? sortedSongs : (currentView === 'cart' ? cart : sortedSongs.filter(s => s.kategorie.includes(currentView)));
+        if (searchQuery !== "" && currentView !== 'cart') displayList = displayList.filter(s => s.tytul.toLowerCase().includes(searchQuery));
+        
+        title.innerText = currentView === 'all' ? "Wszystkie Utwory" : (currentView === 'cart' ? "Twój Wybór" : currentView);
+        document.getElementById('order-section').style.display = (currentView === 'cart' && cart.length > 0) ? 'block' : 'none';
 
-        if (currentView === 'all') { displayList = sortedSongs; title.innerText = "Wszystkie Utwory"; } 
-        else if (isCartView) { displayList = cart; title.innerText = "Twój Wybór"; } 
-        else { displayList = sortedSongs.filter(s => s.kategorie.includes(currentView)); title.innerText = currentView; }
-
-        if (searchQuery !== "" && !isCartView) { displayList = displayList.filter(s => s.tytul.toLowerCase().includes(searchQuery)); }
-
-        document.getElementById('order-section').style.display = (isCartView && cart.length > 0) ? 'block' : 'none';
-        document.getElementById('sort-box').style.visibility = isCartView ? 'hidden' : 'visible';
-
-        displayList.forEach((s, idx) => {
-            if(!s.idYT) return;
-            const card = document.createElement('div'); card.className = 'card';
-            card.innerHTML = `<img class="thumb" src="https://img.youtube.com/vi/${s.idYT}/mqdefault.jpg" onclick="window.open('https://youtube.com/watch?v=${s.idYT}')"><div class="title">${s.tytul}</div>
-                ${isCartView ? `<button class="btn-action btn-remove" onclick="removeFromCart(${idx})">USUŃ</button>` : `<button class="btn-action" onclick="addToCart('${s.tytul.replace(/'/g, "\\'")}')">DODAJ DO MOJEJ LISTY</button>`}`;
-            grid.appendChild(card);
-        });
-        if(displayList.length === 0) grid.innerHTML = `<p style='padding:20px; color:#64748b;'>Nie znaleziono takich utworów.</p>`;
+        if (viewMode === 'grid' || currentView === 'cart') {
+            grid.style.display = 'grid'; listCont.style.display = 'none';
+            displayList.forEach((s, idx) => {
+                const card = document.createElement('div'); card.className = 'card';
+                card.innerHTML = `<img class="thumb" src="https://img.youtube.com/vi/${s.idYT}/mqdefault.jpg" onclick="window.open('https://youtube.com/watch?v=${s.idYT}')"><div class="title">${s.tytul}</div>
+                    <button class="btn-action ${currentView === 'cart' ? 'btn-remove' : ''}" onclick="${currentView === 'cart' ? `removeFromCart(${idx})` : `addToCart('${s.tytul.replace(/'/g, "\\'")}')`}">${currentView === 'cart' ? 'USUŃ' : 'DODAJ DO LISTY'}</button>`;
+                grid.appendChild(card);
+            });
+        } else {
+            grid.style.display = 'none'; listCont.style.display = 'block';
+            // Grupowanie dla widoku listy
+            const groups = {};
+            displayList.forEach(s => {
+                const cat = currentView === 'all' ? s.kategorie[0] : currentView;
+                if (!groups[cat]) groups[cat] = [];
+                groups[cat].push(s);
+            });
+            Object.keys(groups).sort().forEach(catName => {
+                const sec = document.createElement('div'); sec.className = 'list-category-section';
+                sec.innerHTML = `<div class="list-category-title">${catName}</div>`;
+                groups[catName].sort((a,b) => a.tytul.localeCompare(b.tytul)).forEach(s => {
+                    const item = document.createElement('div'); item.className = 'list-item';
+                    item.innerHTML = `<a href="https://youtube.com/watch?v=${s.idYT}" target="_blank" class="list-link">• ${s.tytul}</a>
+                                      <button class="list-add-btn" onclick="addToCart('${s.tytul.replace(/'/g, "\\'")}')">DODAJ (+)</button>`;
+                    sec.appendChild(item);
+                });
+                listCont.appendChild(sec);
+            });
+        }
     }
 
-    function addToCart(title) { 
-        const song = rawSongs.find(s => s.tytul === title); 
-        if(song) { 
-            if(cart.find(item => item.tytul === title)) return alert("Ta pieśń jest już na liście!"); 
-            cart.push(song); saveCart(); alert("Dodano pomyślnie!"); 
-        } 
-    }
-    function removeFromCart(index) { cart.splice(index, 1); saveCart(); render(); }
-    function showView(view) { currentView = view; const btnId = view === 'all' ? 'btn-all' : 'btn-my-list'; updateNavStyles(document.getElementById(btnId)); render(); }
-    function updateNavStyles(activeBtn) { document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); if(activeBtn) activeBtn.classList.add('active'); }
-    function copyToClipboard() { navigator.clipboard.writeText("Lista utworów:\n- " + cart.map(s => s.tytul).join("\n- ")).then(() => alert("Skopiowano listę!")); }
-    function sendOrder() { window.location.href = `mailto:melodiawiary@gmail.com?subject=Zestaw Pieśni&body=Przesyłam listę:\n- ${cart.map(s => s.tytul).join("\n- ")}`; }
+    function addToCart(t) { const s = rawSongs.find(x => x.tytul === t); if(s) { if(cart.find(i => i.tytul === t)) return alert("Już jest!"); cart.push(s); saveCart(); alert("Dodano!"); } }
+    function removeFromCart(i) { cart.splice(i, 1); saveCart(); render(); }
+    function showView(v) { currentView = v; updateNavStyles(document.getElementById(v === 'all' ? 'btn-all' : 'btn-my-list')); render(); }
+    function updateNavStyles(b) { document.querySelectorAll('.nav-btn').forEach(x => x.classList.remove('active')); if(b) b.classList.add('active'); }
+    function copyToClipboard() { navigator.clipboard.writeText("Moja lista:\n- " + cart.map(s => s.tytul).join("\n- ")).then(() => alert("Skopiowano!")); }
+    function sendOrder() { window.location.href = `mailto:melodiawiary@gmail.com?subject=Lista Pieśni&body=Zamówienie:\n- ${cart.map(s => s.tytul).join("\n- ")}`; }
     loadData();
 </script>
 </body>
