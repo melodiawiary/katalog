@@ -22,10 +22,9 @@
 <div id="cart-counter" onclick="sendOrder()">Wybrano: 0 (Poproś o płyty)</div>
 <h1>MELODIA WIARY - KATALOG</h1>
 
-<div class="grid" id="catalog">Ładowanie Twoich pieśni...</div>
+<div class="grid" id="catalog">Ładowanie piosenek...</div>
 
 <script>
-    // TWOJE DANE Z NOTATNIKA:
     const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTSIMZU08zkis1FoqDfypL9hOQ8nTbAvMmBeIuK56_Qo1XFu_b71-de1jN6Km9symosx38V6V5PxKO/pub?output=csv'; 
 
     let cart = [];
@@ -34,29 +33,41 @@
         try {
             const response = await fetch(SHEET_URL);
             const data = await response.text();
-            const rows = data.split('\n').slice(1);
+            
+            // Rozdzielamy wiersze, biorąc pod uwagę różne formaty (Windows/Mac)
+            const rows = data.split(/\r?\n/).slice(1);
             const container = document.getElementById('catalog');
             container.innerHTML = '';
 
             rows.forEach(row => {
-                const cols = row.split(',');
-                if(cols.length < 3) return;
-                const tytul = cols[0];
-                const kategoria = cols[1];
-                const idYT = cols[2].trim();
+                // To pozwoli na obsługę przecinków wewnątrz cudzysłowów
+                const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                 
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                    <img class="thumb" src="https://img.youtube.com/vi/${idYT}/mqdefault.jpg" onclick="window.open('https://youtube.com/watch?v=${idYT}')">
-                    <span class="cat-tag">${kategoria}</span>
-                    <div class="title">${tytul}</div>
-                    <button class="btn-add" onclick="addToCart('${tytul}')">Dodaj do zestawu</button>
-                `;
-                container.appendChild(card);
+                if(cols.length >= 3) {
+                    const tytul = cols[0].replace(/"/g, '').trim();
+                    const kategoria = cols[1].replace(/"/g, '').trim();
+                    const idYT = cols[2].replace(/"/g, '').trim();
+                    
+                    if(idYT.length > 2) {
+                        const card = document.createElement('div');
+                        card.className = 'card';
+                        card.innerHTML = `
+                            <img class="thumb" src="https://img.youtube.com/vi/${idYT}/mqdefault.jpg" onclick="window.open('https://youtube.com/watch?v=${idYT}')">
+                            <span class="cat-tag">${kategoria}</span>
+                            <div class="title">${tytul}</div>
+                            <button class="btn-add" onclick="addToCart('${tytul.replace(/'/g, "\\'")}')">Dodaj do zestawu</button>
+                        `;
+                        container.appendChild(card);
+                    }
+                }
             });
+            
+            if(container.innerHTML === '') {
+                container.innerHTML = 'Nie znaleziono piosenek w arkuszu. Sprawdź, czy dane są w wierszach 2, 3, 4...';
+            }
+
         } catch (e) {
-            document.getElementById('catalog').innerHTML = 'Błąd ładowania. Sprawdź, czy Arkusz Google jest opublikowany jako .csv';
+            document.getElementById('catalog').innerHTML = 'Błąd połączenia z Arkuszem. Upewnij się, że jest opublikowany jako .csv';
         }
     }
 
