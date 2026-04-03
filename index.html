@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Melodia Wiary</title>
+    <title>Katalog Melodia Wiary - Wersja Stabilna</title>
     <style>
         :root { 
             --gold: #d4af37; 
@@ -111,8 +111,22 @@
 
     function updateSize(s) { document.body.className = s; document.getElementById('s-std').classList.toggle('active', s==='standard'); document.getElementById('s-big').classList.toggle('active', s==='senior'); }
 
+    // Funkcja do poprawnego dzielenia linii CSV (obsługuje przecinki w cudzysłowach)
+    function parseCSVLine(text) {
+        const result = [];
+        let cur = '', inQuotes = false;
+        for (let i = 0; i < text.length; i++) {
+            let char = text[i];
+            if (char === '"') inQuotes = !inQuotes;
+            else if (char === ',' && !inQuotes) { result.push(cur); cur = ''; }
+            else cur += char;
+        }
+        result.push(cur);
+        return result;
+    }
+
     async function init() {
-        const saved = localStorage.getItem('mv_storage_stable'); if(saved) cart = JSON.parse(saved);
+        const saved = localStorage.getItem('mv_storage_stable_v14'); if(saved) cart = JSON.parse(saved);
         try {
             const r = await fetch(CSV + '&cb=' + Date.now());
             const text = await r.text();
@@ -120,13 +134,28 @@
             let catsSet = new Set();
             
             songs = rows.map((line, index) => {
-                let c = line.split(/,(?=(?:(?:[^3]*"){2})*[^"]*$)/);
-                let tyt = c[0].replace(/"/g,'').trim();
-                // CZYSZCZENIE KATEGORII ZE ŚMIECI I CUDZYSŁOWÓW
-                let rawCats = (c[1]||"Inne").split(',');
-                let cleanCats = rawCats.map(cat => cat.replace(/[^a-zA-Z0-9ąęćłńóśźżĄĘĆŁŃÓŚŹŻ ]/g, '').trim()).filter(x => x !== "");
+                let columns = parseCSVLine(line);
+                let tyt = (columns[0] || "Bez tytułu").trim();
+                
+                // Parsowanie kategorii (Kolumna 2)
+                let rawCats = (columns[1] || "Inne").split(',');
+                let cleanCats = rawCats
+                    .map(cat => cat.replace(/[^a-zA-Z0-9ąęćłńóśźżĄĘĆŁŃÓŚŹŻ ]/g, '').trim())
+                    .filter(cat => {
+                        // Odrzucaj kategorie, które są tylko liczbami lub śmieciami wynikającymi z błędu CSV
+                        return cat !== "" && isNaN(cat) && cat.length > 2 && !cat.toLowerCase().includes("wykonanie");
+                    });
+                
+                if(cleanCats.length === 0) cleanCats = ["Inne"];
                 cleanCats.forEach(cat => catsSet.add(cat));
-                return { tytul: tyt, kategorie: cleanCats, yt: (c[2]||"").trim(), czas: (c[3]||"0:00").trim(), originalIndex: index };
+                
+                return { 
+                    tytul: tyt, 
+                    kategorie: cleanCats, 
+                    yt: (columns[2] || "").trim(), 
+                    czas: (columns[3] || "0:00").trim(), 
+                    originalIndex: index 
+                };
             });
 
             const catBox = document.getElementById('cat-list');
@@ -142,8 +171,11 @@
     function toggleSong(t) {
         const idx = cart.findIndex(x => x.tytul === t);
         if(idx > -1) cart.splice(idx, 1);
-        else cart.push(songs.find(x => x.tytul === t));
-        localStorage.setItem('mv_storage_stable', JSON.stringify(cart));
+        else {
+            const found = songs.find(x => x.tytul === t);
+            if(found) cart.push(found);
+        }
+        localStorage.setItem('mv_storage_stable_v14', JSON.stringify(cart));
         render();
     }
 
@@ -172,7 +204,7 @@
                         <div class="thumb-overlay">KLIKNIJ<span>W OBRAZEK</span>ABY OTWORZYĆ<span>PIEŚŃ NA</span>YOUTUBE</div>
                     </div>
                     <div class="card-title">${s.tytul}</div>
-                    <button class="btn-add ${isSelected ? 'selected' : ''}" onclick="toggleSong('${s.tytul.replace(/'/g,"")}')">
+                    <button class="btn-add ${isSelected ? 'selected' : ''}" onclick="toggleSong('${s.tytul.replace(/'/g,"\\'")}')">
                         ${isSelected ? 'JUŻ WYBRANO (USUŃ?)' : 'DODAJ DO MOJEJ LISTY'}
                     </button>
                 </div>`;
@@ -189,7 +221,7 @@
                         <div class="list-item-name" onclick="window.open('https://youtube.com/watch?v=${s.yt}')">
                             ${s.tytul} <span class="list-tip">▶ KLIKNIJ I OTWÓRZ NA YOUTUBE</span>
                         </div>
-                        <button class="btn-add ${isSel ? 'selected' : ''}" style="width:auto; padding:10px 25px" onclick="toggleSong('${s.tytul.replace(/'/g,"")}')">
+                        <button class="btn-add ${isSel ? 'selected' : ''}" style="width:auto; padding:10px 25px" onclick="toggleSong('${s.tytul.replace(/'/g,"\\'")}')">
                             ${isSel ? 'USUŃ' : 'DODAJ'}
                         </button>
                     </div>`;
@@ -216,7 +248,7 @@
             box.innerHTML = `<div style="display:flex; align-items:center; border-bottom:3px solid var(--gold); padding-bottom:15px; margin-bottom:15px;">
                 <h2 style="flex-grow:1; text-transform:uppercase;">PŁYTA NR ${n}</h2>
                 <button class="nav-btn nav-btn-main" style="width:auto; padding:10px 30px" onclick="alert('Złożono zamówienie!')">ZAMÓW PŁYTĘ</button>
-            </div><div class="grid">${groups[n].map(s => `<div class="card" style="padding:10px;"><div class="card-title" style="font-size:0.8em">${s.tytul}</div><button class="btn-add selected" onclick="toggleSong('${s.tytul.replace(/'/g,"")}')">USUŃ</button></div>`).join('')}</div>`;
+            </div><div class="grid">${groups[n].map(s => `<div class="card" style="padding:10px;"><div class="card-title" style="font-size:0.8em">${s.tytul}</div><button class="btn-add selected" onclick="toggleSong('${s.tytul.replace(/'/g,"\\'")}')">USUŃ</button></div>`).join('')}</div>`;
             container.appendChild(box);
         });
         container.innerHTML += `<button class="ctrl-btn active" style="width:100%" onclick="setView('all')">POWRÓT DO KATALOGU</button>`;
