@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Melodia Wiary - STABILNY</title>
+    <title>Katalog Melodia Wiary - WERSJA FINALNA</title>
     <style>
         :root { 
             --gold: #d4af37; 
@@ -66,7 +66,7 @@
 
 <div id="sidebar">
     <div class="sidebar-top">
-        <img src="logo.png" class="logo-img" onerror="this.src='https://via.placeholder.com/150?text=LOGO'">
+        <img src="logo.png" class="logo-img" id="main-logo" onerror="this.src='https://via.placeholder.com/150?text=LOGO'">
         <button class="nav-btn nav-btn-main" id="cat-all" onclick="setView('all')">🏠 WSZYSTKIE PIEŚNI</button>
         <button class="nav-btn nav-btn-main" id="btn-cart" onclick="setView('cart')">⭐ MÓJ WYBÓR (<span id="count">0</span>)</button>
         <div style="margin-top:10px;">
@@ -96,8 +96,22 @@
 
 <script>
     const CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTSIMZUO8ZkisiFoqOfypL9hOQBnTbAvtMmBeIuK56_QoiXFu_b7i-de1Jn6Km9symosxJBV6V5PxKO/pub?output=csv';
-    const STORAGE_KEY = 'mv_PERMANENT_v1';
+    const STORAGE_KEY = 'mv_PERMANENT_v2';
     let songs = [], cart = [], currentView = 'all', displayMode = 'grid', query = "", sortType = 'newest';
+
+    // FUNKCJA ODCZYTU CSV OBSŁUGUJĄCA CUDZYSŁOWY (BŁĄD Z " NAPRAWIONY)
+    function parseCSVLine(text) {
+        const result = [];
+        let cur = '', inQuotes = false;
+        for (let i = 0; i < text.length; i++) {
+            let char = text[i];
+            if (char === '"') { inQuotes = !inQuotes; }
+            else if (char === ',' && !inQuotes) { result.push(cur.trim()); cur = ''; }
+            else { cur += char; }
+        }
+        result.push(cur.trim());
+        return result;
+    }
 
     function updateSize(s) { 
         document.body.className = s; 
@@ -106,22 +120,16 @@
         localStorage.setItem('mv_font_pref', s);
     }
 
-    // SYSTEM ODZYSKIWANIA DANYCH
     function loadStableCart() {
-        let finalData = [];
-        const oldKeys = ['mv_global_stable_storage', 'mv_final_storage_v18', 'mv_storage_stable_v16', 'mv_final_storage'];
-        
-        // Sprawdź czy jest coś w nowym kluczu
         const current = localStorage.getItem(STORAGE_KEY);
         if(current) return JSON.parse(current);
-
-        // Jeśli nie, przeszukaj stare klucze
+        const oldKeys = ['mv_PERMANENT_v1', 'mv_global_stable_storage', 'mv_final_storage_v18'];
         for(let key of oldKeys) {
             const oldData = localStorage.getItem(key);
             if(oldData) {
-                finalData = JSON.parse(oldData);
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(finalData));
-                return finalData;
+                const data = JSON.parse(oldData);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+                return data;
             }
         }
         return [];
@@ -138,8 +146,8 @@
             let catsSet = new Set();
             
             songs = rows.map((line, index) => {
-                const cols = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                let tyt = (cols[0] || "Bez tytułu").replace(/"/g, "").trim();
+                const cols = parseCSVLine(line);
+                let tyt = cols[0] || "Bez tytułu";
                 let rawCats = (cols[1] || "Inne").split(',');
                 let cleanCats = rawCats.map(c => c.trim()).filter(c => c.length > 2);
                 cleanCats.forEach(c => catsSet.add(c));
@@ -147,7 +155,7 @@
             });
 
             const catBox = document.getElementById('cat-list');
-            Array.from(catsSet).sort().forEach(cat => {
+            Array.from(catsSet).sort((a,b) => a.localeCompare(b, 'pl')).forEach(cat => {
                 const b = document.createElement('button'); 
                 b.className = 'nav-btn cat-item'; b.innerText = cat; b.id = "btn-" + cat.replace(/\s/g, '');
                 b.onclick = () => setView(cat); catBox.appendChild(b);
@@ -191,6 +199,7 @@
         const g = document.createElement('div'); g.className = (displayMode === 'grid') ? 'grid' : '';
         list.forEach(s => {
             const isSel = cart.some(x => x.tytul === s.tytul);
+            const safeTytul = s.tytul.replace(/'/g,"\\'").replace(/"/g, '&quot;');
             if(displayMode === 'grid') {
                 g.innerHTML += `<div class="card">
                     <div class="thumb-container" onclick="window.open('https://youtube.com/watch?v=${s.yt}')">
@@ -198,12 +207,12 @@
                         <div class="thumb-overlay">KLIKNIJ<span>W OBRAZEK</span>ABY OTWORZYĆ<span>YOUTUBE</span></div>
                     </div>
                     <div class="card-title">${s.tytul}</div>
-                    <button class="btn-add ${isSel ? 'selected' : ''}" onclick="toggleSong('${s.tytul.replace(/'/g,"\\'")}')">${isSel ? 'USUŃ' : 'DODAJ'}</button>
+                    <button class="btn-add ${isSel ? 'selected' : ''}" onclick="toggleSong('${safeTytul}')">${isSel ? 'USUŃ' : 'DODAJ'}</button>
                 </div>`;
             } else {
                 g.innerHTML += `<div style="display:flex; justify-content:space-between; padding:15px; border-bottom:1px solid #ddd; background:white; margin-bottom:5px; border-radius:10px;">
                     <span style="font-weight:700; cursor:pointer;" onclick="window.open('https://youtube.com/watch?v=${s.yt}')">${s.tytul}</span>
-                    <button class="btn-add ${isSel ? 'selected' : ''}" style="width:auto; padding:5px 20px" onclick="toggleSong('${s.tytul.replace(/'/g,"\\'")}')">${isSel ? 'USUŃ' : 'DODAJ'}</button>
+                    <button class="btn-add ${isSel ? 'selected' : ''}" style="width:auto; padding:5px 20px" onclick="toggleSong('${safeTytul}')">${isSel ? 'USUŃ' : 'DODAJ'}</button>
                 </div>`;
             }
         });
@@ -233,17 +242,18 @@
                 <div class="cd-info-text">Czas: ${Math.floor(totalS/60)} min / 65 min — <b>${msg}</b></div>
                 <div class="cd-progress-container"><div class="cd-progress-bar" style="width:${proc}%"></div></div>
                 <div class="grid"></div>
-                <button class="nav-btn nav-btn-main" style="margin-top:20px; width:auto; padding:10px 40px" onclick="alert('Dziękujemy! Skontaktujemy się w celu realizacji zamówienia.')">ZAMÓW TĘ PŁYTĘ</button>
+                <button class="nav-btn nav-btn-main" style="margin-top:20px; width:auto; padding:10px 40px" onclick="alert('Dziękujemy za wybór! Skontaktujemy się w celu realizacji Twojej płyty.')">ZAMÓW TĘ PŁYTĘ</button>
             `;
             const g = box.querySelector('.grid');
             groups[n].forEach(s => {
+                const safeTytul = s.tytul.replace(/'/g,"\\'").replace(/"/g, '&quot;');
                 g.innerHTML += `<div class="card">
                     <div class="thumb-container" onclick="window.open('https://youtube.com/watch?v=${s.yt}')">
                         <img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb">
                         <div class="thumb-overlay">ODTWÓRZ NA<span>YOUTUBE</span></div>
                     </div>
                     <div class="card-title" style="font-size:1.4em;">${s.tytul}</div>
-                    <button class="btn-add selected" onclick="toggleSong('${s.tytul.replace(/'/g,"\\'")}')">USUŃ Z LISTY</button>
+                    <button class="btn-add selected" onclick="toggleSong('${safeTytul}')">USUŃ Z LISTY</button>
                 </div>`;
             });
             container.appendChild(box);
