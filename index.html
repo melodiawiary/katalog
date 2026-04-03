@@ -8,59 +8,68 @@
         body { 
             background: linear-gradient(135deg, #0f172a 0%, #020617 100%); 
             background-attachment: fixed;
-            color: #eee; 
-            font-family: 'Segoe UI', sans-serif; 
-            margin: 0; padding: 20px; 
+            color: #eee; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; 
         }
 
-        .logo-container { text-align: center; margin: 20px auto; max-width: 280px; }
+        .logo-container { text-align: center; margin: 20px auto; max-width: 250px; }
         .logo-img { width: 100%; height: auto; filter: drop-shadow(0 0 15px rgba(212,175,55,0.3)); }
 
-        /* PASEK KATEGORII */
-        #category-bar { 
-            text-align: center; 
-            margin: 30px 0; 
-            display: flex; 
-            flex-wrap: wrap; 
-            justify-content: center; 
-            gap: 10px; 
-        }
-        .cat-btn { 
-            background: rgba(255,255,255,0.05); 
-            border: 1px solid rgba(212,175,55,0.3); 
-            color: #d4af37; 
-            padding: 8px 20px; 
-            border-radius: 20px; 
-            cursor: pointer; 
-            transition: 0.3s; 
-            font-size: 14px;
-            text-transform: uppercase;
-        }
-        .cat-btn:hover, .cat-btn.active { background: #d4af37; color: black; border-color: #d4af37; }
+        #category-bar { text-align: center; margin: 20px 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+        .cat-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(212,175,55,0.3); color: #d4af37; padding: 6px 15px; border-radius: 20px; cursor: pointer; transition: 0.3s; font-size: 13px; text-transform: uppercase; }
+        .cat-btn:hover, .cat-btn.active { background: #d4af37; color: black; }
 
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto; }
-        .card { background: rgba(255,255,255,0.05); border: 1px solid rgba(212, 175, 55, 0.2); padding: 15px; border-radius: 15px; transition: 0.3s; display: flex; flex-direction: column; backdrop-filter: blur(5px); }
-        .card:hover { border-color: #d4af37; transform: translateY(-5px); }
-        .thumb { width: 100%; aspect-ratio: 16/9; cursor: pointer; object-fit: cover; border-radius: 10px; }
-        .cat-label { align-self: flex-start; background: #d4af37; color: black; font-size: 10px; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; font-weight: bold; margin: 15px 0 8px 0; }
-        .title { font-weight: bold; font-size: 16px; margin-bottom: 15px; min-height: 40px; }
-        .btn-add { background: none; border: 1px solid #d4af37; color: #d4af37; padding: 10px; width: 100%; cursor: pointer; border-radius: 8px; font-weight: bold; margin-top: auto; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; }
+        .card { background: rgba(255,255,255,0.05); border: 1px solid rgba(212, 175, 55, 0.1); padding: 12px; border-radius: 12px; transition: 0.3s; display: flex; flex-direction: column; backdrop-filter: blur(5px); }
+        .thumb { width: 100%; aspect-ratio: 16/9; cursor: pointer; object-fit: cover; border-radius: 8px; }
+        .cat-label { align-self: flex-start; background: #d4af37; color: black; font-size: 9px; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; font-weight: bold; margin: 10px 0 5px 0; }
+        .title { font-weight: bold; font-size: 14px; margin-bottom: 10px; min-height: 35px; }
+        .btn-add { background: none; border: 1px solid #d4af37; color: #d4af37; padding: 8px; width: 100%; cursor: pointer; border-radius: 6px; font-weight: bold; margin-top: auto; }
         .btn-add:hover { background: #d4af37; color: black; }
         
-        #cart-counter { position: fixed; bottom: 30px; right: 30px; background: #d4af37; color: black; padding: 15px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.5); z-index: 100; border: 2px solid #000; }
+        /* KOSZYK - PRZYCISK */
+        #cart-counter { position: fixed; bottom: 20px; right: 20px; background: #d4af37; color: black; padding: 15px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.5); z-index: 99; border: 2px solid #000; }
+
+        /* PANEL LISTY (MODAL) */
+        #cart-panel { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; }
+        .panel-content { background: #1a1a1a; width: 90%; max-width: 500px; border-radius: 15px; padding: 25px; border: 1px solid #d4af37; box-shadow: 0 0 30px rgba(212,175,55,0.2); max-height: 80vh; overflow-y: auto; }
+        .panel-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 15px; }
+        .close-btn { background: none; border: none; color: #888; font-size: 24px; cursor: pointer; }
+        
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #222; }
+        .remove-item { color: #ff4444; cursor: pointer; border: none; background: none; font-size: 12px; }
+        
+        .panel-footer { margin-top: 20px; display: grid; gap: 10px; }
+        .action-btn { padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        .copy-btn { background: #eee; color: #000; }
+        .mail-btn { background: #d4af37; color: #000; }
     </style>
 </head>
 <body>
 
 <div class="logo-container">
-    <img src="https://lh3.googleusercontent.com/d/1lGrhzfxzTIAlH2iaHahCjWAZYuqxknP7" alt="Melodia Wiary" class="logo-img">
+    <img src="https://lh3.googleusercontent.com/u/0/d/1lGrhzfxzTIAlH2iaHahCjWAZYuqxknP7" alt="Melodia Wiary" class="logo-img">
 </div>
 
 <div id="category-bar">
     <button class="cat-btn active" onclick="filterSongs('Wszystkie')">Wszystkie</button>
 </div>
 
-<div id="cart-counter" onclick="sendOrder()">Wybrano: 0 (Poproś o płyty)</div>
+<div id="cart-counter" onclick="toggleCart()">Wybrano: 0 (Twoja lista)</div>
+
+<div id="cart-panel">
+    <div class="panel-content">
+        <div class="panel-header">
+            <h2 style="color:#d4af37; margin:0;">Twoje wybrane pieśni</h2>
+            <button class="close-btn" onclick="toggleCart()">×</button>
+        </div>
+        <div id="cart-items-list"></div>
+        <div class="panel-footer">
+            <button class="action-btn copy-btn" onclick="copyToClipboard()">📋 Skopiuj listę do schowka</button>
+            <button class="action-btn mail-btn" onclick="sendOrder()">✉ Wyślij e-mail</button>
+            <p style="font-size:11px; color:#888; text-align:center;">Po skopiowaniu możesz wkleić listę np. na Messengerze lub WhatsAppie.</p>
+        </div>
+    </div>
+</div>
 
 <div class="grid" id="catalog"></div>
 
@@ -74,74 +83,71 @@
             const response = await fetch(SHEET_URL + '&cb=' + Date.now());
             const data = await response.text();
             const rows = data.split(/\r?\n/).filter(row => row.trim() !== "").slice(1);
-            
             const categories = new Set();
             allSongs = rows.map(row => {
                 let cols = row.includes(';') ? row.split(';') : row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                const song = {
-                    tytul: cols[0].replace(/"/g, '').trim(),
-                    kategoria: cols[1].replace(/"/g, '').trim(),
-                    idYT: cols[2].replace(/"/g, '').trim()
-                };
-                categories.add(song.kategoria);
+                const song = { tytul: cols[0].replace(/"/g, '').trim(), kategoria: cols[1].replace(/"/g, '').trim(), idYT: cols[2].replace(/"/g, '').trim() };
+                if(song.kategoria) categories.add(song.kategoria);
                 return song;
             });
-
-            // Tworzenie przycisków kategorii
             const bar = document.getElementById('category-bar');
             categories.forEach(cat => {
-                if(cat) {
-                    const btn = document.createElement('button');
-                    btn.className = 'cat-btn';
-                    btn.innerText = cat;
-                    btn.onclick = () => filterSongs(cat, btn);
-                    bar.appendChild(btn);
-                }
+                const btn = document.createElement('button'); btn.className = 'cat-btn'; btn.innerText = cat; btn.onclick = () => filterSongs(cat, btn); bar.appendChild(btn);
             });
-
             renderSongs(allSongs);
-        } catch (e) { console.error("Błąd ładowania"); }
+        } catch (e) { console.error("Błąd"); }
     }
 
     function renderSongs(songs) {
-        const container = document.getElementById('catalog');
-        container.innerHTML = '';
+        const container = document.getElementById('catalog'); container.innerHTML = '';
         songs.forEach(song => {
             if (song.idYT.length > 5) {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                    <img class="thumb" src="https://img.youtube.com/vi/${song.idYT}/mqdefault.jpg" onclick="window.open('https://youtube.com/watch?v=${song.idYT}')">
-                    <span class="cat-label">${song.kategoria}</span>
-                    <div class="title">${song.tytul}</div>
-                    <button class="btn-add" onclick="addToCart('${song.tytul.replace(/'/g, "\\'")}')">Dodaj do zestawu</button>
-                `;
+                const card = document.createElement('div'); card.className = 'card';
+                card.innerHTML = `<img class="thumb" src="https://img.youtube.com/vi/${song.idYT}/mqdefault.jpg" onclick="window.open('https://youtube.com/watch?v=${song.idYT}')"><span class="cat-label">${song.kategoria}</span><div class="title">${song.tytul}</div><button class="btn-add" onclick="addToCart('${song.tytul.replace(/'/g, "\\'")}')">Dodaj do listy</button>`;
                 container.appendChild(card);
             }
         });
     }
 
     function filterSongs(category, btn) {
-        // Zmiana wyglądu przycisków
         document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
         if(btn) btn.classList.add('active'); else document.querySelector('.cat-btn').classList.add('active');
-
-        if(category === 'Wszystkie') {
-            renderSongs(allSongs);
-        } else {
-            const filtered = allSongs.filter(s => s.kategoria === category);
-            renderSongs(filtered);
-        }
+        renderSongs(category === 'Wszystkie' ? allSongs : allSongs.filter(s => s.kategoria === category));
     }
 
     function addToCart(title) {
         cart.push(title);
-        document.getElementById('cart-counter').innerText = `Wybrano: ${cart.length} (Poproś o płyty)`;
+        updateCartUI();
+    }
+
+    function updateCartUI() {
+        document.getElementById('cart-counter').innerText = `Wybrano: ${cart.length} (Twoja lista)`;
+        const listDiv = document.getElementById('cart-items-list');
+        listDiv.innerHTML = cart.length === 0 ? "<p style='color:#666;'>Lista jest pusta</p>" : "";
+        cart.forEach((title, index) => {
+            listDiv.innerHTML += `<div class="cart-item"><span>${title}</span><button class="remove-item" onclick="removeItem(${index})">USUŃ [X]</button></div>`;
+        });
+    }
+
+    function removeItem(index) {
+        cart.splice(index, 1);
+        updateCartUI();
+    }
+
+    function toggleCart() {
+        const panel = document.getElementById('cart-panel');
+        panel.style.display = panel.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    function copyToClipboard() {
+        if(cart.length === 0) return alert("Twoja lista jest pusta!");
+        const text = "Dzień dobry, zamawiam utwory z Melodii Wiary:\n- " + cart.join("\n- ");
+        navigator.clipboard.writeText(text).then(() => alert("Lista skopiowana do schowka! Teraz wklej ją w wiadomości."));
     }
 
     function sendOrder() {
         if(cart.length === 0) return alert("Wybierz piosenki!");
-        const mailto = `mailto:TWOJ_MAIL@GMAIL.COM?subject=Zamówienie - Melodia Wiary&body=Dzień dobry,%0D%0AZamawiam utwory:%0D%0A- ${cart.join("%0D%0A- ")}`;
+        const mailto = `mailto:TWOJ_MAIL@GMAIL.COM?subject=Zamówienie - Melodia Wiary&body=Dzień dobry, zamawiam:%0D%0A- ${cart.join("%0D%0A- ")}`;
         window.location.href = mailto;
     }
 
