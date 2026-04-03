@@ -30,26 +30,49 @@
         .toolbar { 
             display: flex; flex-direction: column; align-items: center; 
             margin-bottom: 30px; border-bottom: 1px solid rgba(212, 175, 55, 0.2); 
-            padding-bottom: 15px; text-align: center;
+            padding-bottom: 20px; text-align: center;
         }
         .view-title { 
             color: var(--gold); text-transform: uppercase; letter-spacing: 3px; 
-            margin: 0 0 15px 0; font-size: 18px; font-weight: 300; 
+            margin: 0 0 15px 0; font-size: 20px; font-weight: bold; 
         }
         
-        #sort-box { display: flex; align-items: center; gap: 10px; }
+        /* WYSZUKIWARKA */
+        .search-container { margin-bottom: 15px; width: 100%; max-width: 400px; position: relative; }
+        .search-input { 
+            width: 100%; padding: 12px 40px 12px 15px; border-radius: 25px; 
+            border: 1px solid var(--gold); background: #1e293b; color: white; 
+            outline: none; font-size: 14px; box-sizing: border-box;
+        }
+        .search-icon { position: absolute; right: 15px; top: 12px; color: var(--gold); pointer-events: none; }
+
+        #sort-box { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
         .sort-select { 
             background: #1e293b; color: #eee; border: 1px solid var(--gold); 
             padding: 8px; border-radius: 6px; cursor: pointer; outline: none; font-size: 12px;
         }
 
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
-        .card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 12px; border-radius: 12px; transition: 0.3s; display: flex; flex-direction: column; }
-        .card:hover { transform: translateY(-5px); border-color: var(--gold); background: rgba(255,255,255,0.06); }
-        .thumb { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 8px; cursor: pointer; }
-        .title { font-weight: bold; font-size: 14px; margin: 12px 0; min-height: 38px; color: #fff; line-height: 1.4; }
+        /* SIATKA UTWORÓW */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 25px; }
+        .card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; transition: 0.3s; display: flex; flex-direction: column; }
+        .card:hover { transform: translateY(-5px); border-color: var(--gold); background: rgba(212, 175, 55, 0.05); }
         
-        .btn-action { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--gold); background: none; color: var(--gold); cursor: pointer; font-weight: bold; transition: 0.2s; margin-top: auto; }
+        /* MINIATURA Z RAMKĄ */
+        .thumb { 
+            width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 8px; cursor: pointer; 
+            border: 2px solid rgba(212, 175, 55, 0.3); transition: 0.3s; /* Stała złota ramka */
+        }
+        .card:hover .thumb { border-color: var(--gold); box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
+
+        /* TYTUŁY - WIĘKSZE I WIELKIE LITERY */
+        .title { 
+            font-weight: bold; font-size: 16px; /* Zwiększone o 2pt */
+            margin: 15px 0; min-height: 45px; color: #fff; line-height: 1.3; 
+            text-transform: uppercase; /* Wszystkie z dużej litery */
+            text-align: center;
+        }
+        
+        .btn-action { width: 100%; padding: 12px; border-radius: 6px; border: 2px solid var(--gold); background: none; color: var(--gold); cursor: pointer; font-weight: bold; transition: 0.2s; margin-top: auto; text-transform: uppercase; }
         .btn-action:hover { background: var(--gold); color: black; }
         .btn-remove { border-color: #ef4444; color: #ef4444; }
         .btn-remove:hover { background: #ef4444; color: white; }
@@ -83,8 +106,14 @@
 <div id="main-content">
     <div class="toolbar">
         <h1 id="view-name" class="view-title">Wszystkie Utwory</h1>
+        
+        <div class="search-container">
+            <input type="text" id="search-input" class="search-input" placeholder="Wpisz tytuł piosenki..." onkeyup="handleSearch()">
+            <span class="search-icon">🔍</span>
+        </div>
+
         <div id="sort-box">
-            <label style="font-size: 11px; color: #64748b;">SORTUJ:</label>
+            <label style="font-size: 11px; color: #64748b;">UŁÓŻ WEDŁUG:</label>
             <select class="sort-select" onchange="changeSort(this.value)">
                 <option value="newest">Najnowsze</option>
                 <option value="oldest">Najstarsze</option>
@@ -98,7 +127,7 @@
 
 <script>
     const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTSIMZUO8ZkisiFoqOfypL9hOQBnTbAvtMmBeIuK56_QoiXFu_b7i-de1Jn6Km9symosxJBV6V5PxKO/pub?output=csv'; 
-    let rawSongs = []; let sortedSongs = []; let cart = []; let currentView = 'all'; let currentSort = 'newest';
+    let rawSongs = []; let sortedSongs = []; let cart = []; let currentView = 'all'; let currentSort = 'newest'; let searchQuery = "";
 
     function loadCart() { const saved = localStorage.getItem('melodiaWiaryCart'); if (saved) { cart = JSON.parse(saved); document.getElementById('count').innerText = cart.length; } }
     function saveCart() { localStorage.setItem('melodiaWiaryCart', JSON.stringify(cart)); document.getElementById('count').innerText = cart.length; }
@@ -113,31 +142,26 @@
             const catsSet = new Set();
             rawSongs = rows.map((r, index) => {
                 let cols = r.includes(';') ? r.split(';') : r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                
-                // ROZDZIELANIE KATEGORII PO PRZECINKU
                 let catString = cols[1] ? cols[1].replace(/"/g, '').trim() : "Inne";
                 let categoriesArray = catString.split(',').map(item => item.trim());
-                
                 categoriesArray.forEach(c => { if(c) catsSet.add(c); });
-
-                return { 
-                    tytul: cols[0].replace(/"/g, '').trim(), 
-                    kategorie: categoriesArray, 
-                    idYT: cols[2] ? cols[2].replace(/"/g, '').trim() : "", 
-                    order: index 
-                };
+                return { tytul: cols[0].replace(/"/g, '').trim(), kategorie: categoriesArray, idYT: cols[2] ? cols[2].replace(/"/g, '').trim() : "", order: index };
             });
 
-            // Tworzenie listy kategorii w panelu (posortowane alfabetycznie)
             const catDiv = document.getElementById('category-list');
             Array.from(catsSet).sort().forEach(c => {
                 const b = document.createElement('button'); b.className = 'nav-btn'; b.innerText = "• " + c;
                 b.onclick = () => { currentView = c; updateNavStyles(b); render(); };
                 catDiv.appendChild(b);
             });
-            
             applySort();
         } catch (e) { document.getElementById('view-name').innerText = "Błąd bazy danych"; }
+    }
+
+    // LOGIKA WYSZUKIWANIA
+    function handleSearch() {
+        searchQuery = document.getElementById('search-input').value.toLowerCase();
+        render();
     }
 
     function changeSort(val) { currentSort = val; applySort(); }
@@ -156,16 +180,14 @@
         const isCartView = currentView === 'cart';
         let displayList = [];
 
-        if (currentView === 'all') { 
-            displayList = sortedSongs; 
-            title.innerText = "Wszystkie Utwory"; 
-        } else if (isCartView) { 
-            displayList = cart; 
-            title.innerText = "Twój Wybór"; 
-        } else { 
-            // FILTROWANIE: sprawdza czy kategoria znajduje się w tablicy kategorii utworu
-            displayList = sortedSongs.filter(s => s.kategorie.includes(currentView)); 
-            title.innerText = "Kategoria: " + currentView; 
+        // Filtrowanie po kategorii
+        if (currentView === 'all') { displayList = sortedSongs; title.innerText = "Wszystkie Utwory"; } 
+        else if (isCartView) { displayList = cart; title.innerText = "Twój Wybór"; } 
+        else { displayList = sortedSongs.filter(s => s.kategorie.includes(currentView)); title.innerText = "Kategoria: " + currentView; }
+
+        // Filtrowanie po wyszukiwarce (tylko jeśli coś wpisano)
+        if (searchQuery !== "" && !isCartView) {
+            displayList = displayList.filter(s => s.tytul.toLowerCase().includes(searchQuery));
         }
 
         document.getElementById('order-section').style.display = (isCartView && cart.length > 0) ? 'block' : 'none';
@@ -175,23 +197,23 @@
             if(!s.idYT) return;
             const card = document.createElement('div'); card.className = 'card';
             card.innerHTML = `<img class="thumb" src="https://img.youtube.com/vi/${s.idYT}/mqdefault.jpg" onclick="window.open('https://youtube.com/watch?v=${s.idYT}')"><div class="title">${s.tytul}</div>
-                ${isCartView ? `<button class="btn-action btn-remove" onclick="removeFromCart(${idx})">USUŃ</button>` : `<button class="btn-action" onclick="addToCart('${s.tytul.replace(/'/g, "\\'")}')">DODAJ</button>`}`;
+                ${isCartView ? `<button class="btn-action btn-remove" onclick="removeFromCart(${idx})">USUŃ</button>` : `<button class="btn-action" onclick="addToCart('${s.tytul.replace(/'/g, "\\'")}')">DODAJ DO LISTY</button>`}`;
             grid.appendChild(card);
         });
-        if(displayList.length === 0) grid.innerHTML = "<p style='padding:20px; color:#64748b;'>Lista jest pusta.</p>";
+        if(displayList.length === 0) grid.innerHTML = `<p style='padding:20px; color:#64748b;'>Nie znaleziono utworów pasujących do "${searchQuery}".</p>`;
     }
 
     function addToCart(title) { 
         const song = rawSongs.find(s => s.tytul === title); 
         if(song) { 
             if(cart.find(item => item.tytul === title)) return alert("Już jest na liście!"); 
-            cart.push(song); saveCart(); alert("Dodano!"); 
+            cart.push(song); saveCart(); alert("Dodano do listy!"); 
         } 
     }
     function removeFromCart(index) { cart.splice(index, 1); saveCart(); render(); }
     function showView(view) { currentView = view; const btnId = view === 'all' ? 'btn-all' : 'btn-my-list'; updateNavStyles(document.getElementById(btnId)); render(); }
     function updateNavStyles(activeBtn) { document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); if(activeBtn) activeBtn.classList.add('active'); }
-    function copyToClipboard() { navigator.clipboard.writeText("Moje zamówienie:\n- " + cart.map(s => s.tytul).join("\n- ")).then(() => alert("Skopiowano listę!")); }
+    function copyToClipboard() { navigator.clipboard.writeText("Lista utworów:\n- " + cart.map(s => s.tytul).join("\n- ")).then(() => alert("Skopiowano listę!")); }
     function sendOrder() { window.location.href = `mailto:melodiawiary@gmail.com?subject=Zestaw Pieśni&body=Przesyłam listę:\n- ${cart.map(s => s.tytul).join("\n- ")}`; }
     loadData();
 </script>
