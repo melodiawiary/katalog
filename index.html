@@ -3,101 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Melodia Wiary</title>
+    <title>Katalog Melodia Wiary - Jasna Wersja</title>
     <style>
-        :root { --gold: #d4af37; --bg: #020617; --sidebar: #0f172a; --green: #22c55e; }
+        :root { 
+            --gold: #d4af37; 
+            --bg: #f8fafc; /* Jasne, przyjazne tło */
+            --sidebar: #0f172a; /* Ciemny granat z logo */
+            --green: #15803d; 
+            --text-dark: #0f172a;
+            --card-bg: #ffffff;
+        }
         
-        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; min-height: 100vh; transition: font-size 0.2s; }
+        body { background: var(--bg); color: var(--text-dark); font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; display: flex; min-height: 100vh; transition: font-size 0.2s; }
         body.standard { --f-size: 16px; --f-btn: 14px; }
         body.senior { --f-size: 24px; --f-btn: 20px; }
         body { font-size: var(--f-size); }
 
-        /* PANEL BOCZNY */
-        #sidebar { width: 340px; background: var(--sidebar); border-right: 3px solid var(--gold); display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 1000; }
-        .sidebar-top { padding: 20px; border-bottom: 2px solid #333; flex-shrink: 0; text-align: center; }
+        /* PANEL BOCZNY (CIEMNY DLA KONTRASTU) */
+        #sidebar { width: 340px; background: var(--sidebar); border-right: 4px solid var(--gold); display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 1000; box-shadow: 4px 0 15px rgba(0,0,0,0.1); }
+        .sidebar-top { padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; text-align: center; }
         .sidebar-scroll { flex-grow: 1; overflow-y: auto; padding: 15px; }
         
-        .logo-img { width: 150px; height: 150px; border-radius: 50%; border: 3px solid var(--gold); margin-bottom: 15px; object-fit: cover; }
+        .logo-img { width: 160px; height: 160px; border-radius: 50%; border: 4px solid var(--gold); margin-bottom: 15px; object-fit: cover; background: white; }
         
-        .nav-btn { width: 100%; padding: 15px; margin-bottom: 8px; border-radius: 10px; border: 2px solid transparent; cursor: pointer; font-weight: 900; text-align: left; text-transform: uppercase; font-size: var(--f-btn); transition: 0.2s; }
+        .nav-btn { width: 100%; padding: 15px; margin-bottom: 8px; border-radius: 12px; border: 2px solid transparent; cursor: pointer; font-weight: 900; text-align: left; text-transform: uppercase; font-size: var(--f-btn); transition: 0.2s; }
         .nav-btn-main { background: var(--gold); color: black; }
-        .nav-btn-cat { background: #1e293b; color: #eee; border-color: #333; font-size: 0.85em; }
-        .nav-btn:hover { border-color: white; background: #334155; }
-        .nav-btn.active { background: white; color: black; border-color: var(--gold); }
+        .nav-btn-cat { background: rgba(255,255,255,0.05); color: #cbd5e1; border-color: rgba(255,255,255,0.1); }
+        .nav-btn:hover { border-color: white; background: rgba(255,255,255,0.2); color: white; }
+        .nav-btn.active { background: white; color: var(--sidebar); border-color: var(--gold); }
 
         .size-btn { width: 100%; padding: 12px; margin-top: 5px; font-weight: 900; text-transform: uppercase; cursor: pointer; border: 2px solid var(--gold); background: #000; color: var(--gold); border-radius: 8px; font-size: 16px; }
         .size-btn.active { background: var(--gold); color: black; }
 
         /* TREŚĆ GŁÓWNA */
         #main-content { margin-left: 340px; flex: 1; padding: 0 40px; position: relative; }
-        .header-sticky { position: sticky; top: 0; z-index: 900; background: var(--bg); padding: 20px 0; border-bottom: 2px solid var(--gold); }
-        .search-box { width: 100%; padding: 18px; border-radius: 40px; border: 3px solid var(--gold); background: #000; color: white; font-size: 1.4em; text-align: center; font-weight: bold; margin-bottom: 15px; }
+        .header-sticky { position: sticky; top: 0; z-index: 900; background: var(--bg); padding: 25px 0; border-bottom: 3px solid var(--gold); }
+        
+        .search-box { width: 100%; padding: 18px; border-radius: 40px; border: 3px solid var(--sidebar); background: #fff; color: var(--text-dark); font-size: 1.4em; text-align: center; font-weight: bold; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         
         .controls-wrapper { display: flex; flex-direction: column; gap: 10px; }
         .btn-group { display: flex; gap: 8px; width: 100%; }
         
-        .ctrl-btn { flex: 1; padding: 15px 5px; border: 2px solid var(--gold); background: transparent; color: var(--gold); font-weight: 900; cursor: pointer; border-radius: 10px; text-transform: uppercase; font-size: 15px; white-space: nowrap; transition: 0.2s; }
-        .ctrl-btn.active { background: var(--gold); color: black; }
-        .ctrl-btn:hover { background: rgba(212, 175, 55, 0.2); }
+        /* PRZYCISKI STERUJĄCE W JASNEJ WERSJI */
+        .ctrl-btn { flex: 1; padding: 15px 5px; border: 2px solid var(--sidebar); background: #fff; color: var(--sidebar); font-weight: 900; cursor: pointer; border-radius: 10px; text-transform: uppercase; font-size: 15px; white-space: nowrap; transition: 0.2s; }
+        .ctrl-btn.active { background: var(--sidebar); color: #fff; border-color: var(--sidebar); }
+        .ctrl-btn:hover { background: #e2e8f0; }
 
-        /* WIDOK KART (ZDJĘCIE + TYTUŁ) */
+        /* KARTY - JASNE */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; margin-top: 30px; }
         .card { 
-            background: #0f172a; 
-            border: 2px solid #333; 
+            background: var(--card-bg); 
+            border: 2px solid #e2e8f0; 
             padding: 15px; 
             border-radius: 20px; 
             text-align: center; 
             display: flex; 
             flex-direction: column; 
-            transition: all 0.3s ease; /* Płynne animacje */
-            cursor: default;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
         
-        /* EFEKT PODŚWIETLENIA KARTY */
         .card:hover { 
-            transform: scale(1.05); 
+            transform: translateY(-5px); 
             border-color: var(--gold); 
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
-            background: #1e293b;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
 
-        .thumb { width: 100%; aspect-ratio: 16/9; border-radius: 12px; cursor: pointer; border: 1px solid var(--gold); margin-bottom: 10px; transition: 0.2s; }
-        .thumb:hover { filter: brightness(1.2); }
+        .thumb { width: 100%; aspect-ratio: 16/9; border-radius: 12px; cursor: pointer; border: 1px solid #ddd; margin-bottom: 10px; }
 
-        /* TYTUŁY - DRUKOWANE LITERY, BIAŁY KOLOR */
         .card-title { 
             font-weight: 900; 
             margin-bottom: 15px; 
-            color: white; 
+            color: var(--text-dark); /* CZARNY TEKST DLA CZYTELNOŚCI */
             line-height: 1.2; 
             flex-grow: 1; 
-            text-transform: uppercase; /* TYLKO DUŻE LITERY */
+            text-transform: uppercase; 
         }
 
-        .list-header { background: var(--gold); color: black; padding: 10px 20px; border-radius: 10px; margin: 30px 0 10px 0; font-weight: 900; text-transform: uppercase; }
-        .list-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; border-bottom: 1px solid #333; background: rgba(255,255,255,0.02); transition: 0.2s; }
-        .list-row:hover { background: rgba(212, 175, 55, 0.1); }
-        .list-item-name { cursor: pointer; font-weight: bold; color: white; text-transform: uppercase; }
+        /* WIDOK LISTY */
+        .list-header { background: var(--sidebar); color: white; padding: 12px 20px; border-radius: 10px; margin: 30px 0 10px 0; font-weight: 900; text-transform: uppercase; border-left: 8px solid var(--gold); }
+        .list-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid #e2e8f0; background: #fff; transition: 0.2s; }
+        .list-row:hover { background: #f1f5f9; }
+        .list-item-name { cursor: pointer; font-weight: 800; color: var(--text-dark); text-transform: uppercase; }
 
-        .btn-add { background: var(--gold); color: black; border: none; padding: 12px; border-radius: 10px; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 1em; }
-        .btn-remove { background: #ff4444; color: white; padding: 10px 20px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .btn-add { background: var(--gold); color: black; border: none; padding: 12px; border-radius: 10px; font-weight: 900; cursor: pointer; text-transform: uppercase; transition: 0.2s; }
+        .btn-add:hover { background: #b8962d; transform: scale(1.05); }
+        
+        .btn-remove { background: #be123c; color: white; padding: 10px 20px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
-        @media (max-width: 1100px) { .ctrl-btn { font-size: 12px; } }
-        @media (max-width: 900px) { #sidebar { position: relative; width: 100%; height: auto; } #main-content { margin-left: 0; } }
+        @media (max-width: 900px) { #sidebar { position: relative; width: 100%; height: auto; border-right: none; border-bottom: 4px solid var(--gold); } #main-content { margin-left: 0; } }
     </style>
 </head>
 <body class="standard">
 
 <div id="sidebar">
     <div class="sidebar-top">
-        <img src="melodia_wiary_logo_400.png" class="logo-img" onerror="this.src='https://via.placeholder.com/150?text=LOGO'">
+        <img src="melodia_wiary_logo_400.png" class="logo-img" onerror="this.src='https://via.placeholder.com/160?text=Melodia+Wiary'">
         <button class="nav-btn nav-btn-main" onclick="resetToAll()">🏠 WSZYSTKIE PIEŚNI</button>
         <button class="nav-btn nav-btn-main" id="btn-cart" onclick="setView('cart')" style="margin-top:5px;">⭐ MÓJ WYBÓR (<span id="count">0</span>)</button>
         
         <div style="margin-top:10px;">
-            <button class="size-btn active" id="s-std" onclick="updateSize('standard')">STANDARDOWE LITERY</button>
-            <button class="size-btn" id="s-big" onclick="updateSize('senior')">BARDZO DUŻE LITERY</button>
+            <button class="size-btn active" id="s-std" onclick="updateSize('standard')">LITERY STANDARD</button>
+            <button class="size-btn" id="s-big" onclick="updateSize('senior')">LITERY DLA SENIORA</button>
         </div>
     </div>
     <div class="sidebar-scroll" id="cat-list"></div>
@@ -105,7 +112,7 @@
 
 <div id="main-content">
     <div class="header-sticky" id="toolbar">
-        <input type="text" id="search" class="search-box" placeholder="WPISZ NAZWĘ PIEŚNI LUB SZUKAJ SŁOWA..." onkeyup="doSearch()">
+        <input type="text" id="search" class="search-box" placeholder="WPISZ NAZWĘ LUB SŁOWO Z PIEŚNI..." onkeyup="doSearch()">
         
         <div class="controls-wrapper">
             <div class="btn-group">
@@ -114,10 +121,10 @@
             </div>
             
             <div class="btn-group">
-                <button class="ctrl-btn active" id="s-new" onclick="setSort('newest')">SORTUJ OD NAJNOWSZYCH</button>
-                <button class="ctrl-btn" id="s-old" onclick="setSort('oldest')">SORTUJ OD NAJSTARSZYCH</button>
-                <button class="ctrl-btn" id="s-az" onclick="setSort('az')">SORTUJ OD A DO Z</button>
-                <button class="ctrl-btn" id="s-za" onclick="setSort('za')">SORTUJ OD Z DO A</button>
+                <button class="ctrl-btn active" id="s-new" onclick="setSort('newest')">SORTUJ: NAJNOWSZE</button>
+                <button class="ctrl-btn" id="s-old" onclick="setSort('oldest')">SORTUJ: NAJSTARSZE</button>
+                <button class="ctrl-btn" id="s-az" onclick="setSort('az')">SORTUJ: A -> Z</button>
+                <button class="ctrl-btn" id="s-za" onclick="setSort('za')">SORTUJ: Z -> A</button>
             </div>
         </div>
     </div>
@@ -132,7 +139,7 @@
     function updateSize(s) { document.body.className = s; document.getElementById('s-std').classList.toggle('active', s==='standard'); document.getElementById('s-big').classList.toggle('active', s==='senior'); }
 
     async function init() {
-        const saved = localStorage.getItem('mv_cart_v9'); if(saved) cart = JSON.parse(saved);
+        const saved = localStorage.getItem('mv_cart_light'); if(saved) cart = JSON.parse(saved);
         try {
             const r = await fetch(CSV + '&cb=' + Date.now());
             const text = await r.text();
@@ -209,7 +216,7 @@
     function resetToAll() { currentView = 'all'; query = ""; document.getElementById('search').value = ""; render(); }
     
     function renderCart(container) {
-        container.innerHTML = `<h1 style="color:var(--gold); text-align:center;">MÓJ WYBÓR</h1>`;
+        container.innerHTML = `<h1 style="color:var(--sidebar); text-align:center; text-transform:uppercase; font-weight:900;">TWOJE PŁYTY</h1>`;
         let curCD = 1, curSec = 0, groups = {1: []};
         cart.forEach(s => {
             let sec = (parseInt(s.czas.split(':')[0])*60) + (parseInt(s.czas.split(':')[1]||0));
@@ -217,25 +224,25 @@
             else { curSec += sec; groups[curCD].push(s); }
         });
         Object.keys(groups).forEach(n => {
-            const box = document.createElement('div'); box.className = 'cd-box';
-            box.style.border = "4px solid var(--gold)"; box.style.padding = "25px"; box.style.marginBottom = "30px"; box.style.borderRadius = "25px";
-            box.innerHTML = `<div style="display:flex; align-items:center; gap:20px; border-bottom:2px solid var(--gold); padding-bottom:15px; margin-bottom:15px;">
+            const box = document.createElement('div'); box.className = 'card';
+            box.style.border = "4px solid var(--gold)"; box.style.padding = "25px"; box.style.marginBottom = "30px"; box.style.background = "#fff";
+            box.innerHTML = `<div style="display:flex; align-items:center; gap:20px; border-bottom:3px solid var(--gold); padding-bottom:15px; margin-bottom:15px;">
                 <img src="melodia_wiary_logo_400.png" style="width:70px; height:70px; border-radius:50%; border:2px solid var(--gold);">
-                <h2 style="flex-grow:1; color:var(--gold)">PŁYTA NR ${n}</h2>
+                <h2 style="flex-grow:1; color:var(--sidebar); text-transform:uppercase;">PŁYTA NR ${n}</h2>
                 <button class="btn-add" style="background:var(--green); color:white;" onclick="alert('Złożono zamówienie!')">ZAMÓW PŁYTĘ</button>
-            </div><div class="grid">${groups[n].map(s => `<div class="card" style="padding:10px">
+            </div><div class="grid">${groups[n].map(s => `<div class="card" style="padding:10px; box-shadow:none; border:1px solid #eee;">
                 <img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb" style="height:70px; width:auto; margin:0 auto">
-                <div style="font-size:0.9em; font-weight:bold; margin-bottom:10px; color:white; text-transform:uppercase;">${s.tytul}</div>
-                <button class="btn-remove" onclick="remove('${s.tytul.replace(/'/g,"")}')">USUŃ Z LISTY</button>
+                <div style="font-size:0.9em; font-weight:bold; margin-bottom:10px; color:var(--text-dark); text-transform:uppercase;">${s.tytul}</div>
+                <button class="btn-remove" onclick="remove('${s.tytul.replace(/'/g,"")}')">USUŃ</button>
             </div>`).join('')}</div>`;
             container.appendChild(box);
         });
-        container.innerHTML += `<button class="ctrl-btn" style="width:100%; margin-top:20px; color:white; background:#475569;" onclick="setView('all')">POWRÓT DO KATALOGU</button>`;
+        container.innerHTML += `<button class="ctrl-btn active" style="width:100%; margin-top:20px;" onclick="setView('all')">POWRÓT DO KATALOGU</button>`;
     }
 
     function add(t) { if(cart.find(x=>x.tytul===t)) return; cart.push(songs.find(x=>x.tytul===t)); save(); }
     function remove(t) { cart = cart.filter(x=>x.tytul!==t); save(); }
-    function save() { localStorage.setItem('mv_cart_v9', JSON.stringify(cart)); render(); }
+    function save() { localStorage.setItem('mv_cart_light', JSON.stringify(cart)); render(); }
     function doSearch() { query = document.getElementById('search').value.toLowerCase(); render(); }
     init();
 </script>
