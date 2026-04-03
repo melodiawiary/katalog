@@ -32,15 +32,11 @@
         /* TREŚĆ GŁÓWNA */
         #main-content { margin-left: 280px; flex: 1; padding: 0 30px 30px 30px; position: relative; }
         
-        /* --- ZABLOKOWANY PANEL GÓRNY (STICKY) --- */
         .toolbar { 
             position: sticky; top: 0; z-index: 900;
-            background: var(--bg); /* Tło nagłówka, żeby treść pod nim nie prześwitywała */
-            display: flex; flex-direction: column; align-items: center; 
+            background: var(--bg); display: flex; flex-direction: column; align-items: center; 
             padding: 25px 0 20px 0; border-bottom: 1px solid rgba(212, 175, 55, 0.2); 
-            text-align: center;
-            box-shadow: 0 10px 20px -10px rgba(0,0,0,0.5); /* Cień pod nagłówkiem */
-            margin-bottom: 30px;
+            text-align: center; box-shadow: 0 10px 20px -10px rgba(0,0,0,0.5); margin-bottom: 30px;
         }
         
         .view-title { color: var(--gold); text-transform: uppercase; letter-spacing: 3px; margin: 0 0 15px 0; font-size: 22px; font-weight: bold; }
@@ -83,7 +79,7 @@
         @media (max-width: 768px) {
             #sidebar { width: 100%; height: auto; position: relative; border-right: none; }
             #main-content { margin-left: 0; padding: 15px; }
-            .toolbar { position: relative; padding: 15px 0; } /* Na komórkach wyłączamy sticky dla wygody */
+            .toolbar { position: relative; }
             .search-row { flex-direction: column; }
         }
     </style>
@@ -110,17 +106,15 @@
 <div id="main-content">
     <div class="toolbar">
         <h1 id="view-name" class="view-title">Wszystkie Utwory</h1>
-        
         <div class="search-row">
             <div class="search-container">
-                <input type="text" id="search-input" class="search-input" placeholder="Wpisz czego szukasz..." onkeyup="handleSearch()">
+                <input type="text" id="search-input" class="search-input" placeholder="Szukaj (np. Psalm 11)..." onkeyup="handleSearch()">
             </div>
             <div class="view-toggle-btns">
-                <button id="mode-grid" class="toggle-btn active" onclick="setViewMode('grid')" title="Widok miniatur">⬜</button>
-                <button id="mode-list" class="toggle-btn" onclick="setViewMode('list')" title="Widok listy">☰</button>
+                <button id="mode-grid" class="toggle-btn active" onclick="setViewMode('grid')" title="Siatka">⬜</button>
+                <button id="mode-list" class="toggle-btn" onclick="setViewMode('list')" title="Lista">☰</button>
             </div>
         </div>
-
         <div id="sort-box">
             <select class="sort-select" onchange="changeSort(this.value)">
                 <option value="newest">Najnowsze</option>
@@ -135,9 +129,11 @@
 </div>
 
 <script>
-    // Tu pozostaje Twoja logika skryptu (bez zmian, bo działa świetnie)
     const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTSIMZUO8ZkisiFoqOfypL9hOQBnTbAvtMmBeIuK56_QoiXFu_b7i-de1Jn6Km9symosxJBV6V5PxKO/pub?output=csv'; 
     let rawSongs = []; let sortedSongs = []; let cart = []; let currentView = 'all'; let currentSort = 'newest'; let searchQuery = ""; let viewMode = 'grid';
+
+    // FUNKCJA INTELIGENTNEGO SORTOWANIA (Natural Sort)
+    const naturalSort = (a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
 
     function loadCart() { const saved = localStorage.getItem('melodiaWiaryCart'); if (saved) { cart = JSON.parse(saved); document.getElementById('count').innerText = cart.length; } }
     function saveCart() { localStorage.setItem('melodiaWiaryCart', JSON.stringify(cart)); document.getElementById('count').innerText = cart.length; }
@@ -157,7 +153,7 @@
                 return { tytul: cols[0].replace(/"/g, '').trim(), kategorie: categoriesArray, idYT: cols[2] ? cols[2].replace(/"/g, '').trim() : "", order: index };
             });
             const catDiv = document.getElementById('category-list');
-            Array.from(catsSet).sort().forEach(c => {
+            Array.from(catsSet).sort(naturalSort).forEach(c => {
                 const b = document.createElement('button'); b.className = 'nav-btn'; b.innerText = "• " + c;
                 b.onclick = () => { currentView = c; updateNavStyles(b); render(); };
                 catDiv.appendChild(b);
@@ -175,11 +171,12 @@
 
     function handleSearch() { searchQuery = document.getElementById('search-input').value.toLowerCase(); render(); }
     function changeSort(val) { currentSort = val; applySort(); }
+
     function applySort() {
         sortedSongs = [...rawSongs];
         if (currentSort === 'newest') sortedSongs.sort((a, b) => b.order - a.order);
         if (currentSort === 'oldest') sortedSongs.sort((a, b) => a.order - b.order);
-        if (currentSort === 'az') sortedSongs.sort((a, b) => a.tytul.localeCompare(b.tytul));
+        if (currentSort === 'az') sortedSongs.sort((a, b) => naturalSort(a.tytul, b.tytul));
         render();
     }
 
@@ -211,10 +208,10 @@
                 if (!groups[cat]) groups[cat] = [];
                 groups[cat].push(s);
             });
-            Object.keys(groups).sort().forEach(catName => {
+            Object.keys(groups).sort(naturalSort).forEach(catName => {
                 const sec = document.createElement('div'); sec.className = 'list-category-section';
                 sec.innerHTML = `<div class="list-category-title">${catName}</div>`;
-                groups[catName].sort((a,b) => a.tytul.localeCompare(b.tytul)).forEach(s => {
+                groups[catName].sort((a,b) => naturalSort(a.tytul, b.tytul)).forEach(s => {
                     const item = document.createElement('div'); item.className = 'list-item';
                     item.innerHTML = `<a href="https://youtube.com/watch?v=${s.idYT}" target="_blank" class="list-link">• ${s.tytul}</a>
                                       <button class="list-add-btn" onclick="addToCart('${s.tytul.replace(/'/g, "\\'")}')">DODAJ (+)</button>`;
