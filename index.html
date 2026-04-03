@@ -14,8 +14,21 @@
             --card-bg: #ffffff;
         }
         
-        body.standard { --f-size: 16px; --f-btn: 14px; --f-ctrl: 15px; --f-tip: 22px; --f-search: 1.4em; }
-        body.senior { --f-size: 24px; --f-btn: 22px; --f-ctrl: 22px; --f-tip: 19px; --f-search: 1.8em; }
+        /* POPRAWIONE SKALOWANIE DLA PRZYCISKÓW STERUJĄCYCH */
+        body.standard { 
+            --f-size: 16px; 
+            --f-btn: 14px; 
+            --f-ctrl: 13px; /* Rozmiar przycisków sortowania */
+            --f-tip: 22px; 
+            --f-search: 1.4em; 
+        }
+        body.senior { 
+            --f-size: 24px; 
+            --f-btn: 22px; 
+            --f-ctrl: 20px; /* Powiększone przyciski sortowania */
+            --f-tip: 28px; 
+            --f-search: 1.8em; 
+        }
 
         body { background: var(--bg); color: var(--text-dark); font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; min-height: 100vh; font-size: var(--f-size); }
 
@@ -28,7 +41,7 @@
         .nav-btn-main { background: var(--gold); color: black; }
         .nav-btn.active { background: var(--cyan) !important; color: white !important; border-color: white; }
 
-        .size-btn { width: 100%; padding: 10px; margin-top: 5px; font-weight: 900; cursor: pointer; border: 2px solid #555; background: #000; color: #888; border-radius: 8px; font-size: 12px; }
+        .size-btn { width: 100%; padding: 10px; margin-top: 5px; font-weight: 900; cursor: pointer; border: 2px solid #555; background: #000; color: #888; border-radius: 8px; font-size: 14px; }
         .size-btn.active { border-color: var(--cyan); color: white; }
 
         #main-content { margin-left: 340px; flex: 1; padding: 0 40px; }
@@ -36,7 +49,9 @@
         .search-box { width: 100%; padding: 15px; border-radius: 30px; border: 3px solid var(--sidebar); font-size: var(--f-search); text-align: center; font-weight: bold; margin-bottom: 10px; box-sizing: border-box; }
         
         .btn-group { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
-        .ctrl-btn { flex: 1; min-width: 180px; padding: 12px; border: 2px solid var(--sidebar); background: #fff; font-weight: 900; cursor: pointer; border-radius: 8px; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
+        
+        /* KLUCZOWA POPRAWKA: font-size używa teraz zmiennej --f-ctrl */
+        .ctrl-btn { flex: 1; min-width: 180px; padding: 12px; border: 2px solid var(--sidebar); background: #fff; font-weight: 900; cursor: pointer; border-radius: 8px; text-transform: uppercase; font-size: var(--f-ctrl); letter-spacing: 0.5px; transition: 0.2s; }
         .ctrl-btn.active { background: var(--sidebar); color: #fff; }
 
         .view-title { font-size: 2em; font-weight: 900; margin: 20px 0; border-left: 10px solid var(--gold); padding-left: 20px; text-transform: uppercase; }
@@ -52,12 +67,12 @@
         .thumb-overlay span { color: var(--gold); }
 
         .card-title { font-weight: 900; margin-bottom: 10px; text-transform: uppercase; flex-grow: 1; font-size: 1.1em; line-height: 1.2; }
-        .btn-add { background: var(--gold); color: black; border: none; padding: 12px; border-radius: 10px; font-weight: 900; cursor: pointer; text-transform: uppercase; width: 100%; }
+        .btn-add { background: var(--gold); color: black; border: none; padding: 12px; border-radius: 10px; font-weight: 900; cursor: pointer; text-transform: uppercase; width: 100%; font-size: var(--f-btn); }
         .btn-add.selected { background: var(--cyan); color: white; }
 
-        .cd-progress-container { background: #e2e8f0; border-radius: 20px; height: 25px; width: 100%; margin: 15px 0; overflow: hidden; border: 2px solid var(--sidebar); position: relative; }
+        .cd-progress-container { background: #e2e8f0; border-radius: 20px; height: 30px; width: 100%; margin: 15px 0; overflow: hidden; border: 2px solid var(--sidebar); position: relative; }
         .cd-progress-bar { background: var(--cyan); height: 100%; transition: 0.5s; }
-        .cd-info-text { font-weight: 800; font-size: 14px; margin-bottom: 10px; color: #475569; }
+        .cd-info-text { font-weight: 800; font-size: 1em; margin-bottom: 10px; color: #475569; }
 
         @media (max-width: 900px) { #sidebar { position: relative; width: 100%; height: auto; } #main-content { margin-left: 0; } }
     </style>
@@ -70,8 +85,8 @@
         <button class="nav-btn nav-btn-main" id="cat-all" onclick="setView('all')">🏠 WSZYSTKIE PIEŚNI</button>
         <button class="nav-btn nav-btn-main" id="btn-cart" onclick="setView('cart')">⭐ MÓJ WYBÓR (<span id="count">0</span>)</button>
         <div style="margin-top:10px;">
-            <button class="size-btn active" id="s-std" onclick="updateSize('standard')">STANDARDOWE</button>
-            <button class="size-btn" id="s-big" onclick="updateSize('senior')">BARDZO DUŻE</button>
+            <button class="size-btn" id="s-std" onclick="updateSize('standard')">LITERY: STANDARDOWE</button>
+            <button class="size-btn" id="s-big" onclick="updateSize('senior')">LITERY: BARDZO DUŻE</button>
         </div>
     </div>
     <div class="sidebar-scroll" id="cat-list"></div>
@@ -96,7 +111,7 @@
 
 <script>
     const CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTSIMZUO8ZkisiFoqOfypL9hOQBnTbAvtMmBeIuK56_QoiXFu_b7i-de1Jn6Km9symosxJBV6V5PxKO/pub?output=csv';
-    const STORAGE_KEY = 'mv_PERMANENT_v3';
+    const STORAGE_KEY = 'mv_PERMANENT_v4';
     let songs = [], cart = [], currentView = 'all', displayMode = 'grid', query = "", sortType = 'newest';
 
     function parseCSVLine(text) {
@@ -122,7 +137,7 @@
     function loadStableCart() {
         const current = localStorage.getItem(STORAGE_KEY);
         if(current) return JSON.parse(current);
-        const oldKeys = ['mv_PERMANENT_v2', 'mv_PERMANENT_v1', 'mv_global_stable_storage'];
+        const oldKeys = ['mv_PERMANENT_v3', 'mv_PERMANENT_v2', 'mv_PERMANENT_v1', 'mv_global_stable_storage'];
         for(let key of oldKeys) {
             const oldData = localStorage.getItem(key);
             if(oldData) {
@@ -136,7 +151,8 @@
 
     async function init() {
         cart = loadStableCart();
-        const savedFont = localStorage.getItem('mv_font_pref'); if(savedFont) updateSize(savedFont);
+        const savedFont = localStorage.getItem('mv_font_pref') || 'standard';
+        updateSize(savedFont);
 
         try {
             const r = await fetch(CSV + '&cb=' + Date.now());
@@ -209,9 +225,9 @@
                     <button class="btn-add ${isSel ? 'selected' : ''}" onclick="toggleSong('${jsTytul}')">${isSel ? 'USUŃ' : 'DODAJ'}</button>
                 </div>`;
             } else {
-                g.innerHTML += `<div style="display:flex; justify-content:space-between; padding:15px; border-bottom:1px solid #ddd; background:white; margin-bottom:5px; border-radius:10px;">
-                    <span style="font-weight:700; cursor:pointer;" onclick="window.open('https://youtube.com/watch?v=${s.yt}')">${s.tytul}</span>
-                    <button class="btn-add ${isSel ? 'selected' : ''}" style="width:auto; padding:5px 20px" onclick="toggleSong('${jsTytul}')">${isSel ? 'USUŃ' : 'DODAJ'}</button>
+                g.innerHTML += `<div style="display:flex; justify-content:space-between; padding:15px; border-bottom:1px solid #ddd; background:white; margin-bottom:5px; border-radius:10px; align-items:center;">
+                    <span style="font-weight:700; cursor:pointer; flex: 1;" onclick="window.open('https://youtube.com/watch?v=${s.yt}')">${s.tytul}</span>
+                    <button class="btn-add ${isSel ? 'selected' : ''}" style="width:auto; padding:10px 25px; margin-left:15px;" onclick="toggleSong('${jsTytul}')">${isSel ? 'USUŃ' : 'DODAJ'}</button>
                 </div>`;
             }
         });
@@ -219,7 +235,7 @@
     }
 
     function renderCart(container) {
-        if(cart.length === 0) { container.innerHTML += `<p style="text-align:center; padding:40px;">LISTA JEST PUSTA.</p><button class="btn-add" onclick="setView('all')">WRÓĆ DO KATALOGU</button>`; return; }
+        if(cart.length === 0) { container.innerHTML += `<p style="text-align:center; padding:40px; font-weight:bold;">LISTA JEST PUSTA.</p><button class="btn-add" onclick="setView('all')">WRÓĆ DO KATALOGU</button>`; return; }
         
         let groups = {1: []}, curCD = 1, curSec = 0;
         cart.forEach(s => {
@@ -241,7 +257,7 @@
                 <div class="cd-info-text">Czas: ${Math.floor(totalS/60)} min / 65 min — <b>${msg}</b></div>
                 <div class="cd-progress-container"><div class="cd-progress-bar" style="width:${proc}%"></div></div>
                 <div class="grid"></div>
-                <button class="nav-btn nav-btn-main" style="margin-top:20px; width:auto; padding:10px 40px" onclick="alert('Twoje zamówienie zostało zapisane!')">ZAMÓW TĘ PŁYTĘ</button>
+                <button class="nav-btn nav-btn-main" style="margin-top:20px; width:auto; padding:15px 45px" onclick="alert('Twoje zamówienie zostało wysłane!')">ZAMÓW TĘ PŁYTĘ</button>
             `;
             const g = box.querySelector('.grid');
             groups[n].forEach(s => {
@@ -251,13 +267,13 @@
                         <img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb">
                         <div class="thumb-overlay">ODTWÓRZ NA<span>YOUTUBE</span></div>
                     </div>
-                    <div class="card-title" style="font-size:1.4em;">${s.tytul}</div>
+                    <div class="card-title">${s.tytul}</div>
                     <button class="btn-add selected" onclick="toggleSong('${jsTytul}')">USUŃ Z LISTY</button>
                 </div>`;
             });
             container.appendChild(box);
         });
-        container.innerHTML += `<button class="ctrl-btn active" style="width:100%; padding:20px; margin-bottom:50px" onclick="setView('all')">POWRÓT DO KATALOGU</button>`;
+        container.innerHTML += `<button class="ctrl-btn active" style="width:100%; padding:20px; margin-bottom:50px; font-size:1.5em;" onclick="setView('all')">POWRÓT DO KATALOGU</button>`;
     }
 
     function setMode(m) { displayMode = m; document.getElementById('m-grid').classList.toggle('active', m==='grid'); document.getElementById('m-list').classList.toggle('active', m==='list'); render(); }
