@@ -11,7 +11,7 @@
         /* PANEL BOCZNY */
         #sidebar { 
             width: 280px; background: var(--sidebar); border-right: 1px solid rgba(212, 175, 55, 0.2); 
-            padding: 20px; display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 100;
+            padding: 20px; display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 1000;
             box-sizing: border-box; overflow-y: auto;
         }
         #sidebar::-webkit-scrollbar { width: 5px; }
@@ -30,13 +30,19 @@
         .nav-btn.order-btn { background: var(--gold); color: black; font-weight: bold; margin-top: 8px; text-align: center; }
 
         /* TREŚĆ GŁÓWNA */
-        #main-content { margin-left: 280px; flex: 1; padding: 30px; }
+        #main-content { margin-left: 280px; flex: 1; padding: 0 30px 30px 30px; position: relative; }
         
+        /* --- ZABLOKOWANY PANEL GÓRNY (STICKY) --- */
         .toolbar { 
+            position: sticky; top: 0; z-index: 900;
+            background: var(--bg); /* Tło nagłówka, żeby treść pod nim nie prześwitywała */
             display: flex; flex-direction: column; align-items: center; 
-            margin-bottom: 30px; border-bottom: 1px solid rgba(212, 175, 55, 0.2); 
-            padding-bottom: 20px; text-align: center;
+            padding: 25px 0 20px 0; border-bottom: 1px solid rgba(212, 175, 55, 0.2); 
+            text-align: center;
+            box-shadow: 0 10px 20px -10px rgba(0,0,0,0.5); /* Cień pod nagłówkiem */
+            margin-bottom: 30px;
         }
+        
         .view-title { color: var(--gold); text-transform: uppercase; letter-spacing: 3px; margin: 0 0 15px 0; font-size: 22px; font-weight: bold; }
         
         .search-row { display: flex; align-items: center; gap: 15px; width: 100%; max-width: 600px; margin-bottom: 15px; }
@@ -77,6 +83,7 @@
         @media (max-width: 768px) {
             #sidebar { width: 100%; height: auto; position: relative; border-right: none; }
             #main-content { margin-left: 0; padding: 15px; }
+            .toolbar { position: relative; padding: 15px 0; } /* Na komórkach wyłączamy sticky dla wygody */
             .search-row { flex-direction: column; }
         }
     </style>
@@ -122,11 +129,13 @@
             </select>
         </div>
     </div>
+
     <div id="catalog-grid" class="grid"></div>
     <div id="catalog-list" class="list-container" style="display:none;"></div>
 </div>
 
 <script>
+    // Tu pozostaje Twoja logika skryptu (bez zmian, bo działa świetnie)
     const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTSIMZUO8ZkisiFoqOfypL9hOQBnTbAvtMmBeIuK56_QoiXFu_b7i-de1Jn6Km9symosxJBV6V5PxKO/pub?output=csv'; 
     let rawSongs = []; let sortedSongs = []; let cart = []; let currentView = 'all'; let currentSort = 'newest'; let searchQuery = ""; let viewMode = 'grid';
 
@@ -196,7 +205,6 @@
             });
         } else {
             grid.style.display = 'none'; listCont.style.display = 'block';
-            // Grupowanie dla widoku listy
             const groups = {};
             displayList.forEach(s => {
                 const cat = currentView === 'all' ? s.kategorie[0] : currentView;
