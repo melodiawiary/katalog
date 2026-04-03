@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Melodia Wiary - Katalog Utworów</title>
+    <title>Melodia Wiary - Konfigurator Albumów</title>
     <style>
         :root { --gold: #d4af37; --bg: #020617; --sidebar: #0f172a; }
         body { background: var(--bg); color: #eee; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; min-height: 100vh; }
@@ -14,12 +14,7 @@
             padding: 20px; display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 1000;
             box-sizing: border-box; overflow-y: auto;
         }
-        #sidebar::-webkit-scrollbar { width: 5px; }
-        #sidebar::-webkit-scrollbar-thumb { background: rgba(212, 175, 55, 0.3); border-radius: 10px; }
-
-        .logo-img { width: 100%; height: auto; margin-bottom: 25px; filter: drop-shadow(0 0 10px rgba(212,175,55,0.2)); flex-shrink: 0; }
-        .nav-group { margin-bottom: 25px; flex-shrink: 0; }
-        .nav-label { font-size: 11px; text-transform: uppercase; color: #64748b; letter-spacing: 1px; margin-bottom: 10px; display: block; font-weight: bold; }
+        .logo-img { width: 100%; height: auto; margin-bottom: 25px; filter: drop-shadow(0 0 10px rgba(212,175,55,0.2)); }
         
         .nav-btn { 
             width: 100%; background: none; border: 1px solid transparent; color: #ccc; 
@@ -27,61 +22,45 @@
             font-size: 14px; text-transform: uppercase; font-weight: 500;
         }
         .nav-btn:hover, .nav-btn.active { background: rgba(212, 175, 55, 0.1); border-color: var(--gold); color: var(--gold); }
-        .nav-btn.order-btn { background: var(--gold); color: black; font-weight: bold; margin-top: 8px; text-align: center; }
 
         /* TREŚĆ GŁÓWNA */
-        #main-content { margin-left: 280px; flex: 1; padding: 0 30px 30px 30px; position: relative; }
+        #main-content { margin-left: 280px; flex: 1; padding: 0 30px 30px 30px; }
         
         .toolbar { 
-            position: sticky; top: 0; z-index: 900;
-            background: var(--bg); display: flex; flex-direction: column; align-items: center; 
+            position: sticky; top: 0; z-index: 900; background: var(--bg);
+            display: flex; flex-direction: column; align-items: center; 
             padding: 25px 0 20px 0; border-bottom: 1px solid rgba(212, 175, 55, 0.2); 
-            text-align: center; box-shadow: 0 10px 20px -10px rgba(0,0,0,0.5); margin-bottom: 30px;
+            margin-bottom: 30px;
         }
-        
-        .view-title { color: var(--gold); text-transform: uppercase; letter-spacing: 3px; margin: 0 0 15px 0; font-size: 22px; font-weight: bold; }
-        
-        .search-row { display: flex; align-items: center; gap: 15px; width: 100%; max-width: 600px; margin-bottom: 15px; }
-        .search-container { flex: 1; position: relative; }
-        .search-input { 
-            width: 100%; padding: 14px 45px 14px 20px; border-radius: 30px; 
-            border: 1px solid var(--gold); background: #1e293b; color: white; 
-            outline: none; font-size: 16px; box-sizing: border-box;
-        }
-        .view-toggle-btns { display: flex; gap: 5px; }
-        .toggle-btn { 
-            background: #1e293b; border: 1px solid var(--gold); color: var(--gold); 
-            padding: 10px 15px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-size: 18px;
-        }
-        .toggle-btn.active { background: var(--gold); color: black; }
 
-        /* WIDOK SIATKI */
+        /* KALKULATOR PŁYT W KOSZYKU */
+        .cart-panel {
+            background: rgba(212, 175, 55, 0.05); border: 1px solid var(--gold);
+            padding: 20px; border-radius: 15px; margin-bottom: 30px;
+        }
+        .cd-display { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 15px; }
+        .cd-miniature { text-align: center; width: 100px; }
+        .cd-icon-img { width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--gold); object-fit: cover; }
+        .cd-label { font-size: 10px; color: var(--gold); margin-top: 5px; font-weight: bold; }
+
+        .order-multiplier {
+            display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.05);
+            padding: 15px; border-radius: 10px; margin-top: 20px; border: 1px dashed var(--gold);
+        }
+        .qty-input { width: 60px; padding: 10px; background: #000; border: 1px solid var(--gold); color: var(--gold); font-weight: bold; text-align: center; border-radius: 5px; }
+
+        /* WIDOKI */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 25px; }
-        .card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; transition: 0.3s; display: flex; flex-direction: column; }
-        .card:hover { transform: translateY(-5px); border-color: var(--gold); background: rgba(212, 175, 55, 0.05); }
-        .thumb { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 8px; cursor: pointer; border: 2px solid rgba(212, 175, 55, 0.3); }
-        .card:hover .thumb { border-color: var(--gold); box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
-        .title { font-weight: bold; font-size: 15px; margin: 15px 0; min-height: 40px; color: #fff; line-height: 1.3; text-transform: uppercase; text-align: center; }
+        .card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; display: flex; flex-direction: column; }
+        .thumb { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 8px; border: 2px solid rgba(212, 175, 55, 0.3); cursor: pointer; }
+        .title { font-weight: bold; font-size: 14px; margin: 15px 0; text-transform: uppercase; text-align: center; height: 35px; overflow: hidden; }
+        .duration-tag { font-size: 11px; color: #64748b; text-align: center; margin-bottom: 10px; }
 
-        /* WIDOK LISTY */
-        .list-container { max-width: 900px; margin: 0 auto; text-align: left; }
-        .list-category-section { margin-bottom: 40px; border-left: 3px solid var(--gold); padding-left: 20px; }
-        .list-category-title { color: var(--gold); font-size: 20px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; border-bottom: 1px solid rgba(212,175,55,0.1); padding-bottom: 5px; }
-        .list-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .list-link { color: #eee; text-decoration: none; font-size: 16px; text-transform: uppercase; transition: 0.2s; font-weight: 500; }
-        .list-link:hover { color: var(--gold); padding-left: 10px; }
-        .list-add-btn { background: none; border: 1px solid var(--gold); color: var(--gold); padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; text-transform: uppercase; font-weight: bold; }
-        .list-add-btn:hover { background: var(--gold); color: black; }
-
-        .btn-action { width: 100%; padding: 12px; border-radius: 6px; border: 2px solid var(--gold); background: none; color: var(--gold); cursor: pointer; font-weight: bold; transition: 0.2s; margin-top: auto; text-transform: uppercase; }
+        .btn-action { width: 100%; padding: 12px; border-radius: 6px; border: 2px solid var(--gold); background: none; color: var(--gold); cursor: pointer; font-weight: bold; text-transform: uppercase; }
         .btn-action:hover { background: var(--gold); color: black; }
+        .btn-remove { border-color: #ef4444; color: #ef4444; margin-top: 10px; }
 
-        @media (max-width: 768px) {
-            #sidebar { width: 100%; height: auto; position: relative; border-right: none; }
-            #main-content { margin-left: 0; padding: 15px; }
-            .toolbar { position: relative; }
-            .search-row { flex-direction: column; }
-        }
+        @media (max-width: 768px) { #sidebar { width: 100%; height: auto; position: relative; } #main-content { margin-left: 0; } }
     </style>
 </head>
 <body>
@@ -89,145 +68,124 @@
 <div id="sidebar">
     <img src="https://lh3.googleusercontent.com/u/0/d/1lGrhzfxzTIAlH2iaHahCjWAZYuqxknP7" alt="Melodia Wiary" class="logo-img">
     <div class="nav-group">
-        <span class="nav-label">Menu główne</span>
+        <span class="nav-label">Menu</span>
         <button class="nav-btn active" id="btn-all" onclick="showView('all')">🏠 WSZYSTKIE UTWORY</button>
         <button class="nav-btn" id="btn-my-list" onclick="showView('cart')">⭐ MÓJ WYBÓR (<span id="count">0</span>)</button>
     </div>
-    <div class="nav-group">
-        <span class="nav-label">Kategorie</span>
-        <div id="category-list"></div>
-    </div>
-    <div id="order-section" style="display:none; margin-top: auto; padding-top: 15px; border-top: 1px solid rgba(212, 175, 55, 0.2);">
-        <button class="nav-btn order-btn" onclick="copyToClipboard()">📋 SKOPIUJ LISTĘ</button>
-        <button class="nav-btn order-btn" style="background:#eee;" onclick="sendOrder()">✉ WYŚLIJ E-MAIL</button>
-    </div>
+    <div id="category-list"></div>
 </div>
 
 <div id="main-content">
     <div class="toolbar">
         <h1 id="view-name" class="view-title">Wszystkie Utwory</h1>
-        <div class="search-row">
-            <div class="search-container">
-                <input type="text" id="search-input" class="search-input" placeholder="Szukaj (np. Psalm 11)..." onkeyup="handleSearch()">
+        <input type="text" id="search-input" style="width: 100%; max-width: 400px; padding: 10px; border-radius: 20px; border: 1px solid var(--gold); background: #1e293b; color: #fff;" placeholder="Szukaj..." onkeyup="handleSearch()">
+    </div>
+
+    <div id="cart-panel" class="cart-panel" style="display:none;">
+        <h2 style="color:var(--gold); margin-top:0;">PODSUMOWANIE TWOJEGO ALBUMU</h2>
+        <p id="total-stats"></p>
+        
+        <div class="cd-display" id="cd-display">
             </div>
-            <div class="view-toggle-btns">
-                <button id="mode-grid" class="toggle-btn active" onclick="setViewMode('grid')" title="Siatka">⬜</button>
-                <button id="mode-list" class="toggle-btn" onclick="setViewMode('list')" title="Lista">☰</button>
-            </div>
+
+        <div class="order-multiplier">
+            <label>ILE KOMPLETÓW CHCESZ ZAMÓWIĆ? (NP. NA PREZENT)</label>
+            <input type="number" id="order-qty" class="qty-input" value="1" min="1" onchange="render()">
+            <div id="total-physical-discs" style="font-weight:bold; color:var(--gold);"></div>
         </div>
-        <div id="sort-box">
-            <select class="sort-select" onchange="changeSort(this.value)">
-                <option value="newest">Najnowsze</option>
-                <option value="oldest">Najstarsze</option>
-                <option value="az">Alfabetycznie A-Z</option>
-            </select>
-        </div>
+        
+        <button class="btn-action" style="margin-top:20px; background:var(--gold); color:black;" onclick="sendOrder()">✉ WYŚLIJ MOJE ZAMÓWIENIE</button>
     </div>
 
     <div id="catalog-grid" class="grid"></div>
-    <div id="catalog-list" class="list-container" style="display:none;"></div>
 </div>
 
 <script>
-    const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTSIMZUO8ZkisiFoqOfypL9hOQBnTbAvtMmBeIuK56_QoiXFu_b7i-de1Jn6Km9symosxJBV6V5PxKO/pub?output=csv'; 
-    let rawSongs = []; let sortedSongs = []; let cart = []; let currentView = 'all'; let currentSort = 'newest'; let searchQuery = ""; let viewMode = 'grid';
+    const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTSIMZUO8ZkisiFoqOfypL9hOQBnTbAvtMmBeIuK56_QoiXFu_b7i-de1Jn6Km9symosxJBV6V5PxKO/pub?output=csv';
+    
+    // TYMCZASOWA IKONA (Podmienimy jak dasz swoje)
+    const CD_IMAGE_BASE = 'https://lh3.googleusercontent.com/u/0/d/1lGrhzfxzTIAlH2iaHahCjWAZYuqxknP7'; 
 
-    // FUNKCJA INTELIGENTNEGO SORTOWANIA (Natural Sort)
-    const naturalSort = (a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
+    let rawSongs = []; let cart = []; let currentView = 'all';
 
-    function loadCart() { const saved = localStorage.getItem('melodiaWiaryCart'); if (saved) { cart = JSON.parse(saved); document.getElementById('count').innerText = cart.length; } }
-    function saveCart() { localStorage.setItem('melodiaWiaryCart', JSON.stringify(cart)); document.getElementById('count').innerText = cart.length; }
+    function timeToSeconds(t) { if(!t || !t.includes(':')) return 0; const [m, s] = t.split(':').map(Number); return (m*60)+s; }
 
     async function loadData() {
-        loadCart();
+        const saved = localStorage.getItem('melodiaWiaryCart'); if (saved) cart = JSON.parse(saved);
+        updateCartCount();
         try {
             const resp = await fetch(SHEET_URL + '&cb=' + Date.now());
             const text = await resp.text();
             const rows = text.split(/\r?\n/).filter(r => r.trim() !== "").slice(1);
-            const catsSet = new Set();
             rawSongs = rows.map((r, index) => {
-                let cols = r.includes(';') ? r.split(';') : r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                let catString = cols[1] ? cols[1].replace(/"/g, '').trim() : "Inne";
-                let categoriesArray = catString.split(',').map(item => item.trim());
-                categoriesArray.forEach(c => { if(c) catsSet.add(c); });
-                return { tytul: cols[0].replace(/"/g, '').trim(), kategorie: categoriesArray, idYT: cols[2] ? cols[2].replace(/"/g, '').trim() : "", order: index };
+                let cols = r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                return {
+                    tytul: cols[0].replace(/"/g, '').trim(),
+                    kategorie: (cols[1] || "Inne").split(',').map(c => c.trim()),
+                    idYT: (cols[2] || "").trim(),
+                    czas: (cols[3] || "0:00").trim(),
+                    order: index
+                };
             });
-            const catDiv = document.getElementById('category-list');
-            Array.from(catsSet).sort(naturalSort).forEach(c => {
-                const b = document.createElement('button'); b.className = 'nav-btn'; b.innerText = "• " + c;
-                b.onclick = () => { currentView = c; updateNavStyles(b); render(); };
-                catDiv.appendChild(b);
-            });
-            applySort();
+            render();
         } catch (e) { console.error(e); }
-    }
-
-    function setViewMode(mode) { 
-        viewMode = mode; 
-        document.getElementById('mode-grid').classList.toggle('active', mode === 'grid');
-        document.getElementById('mode-list').classList.toggle('active', mode === 'list');
-        render(); 
-    }
-
-    function handleSearch() { searchQuery = document.getElementById('search-input').value.toLowerCase(); render(); }
-    function changeSort(val) { currentSort = val; applySort(); }
-
-    function applySort() {
-        sortedSongs = [...rawSongs];
-        if (currentSort === 'newest') sortedSongs.sort((a, b) => b.order - a.order);
-        if (currentSort === 'oldest') sortedSongs.sort((a, b) => a.order - b.order);
-        if (currentSort === 'az') sortedSongs.sort((a, b) => naturalSort(a.tytul, b.tytul));
-        render();
     }
 
     function render() {
         const grid = document.getElementById('catalog-grid');
-        const listCont = document.getElementById('catalog-list');
-        const title = document.getElementById('view-name');
-        grid.innerHTML = ''; listCont.innerHTML = '';
+        const cartPanel = document.getElementById('cart-panel');
+        const cdDisplay = document.getElementById('cd-display');
+        grid.innerHTML = '';
         
-        let displayList = currentView === 'all' ? sortedSongs : (currentView === 'cart' ? cart : sortedSongs.filter(s => s.kategorie.includes(currentView)));
-        if (searchQuery !== "" && currentView !== 'cart') displayList = displayList.filter(s => s.tytul.toLowerCase().includes(searchQuery));
-        
-        title.innerText = currentView === 'all' ? "Wszystkie Utwory" : (currentView === 'cart' ? "Twój Wybór" : currentView);
-        document.getElementById('order-section').style.display = (currentView === 'cart' && cart.length > 0) ? 'block' : 'none';
+        if(currentView === 'cart') {
+            cartPanel.style.display = 'block';
+            let totalSec = cart.reduce((acc, s) => acc + timeToSeconds(s.czas), 0);
+            let totalMin = Math.ceil(totalSec / 60);
+            let numCDs = Math.ceil(totalMin / 65); // LIMIT 65 MINUT
+            let sets = parseInt(document.getElementById('order-qty').value) || 1;
 
-        if (viewMode === 'grid' || currentView === 'cart') {
-            grid.style.display = 'grid'; listCont.style.display = 'none';
-            displayList.forEach((s, idx) => {
-                const card = document.createElement('div'); card.className = 'card';
-                card.innerHTML = `<img class="thumb" src="https://img.youtube.com/vi/${s.idYT}/mqdefault.jpg" onclick="window.open('https://youtube.com/watch?v=${s.idYT}')"><div class="title">${s.tytul}</div>
-                    <button class="btn-action ${currentView === 'cart' ? 'btn-remove' : ''}" onclick="${currentView === 'cart' ? `removeFromCart(${idx})` : `addToCart('${s.tytul.replace(/'/g, "\\'")}')`}">${currentView === 'cart' ? 'USUŃ' : 'DODAJ DO LISTY'}</button>`;
-                grid.appendChild(card);
-            });
-        } else {
-            grid.style.display = 'none'; listCont.style.display = 'block';
-            const groups = {};
-            displayList.forEach(s => {
-                const cat = currentView === 'all' ? s.kategorie[0] : currentView;
-                if (!groups[cat]) groups[cat] = [];
-                groups[cat].push(s);
-            });
-            Object.keys(groups).sort(naturalSort).forEach(catName => {
-                const sec = document.createElement('div'); sec.className = 'list-category-section';
-                sec.innerHTML = `<div class="list-category-title">${catName}</div>`;
-                groups[catName].sort((a,b) => naturalSort(a.tytul, b.tytul)).forEach(s => {
-                    const item = document.createElement('div'); item.className = 'list-item';
-                    item.innerHTML = `<a href="https://youtube.com/watch?v=${s.idYT}" target="_blank" class="list-link">• ${s.tytul}</a>
-                                      <button class="list-add-btn" onclick="addToCart('${s.tytul.replace(/'/g, "\\'")}')">DODAJ (+)</button>`;
-                    sec.appendChild(item);
-                });
-                listCont.appendChild(sec);
-            });
-        }
+            document.getElementById('total-stats').innerHTML = `Łączny czas wybranych utworów: <strong>${totalMin} min</strong>. To zajmuje <strong>${numCDs}</strong> płyt(y) w jednym komplecie.`;
+            document.getElementById('total-physical-discs').innerText = `ŁĄCZNIE DO NAGRANIA: ${numCDs * sets} PŁYT`;
+
+            cdDisplay.innerHTML = '';
+            for(let i=1; i<=numCDs; i++) {
+                cdDisplay.innerHTML += `
+                    <div class="cd-miniature">
+                        <img src="${CD_IMAGE_BASE}" class="cd-icon-img">
+                        <div class="cd-label">PŁYTA ${i}</div>
+                    </div>`;
+            }
+        } else { cartPanel.style.display = 'none'; }
+
+        let list = currentView === 'all' ? rawSongs : (currentView === 'cart' ? cart : rawSongs.filter(s => s.kategorie.includes(currentView)));
+        
+        list.forEach((s, idx) => {
+            const card = document.createElement('div'); card.className = 'card';
+            card.innerHTML = `
+                <img class="thumb" src="https://img.youtube.com/vi/${s.idYT}/mqdefault.jpg" onclick="window.open('https://youtube.com/watch?v=${s.idYT}')">
+                <div class="title">${s.tytul}</div>
+                <div class="duration-tag">⏱ ${s.czas}</div>
+                <button class="btn-action" onclick="add('${s.tytul}')">DODAJ</button>
+                ${currentView === 'cart' ? `<button class="btn-action btn-remove" onclick="remove(${idx})">USUŃ</button>` : ''}
+            `;
+            grid.appendChild(card);
+        });
     }
 
-    function addToCart(t) { const s = rawSongs.find(x => x.tytul === t); if(s) { if(cart.find(i => i.tytul === t)) return alert("Już jest!"); cart.push(s); saveCart(); alert("Dodano!"); } }
-    function removeFromCart(i) { cart.splice(i, 1); saveCart(); render(); }
-    function showView(v) { currentView = v; updateNavStyles(document.getElementById(v === 'all' ? 'btn-all' : 'btn-my-list')); render(); }
-    function updateNavStyles(b) { document.querySelectorAll('.nav-btn').forEach(x => x.classList.remove('active')); if(b) b.classList.add('active'); }
-    function copyToClipboard() { navigator.clipboard.writeText("Moja lista:\n- " + cart.map(s => s.tytul).join("\n- ")).then(() => alert("Skopiowano!")); }
-    function sendOrder() { window.location.href = `mailto:melodiawiary@gmail.com?subject=Lista Pieśni&body=Zamówienie:\n- ${cart.map(s => s.tytul).join("\n- ")}`; }
+    function add(t) { 
+        if(cart.find(x => x.tytul === t)) return alert("Już jest na liście!");
+        const s = rawSongs.find(x => x.tytul === t); 
+        cart.push(s); save(); 
+    }
+    function remove(i) { cart.splice(i, 1); save(); }
+    function save() { localStorage.setItem('melodiaWiaryCart', JSON.stringify(cart)); updateCartCount(); render(); }
+    function updateCartCount() { document.getElementById('count').innerText = cart.length; }
+    function showView(v) { currentView = v; render(); }
+    function sendOrder() {
+        let sets = document.getElementById('order-qty').value;
+        let body = `Zamawiam ${sets} komplet(ów) płyt.\n\nLista utworów:\n` + cart.map(s => `- ${s.tytul} (${s.czas})`).join('\n');
+        window.location.href = `mailto:melodiawiary@gmail.com?subject=Zamówienie Albumu&body=${encodeURIComponent(body)}`;
+    }
     loadData();
 </script>
 </body>
