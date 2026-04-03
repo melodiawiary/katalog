@@ -20,7 +20,6 @@
         body.senior { --f-size: 24px; --f-btn: 20px; --f-tip: 30px; --f-list-tip: 24px; }
         body { font-size: var(--f-size); }
 
-        /* PANEL BOCZNY */
         #sidebar { width: 340px; background: var(--sidebar); border-right: 4px solid var(--gold); display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 1000; }
         .sidebar-top { padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center; }
         .sidebar-scroll { flex-grow: 1; overflow-y: auto; padding: 15px; }
@@ -34,7 +33,6 @@
         .size-btn { width: 100%; padding: 12px; margin-top: 5px; font-weight: 900; text-transform: uppercase; cursor: pointer; border: 2px solid var(--gold); background: #000; color: var(--gold); border-radius: 8px; }
         .size-btn.active { background: var(--gold); color: black; }
 
-        /* TREŚĆ GŁÓWNA */
         #main-content { margin-left: 340px; flex: 1; padding: 0 40px; }
         .header-sticky { position: sticky; top: 0; z-index: 900; background: var(--bg); padding: 25px 0; border-bottom: 3px solid var(--gold); }
         .search-box { width: 100%; padding: 18px; border-radius: 40px; border: 3px solid var(--sidebar); font-size: 1.4em; text-align: center; font-weight: bold; margin-bottom: 15px; }
@@ -43,7 +41,6 @@
         .ctrl-btn { flex: 1; padding: 15px 5px; border: 2px solid var(--sidebar); background: #fff; color: var(--sidebar); font-weight: 900; cursor: pointer; border-radius: 10px; text-transform: uppercase; transition: 0.2s; }
         .ctrl-btn.active { background: var(--sidebar); color: #fff; }
 
-        /* KARTY */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; margin-top: 30px; }
         .card { background: var(--card-bg); border: 3px solid #e2e8f0; padding: 15px; border-radius: 20px; text-align: center; display: flex; flex-direction: column; transition: 0.3s; }
         .card:hover { background: var(--card-hover); border-color: var(--gold); transform: translateY(-5px); }
@@ -51,7 +48,6 @@
         .thumb-container { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; border: 2px solid #ddd; margin-bottom: 10px; cursor: pointer; }
         .thumb { width: 100%; height: 100%; object-fit: cover; }
         
-        /* NAPIS NA MINIATURZE - ZWARTY */
         .thumb-overlay { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(0, 0, 0, 0.85); color: #fff; 
@@ -64,18 +60,14 @@
 
         .card-title { font-weight: 900; margin-bottom: 15px; color: var(--text-dark); text-transform: uppercase; flex-grow: 1; line-height: 1.2; }
 
-        /* PRZYCISKI AKCJI */
         .btn-add { background: var(--gold); color: black; border: none; padding: 15px; border-radius: 10px; font-weight: 900; cursor: pointer; text-transform: uppercase; transition: 0.2s; width: 100%; }
         .btn-add.selected { background: var(--cyan); }
-        .btn-add:hover { filter: brightness(1.1); }
 
-        /* WIDOK LISTY */
         .list-header { background: var(--sidebar); color: white; padding: 12px 20px; border-radius: 10px; margin: 30px 0 10px 0; font-weight: 900; border-left: 8px solid var(--gold); text-transform: uppercase; }
         .list-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 2px solid #e2e8f0; background: #fff; transition: 0.2s; }
-        .list-row:hover { background: var(--card-hover); border-color: var(--gold); }
+        .list-row:hover { background: var(--card-hover); }
         .list-item-name { cursor: pointer; font-weight: 800; text-transform: uppercase; display: flex; align-items: center; gap: 15px; flex-grow: 1; }
-        
-        .list-tip { background: var(--gold); color: black; padding: 8px 15px; border-radius: 8px; font-size: var(--f-list-tip); font-weight: 900; opacity: 0; transition: 0.2s; pointer-events: none; white-space: nowrap; }
+        .list-tip { background: var(--gold); color: black; padding: 8px 15px; border-radius: 8px; font-size: var(--f-list-tip); font-weight: 900; opacity: 0; transition: 0.2s; pointer-events: none; }
         .list-row:hover .list-tip { opacity: 1; }
 
         @media (max-width: 900px) { #sidebar { position: relative; width: 100%; height: auto; } #main-content { margin-left: 0; } }
@@ -99,12 +91,10 @@
 <div id="main-content">
     <div class="header-sticky" id="toolbar">
         <input type="text" id="search" class="search-box" placeholder="WPISZ NAZWĘ PIEŚNI..." onkeyup="doSearch()">
-        
         <div class="btn-group">
             <button class="ctrl-btn active" id="m-grid" onclick="setMode('grid')">WIDOK Z OBRAZKAMI</button>
             <button class="ctrl-btn" id="m-list" onclick="setMode('list')">WIDOK SAMEJ LISTY</button>
         </div>
-        
         <div class="btn-group">
             <button class="ctrl-btn active" id="s-new" onclick="setSort('newest')">NAJNOWSZE</button>
             <button class="ctrl-btn" id="s-old" onclick="setSort('oldest')">NAJSTARSZE</button>
@@ -122,7 +112,7 @@
     function updateSize(s) { document.body.className = s; document.getElementById('s-std').classList.toggle('active', s==='standard'); document.getElementById('s-big').classList.toggle('active', s==='senior'); }
 
     async function init() {
-        const saved = localStorage.getItem('mv_cart_final_v12'); if(saved) cart = JSON.parse(saved);
+        const saved = localStorage.getItem('mv_storage_stable'); if(saved) cart = JSON.parse(saved);
         try {
             const r = await fetch(CSV + '&cb=' + Date.now());
             const text = await r.text();
@@ -130,11 +120,13 @@
             let catsSet = new Set();
             
             songs = rows.map((line, index) => {
-                let c = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                let tyt = c[0].replace(/"/g,'');
-                let cArr = (c[1]||"Inne").split(',').map(cat => cat.trim()).filter(x => x !== "");
-                cArr.forEach(cat => catsSet.add(cat));
-                return { tytul: tyt, kategorie: cArr, yt: (c[2]||"").trim(), czas: (c[3]||"0:00").trim(), originalIndex: index };
+                let c = line.split(/,(?=(?:(?:[^3]*"){2})*[^"]*$)/);
+                let tyt = c[0].replace(/"/g,'').trim();
+                // CZYSZCZENIE KATEGORII ZE ŚMIECI I CUDZYSŁOWÓW
+                let rawCats = (c[1]||"Inne").split(',');
+                let cleanCats = rawCats.map(cat => cat.replace(/[^a-zA-Z0-9ąęćłńóśźżĄĘĆŁŃÓŚŹŻ ]/g, '').trim()).filter(x => x !== "");
+                cleanCats.forEach(cat => catsSet.add(cat));
+                return { tytul: tyt, kategorie: cleanCats, yt: (c[2]||"").trim(), czas: (c[3]||"0:00").trim(), originalIndex: index };
             });
 
             const catBox = document.getElementById('cat-list');
@@ -151,7 +143,7 @@
         const idx = cart.findIndex(x => x.tytul === t);
         if(idx > -1) cart.splice(idx, 1);
         else cart.push(songs.find(x => x.tytul === t));
-        localStorage.setItem('mv_cart_final_v12', JSON.stringify(cart));
+        localStorage.setItem('mv_storage_stable', JSON.stringify(cart));
         render();
     }
 
@@ -189,7 +181,7 @@
         } else {
             let grouped = {};
             list.forEach(s => { let c = s.kategorie[0] || "Inne"; if(!grouped[c]) grouped[c] = []; grouped[c].push(s); });
-            Object.keys(grouped).sort().forEach(cat => {
+            Object.keys(grouped).sort((a,b) => a.localeCompare(b, 'pl')).forEach(cat => {
                 out.innerHTML += `<div class="list-header">${cat}</div>`;
                 grouped[cat].forEach(s => {
                     const isSel = cart.some(x => x.tytul === s.tytul);
@@ -208,12 +200,12 @@
 
     function renderCart(container) {
         container.innerHTML = `<h1 style="text-align:center; font-weight:900;">TWOJE PŁYTY</h1>`;
-        if(cart.length === 0) { container.innerHTML += `<p style="text-align:center">TWOJA LISTA JEST PUSTA.</p><button class="ctrl-btn active" style="width:100%" onclick="setView('all')">POWRÓT DO KATALOGU</button>`; return; }
+        if(cart.length === 0) { container.innerHTML += `<p style="text-align:center">LISTA JEST PUSTA.</p><button class="ctrl-btn active" style="width:100%" onclick="setView('all')">POWRÓT</button>`; return; }
         
         let curCD = 1, curSec = 0, groups = {1: []};
         cart.forEach(s => {
-            let parts = s.czas.split(':');
-            let sec = (parseInt(parts[0])*60) + (parseInt(parts[1]||0));
+            let p = s.czas.split(':');
+            let sec = (parseInt(p[0])*60) + (parseInt(p[1]||0));
             if(curSec + sec > 3900) { curCD++; curSec = sec; groups[curCD] = [s]; }
             else { curSec += sec; groups[curCD].push(s); }
         });
@@ -223,23 +215,15 @@
             box.style.border = "4px solid var(--gold)"; box.style.marginBottom = "30px"; box.style.padding = "25px";
             box.innerHTML = `<div style="display:flex; align-items:center; border-bottom:3px solid var(--gold); padding-bottom:15px; margin-bottom:15px;">
                 <h2 style="flex-grow:1; text-transform:uppercase;">PŁYTA NR ${n}</h2>
-                <button class="nav-btn nav-btn-main" style="width:auto; padding:10px 30px" onclick="alert('Złożono zamówienie na Płytę nr ${n}!')">ZAMÓW PŁYTĘ</button>
-            </div><div class="grid">${groups[n].map(s => `<div class="card" style="padding:10px; box-shadow:none; border:1px solid #eee;">
-                <div class="card-title" style="font-size:0.9em">${s.tytul}</div>
-                <button class="btn-add selected" onclick="toggleSong('${s.tytul.replace(/'/g,"")}')" style="padding:8px; font-size:0.8em;">USUŃ</button>
-            </div>`).join('')}</div>`;
+                <button class="nav-btn nav-btn-main" style="width:auto; padding:10px 30px" onclick="alert('Złożono zamówienie!')">ZAMÓW PŁYTĘ</button>
+            </div><div class="grid">${groups[n].map(s => `<div class="card" style="padding:10px;"><div class="card-title" style="font-size:0.8em">${s.tytul}</div><button class="btn-add selected" onclick="toggleSong('${s.tytul.replace(/'/g,"")}')">USUŃ</button></div>`).join('')}</div>`;
             container.appendChild(box);
         });
-        container.innerHTML += `<button class="ctrl-btn active" style="width:100%; margin-top:20px;" onclick="setView('all')">POWRÓT DO KATALOGU</button>`;
+        container.innerHTML += `<button class="ctrl-btn active" style="width:100%" onclick="setView('all')">POWRÓT DO KATALOGU</button>`;
     }
 
     function setMode(m) { displayMode = m; document.getElementById('m-grid').classList.toggle('active', m==='grid'); document.getElementById('m-list').classList.toggle('active', m==='list'); render(); }
-    function setSort(s) { 
-        sortType = s; 
-        const ids = { newest: 's-new', oldest: 's-old', az: 's-az', za: 's-za' };
-        Object.keys(ids).forEach(key => document.getElementById(ids[key]).classList.toggle('active', key === s));
-        render(); 
-    }
+    function setSort(s) { sortType = s; const ids = { newest: 's-new', oldest: 's-old', az: 's-az', za: 's-za' }; Object.keys(ids).forEach(k => document.getElementById(ids[k]).classList.toggle('active', k === s)); render(); }
     function setView(v) { currentView = v; render(); window.scrollTo(0,0); }
     function doSearch() { query = document.getElementById('search').value.toLowerCase(); render(); }
     init();
