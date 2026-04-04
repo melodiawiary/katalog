@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Melodia Wiary - v60</title>
+    <title>Katalog Melodia Wiary - v61</title>
     <style>
         :root { 
             --active-orange: #fbda80;
@@ -60,12 +60,17 @@
         .header-sticky { position: sticky; top: 0;
             z-index: 900; background: var(--bg); width: 100%; box-sizing: border-box; }
         
-        /* NOWY UKŁAD PANELI 50/50 */
+        /* UKŁAD PANELI 50/50 */
         .top-padding { display: flex; width: 100%; box-sizing: border-box; gap: 0; padding: 0; }
         
         .header-left { width: 50%; padding: 20px 25px 15px 25px; box-sizing: border-box; }
-        .header-right { width: 50%; background: white; border-left: 2px solid var(--active-orange); box-sizing: border-box; }
+        .header-right { width: 50%; background: var(--bg); border-left: 2px solid var(--active-orange); box-sizing: border-box; padding: 20px 25px 15px 25px; display: flex; flex-direction: column; }
         
+        /* STYLE DLA PANELU TOP */
+        .top-header-title { font-weight: 900; text-transform: uppercase; font-size: 1.1em; text-align: center; margin-bottom: 10px; color: var(--deep-brown); line-height: 1.2; }
+        .top-mini-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .top-btn-more { margin-top: 10px; width: 100%; padding: 8px; background: var(--active-orange); border: 2px solid var(--deep-brown); border-radius: 8px; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 11px; }
+
         .search-box { width: 100%;
             padding: 12px; border-radius: 15px; border: 2px solid var(--deep-brown); font-size: var(--f-search); font-weight: bold; text-align: center; background: var(--card-bg); box-sizing: border-box;
             }
@@ -205,7 +210,7 @@
                 </div>
                <div class="ad-placeholder">MIEJSCE NA REKLAMĘ</div>
             </div>
-            <div class="header-right">
+            <div class="header-right" id="top-panel">
                 </div>
         </div>
         <div id="alpha-shelf" class="alpha-shelf">
@@ -294,10 +299,45 @@
         render();
     }
 
+    function renderTopPanel() {
+        const panel = document.getElementById('top-panel');
+        if (!songs.length) return;
+        
+        // Pobierz 3 najnowsze pieśni (z końca tablicy songs)
+        const top3 = [...songs].sort((a,b) => b.originalIndex - a.originalIndex).slice(0, 3);
+        
+        let html = `<div class="top-header-title">TOP TYGODNIA POLSKIEJ PIEŚNI RELIGIJNEJ NR 1</div>`;
+        html += `<div class="top-mini-grid">`;
+        
+        top3.forEach(s => {
+            const isFav = cart.some(x => x.tytul === s.tytul);
+            const jsTytul = s.tytul.replace(/'/g, "\\'");
+            html += `
+                <div class="card" onclick="openYT('${s.yt}')" style="padding: 6px; border-radius: 8px;">
+                    <div class="thumb-container" style="margin-bottom: 5px;">
+                        <img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb">
+                        <div class="play-overlay" style="font-size: 0.7em;">ODSŁUCHAJ</div>
+                    </div>
+                    <div class="card-title" style="font-size: 9px; min-height: 22px;">${s.tytul}</div>
+                    <button class="btn-fav-toggle ${isFav ? 'is-active' : ''}" style="font-size: 8px; padding: 4px; margin-top: 4px;" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">
+                        ${isFav ? 'USUŃ' : 'DODAJ'}
+                    </button>
+                </div>
+            `;
+        });
+        
+        html += `</div>`;
+        html += `<button class="top-btn-more" onclick="alert('Funkcja TOP 50 wkrótce!')">ZOBACZ CAŁE TOP 50</button>`;
+        panel.innerHTML = html;
+    }
+
     function render() {
         const out = document.getElementById('main-display');
         out.innerHTML = '';
         document.getElementById('count').innerText = cart.length + " UTWORÓW";
+        
+        // Renderuj panel TOP przy każdym odświeżeniu
+        renderTopPanel();
 
         // Side-bar nav buttons
         document.querySelectorAll('.nav-btn').forEach(b => {
