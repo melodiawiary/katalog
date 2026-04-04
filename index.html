@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Melodia Wiary - v28</title>
+    <title>Katalog Melodia Wiary - v29</title>
     <style>
         :root { 
             --active-orange: #fbda80; 
@@ -27,14 +27,12 @@
         
         .section-label { font-size: 16px; font-weight: 900; color: var(--deep-brown); text-transform: uppercase; margin: 15px 0 10px 5px; display: block; border-bottom: 3px solid var(--active-orange); padding-bottom: 5px; }
 
-        /* UJEDNOLICONY STYL PRZYCISKÓW W SIDEBARZE */
         .nav-btn, .size-btn { 
             width: 100%; padding: 12px 10px; margin-bottom: 8px; border-radius: 8px; 
             border: 1px solid var(--deep-brown); cursor: pointer; font-weight: 800; 
             text-align: left; text-transform: uppercase; font-size: var(--f-btn); 
             background: var(--soft-cyan); display: flex; align-items: center; 
             gap: 8px; transition: 0.2s; box-sizing: border-box;
-            font-family: inherit;
         }
         .nav-btn:hover, .nav-btn.active, .size-btn:hover, .size-btn.active { 
             background: var(--active-orange) !important; border: 2px solid var(--deep-brown) !important; 
@@ -61,8 +59,20 @@
         .alpha-btn { padding: 6px 12px; font-size: 14px; font-weight: 900; border: 1px solid var(--deep-brown); background: var(--soft-cyan); cursor: pointer; border-radius: 4px; min-width: 38px; transition: 0.2s; }
         .alpha-btn:hover, .alpha-btn.active { background: var(--active-orange) !important; border: 2px solid var(--deep-brown); }
 
+        /* NAGŁÓWEK KATEGORII NA GÓRZE LISTY */
+        .view-title-header { 
+            background: var(--deep-brown); color: #fff; 
+            padding: 15px 25px; margin: 0 0 20px 0; 
+            font-weight: 900; text-transform: uppercase; 
+            font-size: 1.5em; letter-spacing: 1px; 
+            border-bottom: 5px solid var(--active-orange);
+            display: flex; align-items: center; gap: 15px;
+        }
+
         /* WYŚWIETLANIE */
-        #main-display { padding: 25px; min-height: 100vh; padding-bottom: 400px; }
+        #main-display { padding: 0 0 400px 0; min-height: 100vh; }
+        .display-padding { padding: 0 25px; }
+        
         .alpha-header { grid-column: 1 / -1; background: var(--active-orange); padding: 8px 20px; border-radius: 8px; font-weight: 900; margin: 40px 0 15px 0; border: 2px solid var(--deep-brown); font-size: 1.3em; text-align: left; scroll-margin-top: 380px; }
         .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
         
@@ -202,7 +212,10 @@
             });
             const catBox = document.getElementById('cat-list');
             Array.from(catsSet).sort().forEach(cat => {
-                const b = document.createElement('button'); b.className = 'nav-btn'; b.innerText = cat; 
+                const b = document.createElement('button'); 
+                b.className = 'nav-btn category-link'; 
+                b.innerText = cat; 
+                b.id = 'cat-btn-' + cat.replace(/\s+/g, '-');
                 b.onclick = () => setView(cat); catBox.appendChild(b);
             });
             render();
@@ -220,6 +233,17 @@
     function render() {
         const out = document.getElementById('main-display'); out.innerHTML = '';
         document.getElementById('count').innerText = cart.length;
+
+        // Podświetlenie aktywnej kategorii w menu
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        if(currentView === 'cart') document.getElementById('btn-cart').classList.add('active');
+        else if(currentView === 'all') document.getElementById('cat-all').classList.add('active');
+        else {
+            const targetId = 'cat-btn-' + currentView.replace(/\s+/g, '-');
+            const targetBtn = document.getElementById(targetId);
+            if(targetBtn) targetBtn.classList.add('active');
+        }
+        
         const showAlphaBar = (displayMode === 'list' && currentView !== 'cart');
         document.getElementById('alpha-shelf').style.display = showAlphaBar ? 'block' : 'none';
 
@@ -230,6 +254,18 @@
         document.getElementById('s-za').classList.toggle('active', sortType === 'za');
         document.getElementById('m-grid').classList.toggle('active', displayMode === 'grid');
         document.getElementById('m-list').classList.toggle('active', displayMode === 'list');
+
+        // NAGŁÓWEK KATEGORII
+        const header = document.createElement('div');
+        header.className = 'view-title-header';
+        let viewLabel = currentView === 'all' ? '🏠 WSZYSTKIE PIEŚNI' : (currentView === 'cart' ? '❤️ MOJE ULUBIONE' : '📂 KATEGORIA: ' + currentView);
+        if(query) viewLabel = '🔍 WYNIKI WYSZUKIWANIA: ' + query.toUpperCase();
+        header.innerText = viewLabel;
+        out.appendChild(header);
+
+        const contentBox = document.createElement('div');
+        contentBox.className = 'display-padding';
+        out.appendChild(contentBox);
 
         let list = (currentView === 'cart') ? [...cart] : (currentView === 'all' ? [...songs] : songs.filter(s => s.kategorie.includes(currentView)));
         if(query) list = list.filter(s => s.tytul.toLowerCase().includes(query));
@@ -277,7 +313,7 @@
             }
             container.appendChild(item);
         });
-        out.appendChild(container);
+        contentBox.appendChild(container);
     }
 
     function setMode(m) { displayMode = m; if(m === 'list' && sortType === 'newest') sortType = 'az'; render(); window.scrollTo(0,0); }
