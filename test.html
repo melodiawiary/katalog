@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Melodia Wiary - v59</title>
+    <title>Katalog Melodia Wiary - v60</title>
     <style>
         :root { 
             --active-orange: #fbda80;
@@ -59,11 +59,15 @@
             flex: 1; display: flex; flex-direction: column; width: calc(100% - var(--sidebar-width)); }
         .header-sticky { position: sticky; top: 0;
             z-index: 900; background: var(--bg); width: 100%; box-sizing: border-box; }
-        .top-padding { padding: 20px 25px 15px 25px;
-            }
+        
+        /* NOWY UKŁAD PANELI 50/50 */
+        .top-padding { display: flex; width: 100%; box-sizing: border-box; gap: 0; padding: 0; }
+        
+        .header-left { width: 50%; padding: 20px 25px 15px 25px; box-sizing: border-box; }
+        .header-right { width: 50%; background: white; border-left: 2px solid var(--active-orange); box-sizing: border-box; }
         
         .search-box { width: 100%;
-            padding: 12px; border-radius: 15px; border: 2px solid var(--deep-brown); font-size: var(--f-search); font-weight: bold; text-align: center; background: var(--card-bg);
+            padding: 12px; border-radius: 15px; border: 2px solid var(--deep-brown); font-size: var(--f-search); font-weight: bold; text-align: center; background: var(--card-bg); box-sizing: border-box;
             }
         .btn-group { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 10px;
             }
@@ -186,19 +190,23 @@
 <div id="main-content">
     <div class="header-sticky">
         <div class="top-padding">
-            <input 
-                type="text" id="search" class="search-box" placeholder="SZUKAJ W KATALOGU PIEŚNI MELODII WIARY..." onkeyup="doSearch()">
-            <div class="btn-group">
-                <button class="ctrl-btn" id="s-new" onclick="setSort('newest')">Sortuj od najnowzych</button>
-                <button class="ctrl-btn" id="s-old" onclick="setSort('oldest')">Sortuj od najstarszych</button>
-                <button class="ctrl-btn" id="s-az" onclick="setSort('az')">Sortuj od A do Z</button>
-                <button class="ctrl-btn" id="s-za" onclick="setSort('za')">Sortuj od Z do A</button>
+            <div class="header-left">
+                <input 
+                    type="text" id="search" class="search-box" placeholder="SZUKAJ W KATALOGU PIEŚNI MELODII WIARY..." onkeyup="doSearch()">
+                <div class="btn-group">
+                    <button class="ctrl-btn" id="s-new" onclick="setSort('newest')">Sortuj od najnowszych</button>
+                    <button class="ctrl-btn" id="s-old" onclick="setSort('oldest')">Sortuj od najstarszych</button>
+                    <button class="ctrl-btn" id="s-az" onclick="setSort('az')">Sortuj od A do Z</button>
+                    <button class="ctrl-btn" id="s-za" onclick="setSort('za')">Sortuj od Z do A</button>
+                </div>
+                <div class="btn-group">
+                    <button class="ctrl-btn" id="m-grid" onclick="setMode('grid')">Widok miniatury pieśni</button>
+                    <button class="ctrl-btn" id="m-list" onclick="setMode('list')">Widok lista tytułów pieśni</button>
+                </div>
+               <div class="ad-placeholder">MIEJSCE NA REKLAMĘ</div>
             </div>
-            <div class="btn-group">
-                <button class="ctrl-btn" id="m-grid" onclick="setMode('grid')">Widok miniatury pieśni</button>
-                <button class="ctrl-btn" id="m-list" onclick="setMode('list')">Widok lista tytułów pieśni</button>
-            </div>
-           <div class="ad-placeholder">MIEJSCE NA REKLAMĘ</div>
+            <div class="header-right">
+                </div>
         </div>
         <div id="alpha-shelf" class="alpha-shelf">
             <div id="alpha-row"></div>
