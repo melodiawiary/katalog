@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Melodia Wiary - v57</title>
+    <title>Katalog Melodia Wiary - v58</title>
     <style>
         :root { 
             --active-orange: #fbda80;
@@ -291,6 +291,7 @@
         out.innerHTML = '';
         document.getElementById('count').innerText = cart.length + " UTWORÓW";
 
+        // Side-bar nav buttons
         document.querySelectorAll('.nav-btn').forEach(b => {
             b.classList.remove('active');
             if(currentView === 'cart' && b.id === 'btn-cart') b.classList.add('active');
@@ -298,10 +299,10 @@
             if(b.classList.contains('category-link') && b.innerText === currentView) b.classList.add('active');
         });
 
-        // Obsługa podświetlenia przycisków kontrolnych na górze
+        // Top control buttons (Sort and Mode) - Comprehensive Sync
         document.querySelectorAll('.ctrl-btn').forEach(b => {
             b.classList.remove('active');
-            if(b.id === 's-' + sortType) b.classList.add('active');
+            if(b.id === 's-' + sortType.replace('newest','new').replace('oldest','old')) b.classList.add('active');
             if(b.id === 'm-' + displayMode) b.classList.add('active');
         });
 
@@ -371,8 +372,11 @@
 
     function setMode(m) { 
         displayMode = m; 
-        if(m === 'list') sortType = 'az'; 
-        if(m === 'grid') sortType = 'newest'; 
+        if(m === 'grid') {
+            sortType = 'newest';
+        } else if(m === 'list') {
+            sortType = 'az';
+        }
         render(); 
     }
     function setSort(s) { sortType = s; render(); }
