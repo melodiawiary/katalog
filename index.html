@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Melodia Wiary - v23</title>
+    <title>Katalog Melodia Wiary - v24</title>
     <style>
         :root { 
             --active-orange: #fbda80; 
@@ -53,7 +53,7 @@
             border-bottom: 3px solid var(--active-orange); 
             background: #fff; 
             padding: 10px 25px; 
-            display: none; /* Domyślnie ukryte, JS pokaże w trybie listy */
+            display: none; 
         }
         #alpha-row { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-start; }
         .alpha-btn { 
@@ -146,7 +146,10 @@
 
 <script>
     const CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTSIMZUO8ZkisiFoqOfypL9hOQBnTbAvtMmBeIuK56_QoiXFu_b7i-de1Jn6Km9symosxJBV6V5PxKO/pub?output=csv';
-    const STORAGE_KEY = 'mv_fav_v23'; 
+    
+    // --- KLUCZ PERMANENTNY - NIGDY NIE ZMIENIAĆ ---
+    const STORAGE_KEY = 'melodia_wiary_permanent_storage'; 
+    
     let songs = [], cart = [], currentView = 'all', displayMode = 'grid', query = "", sortType = 'newest';
 
     function parseCSVLine(text) {
@@ -160,11 +163,26 @@
         result.push(cur.trim()); return result;
     }
 
+    // Funkcja migrująca stare dane do nowego klucza
+    function migrateOldData() {
+        const oldKeys = ['mv_fav_v23', 'mv_fav_v22', 'mv_ulubione_v21'];
+        let recovered = [];
+        for (let key of oldKeys) {
+            const data = localStorage.getItem(key);
+            if (data) {
+                const parsed = JSON.parse(data);
+                if (Array.isArray(parsed)) recovered = [...recovered, ...parsed];
+            }
+        }
+        // Usuń duplikaty przy migracji
+        return Array.from(new Set(recovered.map(s => JSON.stringify(s)))).map(s => JSON.parse(s));
+    }
+
     function updateSize(s) { 
         document.body.className = s; 
         document.getElementById('s-std').classList.toggle('active', s==='standard'); 
         document.getElementById('s-big').classList.toggle('active', s==='senior'); 
-        localStorage.setItem('mv_font', s);
+        localStorage.setItem('mv_font_permanent', s);
     }
 
     function playSong(ytId) {
@@ -173,9 +191,17 @@
     }
 
     async function init() {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if(saved) cart = JSON.parse(saved);
-        updateSize(localStorage.getItem('mv_font') || 'standard');
+        // Próba odczytu z nowego klucza
+        let saved = localStorage.getItem(STORAGE_KEY);
+        if(!saved) {
+            // Jeśli nie ma, szukaj w starych wersjach i migruj
+            cart = migrateOldData();
+            if(cart.length > 0) localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+        } else {
+            cart = JSON.parse(saved);
+        }
+
+        updateSize(localStorage.getItem('mv_font_permanent') || 'standard');
         
         const alphabet = "ABCDEFGHIJKLŁMNOPRSTUWZŻ".split("");
         const row = document.getElementById('alpha-row');
@@ -226,7 +252,6 @@
         const out = document.getElementById('main-display'); out.innerHTML = '';
         document.getElementById('count').innerText = cart.length;
         
-        // Pasek liter widoczny tylko w trybie listy A-Z
         const showAlpha = (displayMode === 'list' && currentView !== 'cart' && sortType === 'az');
         document.getElementById('alpha-shelf').style.display = showAlpha ? 'block' : 'none';
 
