@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Melodia Wiary - v50</title>
+    <title>Katalog Melodia Wiary - v51</title>
     <style>
         :root { 
             --active-orange: #fbda80;
@@ -89,23 +89,38 @@
 
         #main-display { padding: 0 0 400px 0; min-height: 100vh;
             }
-        .display-padding { padding: 0 25px; max-width: 1800px; /* Blokada przed zbyt szerokim rozciąganiem */
-            }
+        .display-padding { padding: 0 25px; max-width: 1400px; } /* Ograniczenie szerokości dla czytelności */
         
         .alpha-header { grid-column: 1 / -1;
             background: var(--active-orange); padding: 8px 20px; border-radius: 8px; font-weight: 900; margin: 40px 0 15px 0; border: 2px solid var(--deep-brown); font-size: 1.3em;
             text-align: left; scroll-margin-top: 300px; }
         
-        /* UKŁAD GRID - MAKSYMALNIE 5 KOLUMN */
+        /* SZTYWNY UKŁAD - MAKS 5 KOLUMN */
         .items-grid { 
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(calc(20% - 20px), 1fr)); 
+            grid-template-columns: repeat(5, minmax(0, 1fr)); 
             gap: 20px; 
             margin-top: 20px; 
         }
-        
-        /* Responsywność dla mniejszych ekranów */
-        @media (max-width: 1200px) { .items-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); } }
+
+        /* UKŁAD DLA LISTY - TEŻ MAKS 5 KOLUMN, ALE MNIEJSZE GAPY */
+        .list-container { 
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr)); 
+            gap: 10px; 
+            margin-top: 20px; 
+        }
+
+        /* Responsywność - tylko dla małych ekranów zmniejszamy liczbę kolumn */
+        @media (max-width: 1200px) {
+            .items-grid, .list-container { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 800px) {
+            .items-grid, .list-container { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 500px) {
+            .items-grid, .list-container { grid-template-columns: 1fr; }
+        }
 
         .card { background: var(--card-bg);
             border: 2px solid rgba(59, 42, 0, 0.08); padding: 12px; border-radius: 15px; text-align: center; position: relative; transition: 0.3s; display: flex;
@@ -141,7 +156,7 @@
             text-transform: uppercase; color: var(--deep-brown); }
         
         .list-overlay { position: absolute; top:0; left:0; width:100%; height:100%;
-            background: var(--active-orange); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.2s; color: var(--deep-brown); font-weight: 900; text-align: center; font-size: 0.8em;
+            background: var(--active-orange); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.2s; color: var(--deep-brown); font-weight: 900; text-align: center; font-size: 0.9em;
             pointer-events: none; }
         .list-card:hover .list-overlay { opacity: 1;
             }
@@ -301,7 +316,9 @@
         const contentBox = document.createElement('div');
         contentBox.className = 'display-padding';
         const container = document.createElement('div');
-        container.className = 'items-grid'; // Ten sam grid dla obu widoków, limitowany do 5 kolumn
+        
+        // Zastosowanie odpowiedniej klasy grid w zależności od trybu
+        container.className = displayMode === 'grid' ? 'items-grid' : 'list-container';
         
         let lastChar = "";
         const showHeaders = (sortType === 'az' || sortType === 'za') && !query;
