@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Melodia Wiary - v26</title>
+    <title>Katalog Melodia Wiary - v27</title>
     <style>
         :root { 
             --active-orange: #fbda80; 
@@ -11,7 +11,7 @@
             --sidebar-bg: #ffffff; 
             --soft-cyan: #d2e9e6; 
             --deep-brown: #3b2a00; 
-            --sidebar-width: 220px; /* Nieco zwężony dla większego gracza */
+            --sidebar-width: 220px; 
         }
         
         body.standard { --f-size: 16px; --f-btn: 13px; --f-ctrl: 11px; --f-search: 1.1em; }
@@ -38,7 +38,6 @@
         .top-layout { display: flex; gap: 25px; align-items: flex-start; }
         .controls-area { flex: 1; display: flex; flex-direction: column; gap: 10px; }
         
-        /* POWIĘKSZONY ODTWARZACZ (+25%) */
         #player-section { width: 600px; background: #000; aspect-ratio: 16/9; border: 4px solid var(--deep-brown); border-radius: 12px; overflow: hidden; flex-shrink: 0; }
         .search-box { width: 100%; padding: 12px; border-radius: 15px; border: 2px solid var(--deep-brown); font-size: var(--f-search); font-weight: bold; text-align: center; }
         
@@ -46,7 +45,7 @@
         .ctrl-btn { flex: 1; padding: 12px 4px; border: 1px solid var(--deep-brown); background: var(--soft-cyan); color: var(--deep-brown); font-weight: 800; cursor: pointer; border-radius: 6px; text-transform: uppercase; font-size: var(--f-ctrl); transition: 0.2s; }
         .ctrl-btn:hover, .ctrl-btn.active { background: var(--active-orange) !important; border: 2px solid var(--deep-brown); }
 
-        /* PÓŁKA NA LITERKI - ZAWSZE W WIDOKU LISTY */
+        /* PÓŁKA NA LITERKI */
         .alpha-shelf { border-top: 3px solid var(--active-orange); border-bottom: 3px solid var(--active-orange); background: #fff; padding: 10px 25px; display: none; }
         #alpha-row { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-start; }
         .alpha-btn { padding: 6px 12px; font-size: 14px; font-weight: 900; border: 1px solid var(--deep-brown); background: var(--soft-cyan); cursor: pointer; border-radius: 4px; min-width: 38px; transition: 0.2s; }
@@ -55,24 +54,48 @@
         /* WYŚWIETLANIE */
         #main-display { padding: 25px; min-height: 100vh; padding-bottom: 400px; }
         .alpha-header { grid-column: 1 / -1; background: var(--active-orange); padding: 8px 20px; border-radius: 8px; font-weight: 900; margin: 40px 0 15px 0; border: 2px solid var(--deep-brown); font-size: 1.3em; text-align: left; scroll-margin-top: 380px; }
-
         .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
         
         /* WIDOK MINIATURY PIEŚNI */
         .card { background: #fff; border: 2px solid #ddd; padding: 12px; border-radius: 15px; text-align: center; position: relative; transition: 0.2s; display: flex; flex-direction: column; }
-        .card:hover { background: var(--active-orange); border: 2px solid var(--deep-brown); }
+        .card:hover { border: 2px solid var(--deep-brown); }
         .thumb-container { width: 100%; aspect-ratio: 16/9; border-radius: 10px; overflow: hidden; cursor: pointer; margin-bottom: 10px; border: 1px solid #ddd; position: relative; }
         .thumb { width: 100%; height: 100%; object-fit: cover; }
-        .play-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(251, 218, 128, 0.9); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.2s; color: var(--deep-brown); font-weight: 900; text-align: center; }
+        
+        /* WIELKI NAPIS NA MINIATURZE */
+        .play-overlay { 
+            position: absolute; top:0; left:0; width:100%; height:100%; 
+            background: rgba(251, 218, 128, 0.95); 
+            display: flex; align-items: center; justify-content: center; 
+            opacity: 0; transition: 0.2s; color: var(--deep-brown); 
+            font-weight: 900; text-align: center; padding: 10px;
+            font-size: 1.4em; line-height: 1.1; text-transform: uppercase;
+        }
         .thumb-container:hover .play-overlay { opacity: 1; }
 
-        /* WIDOK LISTA TYTUŁÓW PIEŚNI */
-        .list-card { background: #fff; border: 2px solid #ddd; border-radius: 10px; padding: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; min-height: 65px; position: relative; }
-        .list-card:hover { background: var(--active-orange); border: 2px solid var(--deep-brown); }
-        .list-card:hover .list-title::before { content: "▶ KLIKNIJ, ABY POSŁUCHAĆ: "; font-size: 0.75em; display: block; margin-bottom: 2px; color: #555; }
-        .list-title { font-weight: 800; font-size: 0.95em; flex: 1; padding-right: 10px; line-height: 1.2; text-transform: uppercase; }
+        /* WIDOK LISTA TYTUŁÓW PIEŚNI - WIELKI HOVER */
+        .list-card { 
+            background: #fff; border: 2px solid #ddd; border-radius: 10px; 
+            padding: 15px; cursor: pointer; display: flex; justify-content: space-between; 
+            align-items: center; transition: 0.2s; min-height: 70px; position: relative; overflow: hidden;
+        }
+        .list-card:hover { border: 2px solid var(--deep-brown); background: var(--active-orange); }
+        
+        .list-title { font-weight: 800; font-size: 1em; flex: 1; padding-right: 10px; line-height: 1.2; text-transform: uppercase; transition: 0.2s; }
+        
+        /* WIELKI NAPIS NA LIŚCIE */
+        .list-overlay {
+            position: absolute; top:0; left:0; width:100%; height:100%;
+            background: var(--active-orange);
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; transition: 0.2s; color: var(--deep-brown);
+            font-weight: 900; text-align: center; font-size: 1.1em;
+            pointer-events: none; /* Żeby serce pod spodem było klikalne jeśli trzeba */
+        }
+        .list-card:hover .list-overlay { opacity: 1; }
+        .list-card:hover .list-title { opacity: 0; }
 
-        .heart-btn { font-size: 28px; cursor: pointer; border: none; background: none; transition: transform 0.1s; }
+        .heart-btn { font-size: 28px; cursor: pointer; border: none; background: none; transition: transform 0.1s; position: relative; z-index: 5; }
         .heart-btn:active { transform: scale(1.3); }
         
         .size-box { border: 2px solid var(--deep-brown); padding: 8px; border-radius: 12px; margin: 10px 5px; background: #f9f9f9; text-align: center; }
@@ -172,7 +195,6 @@
             b.onclick = () => {
                 document.querySelectorAll('.alpha-btn').forEach(x => x.classList.remove('active'));
                 b.classList.add('active');
-                // Jeśli klikamy literkę, wymuszamy tryb sortowania A-Z lub Z-A, aby nagłówki się pojawiły
                 if(sortType !== 'az' && sortType !== 'za') sortType = 'az';
                 render();
                 const target = document.getElementById("anchor-" + l);
@@ -216,7 +238,6 @@
         const out = document.getElementById('main-display'); out.innerHTML = '';
         document.getElementById('count').innerText = cart.length;
         
-        // Pasek liter widoczny zawsze w widoku LISTY (poza ulubionymi)
         const showAlphaBar = (displayMode === 'list' && currentView !== 'cart');
         document.getElementById('alpha-shelf').style.display = showAlphaBar ? 'block' : 'none';
 
@@ -240,7 +261,6 @@
         container.className = 'items-grid';
         
         let lastChar = "";
-        // Nagłówki literowe pokazujemy tylko przy sortowaniu A-Z lub Z-A
         const showHeaders = (sortType === 'az' || sortType === 'za') && !query;
 
         list.forEach(s => {
@@ -269,6 +289,7 @@
                 item.className = 'list-card';
                 item.onclick = (e) => { if(!e.target.closest('.heart-btn')) playSong(s.yt); };
                 item.innerHTML = `
+                    <div class="list-overlay">▶ KLIKNIJ, ABY POSŁUCHAĆ 🎶</div>
                     <span class="list-title">${s.tytul}</span>
                     <button class="heart-btn" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">${isFav ? '❤️' : '🤍'}</button>
                 `;
