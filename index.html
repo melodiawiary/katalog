@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Melodia Wiary - Nowa Kolorystyka</title>
+    <title>Katalog Melodia Wiary - Jasna Edycja</title>
     <style>
         :root { 
-            --gold: #ffb347; /* JASNY POMARAŃCZ / CIEPŁE ZŁOTO */
-            --bg: #f8fafc; 
-            --sidebar: #0f172a; 
-            --accent: #d2e9e6; /* TWOJA NOWA ZIELEŃ/CYJAN */
+            --active-orange: #fbda80; /* TWOJA POMARAŃCZA */
+            --bg: #fdfdfd; 
+            --sidebar-bg: #ffffff; 
+            --soft-cyan: #d2e9e6; /* TWOJA ZIELEŃ/CYJAN */
             --text-dark: #0f172a;
-            --card-bg: #ffffff;
+            --sidebar-border: #e2e8f0;
             --sidebar-width: 230px; 
         }
         
@@ -20,69 +20,65 @@
 
         body { background: var(--bg); color: var(--text-dark); font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; min-height: 100vh; font-size: var(--f-size); }
 
-        /* SIDEBAR */
-        #sidebar { width: var(--sidebar-width); background: var(--sidebar); border-right: 4px solid var(--gold); display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 1000; }
-        .sidebar-top { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center; }
+        /* SIDEBAR - TERAZ BIAŁY */
+        #sidebar { width: var(--sidebar-width); background: var(--sidebar-bg); border-right: 4px solid var(--active-orange); display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 1000; box-shadow: 2px 0 10px rgba(0,0,0,0.05); }
+        .sidebar-top { padding: 15px; border-bottom: 1px solid var(--sidebar-border); text-align: center; }
         .sidebar-scroll { flex-grow: 1; overflow-y: auto; padding: 10px; }
-        .logo-img { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--gold); background: white; object-fit: cover; margin-bottom: 10px; }
+        .logo-img { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--active-orange); background: white; object-fit: cover; margin-bottom: 10px; }
         
-        .nav-btn { width: 100%; padding: 10px; margin-bottom: 6px; border-radius: 8px; border: 1px solid transparent; cursor: pointer; font-weight: 700; text-align: left; text-transform: uppercase; font-size: var(--f-btn); color: #cbd5e1; background: rgba(255,255,255,0.05); line-height: 1.2; transition: 0.2s; }
-        .nav-btn:hover { background: rgba(255, 179, 71, 0.2); color: var(--gold); }
-        .nav-btn-main { background: var(--gold); color: black; }
-        
-        /* AKTYWNY PRZYCISK - TWOJA NOWA BARWA */
-        .nav-btn.active { background: var(--accent) !important; color: var(--text-dark) !important; border-color: var(--sidebar); }
+        /* PRZYCISKI BOCZNE */
+        .nav-btn { width: 100%; padding: 10px; margin-bottom: 6px; border-radius: 8px; border: 1px solid var(--sidebar-border); cursor: pointer; font-weight: 700; text-align: left; text-transform: uppercase; font-size: var(--f-btn); color: var(--text-dark); background: var(--soft-cyan); transition: 0.2s; }
+        .nav-btn:hover { background: var(--active-orange); border-color: var(--text-dark); }
+        .nav-btn.active { background: var(--active-orange) !important; color: var(--text-dark) !important; border: 2px solid var(--text-dark); }
 
-        .size-btn { width: 100%; padding: 8px; margin-top: 5px; font-weight: 900; cursor: pointer; border: 2px solid #555; background: #000; color: #888; border-radius: 6px; font-size: var(--f-ctrl); text-transform: uppercase; transition: 0.2s; }
-        .size-btn:hover { color: white; border-color: var(--gold); }
-        .size-btn.active { border-color: var(--accent); color: white; }
+        .size-btn { width: 100%; padding: 8px; margin-top: 5px; font-weight: 900; cursor: pointer; border: 2px solid var(--sidebar-border); background: #eee; color: #555; border-radius: 6px; font-size: var(--f-ctrl); text-transform: uppercase; transition: 0.2s; }
+        .size-btn:hover { background: var(--active-orange); color: var(--text-dark); }
+        .size-btn.active { background: var(--active-orange); border-color: var(--text-dark); color: var(--text-dark); }
 
         #main-content { margin-left: var(--sidebar-width); flex: 1; padding: 0 30px; position: relative; }
-        .header-sticky { position: sticky; top: 0; z-index: 900; background: var(--bg); padding-top: 20px; border-bottom: 3px solid var(--gold); margin-bottom: 20px; }
+        .header-sticky { position: sticky; top: 0; z-index: 900; background: var(--bg); padding-top: 20px; border-bottom: 3px solid var(--active-orange); margin-bottom: 20px; }
         .top-layout { display: flex; gap: 20px; align-items: flex-start; padding-bottom: 15px; }
-        .controls-area { flex: 1; }
         
         #player-section { 
             width: 400px; 
             background: #000; 
             aspect-ratio: 16/9; 
-            border: 3px solid var(--sidebar); 
+            border: 3px solid var(--text-dark); 
             border-radius: 12px; 
             overflow: hidden; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
         }
 
-        .search-box { width: 100%; padding: 12px; border-radius: 20px; border: 2px solid var(--sidebar); font-size: var(--f-search); font-weight: bold; margin-bottom: 10px; box-sizing: border-box; text-align: center; }
+        .search-box { width: 100%; padding: 12px; border-radius: 20px; border: 2px solid var(--soft-cyan); font-size: var(--f-search); font-weight: bold; margin-bottom: 10px; box-sizing: border-box; text-align: center; background: #fff; }
+        .search-box:focus { border-color: var(--active-orange); outline: none; }
         
-        /* PRZYCISKI GÓRNE - CIEPŁY POMARAŃCZ */
+        /* PRZYCISKI GÓRNE */
         .btn-group { display: flex; gap: 5px; margin-bottom: 8px; flex-wrap: wrap; }
-        .ctrl-btn { flex: 1; min-width: 120px; padding: 10px; border: 2px solid var(--sidebar); background: var(--gold); color: black; font-weight: 800; cursor: pointer; border-radius: 6px; text-transform: uppercase; font-size: var(--f-ctrl); transition: 0.2s; }
-        .ctrl-btn:hover { background: #ffc470; }
-        /* AKTYWNY PRZYCISK GÓRNY - TWOJA NOWA BARWA */
-        .ctrl-btn.active { background: var(--accent) !important; color: var(--text-dark) !important; border-color: var(--sidebar); }
+        .ctrl-btn { flex: 1; min-width: 120px; padding: 10px; border: 1px solid var(--sidebar-border); background: var(--soft-cyan); color: var(--text-dark); font-weight: 800; cursor: pointer; border-radius: 6px; text-transform: uppercase; font-size: var(--f-ctrl); transition: 0.2s; }
+        .ctrl-btn:hover { background: var(--active-orange); }
+        .ctrl-btn.active { background: var(--active-orange) !important; border: 2px solid var(--text-dark); }
 
         /* KAFELKI */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; padding-bottom: 60px; }
-        .card { background: var(--card-bg); border: 2px solid #e2e8f0; padding: 12px; border-radius: 15px; text-align: center; display: flex; flex-direction: column; transition: 0.3s; }
-        .card:hover { border-color: var(--gold); transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .card { background: #fff; border: 1px solid var(--sidebar-border); padding: 12px; border-radius: 15px; text-align: center; display: flex; flex-direction: column; transition: 0.3s; }
+        .card:hover { border-color: var(--active-orange); transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.05); }
 
         .thumb-container { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 10px; overflow: hidden; cursor: pointer; margin-bottom: 8px; }
         .thumb { width: 100%; height: 100%; object-fit: cover; }
-        /* NAKŁADKA POSŁUCHAJ - TWOJA NOWA BARWA */
-        .play-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(210, 233, 230, 0.9); color: var(--text-dark); display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: 0.2s; font-weight: 900; text-align: center; font-size: var(--f-tip); }
+        .play-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(251, 218, 128, 0.9); color: var(--text-dark); display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: 0.2s; font-weight: 900; text-align: center; font-size: var(--f-tip); }
         .thumb-container:hover .play-overlay { opacity: 1; }
 
-        .card-title { font-weight: 800; margin-bottom: 10px; text-transform: uppercase; font-size: 0.95em; line-height: 1.2; height: 2.4em; overflow: hidden; }
+        .card-title { font-weight: 800; margin-bottom: 10px; text-transform: uppercase; font-size: 0.95em; line-height: 1.2; height: 2.4em; overflow: hidden; color: var(--text-dark); }
         
         /* PRZYCISK DODAJ/USUŃ */
-        .btn-add { background: var(--gold); color: black; border: none; padding: 10px; border-radius: 8px; font-weight: 800; cursor: pointer; text-transform: uppercase; width: 100%; font-size: var(--f-btn); transition: 0.2s; }
-        .btn-add:hover { background: #ffc470; }
-        .btn-add.selected { background: var(--accent); color: var(--text-dark); border: 1px solid var(--sidebar); }
+        .btn-add { background: var(--soft-cyan); color: var(--text-dark); border: 1px solid var(--sidebar-border); padding: 10px; border-radius: 8px; font-weight: 800; cursor: pointer; text-transform: uppercase; width: 100%; font-size: var(--f-btn); transition: 0.2s; }
+        .btn-add:hover { background: var(--active-orange); }
+        .btn-add.selected { background: var(--active-orange); border: 2px solid var(--text-dark); }
 
         /* CD PROGRESS */
-        .cd-box { background: white; padding: 20px; border-radius: 20px; border: 4px solid var(--gold); margin-bottom: 30px; }
-        .cd-progress-container { background: #e2e8f0; border-radius: 15px; height: 25px; width: 100%; margin: 10px 0; overflow: hidden; border: 2px solid var(--sidebar); }
-        .cd-progress-bar { background: var(--accent); height: 100%; transition: 0.5s; border-right: 2px solid var(--sidebar); }
+        .cd-box { background: white; padding: 20px; border-radius: 20px; border: 4px solid var(--active-orange); margin-bottom: 30px; }
+        .cd-progress-container { background: #eee; border-radius: 15px; height: 25px; width: 100%; margin: 10px 0; overflow: hidden; border: 1px solid var(--text-dark); }
+        .cd-progress-bar { background: var(--active-orange); height: 100%; transition: 0.5s; }
 
         @media (max-width: 1000px) { 
             #sidebar { width: 100%; height: auto; position: relative; }
@@ -97,8 +93,8 @@
 <div id="sidebar">
     <div class="sidebar-top">
         <img src="logo.png" class="logo-img" onerror="this.src='https://via.placeholder.com/100?text=LOGO'">
-        <button class="nav-btn nav-btn-main" id="cat-all" onclick="setView('all')">🏠 WSZYSTKIE</button>
-        <button class="nav-btn nav-btn-main" id="btn-cart" onclick="setView('cart')">⭐ WYBÓR (<span id="count">0</span>)</button>
+        <button class="nav-btn" id="cat-all" onclick="setView('all')">🏠 WSZYSTKIE</button>
+        <button class="nav-btn" id="btn-cart" onclick="setView('cart')">⭐ WYBÓR (<span id="count">0</span>)</button>
         <div style="margin-top:10px;">
             <button class="size-btn" id="s-std" onclick="updateSize('standard')">LITERY: STD</button>
             <button class="size-btn" id="s-big" onclick="updateSize('senior')">LITERY: DUŻE</button>
@@ -111,7 +107,7 @@
     <div class="header-sticky" id="toolbar">
         <div class="top-layout">
             <div class="controls-area">
-                <input type="text" id="search" class="search-box" placeholder="SZUKAJ UTWORU..." onkeyup="doSearch()">
+                <input type="text" id="search" class="search-box" placeholder="Wpisz tytuł pieśni..." onkeyup="doSearch()">
                 <div class="btn-group">
                     <button class="ctrl-btn active" id="s-new" onclick="setSort('newest')">NAJNOWSZE</button>
                     <button class="ctrl-btn" id="s-old" onclick="setSort('oldest')">NAJSTARSZE</button>
@@ -125,8 +121,8 @@
             </div>
 
             <div id="player-section">
-                <div id="yt-player-container" style="height:100%; background:#000; color:#888; display:flex; align-items:center; justify-content:center; text-align:center; font-weight:bold; font-size:13px; padding:20px; border: 1px dashed #333;">
-                    WYBIERZ PIEŚŃ,<br>ABY POSŁUCHAĆ TUTAJ 🎶
+                <div id="yt-player-container" style="height:100%; background:#000; color:#555; display:flex; align-items:center; justify-content:center; text-align:center; font-weight:bold; font-size:13px; padding:20px;">
+                    KLIKNIJ MINIATURKĘ,<br>ABY POSŁUCHAĆ TUTAJ 🎶
                 </div>
             </div>
         </div>
@@ -136,7 +132,6 @@
 </div>
 
 <script>
-    // PAMIĘTAJ O ZMIANIE KLUCZA NA SWÓJ STARY: 'mv_PERMANENT_final_v1'
     const CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTSIMZUO8ZkisiFoqOfypL9hOQBnTbAvtMmBeIuK56_QoiXFu_b7i-de1Jn6Km9symosxJBV6V5PxKO/pub?output=csv';
     const STORAGE_KEY = 'mv_PERMANENT_final_v1'; 
     let songs = [], cart = [], currentView = 'all', displayMode = 'grid', query = "", sortType = 'newest';
@@ -208,10 +203,7 @@
         if(currentView === 'cart') { renderCart(out); return; }
 
         const sortIds = { newest:'s-new', oldest:'s-old', az:'s-az', za:'s-za' };
-        Object.keys(sortIds).forEach(k => {
-            const el = document.getElementById(sortIds[k]);
-            if(el) el.classList.toggle('active', sortType === k);
-        });
+        Object.keys(sortIds).forEach(k => document.getElementById(sortIds[k]).classList.toggle('active', sortType === k));
         document.getElementById('m-grid').classList.toggle('active', displayMode === 'grid');
         document.getElementById('m-list').classList.toggle('active', displayMode === 'list');
 
