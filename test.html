@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Melodia Wiary - v52</title>
+    <title>Katalog Melodia Wiary - v53</title>
     <style>
         :root { 
             --active-orange: #fbda80;
@@ -40,11 +40,17 @@
         .section-label { font-size: 16px;
             font-weight: 900; color: var(--deep-brown); text-transform: uppercase; margin: 15px 0 10px 5px; display: block; border-bottom: 3px solid var(--active-orange); padding-bottom: 5px;
             }
+        
+        /* Zmiany kosmetyczne w przyciskach bocznych */
         .nav-btn, .size-btn { width: 100%; padding: 12px 10px; margin-bottom: 8px; border-radius: 8px;
             border: 1px solid var(--deep-brown); cursor: pointer; font-weight: 800; text-align: left; text-transform: uppercase; font-size: var(--f-btn); background: var(--soft-cyan); color: var(--deep-brown); display: flex;
-            align-items: center; gap: 8px; transition: 0.2s; box-sizing: border-box; }
+            align-items: center; gap: 8px; transition: transform 0.2s, background 0.2s; box-sizing: border-box; }
+        
+        .nav-btn:hover { background: var(--active-orange); transform: scale(1.02); }
+        
         .nav-btn.active, .size-btn.active { background: var(--active-orange) !important;
-            border: 2.5px solid var(--deep-brown) !important; }
+            border: 2.5px solid var(--deep-brown) !important; transform: scale(1.02); }
+            
         .nav-btn.fav-btn { background: #fff1f1; border-color: #ffb3b3;
             flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 10px; min-height: 60px;
             }
@@ -95,7 +101,6 @@
             background: var(--active-orange); padding: 8px 20px; border-radius: 8px; font-weight: 900; margin: 40px 0 15px 0; border: 2px solid var(--deep-brown); font-size: 1.3em;
             text-align: left; scroll-margin-top: 300px; }
         
-        /* WIDOK MINIATUR - NA CAŁĄ SZEROKOŚĆ (TYLE ILE WEJDZIE) */
         .items-grid { 
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
@@ -103,7 +108,6 @@
             margin-top: 20px; 
         }
 
-        /* WIDOK LISTY - SZTYWNE 5 KOLUMN (DŁUGIE LINIE) */
         .list-container { 
             display: grid;
             grid-template-columns: repeat(5, 1fr); 
@@ -111,7 +115,6 @@
             margin-top: 20px; 
         }
 
-        /* Obsługa mniejszych ekranów dla listy tytułów */
         @media (max-width: 1400px) { .list-container { grid-template-columns: repeat(4, 1fr); } }
         @media (max-width: 1100px) { .list-container { grid-template-columns: repeat(3, 1fr); } }
         @media (max-width: 800px) { .list-container { grid-template-columns: repeat(2, 1fr); } }
@@ -267,7 +270,7 @@
             });
             const catBox = document.getElementById('cat-list');
             Array.from(catsSet).sort().forEach(cat => {
-                const b = document.createElement('button'); b.className = 'nav-btn'; b.innerText = cat; 
+                const b = document.createElement('button'); b.className = 'nav-btn category-link'; b.innerText = cat; 
                 b.onclick = () => setView(cat); catBox.appendChild(b);
             });
             render();
@@ -288,9 +291,13 @@
         out.innerHTML = '';
         document.getElementById('count').innerText = cart.length + " UTWORÓW";
 
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        if(currentView === 'cart') document.getElementById('btn-cart').classList.add('active');
-        else if(currentView === 'all') document.getElementById('cat-all').classList.add('active');
+        // Poprawiona logika podświetlania aktywnego widoku/kategorii
+        document.querySelectorAll('.nav-btn').forEach(b => {
+            b.classList.remove('active');
+            if(currentView === 'cart' && b.id === 'btn-cart') b.classList.add('active');
+            if(currentView === 'all' && b.id === 'cat-all') b.classList.add('active');
+            if(b.classList.contains('category-link') && b.innerText === currentView) b.classList.add('active');
+        });
 
         const showAlphaBar = (displayMode === 'list' && currentView !== 'cart');
         document.getElementById('alpha-shelf').style.display = showAlphaBar ? 'block' : 'none';
