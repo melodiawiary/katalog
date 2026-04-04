@@ -66,7 +66,7 @@
             }
         .header-sticky { position: sticky; top: 0;
             z-index: 950; background: var(--bg); width: 100%;
-            box-sizing: border-box; border-bottom: 2px solid var(--active-orange); }
+            box-sizing: border-box; display: flex; flex-direction: column; }
         
         /* UKŁAD PANELI 50/50 */
         .top-padding { display: flex;
@@ -163,8 +163,7 @@
 
         .view-title-header { background: var(--soft-cyan); color: var(--deep-brown); padding: 15px 25px; font-weight: 900;
             text-transform: uppercase; font-size: 1.5em; border-bottom: 5px solid var(--active-orange); border-top: 2px solid var(--active-orange);
-            position: sticky; top: 240px; z-index: 900; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            width: 100%; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px;
             }
 
         #main-display { padding: 0 0 400px 0; min-height: 100vh; width: 100%;
@@ -255,11 +254,12 @@
             z-index: 5; }
 
         .vote-btn-header {
-            width: 100%; max-width: 600px; background: var(--active-orange); color: var(--deep-brown); border: 3px solid var(--deep-brown);
-            padding: 10px; border-radius: 10px; font-weight: 900; text-transform: uppercase;
-            cursor: pointer; font-size: 0.6em; transition: transform 0.2s; margin-top: 5px;
+            width: 100%; background: var(--active-orange); color: var(--deep-brown); border: 3px solid var(--deep-brown);
+            padding: 12px; border-radius: 10px; font-weight: 900; text-transform: uppercase;
+            cursor: pointer; font-size: 0.7em; transition: transform 0.2s;
+            margin-top: 5px; box-sizing: border-box;
         }
-        .vote-btn-header:hover { transform: scale(1.02); }
+        .vote-btn-header:hover { transform: scale(1.01); }
         
         .instruction-box {
             margin-top: 50px; padding: 40px; background: white; border: 4px solid var(--active-orange);
@@ -312,6 +312,7 @@
         <div id="alpha-shelf" class="alpha-shelf">
             <div id="alpha-row"></div>
         </div>
+        <div id="sticky-title-container"></div>
     </div>
     <div id="main-display"></div>
 </div>
@@ -444,15 +445,18 @@
 
     function render() {
         const out = document.getElementById('main-display');
+        const stickyTitleContainer = document.getElementById('sticky-title-container');
         out.innerHTML = '';
+        stickyTitleContainer.innerHTML = '';
         renderTopPanel();
 
+        // AKTUALIZACJA PODŚWIETLENIA SIDEBARA
         document.querySelectorAll('.nav-btn').forEach(b => {
             b.classList.remove('active');
             if(currentView === 'cart' && b.id === 'btn-cart') b.classList.add('active');
             else if(currentView === 'top50' && b.id === 'btn-top50-side') b.classList.add('active');
             else if(currentView === 'all' && b.id === 'cat-all') b.classList.add('active');
-            else if(b.classList.contains('category-link') && b.innerText === currentView) b.classList.add('active');
+            else if(b.innerText.trim() === currentView) b.classList.add('active');
         });
 
         document.querySelectorAll('.ctrl-btn').forEach(b => {
@@ -464,24 +468,7 @@
         const showAlphaBar = (displayMode === 'list' && currentView !== 'cart' && currentView !== 'top50');
         document.getElementById('alpha-shelf').style.display = showAlphaBar ? 'block' : 'none';
 
-        let list = [];
-        if(currentView === 'cart') list = [...cart];
-        else if(currentView === 'top50') {
-            list = [...top50];
-            while(list.length < 50) { list.push({ tytul: "MIEJSCE WOLNE", yt: "", dummy: true }); }
-        }
-        else if(currentView === 'all') list = [...songs];
-        else list = songs.filter(s => s.kategorie.includes(currentView));
-
-        if(query) list = list.filter(s => s.tytul.toLowerCase().includes(query));
-
-        if(currentView !== 'top50') {
-            if(sortType === 'newest') list.sort((a,b) => b.originalIndex - a.originalIndex);
-            else if(sortType === 'oldest') list.sort((a,b) => a.originalIndex - b.originalIndex);
-            else if(sortType === 'az') list.sort((a,b) => a.tytul.localeCompare(b.tytul, 'pl'));
-            else if(sortType === 'za') list.sort((a,b) => b.tytul.localeCompare(a.tytul, 'pl'));
-        }
-
+        // PRZYGOTOWANIE ZABLOKOWANEGO NAGŁÓWKA KATEGORII
         const header = document.createElement('div');
         header.className = 'view-title-header';
         
@@ -500,8 +487,26 @@
             };
             header.appendChild(voteBtn);
         }
+        stickyTitleContainer.appendChild(header);
 
-        out.appendChild(header);
+        // LOGIKA LISTY
+        let list = [];
+        if(currentView === 'cart') list = [...cart];
+        else if(currentView === 'top50') {
+            list = [...top50];
+            while(list.length < 50) { list.push({ tytul: "MIEJSCE WOLNE", yt: "", dummy: true }); }
+        }
+        else if(currentView === 'all') list = [...songs];
+        else list = songs.filter(s => s.kategorie.includes(currentView));
+
+        if(query) list = list.filter(s => s.tytul.toLowerCase().includes(query));
+
+        if(currentView !== 'top50') {
+            if(sortType === 'newest') list.sort((a,b) => b.originalIndex - a.originalIndex);
+            else if(sortType === 'oldest') list.sort((a,b) => a.originalIndex - b.originalIndex);
+            else if(sortType === 'az') list.sort((a,b) => a.tytul.localeCompare(b.tytul, 'pl'));
+            else if(sortType === 'za') list.sort((a,b) => b.tytul.localeCompare(a.tytul, 'pl'));
+        }
 
         const contentBox = document.createElement('div');
         contentBox.className = 'display-padding';
