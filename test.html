@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Melodia Wiary - v51 (MOD)</title>
+    <title>Katalog Melodia Wiary - v51 (MOD - POPRAWIONY)</title>
     <style>
         :root { 
             --active-orange: #fbda80; --bg: #f4f9f8; --card-bg: #f9fffe;
@@ -39,7 +39,7 @@
         .display-padding { padding: 0 25px; }
         
         .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
-        .card { background: var(--card-bg); border: 2px solid rgba(59, 42, 0, 0.08); padding: 12px; border-radius: 15px; text-align: center; transition: 0.3s; display: flex; flex-direction: column; cursor: pointer; }
+        .card { background: var(--card-bg); border: 2px solid rgba(59, 42, 0, 0.08); padding: 12px; border-radius: 15px; text-align: center; transition: 0.3s; display: flex; flex-direction: column; cursor: pointer; position: relative; }
         .card:hover { border: 2px solid var(--deep-brown); transform: translateY(-3px); }
         .card.is-fav { border: 4px solid var(--active-orange); background: #fffcf0; }
         
@@ -50,7 +50,7 @@
 
         .card-title { font-weight: 900; font-size: var(--f-card-title); text-transform: uppercase; padding: 5px; flex-grow: 1; }
 
-        /* NOWY PRZYCISK POD MINIATURĄ */
+        /* PRZYCISK POD MINIATURĄ */
         .btn-fav-toggle { margin-top: 10px; padding: 10px; border-radius: 10px; border: 1px solid #ccc; background: #eee; font-weight: 900; font-size: 12px; text-transform: uppercase; cursor: pointer; transition: 0.2s; }
         .btn-fav-toggle.is-active { background: var(--active-orange); border-color: var(--deep-brown); }
 
@@ -107,7 +107,13 @@
 
     let songs = [], cart = [], currentView = 'all', displayMode = 'grid', query = "", sortType = 'newest';
 
-    function openYT(id) { window.open(`https://www.youtube.com/watch?v=${id}`, '_blank'); }
+    // PRZYWRÓCONA TWOJA FUNKCJA OTWIERANIA W NOWYM OKNIE
+    function openYT(id) {
+        const width = 800; const height = 600;
+        const left = (window.screen.width / 2) - (width / 2);
+        const top = (window.screen.height / 2) - (height / 2);
+        window.open(`https://www.youtube.com/watch?v=${id}`, 'YouTubePlayer', `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`);
+    }
 
     function parseCSV(text) {
         const lines = text.split(/\r?\n/).filter(x => x.trim() !== "");
@@ -189,7 +195,7 @@
                         <img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb">
                         <div class="play-overlay">OTWÓRZ NA YOUTUBE 🎶</div>
                     </div>
-                    <div class="card-title">${s.tytul}</div>
+                    <div class="card-title" onclick="openYT('${s.yt}')">${s.tytul}</div>
                     <button class="btn-fav-toggle ${isFav ? 'is-active' : ''}" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">
                         ${isFav ? '❌ USUŃ Z ULUBIONYCH USUŃ' : '➕ DODAJ DO ULUBIONYCH'}
                     </button>
