@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Melodia Wiary - Pełna Szerokość</title>
+    <title>Katalog Melodia Wiary - Edycja v9</title>
     <style>
         :root { 
             --active-orange: #fbda80; 
             --bg: #fdfdfd; 
             --sidebar-bg: #ffffff; 
             --soft-cyan: #d2e9e6; 
-            --text-dark: #0f172a;
+            --deep-brown: #3b2a00; /* TWÓJ NOWY KOLOR TEKSTU */
             --sidebar-border: #e2e8f0;
             --sidebar-width: 230px; 
         }
@@ -18,7 +18,7 @@
         body.standard { --f-size: 16px; --f-btn: 13px; --f-ctrl: 12px; --f-tip: 18px; --f-search: 1.2em; }
         body.senior { --f-size: 22px; --f-btn: 18px; --f-ctrl: 18px; --f-tip: 24px; --f-search: 1.6em; }
 
-        body { background: var(--bg); color: var(--text-dark); font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; min-height: 100vh; font-size: var(--f-size); }
+        body { background: var(--bg); color: var(--deep-brown); font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; min-height: 100vh; font-size: var(--f-size); }
 
         /* SIDEBAR */
         #sidebar { width: var(--sidebar-width); background: var(--sidebar-bg); border-right: 4px solid var(--active-orange); display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 1000; box-shadow: 2px 0 10px rgba(0,0,0,0.05); }
@@ -26,14 +26,13 @@
         .sidebar-scroll { flex-grow: 1; overflow-y: auto; padding: 10px; }
         .logo-img { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--active-orange); background: white; object-fit: cover; margin-bottom: 10px; }
         
-        .nav-btn { width: 100%; padding: 10px; margin-bottom: 6px; border-radius: 8px; border: 1px solid var(--sidebar-border); cursor: pointer; font-weight: 700; text-align: left; text-transform: uppercase; font-size: var(--f-btn); color: var(--text-dark); background: var(--soft-cyan); transition: 0.2s; }
-        .nav-btn:hover { background: var(--active-orange); border-color: var(--text-dark); }
-        .nav-btn.active { background: var(--active-orange) !important; color: var(--text-dark) !important; border: 2px solid var(--text-dark); }
+        .nav-btn { width: 100%; padding: 10px; margin-bottom: 6px; border-radius: 8px; border: 1px solid var(--sidebar-border); cursor: pointer; font-weight: 700; text-align: left; text-transform: uppercase; font-size: var(--f-btn); color: var(--deep-brown); background: var(--soft-cyan); transition: 0.2s; }
+        .nav-btn:hover { background: var(--active-orange); }
+        .nav-btn.active { background: var(--active-orange) !important; border: 2px solid var(--deep-brown); }
 
         /* GŁÓWNA TREŚĆ */
         #main-content { margin-left: var(--sidebar-width); flex: 1; display: flex; flex-direction: column; }
         
-        /* POPRAWIONY PANEL GÓRNY - PEŁNA SZEROKOŚĆ */
         .header-sticky { 
             position: sticky; 
             top: 0; 
@@ -42,64 +41,74 @@
             padding: 20px 30px; 
             border-bottom: 3px solid var(--active-orange); 
             width: 100%; 
-            box-sizing: border-box; /* Kluczowe dla pełnej szerokości z paddingiem */
+            box-sizing: border-box;
         }
         
-        .top-layout { 
-            display: flex; 
-            gap: 30px; 
-            align-items: flex-start; 
-            width: 100%; 
-        }
-
-        .controls-area { 
-            flex: 1; /* Zajmuje całą dostępną przestrzeń po lewej od odtwarzacza */
-        }
+        .top-layout { display: flex; gap: 30px; align-items: flex-start; width: 100%; }
+        .controls-area { flex: 1; display: flex; flex-direction: column; }
         
+        /* POWIĘKSZONY ODTWARZACZ O 30% (z 400px na 520px) */
         #player-section { 
-            width: 400px; 
+            width: 520px; 
             background: #000; 
             aspect-ratio: 16/9; 
-            border: 3px solid var(--text-dark); 
+            border: 3px solid var(--deep-brown); 
             border-radius: 12px; 
             overflow: hidden; 
             box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-            flex-shrink: 0; /* Zapobiega ściskaniu odtwarzacza */
+            flex-shrink: 0;
         }
 
-        .search-box { width: 100%; padding: 12px; border-radius: 20px; border: 2px solid var(--soft-cyan); font-size: var(--f-search); font-weight: bold; margin-bottom: 10px; box-sizing: border-box; text-align: center; background: #fff; }
+        .search-box { width: 100%; padding: 12px; border-radius: 20px; border: 2px solid var(--soft-cyan); font-size: var(--f-search); font-weight: bold; margin-bottom: 10px; box-sizing: border-box; text-align: center; color: var(--deep-brown); }
         
-        .btn-group { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
-        .ctrl-btn { flex: 1; min-width: 110px; padding: 10px; border: 1px solid var(--sidebar-border); background: var(--soft-cyan); color: var(--text-dark); font-weight: 800; cursor: pointer; border-radius: 6px; text-transform: uppercase; font-size: var(--f-ctrl); transition: 0.2s; }
+        .btn-group { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+        .ctrl-btn { flex: 1; min-width: 100px; padding: 10px; border: 1px solid var(--sidebar-border); background: var(--soft-cyan); color: var(--deep-brown); font-weight: 800; cursor: pointer; border-radius: 6px; text-transform: uppercase; font-size: var(--f-ctrl); transition: 0.2s; }
         .ctrl-btn:hover { background: var(--active-orange); }
-        .ctrl-btn.active { background: var(--active-orange) !important; border: 2px solid var(--text-dark); }
+        .ctrl-btn.active { background: var(--active-orange) !important; border: 2px solid var(--deep-brown); }
 
-        /* GRID Z KAFELKAMI */
+        /* MIEJSCE NA REKLAMY */
+        #ad-space {
+            width: 100%;
+            height: 60px;
+            background: #ffffff;
+            border: 1px dashed var(--soft-cyan);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #ccc;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* GRID I KAFELKI */
         #main-display { padding: 0 30px 60px 30px; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 25px; }
         
         .card { background: #fff; border: 1px solid var(--sidebar-border); padding: 12px; border-radius: 15px; text-align: center; display: flex; flex-direction: column; transition: 0.3s; }
-        .card:hover { border-color: var(--active-orange); transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.05); }
+        .card:hover { border-color: var(--active-orange); transform: translateY(-3px); }
 
         .thumb-container { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 10px; overflow: hidden; cursor: pointer; margin-bottom: 8px; }
         .thumb { width: 100%; height: 100%; object-fit: cover; }
-        .play-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(251, 218, 128, 0.9); color: var(--text-dark); display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: 0.2s; font-weight: 900; text-align: center; font-size: var(--f-tip); }
+        .play-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(251, 218, 128, 0.9); color: var(--deep-brown); display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: 0.2s; font-weight: 900; }
         .thumb-container:hover .play-overlay { opacity: 1; }
 
-        .card-title { font-weight: 800; margin-bottom: 12px; text-transform: uppercase; font-size: 0.95em; line-height: 1.2; height: 2.4em; overflow: hidden; color: var(--text-dark); }
-        .btn-add { background: var(--soft-cyan); color: var(--text-dark); border: 1px solid var(--sidebar-border); padding: 10px; border-radius: 8px; font-weight: 800; cursor: pointer; text-transform: uppercase; width: 100%; font-size: var(--f-btn); transition: 0.2s; }
+        .card-title { font-weight: 800; margin-bottom: 12px; text-transform: uppercase; font-size: 0.95em; line-height: 1.2; height: 2.4em; overflow: hidden; color: var(--deep-brown); }
+        .btn-add { background: var(--soft-cyan); color: var(--deep-brown); border: 1px solid var(--sidebar-border); padding: 10px; border-radius: 8px; font-weight: 800; cursor: pointer; text-transform: uppercase; width: 100%; font-size: var(--f-btn); transition: 0.2s; }
         .btn-add:hover { background: var(--active-orange); }
-        .btn-add.selected { background: var(--active-orange); border: 2px solid var(--text-dark); }
+        .btn-add.selected { background: var(--active-orange); border: 2px solid var(--deep-brown); }
 
-        .size-btn { width: 100%; padding: 8px; margin-top: 5px; font-weight: 900; cursor: pointer; border: 2px solid var(--sidebar-border); background: #eee; color: #555; border-radius: 6px; font-size: var(--f-ctrl); text-transform: uppercase; }
-        .size-btn.active { background: var(--active-orange); border-color: var(--text-dark); color: var(--text-dark); }
+        /* PRZYCISKI LITER - LOGIKA KOLORÓW */
+        .size-btn { width: 100%; padding: 8px; margin-top: 5px; font-weight: 900; cursor: pointer; border: 1px solid var(--sidebar-border); background: var(--soft-cyan); color: var(--deep-brown); border-radius: 6px; font-size: var(--f-ctrl); text-transform: uppercase; transition: 0.2s; }
+        .size-btn:hover { background: var(--active-orange); }
+        .size-btn.active { background: var(--active-orange); border: 2px solid var(--deep-brown); }
 
-        /* CD BOX */
-        .cd-box { background: white; padding: 25px; border-radius: 20px; border: 4px solid var(--active-orange); margin: 30px 0; }
-        .cd-progress-container { background: #eee; border-radius: 15px; height: 25px; width: 100%; margin: 15px 0; overflow: hidden; border: 1px solid var(--text-dark); }
+        .cd-box { background: white; padding: 25px; border-radius: 20px; border: 4px solid var(--active-orange); margin: 30px 0; color: var(--deep-brown); }
+        .cd-progress-container { background: #eee; border-radius: 15px; height: 25px; width: 100%; margin: 15px 0; overflow: hidden; border: 1px solid var(--deep-brown); }
         .cd-progress-bar { background: var(--active-orange); height: 100%; transition: 0.5s; }
 
-        @media (max-width: 1100px) { 
+        @media (max-width: 1200px) { 
             .top-layout { flex-direction: column; }
             #player-section { width: 100%; }
         }
@@ -113,8 +122,8 @@
         <button class="nav-btn" id="cat-all" onclick="setView('all')">🏠 WSZYSTKIE</button>
         <button class="nav-btn" id="btn-cart" onclick="setView('cart')">⭐ WYBÓR (<span id="count">0</span>)</button>
         <div style="margin-top:10px;">
-            <button class="size-btn" id="s-std" onclick="updateSize('standard')">LITERY: STD</button>
-            <button class="size-btn" id="s-big" onclick="updateSize('senior')">LITERY: DUŻE</button>
+            <button class="size-btn" id="s-std" onclick="updateSize('standard')">LITERY ZWYKŁE</button>
+            <button class="size-btn" id="s-big" onclick="updateSize('senior')">LITERY DUŻE</button>
         </div>
     </div>
     <div class="sidebar-scroll" id="cat-list"></div>
@@ -135,11 +144,12 @@
                     <button class="ctrl-btn active" id="m-grid" onclick="setMode('grid')">OBRAZKI</button>
                     <button class="ctrl-btn" id="m-list" onclick="setMode('list')">LISTA</button>
                 </div>
+                <div id="ad-space">MIEJSCE NA TWOJĄ REKLAMĘ</div>
             </div>
 
             <div id="player-section">
-                <div id="yt-player-container" style="height:100%; background:#000; color:#555; display:flex; align-items:center; justify-content:center; text-align:center; font-weight:bold; font-size:13px; padding:20px;">
-                    POSŁUCHAJ WYBRANEJ PIEŚNI 🎶
+                <div id="yt-player-container" style="height:100%; background:#000; color:#555; display:flex; align-items:center; justify-content:center; text-align:center; font-weight:bold; font-size:14px; padding:20px;">
+                    POSŁUCHAJ PIEŚNI W WIĘKSZYM OKNIE 🎶
                 </div>
             </div>
         </div>
@@ -216,7 +226,6 @@
         const out = document.getElementById('main-display'); out.innerHTML = '';
         document.getElementById('count').innerText = cart.length;
         document.getElementById('toolbar').style.display = (currentView === 'cart') ? 'none' : 'block';
-
         if(currentView === 'cart') { renderCart(out); return; }
 
         const sortIds = { newest:'s-new', oldest:'s-old', az:'s-az', za:'s-za' };
@@ -236,60 +245,4 @@
 
         if(sortType === 'newest') list.sort((a,b) => b.originalIndex - a.originalIndex);
         else if(sortType === 'oldest') list.sort((a,b) => a.originalIndex - b.originalIndex);
-        else if(sortType === 'az') list.sort((a,b) => a.tytul.localeCompare(b.tytul, 'pl'));
-        else if(sortType === 'za') list.sort((a,b) => b.tytul.localeCompare(a.tytul, 'pl'));
-
-        const g = document.createElement('div'); g.className = (displayMode === 'grid') ? 'grid' : '';
-        list.forEach(s => {
-            const isSel = cart.some(x => x.tytul === s.tytul);
-            const jsTytul = s.tytul.replace(/'/g, "\\'");
-            if(displayMode === 'grid') {
-                g.innerHTML += `<div class="card">
-                    <div class="thumb-container" onclick="playSong('${s.yt}')">
-                        <img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb">
-                        <div class="play-overlay">POSŁUCHAJ<span>TUTAJ</span></div>
-                    </div>
-                    <div class="card-title">${s.tytul}</div>
-                    <button class="btn-add ${isSel ? 'selected' : ''}" onclick="toggleSong('${jsTytul}')">${isSel ? 'USUŃ' : 'DODAJ'}</button>
-                </div>`;
-            } else {
-                g.innerHTML += `<div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #ddd; background:white; margin-bottom:5px; border-radius:10px; align-items:center;">
-                    <span style="font-weight:700; cursor:pointer;" onclick="playSong('${s.yt}')">▶ ${s.tytul}</span>
-                    <button class="btn-add ${isSel ? 'selected' : ''}" style="width:auto; padding:5px 20px;" onclick="toggleSong('${jsTytul}')">${isSel ? 'USUŃ' : 'DODAJ'}</button>
-                </div>`;
-            }
-        });
-        out.appendChild(g);
-    }
-
-    function renderCart(container) {
-        if(cart.length === 0) { container.innerHTML = `<div style="padding:50px; text-align:center;"><h3>Lista jest pusta</h3><button class="btn-add" onclick="setView('all')">Wróć do katalogu</button></div>`; return; }
-        let groups = {1: []}, curCD = 1, curSec = 0;
-        cart.forEach(s => {
-            let p = s.czas.split(':'); let sCount = (parseInt(p[0])||0)*60 + (parseInt(p[1])||0);
-            if(curSec + sCount > 3900) { curCD++; curSec = sCount; groups[curCD] = [s]; }
-            else { curSec += sCount; groups[curCD].push(s); }
-        });
-        Object.keys(groups).forEach(n => {
-            let totalS = 0; groups[n].forEach(s => { let p = s.czas.split(':'); totalS += (parseInt(p[0])||0)*60 + (parseInt(p[1])||0); });
-            let proc = Math.min((totalS / 3900) * 100, 100);
-            const box = document.createElement('div'); box.className = 'cd-box';
-            box.innerHTML = `<h2>PŁYTA NR ${n}</h2><p>Czas: ${Math.floor(totalS/60)} min / 65 min</p>
-                <div class="cd-progress-container"><div class="cd-progress-bar" style="width:${proc}%"></div></div><div class="grid"></div>`;
-            const g = box.querySelector('.grid');
-            groups[n].forEach(s => {
-                g.innerHTML += `<div class="card"><div class="card-title">${s.tytul}</div><button class="btn-add selected" onclick="toggleSong('${s.tytul.replace(/'/g, "\\'")}')">USUŃ</button></div>`;
-            });
-            container.appendChild(box);
-        });
-        container.innerHTML += `<div style="padding: 0 30px;"><button class="ctrl-btn active" style="width:100%; padding:20px; margin-top:20px;" onclick="setView('all')">POWRÓT DO KATALOGU</button></div>`;
-    }
-
-    function setMode(m) { displayMode = m; render(); }
-    function setSort(s) { sortType = s; render(); }
-    function setView(v) { currentView = v; render(); window.scrollTo(0,0); }
-    function doSearch() { query = document.getElementById('search').value.toLowerCase(); render(); }
-    init();
-</script>
-</body>
-</html>
+        else if(sortType === 'az') list.sort((a,b
