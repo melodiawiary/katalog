@@ -35,12 +35,12 @@
         .header-sticky { position: sticky; top: 0; z-index: 900; background: var(--bg); width: 100%; box-sizing: border-box; }
         .top-padding { padding: 20px 25px 15px 25px; }
         
-        .search-box { width: 100%; padding: 12px; border-radius: 15px; border: 2px solid var(--deep-brown); font-size: var(--f-search); font-weight: bold; text-align: center; background: var(--card-bg); color: var(--deep-brown); }
+        .search-box { width: 100%; padding: 12px; border-radius: 15px; border: 2px solid var(--deep-brown); font-size: var(--f-search); font-weight: bold; text-align: center; background: var(--card-bg); }
         .btn-group { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 10px; }
         .ctrl-btn { flex: 1; padding: 12px 4px; border: 1px solid var(--deep-brown); background: var(--soft-cyan); color: var(--deep-brown); font-weight: 800; cursor: pointer; border-radius: 6px; text-transform: uppercase; font-size: var(--f-ctrl); transition: 0.2s; }
         .ctrl-btn.active { background: var(--active-orange) !important; border: 2.5px solid var(--deep-brown); }
 
-        .ad-placeholder { height: 100px; background: white; margin-top: 15px; border: 1px dashed #ccc; display: flex; align-items: center; justify-content: center; color: #999; font-weight: bold; border-radius: 10px; text-transform: uppercase; }
+        .ad-placeholder { height: 100px; background: white; margin-top: 15px; border: 1px dashed #ccc; display: flex; align-items: center; justify-content: center; color: #999; font-weight: bold; border-radius: 10px; }
 
         .view-title-header { background: var(--soft-cyan); color: var(--deep-brown); padding: 15px 25px; font-weight: 900; text-transform: uppercase; font-size: 1.5em; border-bottom: 5px solid var(--active-orange); border-top: 2px solid var(--active-orange); }
 
@@ -49,26 +49,25 @@
         
         .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
         .card { background: var(--card-bg); border: 2px solid rgba(59, 42, 0, 0.08); padding: 12px; border-radius: 15px; text-align: center; position: relative; transition: 0.3s; display: flex; flex-direction: column; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
-        .card:hover { border: 2px solid var(--deep-brown); transform: translateY(-3px); }
-        .card.is-fav { border: 4px solid var(--active-orange); background: #fffcf0; }
-        
+        .card:hover { border: 2px solid var(--deep-brown); transform: translateY(-5px); }
         .thumb-container { width: 100%; aspect-ratio: 16/9; border-radius: 10px; overflow: hidden; margin-bottom: 10px; border: 1px solid rgba(0,0,0,0.05); position: relative; }
         .thumb { width: 100%; height: 100%; object-fit: cover; }
-        
+        .card-title { font-weight: 900; font-size: var(--f-card-title); text-transform: uppercase; padding: 5px; line-height: 1.2; }
+
         .play-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(251, 218, 128, 0.95); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.2s; color: var(--deep-brown); font-weight: 900; text-align: center; padding: 10px; font-size: 1.1em; text-transform: uppercase; }
         .card:hover .play-overlay { opacity: 1; }
 
-        .card-title { font-weight: 900; font-size: var(--f-card-title); text-transform: uppercase; padding: 5px; line-height: 1.2; flex-grow: 1; }
-
         /* PRZYCISK POD MINIATURĄ */
-        .btn-fav-action { margin-top: 10px; padding: 10px; border-radius: 10px; border: 1px solid #ccc; background: #eee; font-weight: 900; font-size: 12px; text-transform: uppercase; cursor: pointer; transition: 0.2s; }
-        .btn-fav-action.active { background: var(--active-orange); border-color: var(--deep-brown); }
+        .btn-fav-toggle { margin-top: 10px; padding: 10px; border-radius: 10px; border: 1px solid #ccc; background: #eee; font-weight: 900; font-size: 12px; text-transform: uppercase; cursor: pointer; transition: 0.2s; }
+        .btn-fav-toggle.is-active { background: var(--active-orange); border-color: var(--deep-brown); }
 
-        .list-container { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; }
-        .list-card { background: var(--card-bg); border: 2px solid rgba(59, 42, 0, 0.08); border-radius: 10px; padding: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; min-height: 70px; }
-        .list-card:hover { border-color: var(--deep-brown); background: var(--soft-cyan); }
-        .list-title { font-weight: 800; font-size: var(--f-list-title); text-transform: uppercase; flex: 1; }
-        .heart-btn { font-size: 28px; cursor: pointer; border: none; background: none; }
+        .list-card { background: var(--card-bg); border: 2px solid rgba(59, 42, 0, 0.08); border-radius: 10px; padding: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; min-height: 70px; position: relative; overflow: hidden; }
+        .list-card:hover { border: 2px solid var(--deep-brown); background: var(--active-orange); }
+        .list-title { font-weight: 800; font-size: var(--f-list-title); flex: 1; padding-right: 10px; line-height: 1.2; text-transform: uppercase; color: var(--deep-brown); }
+        .list-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: var(--active-orange); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.2s; color: var(--deep-brown); font-weight: 900; text-align: center; font-size: 1.1em; pointer-events: none; }
+        .list-card:hover .list-overlay { opacity: 1; }
+
+        .heart-btn { font-size: 28px; cursor: pointer; border: none; background: none; position: relative; z-index: 5; }
     </style>
 </head>
 <body class="standard">
@@ -114,12 +113,10 @@
 
 <script>
     const CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTSIMZUO8ZkisiFoqOfypL9hOQBnTbAvtMmBeIuK56_QoiXFu_b7i-de1Jn6Km9symosxJBV6V5PxKO/pub?output=csv';
-    // PRZYWRÓCONY ORYGINALNY KLUCZ Z TWOJEGO PLIKU V51
     const STORAGE_KEY = 'melodia_wiary_permanent_storage';
 
     let songs = [], cart = [], currentView = 'all', displayMode = 'grid', query = "", sortType = 'newest';
 
-    // PRZYWRÓCONA TWOJA FUNKCJA OPENYT
     function openYT(id) {
         const width = 800; const height = 600;
         const left = (window.screen.width / 2) - (width / 2);
@@ -197,7 +194,7 @@
         const contentBox = document.createElement('div');
         contentBox.className = 'display-padding';
         const container = document.createElement('div');
-        container.className = displayMode === 'grid' ? 'items-grid' : 'list-container';
+        container.className = 'items-grid';
         
         list.forEach(s => {
             const isFav = cart.some(x => x.tytul === s.tytul);
@@ -205,14 +202,14 @@
             const jsTytul = s.tytul.replace(/'/g, "\\'");
 
             if(displayMode === 'grid') {
-                item.className = isFav ? 'card is-fav' : 'card';
+                item.className = 'card';
                 item.innerHTML = `
                     <div class="thumb-container" onclick="openYT('${s.yt}')">
                         <img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb">
                         <div class="play-overlay">KLIKNIJ, ABY OTWORZYĆ NA YOUTUBE 🎶</div>
                     </div>
                     <div class="card-title" onclick="openYT('${s.yt}')">${s.tytul}</div>
-                    <button class="btn-fav-action ${isFav ? 'active' : ''}" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">
+                    <button class="btn-fav-toggle ${isFav ? 'is-active' : ''}" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">
                         ${isFav ? '❌ USUŃ Z ULUBIONYCH USUŃ' : '➕ DODAJ DO ULUBIONYCH'}
                     </button>
                 `;
@@ -220,6 +217,7 @@
                 item.className = 'list-card';
                 item.onclick = () => openYT(s.yt);
                 item.innerHTML = `
+                    <div class="list-overlay">KLIKNIJ, ABY OTWORZYĆ NA YOUTUBE 🎶</div>
                     <span class="list-title">${s.tytul}</span>
                     <button class="heart-btn" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">${isFav ? '❤️' : '🤍'}</button>
                 `;
