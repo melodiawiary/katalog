@@ -3,12 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Melodia Wiary - v46 (Okno Popup dla Seniorów)</title>
+    <title>Katalog Melodia Wiary - v34</title>
     <style>
         :root { 
-            --active-orange: #fbda80; --bg: #f4f9f8; --card-bg: #f9fffe;
-            --soft-cyan: #d2e9e6; --deep-brown: #3b2a00; --sidebar-width: 220px;
+            --active-orange: #fbda80; 
+            --bg: #f4f9f8; 
+            --card-bg: #f9fffe;
+            --soft-cyan: #d2e9e6; 
+            --deep-brown: #3b2a00; 
+            --sidebar-width: 220px; 
         }
+        
+        /* POPRAWKA: Teraz czcionka przycisków też rośnie */
         body.standard { --f-size: 16px; --f-btn: 13px; --f-ctrl: 11px; --f-search: 1.1em; }
         body.senior { --f-size: 22px; --f-btn: 18px; --f-ctrl: 16px; --f-search: 1.4em; }
 
@@ -21,40 +27,66 @@
         .logo-img { width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--active-orange); background: white; object-fit: cover; margin-bottom: 15px; }
         
         .section-label { font-size: 1.1em; font-weight: 900; color: var(--deep-brown); text-transform: uppercase; margin: 15px 0 10px 5px; display: block; border-bottom: 3px solid var(--active-orange); padding-bottom: 5px; }
-        .nav-btn, .size-btn { width: 100%; padding: 12px 10px; margin-bottom: 8px; border-radius: 8px; border: 1px solid var(--deep-brown); cursor: pointer; font-weight: 900; text-align: left; text-transform: uppercase; font-size: var(--f-btn); background: var(--soft-cyan); color: var(--deep-brown); transition: 0.2s; box-sizing: border-box; display: flex; align-items: center; gap: 8px; }
-        .nav-btn.active, .size-btn.active { background: var(--active-orange) !important; border: 2.5px solid var(--deep-brown) !important; }
-        .nav-btn.fav-btn { background: #fff1f1; border-color: #ffb3b3; flex-direction: column; align-items: center; justify-content: center; text-align: center; min-height: 70px; }
+
+        .nav-btn, .size-btn { 
+            width: 100%; padding: 12px 10px; margin-bottom: 8px; border-radius: 8px; 
+            border: 1px solid var(--deep-brown); cursor: pointer; font-weight: 900; 
+            text-align: left; text-transform: uppercase; font-size: var(--f-btn); 
+            background: var(--soft-cyan); color: var(--deep-brown); display: flex; align-items: center; 
+            gap: 8px; transition: 0.2s; box-sizing: border-box;
+        }
+        .nav-btn:hover, .nav-btn.active, .size-btn:hover, .size-btn.active { 
+            background: var(--active-orange) !important; border: 2.5px solid var(--deep-brown) !important; 
+        }
+        
+        /* MOJE ULUBIONE - POPRAWKA CZYTELNOŚCI LICZNIKA */
+        .nav-btn.fav-btn { 
+            background: #fff1f1; border-color: #ffb3b3; 
+            flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; padding: 12px 10px; min-height: 70px;
+        }
+        .fav-label, .fav-count-label { 
+            font-size: 1em; 
+            font-weight: 900; /* Taka sama gruba czcionka */
+            display: block;
+        }
+
+        /* USUNIĘTO RAMKĘ SIZE-BOX - PRZYCISKI SĄ TERAZ WOLNE */
+        .size-btn { margin-top: 10px; text-align: center; justify-content: center; }
 
         /* MAIN CONTENT */
         #main-content { margin-left: var(--sidebar-width); flex: 1; display: flex; flex-direction: column; }
-        .header-sticky { position: sticky; top: 0; z-index: 900; background: var(--bg); width: 100%; box-sizing: border-box; border-bottom: 2px solid var(--active-orange); }
+        .header-sticky { position: sticky; top: 0; z-index: 900; background: var(--bg); width: 100%; box-sizing: border-box; }
         .top-padding { padding: 20px 25px 15px 25px; }
-
+        .top-layout { display: flex; gap: 25px; align-items: flex-start; }
+        .controls-area { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+        
+        #player-section { width: 600px; background: #000; aspect-ratio: 16/9; border: 4px solid var(--deep-brown); border-radius: 12px; overflow: hidden; flex-shrink: 0; }
         .search-box { width: 100%; padding: 12px; border-radius: 15px; border: 2px solid var(--deep-brown); font-size: var(--f-search); font-weight: 900; text-align: center; background: var(--card-bg); }
-        .btn-group { display: flex; gap: 5px; margin-top: 10px; flex-wrap: wrap; }
+        
+        .btn-group { display: flex; gap: 5px; flex-wrap: wrap; }
         .ctrl-btn { flex: 1; padding: 12px 4px; border: 1px solid var(--deep-brown); background: var(--soft-cyan); color: var(--deep-brown); font-weight: 900; cursor: pointer; border-radius: 6px; text-transform: uppercase; font-size: var(--f-ctrl); transition: 0.2s; }
-        .ctrl-btn.active { background: var(--active-orange) !important; border: 2.5px solid var(--deep-brown); }
+        .ctrl-btn:hover, .ctrl-btn.active { background: var(--active-orange) !important; border: 2px solid var(--deep-brown); }
 
-        .view-title-header { background: var(--soft-cyan); color: var(--deep-brown); padding: 15px 25px; font-weight: 900; text-transform: uppercase; font-size: 1.5em; border-bottom: 5px solid var(--active-orange); }
+        .alpha-shelf { border-top: 3px solid var(--active-orange); border-bottom: 3px solid var(--active-orange); background: var(--bg); padding: 10px 25px; display: none; }
+        #alpha-row { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-start; }
+        .alpha-btn { padding: 6px 12px; font-size: 14px; font-weight: 900; border: 1px solid var(--deep-brown); background: var(--soft-cyan); color: var(--deep-brown); cursor: pointer; border-radius: 4px; min-width: 38px; }
+
+        .view-title-header { 
+            background: var(--soft-cyan); color: var(--deep-brown); 
+            padding: 15px 25px; margin: 0 0 20px 0; 
+            font-weight: 900; text-transform: uppercase; 
+            font-size: 1.5em; border-bottom: 5px solid var(--active-orange);
+        }
+
         #main-display { padding: 0 0 400px 0; min-height: 100vh; }
         .display-padding { padding: 0 25px; }
-
-        /* GRID / LIST */
-        .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
-        .items-list { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
-
-        .card { background: var(--card-bg); border: 2px solid rgba(59, 42, 0, 0.08); padding: 12px; border-radius: 15px; text-align: center; position: relative; display: flex; flex-direction: column; transition: 0.3s; cursor: pointer; }
-        .card:hover { border: 2.5px solid var(--deep-brown); background: var(--active-orange); transform: translateY(-5px); }
         
-        .items-list .card { flex-direction: row; text-align: left; align-items: center; gap: 20px; }
-        .items-list .thumb-container { width: 180px; margin-bottom: 0; }
-
-        .thumb-container { width: 100%; aspect-ratio: 16/9; border-radius: 10px; overflow: hidden; margin-bottom: 10px; border: 1px solid rgba(0,0,0,0.05); position: relative; }
+        .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .card { background: var(--card-bg); border: 2px solid rgba(59, 42, 0, 0.08); padding: 12px; border-radius: 15px; text-align: center; position: relative; display: flex; flex-direction: column; }
+        .card:hover { border: 2px solid var(--deep-brown); }
+        .thumb-container { width: 100%; aspect-ratio: 16/9; border-radius: 10px; overflow: hidden; cursor: pointer; margin-bottom: 10px; border: 1px solid rgba(0,0,0,0.05); }
         .thumb { width: 100%; height: 100%; object-fit: cover; }
-        
-        /* HOVER OVERLAY */
-        .card-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(251, 218, 128, 0.9); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.3s; font-weight: 900; font-size: 0.8em; color: var(--deep-brown); text-transform: uppercase; padding: 10px; text-align: center; }
-        .card:hover .card-overlay { opacity: 1; }
 
         .heart-btn { font-size: 28px; cursor: pointer; border: none; background: none; }
     </style>
@@ -64,16 +96,18 @@
 <div id="sidebar">
     <div class="sidebar-top">
         <img src="logo.png" class="logo-img" onerror="this.src='https://via.placeholder.com/120?text=LOGO'">
+        
         <button class="nav-btn fav-btn" id="btn-cart" onclick="setView('cart')">
             <span class="fav-label">❤️ MOJE ULUBIONE</span>
-            <span class="fav-count-label">(<span id="count">0</span>)</span>
+            <span class="fav-count-label">(<span id="count">0</span> UTWORÓW)</span>
         </button>
+        
         <button class="size-btn" id="s-std" onclick="updateSize('standard')">LITERY ZWYKŁE</button>
         <button class="size-btn" id="s-big" onclick="updateSize('senior')">LITERY DUŻE</button>
     </div>
     <div class="sidebar-scroll">
         <span class="section-label">KATEGORIE</span>
-        <button class="nav-btn active" id="cat-all" onclick="setView('all')">WSZYSTKIE PIEŚNI</button>
+        <button class="nav-btn" id="cat-all" onclick="setView('all')">WSZYSTKIE PIEŚNI</button>
         <div id="cat-list"></div>
     </div>
 </div>
@@ -81,18 +115,28 @@
 <div id="main-content">
     <div class="header-sticky">
         <div class="top-padding">
-            <input type="text" id="search" class="search-box" placeholder="SZUKAJ PIEŚNI W KATALOGU MELODII WIARY - WPISZ LITERKI Z TYTUŁU..." onkeyup="doSearch()">
-            <div class="btn-group">
-                <button class="ctrl-btn active" id="s-new" onclick="setSort('newest')">Sortuj od najnowszych</button>
-                <button class="ctrl-btn" id="s-old" onclick="setSort('oldest')">Sortuj od najstarszych</button>
-                <button class="ctrl-btn" id="s-az" onclick="setSort('az')">Sortuj od A do Z</button>
-                <button class="ctrl-btn" id="s-za" onclick="setSort('za')">Sortuj od Z do A</button>
-            </div>
-            <div class="btn-group">
-                <button class="ctrl-btn active" id="m-grid" onclick="setMode('grid')">Widok miniatury pieśni</button>
-                <button class="ctrl-btn" id="m-list" onclick="setMode('list')">Widok lista tytułów pieśni</button>
+            <div class="top-layout">
+                <div class="controls-area">
+                    <input type="text" id="search" class="search-box" placeholder="SZUKAJ W KATALOGU PIEŚNI..." onkeyup="doSearch()">
+                    <div class="btn-group">
+                        <button class="ctrl-btn" id="s-new" onclick="setSort('newest')">Sortuj od najnowszych</button>
+                        <button class="ctrl-btn" id="s-old" onclick="setSort('oldest')">Sortuj od najstarszych</button>
+                        <button class="ctrl-btn" id="s-az" onclick="setSort('az')">Sortuj od A do Z</button>
+                        <button class="ctrl-btn" id="s-za" onclick="setSort('za')">Sortuj od Z do A</button>
+                    </div>
+                    <div class="btn-group">
+                        <button class="ctrl-btn" id="m-grid" onclick="setMode('grid')">Widok miniatury pieśni</button>
+                        <button class="ctrl-btn" id="m-list" onclick="setMode('list')">Widok lista tytułów</button>
+                    </div>
+                </div>
+                <div id="player-section">
+                    <div id="yt-player-container" style="height:100%; background:#000; color:#fff; display:flex; align-items:center; justify-content:center; text-align:center; padding:20px; font-weight: 900;">
+                        KLIKNIJ W PIEŚŃ, BY ZACZĄĆ ODTWARZANIE 🎶
+                    </div>
+                </div>
             </div>
         </div>
+        <div id="alpha-shelf" class="alpha-shelf"><div id="alpha-row"></div></div>
     </div>
     <div id="main-display"></div>
 </div>
@@ -100,22 +144,7 @@
 <script>
     const CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTSIMZUO8ZkisiFoqOfypL9hOQBnTbAvtMmBeIuK56_QoiXFu_b7i-de1Jn6Km9symosxJBV6V5PxKO/pub?output=csv';
     const STORAGE_KEY = 'melodia_wiary_permanent_storage'; 
-    let songs = [], cart = [], currentView = 'all', displayMode = 'grid', sortType = 'newest', query = "";
-
-    // NOWA FUNKCJA: Otwiera oddzielne okno (Popup)
-    function openYT(id) {
-        const width = 800;
-        const height = 600;
-        const left = (window.screen.width / 2) - (width / 2);
-        const top = (window.screen.height / 2) - (height / 2);
-        
-        // window.open z parametrami wymusza nowe, oddzielne okno zamiast karty
-        window.open(
-            `https://www.youtube.com/watch?v=${id}`, 
-            'YouTubePlayer', 
-            `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes,toolbar=no,location=no,status=no,menubar=no`
-        );
-    }
+    let songs = [], cart = [], currentView = 'all', displayMode = 'grid', query = "", sortType = 'newest';
 
     function parseCSVLine(text) {
         const result = []; let cur = '', inQuotes = false;
@@ -130,30 +159,38 @@
 
     function updateSize(s) { 
         document.body.className = s; 
-        document.getElementById('s-std').classList.toggle('active', s==='standard');
+        document.getElementById('s-std').classList.toggle('active', s==='standard'); 
         document.getElementById('s-big').classList.toggle('active', s==='senior'); 
         localStorage.setItem('mv_font_permanent', s);
+    }
+
+    function playSong(ytId) {
+        document.getElementById('yt-player-container').innerHTML = 
+            `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
     }
 
     async function init() {
         let saved = localStorage.getItem(STORAGE_KEY);
         if(saved) cart = JSON.parse(saved);
         updateSize(localStorage.getItem('mv_font_permanent') || 'standard');
-
+        
         try {
             const r = await fetch(CSV + '&cb=' + Date.now());
             const text = await r.text();
             const rows = text.split(/\r?\n/).filter(x => x.trim() !== "").slice(1);
             let catsSet = new Set();
-            songs = rows.map((line, idx) => {
+            songs = rows.map((line, index) => {
                 const cols = parseCSVLine(line);
                 let rawCats = (cols[1] || "Inne").split(',').map(c => c.trim()).filter(c => c.length > 2);
                 rawCats.forEach(c => catsSet.add(c));
-                return { tytul: cols[0], kategorie: rawCats, yt: (cols[2] || "").trim(), id: idx };
+                return { tytul: cols[0] || "Bez tytułu", kategorie: rawCats, yt: (cols[2] || "").trim(), originalIndex: index };
             });
             const catBox = document.getElementById('cat-list');
             Array.from(catsSet).sort().forEach(cat => {
-                const b = document.createElement('button'); b.className = 'nav-btn'; b.innerText = cat;
+                const b = document.createElement('button'); 
+                b.className = 'nav-btn category-link'; 
+                b.innerText = cat; 
+                b.id = 'cat-btn-' + cat.replace(/\s+/g, '-');
                 b.onclick = () => setView(cat); catBox.appendChild(b);
             });
             render();
@@ -171,57 +208,45 @@
     function render() {
         const out = document.getElementById('main-display'); out.innerHTML = '';
         document.getElementById('count').innerText = cart.length;
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        if(currentView === 'cart') document.getElementById('btn-cart').classList.add('active');
+        else if(currentView === 'all') document.getElementById('cat-all').classList.add('active');
         
-        let list = (currentView === 'cart') ? [...cart] : (currentView === 'all' ? [...songs] : songs.filter(s => s.kategorie.includes(currentView)));
-        if(query) list = list.filter(s => s.tytul.toLowerCase().includes(query));
-
-        if(sortType === 'az') list.sort((a,b) => a.tytul.localeCompare(b.tytul));
-        else if(sortType === 'za') list.sort((a,b) => b.tytul.localeCompare(a.tytul));
-        else if(sortType === 'oldest') list.sort((a,b) => a.id - b.id);
-        else list.sort((a,b) => b.id - a.id);
-
         const header = document.createElement('div');
         header.className = 'view-title-header';
-        header.innerText = currentView === 'all' ? 'WSZYSTKIE PIEŚNI' : (currentView === 'cart' ? '❤️ MOJE ULUBIONE' : '📂 ' + currentView);
+        header.innerText = currentView === 'all' ? 'WSZYSTKIE PIEŚNI' : (currentView === 'cart' ? '❤️ MOJE ULUBIONE' : '📂 KATEGORIA: ' + currentView);
         out.appendChild(header);
 
         const contentBox = document.createElement('div');
         contentBox.className = 'display-padding';
+        out.appendChild(contentBox);
+
+        let list = (currentView === 'cart') ? [...cart] : (currentView === 'all' ? [...songs] : songs.filter(s => s.kategorie.includes(currentView)));
+        if(query) list = list.filter(s => s.tytul.toLowerCase().includes(query));
+
         const container = document.createElement('div');
-        container.className = displayMode === 'grid' ? 'items-grid' : 'items-list';
+        container.className = 'items-grid';
         
         list.forEach(s => {
             const item = document.createElement('div');
-            item.className = 'card';
-            item.onclick = () => openYT(s.yt);
             const isFav = cart.some(x => x.tytul === s.tytul);
+            item.className = 'card';
             item.innerHTML = `
-                <button class="heart-btn" style="position:absolute; top:10px; right:10px; z-index:10;" onclick="event.stopPropagation(); toggleFav('${s.tytul.replace(/'/g, "\\'")}')">${isFav ? '❤️' : '🤍'}</button>
-                <div class="thumb-container">
+                <button class="heart-btn" style="position:absolute; top:10px; right:10px; z-index:10;" onclick="toggleFav('${s.tytul.replace(/'/g, "\\'")}')">${isFav ? '❤️' : '🤍'}</button>
+                <div class="thumb-container" onclick="playSong('${s.yt}')">
                     <img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb">
-                    <div class="card-overlay">KLIKNIJ, ABY OTWORZYĆ NA YOUTUBE</div>
                 </div>
                 <div style="font-weight:900; font-size:0.9em; text-transform:uppercase; padding:5px;">${s.tytul}</div>
             `;
             container.appendChild(item);
         });
         contentBox.appendChild(container);
-        out.appendChild(contentBox);
     }
 
+    function setMode(m) { displayMode = m; render(); }
+    function setSort(s) { sortType = s; render(); }
     function setView(v) { currentView = v; render(); }
     function doSearch() { query = document.getElementById('search').value.toLowerCase(); render(); }
-    function setSort(s) { 
-        sortType = s; 
-        document.querySelectorAll('.ctrl-btn').forEach(b => { if(b.id.startsWith('s-')) b.classList.toggle('active', b.id === 's-'+s); });
-        render(); 
-    }
-    function setMode(m) { 
-        displayMode = m; 
-        document.getElementById('m-grid').classList.toggle('active', m === 'grid');
-        document.getElementById('m-list').classList.toggle('active', m === 'list');
-        render(); 
-    }
     init();
 </script>
 </body>
