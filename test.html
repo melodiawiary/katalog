@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Melodia Wiary - v64</title>
+    <title>Katalog Melodia Wiary - v65</title>
     <style>
         :root { 
             --active-orange: #fbda80;
@@ -326,7 +326,6 @@
     const STORAGE_KEY = 'melodia_wiary_permanent_storage'; 
     let songs = [], top50 = [], cart = [], currentView = 'all', displayMode = 'grid', query = "", sortType = 'newest';
 
-    // POPRAWIONA FUNKCJA OTWIERANIA: Pełne nowe okno (nie karta), aby zachować monetyzację
     function openYT(id) {
         if(!id) return;
         window.open(`https://www.youtube.com/watch?v=${id}`, '_blank', 'noopener,noreferrer');
@@ -394,8 +393,12 @@
 
             const catBox = document.getElementById('cat-list');
             Array.from(catsSet).sort().forEach(cat => {
-                const b = document.createElement('button'); b.className = 'nav-btn category-link'; b.innerText = cat; 
-                b.onclick = () => setView(cat); catBox.appendChild(b);
+                const b = document.createElement('button'); 
+                b.className = 'nav-btn category-link'; 
+                b.innerText = cat; 
+                b.dataset.view = cat; // UNIKALNY IDENTYFIKATOR
+                b.onclick = () => setView(cat); 
+                catBox.appendChild(b);
             });
             render();
         } catch(e) { console.error(e); }
@@ -451,17 +454,16 @@
         stickyTitleContainer.innerHTML = '';
         renderTopPanel();
 
-        // KLUCZOWA ZMIANA: PODŚWIETLANIE KATEGORII
+        // ANALOGIA DO DZIAŁAJĄCEGO "WSZYSTKIE" - POPRAWIONE PODŚWIETLANIE
         document.querySelectorAll('.nav-btn').forEach(b => {
             b.classList.remove('active');
-            const btnText = b.innerText.trim();
             
-            // Logika dopasowania
+            // 1. Sprawdzanie stałych ID
             if(currentView === 'cart' && b.id === 'btn-cart') b.classList.add('active');
             else if(currentView === 'top50' && b.id === 'btn-top50-side') b.classList.add('active');
             else if(currentView === 'all' && b.id === 'cat-all') b.classList.add('active');
-            else if(btnText === currentView) b.classList.add('active');
-            else if(btnText === '📂 ' + currentView) b.classList.add('active');
+            // 2. Sprawdzanie dynamicznych kategorii po przypisanym dataset
+            else if(b.dataset.view === currentView) b.classList.add('active');
         });
 
         document.querySelectorAll('.ctrl-btn').forEach(b => {
@@ -484,7 +486,7 @@
         if(currentView === 'top50') {
             const voteBtn = document.createElement('button');
             voteBtn.className = 'vote-btn-header';
-            voteBtn.innerText = 'KLIKNIJ I ZAGŁOSUJ NA LISTĘ TYGODNIOWĄ';
+            voteBtn.innerText = 'KLIKNIJ i ZAGŁOSUJ NA LISTĘ TYGODNIOWĄ';
             voteBtn.onclick = () => {
                 const instr = document.getElementById('instruction-anchor');
                 if(instr) instr.scrollIntoView({ behavior: 'smooth' });
