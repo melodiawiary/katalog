@@ -14,18 +14,18 @@
             --card-bg: #ffffff;
         }
         
-        /* POPRAWIONE SKALOWANIE DLA PRZYCISKÓW STERUJĄCYCH */
+        /* SKALOWANIE DLA WSZYSTKICH ELEMENTÓW STERUJĄCYCH */
         body.standard { 
             --f-size: 16px; 
             --f-btn: 14px; 
-            --f-ctrl: 13px; /* Rozmiar przycisków sortowania */
+            --f-ctrl: 13px; 
             --f-tip: 22px; 
             --f-search: 1.4em; 
         }
         body.senior { 
             --f-size: 24px; 
             --f-btn: 22px; 
-            --f-ctrl: 20px; /* Powiększone przyciski sortowania */
+            --f-ctrl: 20px; 
             --f-tip: 28px; 
             --f-search: 1.8em; 
         }
@@ -41,7 +41,8 @@
         .nav-btn-main { background: var(--gold); color: black; }
         .nav-btn.active { background: var(--cyan) !important; color: white !important; border-color: white; }
 
-        .size-btn { width: 100%; padding: 10px; margin-top: 5px; font-weight: 900; cursor: pointer; border: 2px solid #555; background: #000; color: #888; border-radius: 8px; font-size: 14px; }
+        /* POPRAWKA: Przycisk zmiany rozmiaru teraz też używa zmiennej --f-ctrl */
+        .size-btn { width: 100%; padding: 10px; margin-top: 5px; font-weight: 900; cursor: pointer; border: 2px solid #555; background: #000; color: #888; border-radius: 8px; font-size: var(--f-ctrl); text-transform: uppercase; transition: 0.2s; }
         .size-btn.active { border-color: var(--cyan); color: white; }
 
         #main-content { margin-left: 340px; flex: 1; padding: 0 40px; }
@@ -49,8 +50,6 @@
         .search-box { width: 100%; padding: 15px; border-radius: 30px; border: 3px solid var(--sidebar); font-size: var(--f-search); text-align: center; font-weight: bold; margin-bottom: 10px; box-sizing: border-box; }
         
         .btn-group { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
-        
-        /* KLUCZOWA POPRAWKA: font-size używa teraz zmiennej --f-ctrl */
         .ctrl-btn { flex: 1; min-width: 180px; padding: 12px; border: 2px solid var(--sidebar); background: #fff; font-weight: 900; cursor: pointer; border-radius: 8px; text-transform: uppercase; font-size: var(--f-ctrl); letter-spacing: 0.5px; transition: 0.2s; }
         .ctrl-btn.active { background: var(--sidebar); color: #fff; }
 
@@ -111,7 +110,7 @@
 
 <script>
     const CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTSIMZUO8ZkisiFoqOfypL9hOQBnTbAvtMmBeIuK56_QoiXFu_b7i-de1Jn6Km9symosxJBV6V5PxKO/pub?output=csv';
-    const STORAGE_KEY = 'mv_PERMANENT_v4';
+    const STORAGE_KEY = 'mv_PERMANENT_final_v1';
     let songs = [], cart = [], currentView = 'all', displayMode = 'grid', query = "", sortType = 'newest';
 
     function parseCSVLine(text) {
@@ -137,7 +136,7 @@
     function loadStableCart() {
         const current = localStorage.getItem(STORAGE_KEY);
         if(current) return JSON.parse(current);
-        const oldKeys = ['mv_PERMANENT_v3', 'mv_PERMANENT_v2', 'mv_PERMANENT_v1', 'mv_global_stable_storage'];
+        const oldKeys = ['mv_PERMANENT_v4', 'mv_PERMANENT_v3', 'mv_PERMANENT_v2', 'mv_PERMANENT_v1'];
         for(let key of oldKeys) {
             const oldData = localStorage.getItem(key);
             if(oldData) {
