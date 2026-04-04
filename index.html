@@ -10,7 +10,7 @@
             --bg: #fdfdfd; 
             --sidebar-bg: #ffffff; 
             --soft-cyan: #d2e9e6; 
-            --deep-brown: #3b2a00; /* TWÓJ NOWY KOLOR TEKSTU */
+            --deep-brown: #3b2a00; 
             --sidebar-border: #e2e8f0;
             --sidebar-width: 230px; 
         }
@@ -28,9 +28,8 @@
         
         .nav-btn { width: 100%; padding: 10px; margin-bottom: 6px; border-radius: 8px; border: 1px solid var(--sidebar-border); cursor: pointer; font-weight: 700; text-align: left; text-transform: uppercase; font-size: var(--f-btn); color: var(--deep-brown); background: var(--soft-cyan); transition: 0.2s; }
         .nav-btn:hover { background: var(--active-orange); }
-        .nav-btn.active { background: var(--active-orange) !important; border: 2px solid var(--deep-brown); }
+        .nav-btn.active { background: var(--active-orange) !important; color: var(--deep-brown) !important; border: 2px solid var(--deep-brown); }
 
-        /* GŁÓWNA TREŚĆ */
         #main-content { margin-left: var(--sidebar-width); flex: 1; display: flex; flex-direction: column; }
         
         .header-sticky { 
@@ -47,7 +46,7 @@
         .top-layout { display: flex; gap: 30px; align-items: flex-start; width: 100%; }
         .controls-area { flex: 1; display: flex; flex-direction: column; }
         
-        /* POWIĘKSZONY ODTWARZACZ O 30% (z 400px na 520px) */
+        /* POWIĘKSZONY ODTWARZACZ */
         #player-section { 
             width: 520px; 
             background: #000; 
@@ -59,14 +58,14 @@
             flex-shrink: 0;
         }
 
-        .search-box { width: 100%; padding: 12px; border-radius: 20px; border: 2px solid var(--soft-cyan); font-size: var(--f-search); font-weight: bold; margin-bottom: 10px; box-sizing: border-box; text-align: center; color: var(--deep-brown); }
+        .search-box { width: 100%; padding: 12px; border-radius: 20px; border: 2px solid var(--soft-cyan); font-size: var(--f-search); font-weight: bold; margin-bottom: 10px; box-sizing: border-box; text-align: center; color: var(--deep-brown); background: #fff; }
         
         .btn-group { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
         .ctrl-btn { flex: 1; min-width: 100px; padding: 10px; border: 1px solid var(--sidebar-border); background: var(--soft-cyan); color: var(--deep-brown); font-weight: 800; cursor: pointer; border-radius: 6px; text-transform: uppercase; font-size: var(--f-ctrl); transition: 0.2s; }
         .ctrl-btn:hover { background: var(--active-orange); }
         .ctrl-btn.active { background: var(--active-orange) !important; border: 2px solid var(--deep-brown); }
 
-        /* MIEJSCE NA REKLAMY */
+        /* PASEK REKLAMOWY */
         #ad-space {
             width: 100%;
             height: 60px;
@@ -76,13 +75,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 10px;
-            color: #ccc;
+            font-size: 11px;
+            color: #aaa;
             text-transform: uppercase;
             letter-spacing: 2px;
         }
 
-        /* GRID I KAFELKI */
         #main-display { padding: 0 30px 60px 30px; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 25px; }
         
@@ -99,7 +97,6 @@
         .btn-add:hover { background: var(--active-orange); }
         .btn-add.selected { background: var(--active-orange); border: 2px solid var(--deep-brown); }
 
-        /* PRZYCISKI LITER - LOGIKA KOLORÓW */
         .size-btn { width: 100%; padding: 8px; margin-top: 5px; font-weight: 900; cursor: pointer; border: 1px solid var(--sidebar-border); background: var(--soft-cyan); color: var(--deep-brown); border-radius: 6px; font-size: var(--f-ctrl); text-transform: uppercase; transition: 0.2s; }
         .size-btn:hover { background: var(--active-orange); }
         .size-btn.active { background: var(--active-orange); border: 2px solid var(--deep-brown); }
@@ -144,17 +141,16 @@
                     <button class="ctrl-btn active" id="m-grid" onclick="setMode('grid')">OBRAZKI</button>
                     <button class="ctrl-btn" id="m-list" onclick="setMode('list')">LISTA</button>
                 </div>
-                <div id="ad-space">MIEJSCE NA TWOJĄ REKLAMĘ</div>
+                <div id="ad-space">MIEJSCE NA REKLAMĘ</div>
             </div>
 
             <div id="player-section">
                 <div id="yt-player-container" style="height:100%; background:#000; color:#555; display:flex; align-items:center; justify-content:center; text-align:center; font-weight:bold; font-size:14px; padding:20px;">
-                    POSŁUCHAJ PIEŚNI W WIĘKSZYM OKNIE 🎶
+                    KLIKNIJ MINIATURKĘ, ABY POSŁUCHAĆ 🎶
                 </div>
             </div>
         </div>
     </div>
-    
     <div id="main-display"></div>
 </div>
 
@@ -245,4 +241,60 @@
 
         if(sortType === 'newest') list.sort((a,b) => b.originalIndex - a.originalIndex);
         else if(sortType === 'oldest') list.sort((a,b) => a.originalIndex - b.originalIndex);
-        else if(sortType === 'az') list.sort((a,b
+        else if(sortType === 'az') list.sort((a,b) => a.tytul.localeCompare(b.tytul, 'pl'));
+        else if(sortType === 'za') list.sort((a,b) => b.tytul.localeCompare(a.tytul, 'pl'));
+
+        const g = document.createElement('div'); g.className = (displayMode === 'grid') ? 'grid' : '';
+        list.forEach(s => {
+            const isSel = cart.some(x => x.tytul === s.tytul);
+            const jsTytul = s.tytul.replace(/'/g, "\\'");
+            if(displayMode === 'grid') {
+                g.innerHTML += `<div class="card">
+                    <div class="thumb-container" onclick="playSong('${s.yt}')">
+                        <img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb">
+                        <div class="play-overlay">POSŁUCHAJ<span>TUTAJ</span></div>
+                    </div>
+                    <div class="card-title">${s.tytul}</div>
+                    <button class="btn-add ${isSel ? 'selected' : ''}" onclick="toggleSong('${jsTytul}')">${isSel ? 'USUŃ' : 'DODAJ'}</button>
+                </div>`;
+            } else {
+                g.innerHTML += `<div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #ddd; background:white; margin-bottom:5px; border-radius:10px; align-items:center;">
+                    <span style="font-weight:700; cursor:pointer;" onclick="playSong('${s.yt}')">▶ ${s.tytul}</span>
+                    <button class="btn-add ${isSel ? 'selected' : ''}" style="width:auto; padding:5px 20px;" onclick="toggleSong('${jsTytul}')">${isSel ? 'USUŃ' : 'DODAJ'}</button>
+                </div>`;
+            }
+        });
+        out.appendChild(g);
+    }
+
+    function renderCart(container) {
+        if(cart.length === 0) { container.innerHTML = `<div style="padding:50px; text-align:center;"><h3>Lista jest pusta</h3><button class="btn-add" onclick="setView('all')">Wróć do katalogu</button></div>`; return; }
+        let groups = {1: []}, curCD = 1, curSec = 0;
+        cart.forEach(s => {
+            let p = s.czas.split(':'); let sCount = (parseInt(p[0])||0)*60 + (parseInt(p[1])||0);
+            if(curSec + sCount > 3900) { curCD++; curSec = sCount; groups[curCD] = [s]; }
+            else { curSec += sCount; groups[curCD].push(s); }
+        });
+        Object.keys(groups).forEach(n => {
+            let totalS = 0; groups[n].forEach(s => { let p = s.czas.split(':'); totalS += (parseInt(p[0])||0)*60 + (parseInt(p[1])||0); });
+            let proc = Math.min((totalS / 3900) * 100, 100);
+            const box = document.createElement('div'); box.className = 'cd-box';
+            box.innerHTML = `<h2>PŁYTA NR ${n}</h2><p>Czas: ${Math.floor(totalS/60)} min / 65 min</p>
+                <div class="cd-progress-container"><div class="cd-progress-bar" style="width:${proc}%"></div></div><div class="grid"></div>`;
+            const g = box.querySelector('.grid');
+            groups[n].forEach(s => {
+                g.innerHTML += `<div class="card"><div class="card-title">${s.tytul}</div><button class="btn-add selected" onclick="toggleSong('${s.tytul.replace(/'/g, "\\'")}')">USUŃ</button></div>`;
+            });
+            container.appendChild(box);
+        });
+        container.innerHTML += `<div style="padding: 0 30px;"><button class="ctrl-btn active" style="width:100%; padding:20px; margin-top:20px;" onclick="setView('all')">POWRÓT DO KATALOGU</button></div>`;
+    }
+
+    function setMode(m) { displayMode = m; render(); }
+    function setSort(s) { sortType = s; render(); }
+    function setView(v) { currentView = v; render(); window.scrollTo(0,0); }
+    function doSearch() { query = document.getElementById('search').value.toLowerCase(); render(); }
+    init();
+</script>
+</body>
+</html>
