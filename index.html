@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Melodia Wiary - Alfabet v11</title>
+    <title>Katalog Melodia Wiary - Edycja v12</title>
     <style>
         :root { 
             --active-orange: #fbda80; 
@@ -38,66 +38,45 @@
         
         #player-section { width: 520px; background: #000; aspect-ratio: 16/9; border: 3px solid var(--deep-brown); border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.15); flex-shrink: 0; }
         .search-box { width: 100%; padding: 12px; border-radius: 20px; border: 2px solid var(--soft-cyan); font-size: var(--f-search); font-weight: bold; margin-bottom: 10px; box-sizing: border-box; text-align: center; color: var(--deep-brown); background: #fff; }
+        
+        /* POPRAWIONE PRZYCISKI GÓRNE */
         .btn-group { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
         .ctrl-btn { flex: 1; min-width: 100px; padding: 10px; border: 1px solid var(--sidebar-border); background: var(--soft-cyan); color: var(--deep-brown); font-weight: 800; cursor: pointer; border-radius: 6px; text-transform: uppercase; font-size: var(--f-ctrl); transition: 0.2s; }
-        .ctrl-btn:hover { background: var(--active-orange); }
-        .ctrl-btn.active { background: var(--active-orange) !important; border: 2px solid var(--deep-brown); }
+        .ctrl-btn:hover, .ctrl-btn.active { background: var(--active-orange) !important; border: 2px solid var(--deep-brown); }
 
         #ad-space { width: 100%; height: 60px; background: #ffffff; border: 1px dashed var(--soft-cyan); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: 2px; }
 
-        /* UKŁAD Z ALFABETEM */
         .content-with-alpha { display: flex; gap: 15px; padding: 0 30px 60px 30px; }
         
-        /* PASEK LITER A-Z */
-        #alpha-bar { 
-            width: 40px; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 2px; 
-            position: sticky; 
-            top: 250px; 
-            height: fit-content;
-        }
-        .alpha-btn { 
-            width: 100%; 
-            padding: 5px 0; 
-            font-size: 14px; 
-            font-weight: 900; 
-            border: 1px solid var(--sidebar-border); 
-            background: var(--soft-cyan); 
-            color: var(--deep-brown); 
-            cursor: pointer; 
-            border-radius: 4px; 
-            text-align: center;
-        }
-        .alpha-btn:hover { background: var(--active-orange); }
-        .alpha-btn.active { background: var(--active-orange); border: 2px solid var(--deep-brown); }
+        #alpha-bar { width: 40px; display: flex; flex-direction: column; gap: 2px; position: sticky; top: 250px; height: fit-content; }
+        .alpha-btn { width: 100%; padding: 5px 0; font-size: 14px; font-weight: 900; border: 1px solid var(--sidebar-border); background: var(--soft-cyan); color: var(--deep-brown); cursor: pointer; border-radius: 4px; text-align: center; }
+        .alpha-btn:hover, .alpha-btn.active { background: var(--active-orange); border: 2px solid var(--deep-brown); }
 
         #main-display { flex: 1; }
 
-        /* LISTA I GRID */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 25px; }
+        
+        /* LISTA - ZAWSZE OD NOWEJ LINII DLA LITER */
         .list-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 10px; }
 
-        /* SEKCJA LITERY NA LIŚCIE */
         .alpha-header { 
-            grid-column: 1 / -1; 
+            grid-column: 1 / -1; /* Rozciąga nagłówek na całą szerokość */
             background: var(--active-orange); 
-            padding: 5px 20px; 
+            padding: 8px 20px; 
             border-radius: 8px; 
             font-weight: 900; 
-            margin: 15px 0 5px 0; 
+            margin: 20px 0 10px 0; 
             border-left: 10px solid var(--deep-brown);
+            font-size: 1.2em;
         }
 
-        .list-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; background: #fff; border: 1px solid #ddd; border-radius: 10px; transition: 0.2s; }
+        .list-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; background: #fff; border: 1px solid #ddd; border-radius: 10px; transition: 0.2s; cursor: pointer; }
         .list-item:hover { background: var(--active-orange); border-color: var(--deep-brown); }
-        .list-title { font-weight: 700; cursor: pointer; flex-grow: 1; margin-right: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .list-title { font-weight: 700; flex-grow: 1; margin-right: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .list-item:hover .list-title::before { content: "▶ "; }
 
         .btn-add { background: var(--soft-cyan); color: var(--deep-brown); border: 1px solid var(--sidebar-border); padding: 10px; border-radius: 8px; font-weight: 800; cursor: pointer; text-transform: uppercase; width: 100%; font-size: var(--f-btn); transition: 0.2s; }
-        .btn-add:hover { background: var(--active-orange); border-color: var(--deep-brown); }
-        .btn-add.selected { background: var(--active-orange); border: 2px solid var(--deep-brown); }
+        .btn-add:hover, .btn-add.selected { background: var(--active-orange); border: 2px solid var(--deep-brown); }
         .btn-list-add { width: auto; padding: 6px 15px; min-width: 80px; }
 
         .card { background: #fff; border: 1px solid var(--sidebar-border); padding: 12px; border-radius: 15px; text-align: center; display: flex; flex-direction: column; transition: 0.3s; }
@@ -110,10 +89,6 @@
 
         .size-btn { width: 100%; padding: 8px; margin-top: 5px; font-weight: 900; cursor: pointer; border: 1px solid var(--sidebar-border); background: var(--soft-cyan); color: var(--deep-brown); border-radius: 6px; font-size: var(--f-ctrl); text-transform: uppercase; transition: 0.2s; }
         .size-btn.active { background: var(--active-orange); border: 2px solid var(--deep-brown); }
-
-        .cd-box { background: white; padding: 25px; border-radius: 20px; border: 4px solid var(--active-orange); margin: 30px 0; color: var(--deep-brown); }
-        .cd-progress-container { background: #eee; border-radius: 15px; height: 25px; width: 100%; margin: 15px 0; overflow: hidden; border: 1px solid var(--deep-brown); }
-        .cd-progress-bar { background: var(--active-orange); height: 100%; transition: 0.5s; }
 
         @media (max-width: 1200px) { .top-layout { flex-direction: column; } #player-section { width: 100%; } .list-container { grid-template-columns: 1fr; } }
     </style>
@@ -139,20 +114,20 @@
             <div class="controls-area">
                 <input type="text" id="search" class="search-box" placeholder="SZUKAJ UTWORU..." onkeyup="doSearch()">
                 <div class="btn-group">
-                    <button class="ctrl-btn active" id="s-new" onclick="setSort('newest')">NAJNOWSZE</button>
+                    <button class="ctrl-btn" id="s-new" onclick="setSort('newest')">NAJNOWSZE</button>
                     <button class="ctrl-btn" id="s-old" onclick="setSort('oldest')">NAJSTARSZE</button>
                     <button class="ctrl-btn" id="s-az" onclick="setSort('az')">A-Z</button>
                     <button class="ctrl-btn" id="s-za" onclick="setSort('za')">Z-A</button>
                 </div>
                 <div class="btn-group">
-                    <button class="ctrl-btn active" id="m-grid" onclick="setMode('grid')">OBRAZKI</button>
+                    <button class="ctrl-btn" id="m-grid" onclick="setMode('grid')">OBRAZKI</button>
                     <button class="ctrl-btn" id="m-list" onclick="setMode('list')">LISTA</button>
                 </div>
                 <div id="ad-space">MIEJSCE NA TWOJĄ REKLAMĘ</div>
             </div>
             <div id="player-section">
                 <div id="yt-player-container" style="height:100%; background:#000; color:#555; display:flex; align-items:center; justify-content:center; text-align:center; font-weight:bold; font-size:14px; padding:20px;">
-                    KLIKNIJ PIEŚŃ, ABY POSŁUCHAĆ 🎶
+                    WYBIERZ UTWÓR, ABY ROZPOCZĄĆ ODTWARZANIE 🎶
                 </div>
             </div>
         </div>
@@ -197,7 +172,6 @@
         if(savedCart) cart = JSON.parse(savedCart);
         updateSize(localStorage.getItem('mv_font_pref') || 'standard');
         
-        // Budowanie paska alfabetu
         const ab = document.getElementById('alpha-bar');
         "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(l => {
             const b = document.createElement('button'); b.className = 'alpha-btn'; b.innerText = l;
@@ -227,6 +201,7 @@
 
     function setAlpha(l) {
         if(alphaFilter === l) alphaFilter = ""; else alphaFilter = l;
+        if(alphaFilter) { sortType = 'az'; displayMode = 'list'; }
         render();
     }
 
@@ -243,7 +218,14 @@
         document.getElementById('count').innerText = cart.length;
         document.getElementById('toolbar').style.display = (currentView === 'cart') ? 'none' : 'block';
         document.getElementById('alpha-bar').style.display = (currentView === 'cart' || displayMode === 'grid') ? 'none' : 'flex';
-        if(currentView === 'cart') { renderCart(out); return; }
+        
+        // PODŚWIETLANIE PRZYCISKÓW GÓRNYCH
+        document.getElementById('s-new').classList.toggle('active', sortType === 'newest');
+        document.getElementById('s-old').classList.toggle('active', sortType === 'oldest');
+        document.getElementById('s-az').classList.toggle('active', sortType === 'az');
+        document.getElementById('s-za').classList.toggle('active', sortType === 'za');
+        document.getElementById('m-grid').classList.toggle('active', displayMode === 'grid');
+        document.getElementById('m-list').classList.toggle('active', displayMode === 'list');
 
         document.querySelectorAll('.alpha-btn').forEach(b => b.classList.remove('active'));
         if(alphaFilter) document.getElementById('alpha-' + alphaFilter).classList.add('active');
@@ -265,7 +247,6 @@
             const jsTytul = s.tytul.replace(/'/g, "\\'");
             const firstChar = s.tytul.charAt(0).toUpperCase();
 
-            // Dodaj nagłówek litery na liście, jeśli się zmienia (tylko w trybie listy bez konkretnego filtra litery)
             if(displayMode === 'list' && !alphaFilter && firstChar !== lastChar) {
                 const h = document.createElement('div'); h.className = 'alpha-header'; h.innerText = firstChar;
                 g.appendChild(h); lastChar = firstChar;
@@ -277,33 +258,19 @@
                 item.innerHTML = `<div class="thumb-container" onclick="playSong('${s.yt}')"><img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb"><div class="play-overlay">POSŁUCHAJ<span>TUTAJ</span></div></div><div class="card-title">${s.tytul}</div><button class="btn-add ${isSel ? 'selected' : ''}" onclick="toggleSong('${jsTytul}')">${isSel ? 'USUŃ' : 'DODAJ'}</button>`;
             } else {
                 item.className = 'list-item';
-                item.innerHTML = `<span class="list-title" onclick="playSong('${s.yt}')">${s.tytul}</span><button class="btn-add btn-list-add ${isSel ? 'selected' : ''}" onclick="toggleSong('${jsTytul}')">${isSel ? 'USUŃ' : 'DODAJ'}</button>`;
+                item.onclick = (e) => { if(e.target.tagName !== 'BUTTON') playSong(s.yt); };
+                item.innerHTML = `<span class="list-title">${s.tytul}</span><button class="btn-add btn-list-add ${isSel ? 'selected' : ''}" onclick="event.stopPropagation(); toggleSong('${jsTytul}')">${isSel ? 'USUŃ' : 'DODAJ'}</button>`;
             }
             g.appendChild(item);
         });
         out.appendChild(g);
     }
 
-    function renderCart(container) {
-        if(cart.length === 0) { container.innerHTML = `<div style="padding:50px; text-align:center;"><h3>Lista jest pusta</h3><button class="btn-add" onclick="setView('all')">Wróć do katalogu</button></div>`; return; }
-        let groups = {1: []}, curCD = 1, curSec = 0;
-        cart.forEach(s => {
-            let p = s.czas.split(':'); let sCount = (parseInt(p[0])||0)*60 + (parseInt(p[1])||0);
-            if(curSec + sCount > 3900) { curCD++; curSec = sCount; groups[curCD] = [s]; }
-            else { curSec += sCount; groups[curCD].push(s); }
-        });
-        Object.keys(groups).forEach(n => {
-            let totalS = 0; groups[n].forEach(s => { let p = s.czas.split(':'); totalS += (parseInt(p[0])||0)*60 + (parseInt(p[1])||0); });
-            let proc = Math.min((totalS / 3900) * 100, 100);
-            const box = document.createElement('div'); box.className = 'cd-box';
-            box.innerHTML = `<h2>PŁYTA NR ${n}</h2><p>Czas: ${Math.floor(totalS/60)} min / 65 min</p><div class="cd-progress-container"><div class="cd-progress-bar" style="width:${proc}%"></div></div><div class="grid"></div>`;
-            const g = box.querySelector('.grid');
-            groups[n].forEach(s => { g.innerHTML += `<div class="card"><div class="card-title">${s.tytul}</div><button class="btn-add selected" onclick="toggleSong('${s.tytul.replace(/'/g, "\\'")}')">USUŃ</button></div>`; });
-            container.appendChild(box);
-        });
+    function setMode(m) { 
+        displayMode = m; 
+        if(m === 'list') sortType = 'az'; // Automatyczne A-Z przy wejściu na listę
+        render(); 
     }
-
-    function setMode(m) { displayMode = m; render(); }
     function setSort(s) { sortType = s; render(); }
     function setView(v) { currentView = v; alphaFilter = ""; render(); window.scrollTo(0,0); }
     function doSearch() { query = document.getElementById('search').value.toLowerCase(); render(); }
