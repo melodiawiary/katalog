@@ -81,6 +81,7 @@
         /* STYLE DLA PANELU TOP */
         .top-header-title { font-weight: 900;
             text-transform: uppercase; font-size: 1.1em; text-align: center; margin-bottom: 10px; color: var(--deep-brown); line-height: 1.2;
+            background: #ffcccc; border: 2px solid var(--deep-brown); padding: 8px; border-radius: 8px; width: 100%; box-sizing: border-box;
             }
         .top-mini-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
             }
@@ -180,8 +181,8 @@
             }
 
         .play-overlay { position: absolute; top:0; left:0; width:100%; height:100%;
-            background: rgba(210, 233, 230, 0.95); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.2s; color: var(--deep-brown); font-weight: 900;
-            text-align: center; padding: 10px; font-size: 1.1em; text-transform: uppercase; }
+            background: var(--active-orange); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.2s; color: var(--deep-brown); font-weight: 900;
+            text-align: center; padding: 10px; font-size: 0.9em; text-transform: uppercase; border: 2px solid var(--deep-brown); border-radius: 10px; box-sizing: border-box; }
         .card:hover .play-overlay { opacity: 1;
             }
         .yt-btn-fake { background: var(--active-orange); border: 2px solid var(--deep-brown); padding: 8px 12px;
@@ -190,6 +191,7 @@
         .btn-fav-toggle { margin-top: 10px;
             padding: 10px; border-radius: 10px; border: 1px solid var(--deep-brown); background: var(--soft-cyan); color: var(--deep-brown); font-weight: 900; font-size: 12px; text-transform: uppercase; cursor: pointer;
             transition: 0.2s; }
+        .btn-fav-toggle:hover { background: var(--active-orange); }
         .btn-fav-toggle.is-active { background: var(--active-orange); border-width: 2.5px;
             }
 
@@ -367,12 +369,12 @@ top3.forEach(s => {
                     <div class="thumb-container" style="margin-bottom: 5px;">
     
                         <img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb">
-                        <div class="play-overlay" style="font-size: 0.7em;">ODSŁUCHAJ</div>
+                        <div class="play-overlay">KLIKNIJ, ABY OTWORZYĆ NA YOUTUBE 🎶</div>
                     </div>
-                    <div class="card-title" style="font-size: 9px; min-height: 22px;">${s.tytul}</div>
+                    <div class="card-title">${s.tytul}</div>
       
-              <button class="btn-fav-toggle ${isFav ? 'is-active' : ''}" style="font-size: 8px; padding: 4px; margin-top: 4px;" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">
-                        ${isFav ? 'USUŃ' : 'DODAJ'}
+              <button class="btn-fav-toggle ${isFav ? 'is-active' : ''}" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">
+                        ${isFav ? '❌ USUŃ Z ULUBIONYCH' : '➕ DODAJ DO ULUBIONYCH'}
                     </button>
                 </div>
         
