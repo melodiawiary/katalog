@@ -52,15 +52,16 @@
         .card:hover { border: 2px solid var(--deep-brown); transform: translateY(-5px); }
         .thumb-container { width: 100%; aspect-ratio: 16/9; border-radius: 10px; overflow: hidden; margin-bottom: 10px; border: 1px solid rgba(0,0,0,0.05); position: relative; }
         .thumb { width: 100%; height: 100%; object-fit: cover; }
-        .card-title { font-weight: 900; font-size: var(--f-card-title); text-transform: uppercase; padding: 5px; line-height: 1.2; }
+        .card-title { font-weight: 900; font-size: var(--f-card-title); text-transform: uppercase; padding: 5px; line-height: 1.2; flex-grow: 1; }
 
         .play-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(251, 218, 128, 0.95); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.2s; color: var(--deep-brown); font-weight: 900; text-align: center; padding: 10px; font-size: 1.1em; text-transform: uppercase; }
         .card:hover .play-overlay { opacity: 1; }
 
-        /* PRZYCISK POD MINIATURĄ */
+        /* PRZYCISK DODANY POD MINIATURĘ */
         .btn-fav-toggle { margin-top: 10px; padding: 10px; border-radius: 10px; border: 1px solid #ccc; background: #eee; font-weight: 900; font-size: 12px; text-transform: uppercase; cursor: pointer; transition: 0.2s; }
         .btn-fav-toggle.is-active { background: var(--active-orange); border-color: var(--deep-brown); }
 
+        .list-container { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; }
         .list-card { background: var(--card-bg); border: 2px solid rgba(59, 42, 0, 0.08); border-radius: 10px; padding: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; min-height: 70px; position: relative; overflow: hidden; }
         .list-card:hover { border: 2px solid var(--deep-brown); background: var(--active-orange); }
         .list-title { font-weight: 800; font-size: var(--f-list-title); flex: 1; padding-right: 10px; line-height: 1.2; text-transform: uppercase; color: var(--deep-brown); }
@@ -194,7 +195,7 @@
         const contentBox = document.createElement('div');
         contentBox.className = 'display-padding';
         const container = document.createElement('div');
-        container.className = 'items-grid';
+        container.className = displayMode === 'grid' ? 'items-grid' : 'list-container';
         
         list.forEach(s => {
             const isFav = cart.some(x => x.tytul === s.tytul);
@@ -208,36 +209,4 @@
                         <img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb">
                         <div class="play-overlay">KLIKNIJ, ABY OTWORZYĆ NA YOUTUBE 🎶</div>
                     </div>
-                    <div class="card-title" onclick="openYT('${s.yt}')">${s.tytul}</div>
-                    <button class="btn-fav-toggle ${isFav ? 'is-active' : ''}" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">
-                        ${isFav ? '❌ USUŃ Z ULUBIONYCH USUŃ' : '➕ DODAJ DO ULUBIONYCH'}
-                    </button>
-                `;
-            } else {
-                item.className = 'list-card';
-                item.onclick = () => openYT(s.yt);
-                item.innerHTML = `
-                    <div class="list-overlay">KLIKNIJ, ABY OTWORZYĆ NA YOUTUBE 🎶</div>
-                    <span class="list-title">${s.tytul}</span>
-                    <button class="heart-btn" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">${isFav ? '❤️' : '🤍'}</button>
-                `;
-            }
-            container.appendChild(item);
-        });
-        contentBox.appendChild(container);
-        out.appendChild(contentBox);
-
-        document.querySelectorAll('.ctrl-btn').forEach(b => {
-            if(b.id.startsWith('s-')) b.classList.toggle('active', b.id === 's-'+sortType);
-            if(b.id.startsWith('m-')) b.classList.toggle('active', b.id === 'm-'+displayMode);
-        });
-    }
-
-    function setMode(m) { displayMode = m; render(); }
-    function setSort(s) { sortType = s; render(); }
-    function setView(v) { currentView = v; render(); window.scrollTo(0,0); }
-    function doSearch() { query = document.getElementById('search').value.toLowerCase(); render(); }
-    init();
-</script>
-</body>
-</html>
+                    <div class="card-title" onclick="openYT('${
