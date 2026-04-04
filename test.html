@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Melodia Wiary - v55</title>
+    <title>Katalog Melodia Wiary - v56</title>
     <style>
         :root { 
             --active-orange: #fbda80;
@@ -67,11 +67,13 @@
             }
         .btn-group { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 10px;
             }
+        
+        /* Zmiany w przyciskach kontrolnych - dodany hover i transform */
         .ctrl-btn { flex: 1; padding: 12px 4px; border: 1px solid var(--deep-brown);
-            background: var(--soft-cyan); color: var(--deep-brown); font-weight: 800; cursor: pointer; border-radius: 6px; text-transform: uppercase; font-size: var(--f-ctrl); transition: 0.2s;
+            background: var(--soft-cyan); color: var(--deep-brown); font-weight: 800; cursor: pointer; border-radius: 6px; text-transform: uppercase; font-size: var(--f-ctrl); transition: transform 0.2s, background 0.2s;
             }
-        .ctrl-btn.active { background: var(--active-orange) !important; border: 2.5px solid var(--deep-brown);
-            }
+        .ctrl-btn:hover { background: var(--active-orange); transform: scale(1.02); }
+        .ctrl-btn.active { background: var(--active-orange) !important; border: 2.5px solid var(--deep-brown); transform: scale(1.02); }
 
         .ad-placeholder { height: 100px;
             background: white; margin-top: 15px; border: 1px dashed #ccc; display: flex; align-items: center; justify-content: center; color: #999; font-weight: bold; border-radius: 10px;
@@ -297,6 +299,13 @@
             if(b.classList.contains('category-link') && b.innerText === currentView) b.classList.add('active');
         });
 
+        // Obsługa podświetlenia przycisków kontrolnych na górze
+        document.querySelectorAll('.ctrl-btn').forEach(b => {
+            b.classList.remove('active');
+            if(b.id === 's-' + sortType) b.classList.add('active');
+            if(b.id === 'm-' + displayMode) b.classList.add('active');
+        });
+
         const showAlphaBar = (displayMode === 'list' && currentView !== 'cart');
         document.getElementById('alpha-shelf').style.display = showAlphaBar ? 'block' : 'none';
 
@@ -359,16 +368,12 @@
         });
         contentBox.appendChild(container);
         out.appendChild(contentBox);
-        document.querySelectorAll('.ctrl-btn').forEach(b => {
-            if(b.id.startsWith('s-')) b.classList.toggle('active', b.id === 's-'+sortType);
-            if(b.id.startsWith('m-')) b.classList.toggle('active', b.id === 'm-'+displayMode);
-        });
     }
 
     function setMode(m) { 
         displayMode = m; 
         if(m === 'list') sortType = 'az'; 
-        if(m === 'grid') sortType = 'newest'; // Automatyczne sortowanie od najnowszych dla widoku miniatur
+        if(m === 'grid') sortType = 'newest'; 
         render(); 
     }
     function setSort(s) { sortType = s; render(); }
