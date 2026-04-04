@@ -299,7 +299,7 @@
             <div class="header-left">
                 <input type="text" id="search" class="search-box" placeholder="SZUKAJ W KATALOGU PIEŚNI MELODII WIARY..." onkeyup="doSearch()">
                 <div class="btn-group">
-                    <button class="ctrl-btn" id="s-new" onclick="setSort('newest')">Sortuj od najnowszych</button>
+                    <button class="ctrl-btn" id="s-new" onclick="setSort('newest')">Sortuj od najnowzych</button>
                     <button class="ctrl-btn" id="s-old" onclick="setSort('oldest')">Sortuj od najstarszych</button>
                     <button class="ctrl-btn" id="s-az" onclick="setSort('az')">Sortuj od A do Z</button>
                     <button class="ctrl-btn" id="s-za" onclick="setSort('za')">Sortuj od Z do A</button>
@@ -563,9 +563,18 @@
             instr.className = 'instruction-box';
             instr.innerHTML = `
                 <h2 style="text-transform:uppercase; margin-top:0;">Jak zagłosować na listę tygodniową?</h2>
-                <p>TUTAJ POJAWI SIĘ INSTRUKCJA GŁOSOWANIA ORAZ ODNOŚNIK DO STRONY Z FORMULARZEM.</p>
-                <div style="padding:20px; border: 2px dashed var(--active-orange); margin: 20px 0;">INSTRUKCJA W PRZYGOTOWANIU</div>
-                <p style="font-size: 0.8em; color: #666;">Sekcja zostanie zaktualizowana po przygotowaniu posta na stronie.</p>
+                <p>Głosowanie odbywa się bezpośrednio na naszym profilu YouTube. Każdy głos ma ogromne znaczenie!</p>
+                <div style="padding:25px; border: 3px solid var(--active-orange); margin: 20px 0; border-radius: 15px; background: #fffdf5;">
+                    <p><strong>1. Przygotuj tytuły i linki do 3 dowolnych polskich pieśni religijnych z YouTube.</strong></p>
+                    <p>(Pamiętaj: Jesteśmy otwarci na wszystkich twórców oraz na pieśni tworzone przy wsparciu technologii AI!)</p>
+                    <p><strong>2. Kliknij w przycisk poniżej:</strong></p>
+                    <a href="http://youtube.com/post/UgkxudR-ghySucG9xp6vcB28mYZ9cBb_B-a0?si=_zkEhGhy1P6Xo9Hw" 
+                       target="_blank" 
+                       style="display:inline-block; background: #ff0000; color: white; padding: 15px 30px; text-decoration: none; border-radius: 10px; font-weight: 900; border: 3px solid #333;">
+                       PRZEJDŹ DO GŁOSOWANIA NA YOUTUBE 🎶
+                    </a>
+                </div>
+                <p style="font-size: 0.9em; color: #555;">Wklej swoje 3 propozycje w komentarzu pod postem na YouTube. Głosujemy do piątku do 24:00!</p>
             `;
             contentBox.appendChild(instr);
         }
