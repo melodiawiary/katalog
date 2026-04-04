@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Melodia Wiary - v62.4</title>
+    <title>Katalog Melodia Wiary - v61</title>
     <style>
         :root { 
             --active-orange: #fbda80;
@@ -68,6 +68,7 @@
             z-index: 900; background: var(--bg); width: 100%;
             box-sizing: border-box; }
         
+        /* UKŁAD PANELI 50/50 */
         .top-padding { display: flex;
             width: 100%; box-sizing: border-box; gap: 0; padding: 0; }
         
@@ -77,6 +78,7 @@
             background: var(--bg); border-left: 2px solid var(--active-orange); box-sizing: border-box; padding: 20px 25px 15px 25px; display: flex; flex-direction: column;
             }
         
+        /* STYLE DLA PANELU TOP */
         .top-header-title { font-weight: 900;
             text-transform: uppercase; font-size: 1.1em; text-align: center; margin-bottom: 10px; color: var(--deep-brown); line-height: 1.2;
             background: #ffcccc; border: 2px solid var(--deep-brown); padding: 8px; border-radius: 8px; width: 100%; box-sizing: border-box;
@@ -151,11 +153,67 @@
             margin-top: 20px; 
         }
 
-        .card { background: var(--card-bg); border: 2px solid rgba(59, 42, 0, 0.08); padding: 12px; border-radius: 15px; text-align: center; position: relative; transition: 0.3s; display: flex; flex-direction: column; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
-        .card:hover { border: 2px solid var(--deep-brown); background: var(--soft-cyan); transform: translateY(-5px); }
-        .thumb-container { width: 100%; aspect-ratio: 16/9; border-radius: 10px; overflow: hidden; margin-bottom: 10px; border: 1px solid rgba(0,0,0,0.05); position: relative; }
-        .thumb { width: 100%; height: 100%; object-fit: cover; }
-        .card-title { font-weight: 900; font-size: var(--f-card-title); text-transform: uppercase; padding: 5px; line-height: 1.2; }
+        @media (max-width: 1400px) { .list-container { grid-template-columns: repeat(4, 1fr);
+            } }
+        @media (max-width: 1100px) { .list-container { grid-template-columns: repeat(3, 1fr);
+            } }
+        @media (max-width: 800px) { .list-container { grid-template-columns: repeat(2, 1fr);
+            } }
+        @media (max-width: 500px) { .list-container { grid-template-columns: 1fr;
+            } }
+
+        .card { background: var(--card-bg);
+            border: 2px solid rgba(59, 42, 0, 0.08);
+            padding: 12px; border-radius: 15px; text-align: center; position: relative; transition: 0.3s; display: flex;
+            flex-direction: column; cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        
+        .card:hover { border: 2px solid var(--deep-brown);
+            background: var(--soft-cyan); transform: translateY(-5px); }
+        
+        .thumb-container { width: 100%;
+            aspect-ratio: 16/9; border-radius: 10px;
+            overflow: hidden; margin-bottom: 10px; border: 1px solid rgba(0,0,0,0.05); position: relative;
+            }
+        .thumb { width: 100%; height: 100%; object-fit: cover;
+            }
+        .card-title { font-weight: 900; font-size: var(--f-card-title); text-transform: uppercase; padding: 5px; line-height: 1.2;
+            }
+
+        .play-overlay { position: absolute; top:0; left:0; width:100%; height:100%;
+            background: var(--active-orange); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.2s; color: var(--deep-brown); font-weight: 900;
+            text-align: center; padding: 10px; font-size: 0.9em; text-transform: uppercase; border: 2px solid var(--deep-brown); border-radius: 10px; box-sizing: border-box; }
+        .card:hover .play-overlay { opacity: 1;
+            }
+        .yt-btn-fake { background: var(--active-orange); border: 2px solid var(--deep-brown); padding: 8px 12px;
+            border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+
+        .btn-fav-toggle { margin-top: 10px;
+            padding: 10px; border-radius: 10px; border: 1px solid var(--deep-brown); background: var(--soft-cyan); color: var(--deep-brown); font-weight: 900; font-size: 12px; text-transform: uppercase; cursor: pointer;
+            transition: 0.2s; }
+        .btn-fav-toggle:hover { background: var(--active-orange); }
+        .btn-fav-toggle.is-active { background: var(--active-orange); border-width: 2.5px;
+            }
+
+        .list-card { background: var(--card-bg); border: 2px solid rgba(59, 42, 0, 0.08);
+            border-radius: 10px; padding: 10px 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; min-height: 60px; position: relative;
+            overflow: hidden;
+            }
+        .list-card:hover { border: 2px solid var(--deep-brown); background: var(--active-orange);
+            }
+        .list-title { font-weight: 800; font-size: var(--f-list-title); flex: 1; padding-right: 10px; line-height: 1.2;
+            text-transform: uppercase; color: var(--deep-brown); }
+        
+        .list-overlay { position: absolute;
+            top:0; left:0; width:100%; height:100%;
+            background: var(--active-orange); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.2s; color: var(--deep-brown); font-weight: 900;
+            text-align: center; font-size: 0.9em;
+            pointer-events: none; }
+        .list-card:hover .list-overlay { opacity: 1;
+            }
+
+        .heart-btn { font-size: 24px; cursor: pointer; border: none; background: none; position: relative;
+            z-index: 5; }
     </style>
 </head>
 <body class="standard">
@@ -167,135 +225,276 @@
             <span id="count" style="font-weight:900;">0 UTWORÓW</span>
         </button>
         <div style="margin-top:10px; padding:5px; border: 1px solid var(--deep-brown); border-radius:10px;">
-          <button class="size-btn" id="s-std" onclick="updateSize('standard')">LITERY ZWYKŁE</button>
-          <button class="size-btn" id="s-big" onclick="updateSize('senior')">LITERY DUŻE</button>
+           <button class="size-btn" id="s-std" onclick="updateSize('standard')">LITERY ZWYKŁE</button>
+            <button class="size-btn" id="s-big" onclick="updateSize('senior')">LITERY DUŻE</button>
         </div>
         <span class="section-label">KATEGORIE</span>
     </div>
-    <div class="sidebar-scroll"><button class="nav-btn" id="cat-all" onclick="setView('all')">WSZYSTKIE PIEŚNI</button><div id="cat-list"></div></div>
+    <div class="sidebar-scroll">
+        <button class="nav-btn" id="cat-all" onclick="setView('all')">WSZYSTKIE PIEŚNI</button>
+        <div id="cat-list"></div>
+    </div>
 </div>
 
 <div id="main-content">
     <div class="header-sticky">
         <div class="top-padding">
-            <div class="header-left">
-                <input type="text" id="search" class="search-box" placeholder="SZUKAJ..." onkeyup="doSearch()">
+<div class="header-left">
+                <input 
+                    type="text" id="search" class="search-box" placeholder="SZUKAJ W KATALOGU PIEŚNI MELODII WIARY..." onkeyup="doSearch()">
                 <div class="btn-group">
-                    <button class="ctrl-btn" id="s-new" onclick="setSort('newest')">Nowe</button>
-                    <button class="ctrl-btn" id="s-az" onclick="setSort('az')">A-Z</button>
+                    <button class="ctrl-btn" id="s-new" onclick="setSort('newest')">Sortuj od najnowszych</button>
+                 <button class="ctrl-btn" id="s-old" onclick="setSort('oldest')">Sortuj od najstarszych</button>
+                    <button class="ctrl-btn" id="s-az" onclick="setSort('az')">Sortuj od A do Z</button>
+                    <button class="ctrl-btn" id="s-za" onclick="setSort('za')">Sortuj od Z do A</button>
                 </div>
-                <div class="btn-group">
-                    <button class="ctrl-btn" id="m-grid" onclick="setMode('grid')">Miniatury</button>
-                    <button class="ctrl-btn" id="m-list" onclick="setMode('list')">Lista</button>
+<div class="btn-group">
+                    <button class="ctrl-btn" id="m-grid" onclick="setMode('grid')">Widok miniatury pieśni</button>
+                    <button class="ctrl-btn" id="m-list" onclick="setMode('list')">Widok lista tytułów pieśni</button>
                 </div>
+               <div class="ad-placeholder">MIEJSCE NA REKLAMĘ</div>
             </div>
-            <div class="header-right" id="top-panel"></div>
+          <div class="header-right" id="top-panel">
+                </div>
         </div>
-        <div id="alpha-shelf" class="alpha-shelf"><div id="alpha-row"></div></div>
+        <div id="alpha-shelf" class="alpha-shelf">
+            <div id="alpha-row"></div>
+        </div>
     </div>
     <div id="main-display"></div>
 </div>
 
 <script>
-    const CSV_MAIN = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTSIMZUO8ZkisiFoqOfypL9hOQBnTbAvtMmBeIuK56_QoiXFu_b7i-de1Jn6Km9symosxJBV6V5PxKO/pub?output=csv';
-    const CSV_TOP_BASE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQeNOmR7SJ-G5j8DMMXjR1KE4h5w1UiNY5nHhV1mvGNJ63I_-3SQPDMNxNFpakUL4VLFacWFUOmycPB/pub?output=csv';
-    const STORAGE_KEY = 'melodia_wiary_permanent_storage';
-    
-    let songs = [], topSongs = [], cart = [], currentView = 'all', displayMode = 'grid', query = "", sortType = 'newest', activeTopName = "ŁADOWANIE...";
+    const CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTSIMZUO8ZkisiFoqOfypL9hOQBnTbAvtMmBeIuK56_QoiXFu_b7i-de1Jn6Km9symosxJBV6V5PxKO/pub?output=csv';
+    const CSV_TOP = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQeNOmR7SJ-G5j8DMMXjR1KE4h5w1UiNY5nHhV1mvGNJ63I_-3SQPDMNxNFpakUL4VLFacWFUOmycPB/pub?gid=1082900381&single=true&output=csv';
+const STORAGE_KEY = 'melodia_wiary_permanent_storage'; 
+    let songs = [], top50 = [], cart = [], currentView = 'all', displayMode = 'grid', query = "", sortType = 'newest';
 
-    function openYT(id) { window.open(`https://www.youtube.com/watch?v=${id}`, '_blank'); }
+function openYT(id) {
+        const width = 800; const height = 600;
+const left = (window.screen.width / 2) - (width / 2);
+        const top = (window.screen.height / 2) - (height / 2);
+window.open(`https://www.youtube.com/watch?v=${id}`, 'YouTubePlayer', `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`);
+    }
 
     function parseCSVLine(text) {
-        const result = []; let cur = '', inQuotes = false;
+        const result = [];
+let cur = '', inQuotes = false;
         for (let i = 0; i < text.length; i++) {
             let char = text[i];
-            if (char === '"') inQuotes = !inQuotes;
+if (char === '"') inQuotes = !inQuotes;
             else if (char === ',' && !inQuotes) { result.push(cur.trim()); cur = ''; }
             else cur += char;
         }
         result.push(cur.trim()); return result;
     }
 
+    function updateSize(s) { 
+        document.body.className = s; 
+        document.getElementById('s-std').classList.toggle('active', s==='standard');
+        document.getElementById('s-big').classList.toggle('active', s==='senior'); 
+        localStorage.setItem('mv_font_permanent', s);
+    }
+
     async function init() {
-        cart = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        let saved = localStorage.getItem(STORAGE_KEY);
+        if(saved) cart = JSON.parse(saved);
         updateSize(localStorage.getItem('mv_font_permanent') || 'standard');
 
-        try {
-            // 1. Pobierz nazwę aktywnego TOPu (z głównego arkusza pliku sterującego)
-            const rList = await fetch(CSV_TOP_BASE + '&gid=0&cb=' + Date.now());
-            const textList = await rList.text();
-            const listRows = textList.split(/\r?\n/).filter(x => x.trim() !== "");
-            activeTopName = listRows[listRows.length - 1].split(',')[0].replace(/"/g, "").trim();
-
-            // 2. Pobierz główny katalog i dane konkretnego TOPu
-            const [rMain, rTop] = await Promise.all([
-                fetch(CSV_MAIN + '&cb=' + Date.now()),
-                fetch(CSV_TOP_BASE + '&sheet=' + encodeURIComponent(activeTopName) + '&cb=' + Date.now())
+        const alphabet = "ABCDEFGHIJKLŁMNOPRSTUWZŻ".split("");
+        const row = document.getElementById('alpha-row');
+        alphabet.forEach(l => {
+const b = document.createElement('button'); b.className = 'alpha-btn'; b.innerText = l;
+            b.onclick = () => {
+                document.querySelectorAll('.alpha-btn').forEach(x => x.classList.remove('active'));
+b.classList.add('active');
+                sortType = 'az'; render();
+                const target = document.getElementById("anchor-" + l);
+if(target) window.scrollTo({ top: target.getBoundingClientRect().top + window.pageYOffset - 320, behavior: 'smooth' });
+            };
+            row.appendChild(b);
+        });
+try {
+            const [r1, r2] = await Promise.all([
+                fetch(CSV + '&cb=' + Date.now()),
+                fetch(CSV_TOP + '&cb=' + Date.now())
             ]);
+            const text1 = await r1.text();
+            const text2 = await r2.text();
 
-            const textMain = await rMain.text();
-            const rowsMain = textMain.split(/\r?\n/).filter(x => x.trim() !== "").slice(1);
+            const rows = text1.split(/\r?\n/).filter(x => x.trim() !== "").slice(1);
             let catsSet = new Set();
-            songs = rowsMain.map((line, index) => {
+songs = rows.map((line, index) => {
                 const cols = parseCSVLine(line);
                 let rawCats = (cols[1] || "Inne").split(',').map(c => c.trim()).filter(c => c.length > 2);
                 rawCats.forEach(c => catsSet.add(c));
-                return { tytul: cols[0], kategorie: rawCats, yt: (cols[2] || "").trim(), originalIndex: index };
+                return { tytul: cols[0] || "Bez tytułu", kategorie: rawCats, yt: (cols[2] || "").trim(), originalIndex: index 
+                };
             });
 
-            const textTop = await rTop.text();
-            const rowsTop = textTop.split(/\r?\n/).filter(x => x.trim() !== "").slice(1);
-            topSongs = rowsTop.map((line, index) => {
+            const rowsTop = text2.split(/\r?\n/).filter(x => x.trim() !== "").slice(1);
+            top50 = rowsTop.map((line, index) => {
                 const cols = parseCSVLine(line);
-                return { tytul: cols[0], yt: (cols[1] || "").trim(), originalIndex: index };
+                return { tytul: cols[0] || "Bez tytułu", yt: (cols[1] || "").trim(), originalIndex: index };
             });
 
-            const catBox = document.getElementById('cat-list');
+const catBox = document.getElementById('cat-list');
             Array.from(catsSet).sort().forEach(cat => {
-                const b = document.createElement('button'); b.className = 'nav-btn'; b.innerText = cat;
+                const b = document.createElement('button'); b.className = 'nav-btn category-link'; b.innerText = cat; 
                 b.onclick = () => setView(cat); catBox.appendChild(b);
             });
-            render();
-        } catch(e) { console.error("Błąd ładowania:", e); }
+render();
+        } catch(e) { console.error(e); }
     }
+
+    function toggleFav(t) {
+        const idx = cart.findIndex(x => x.tytul === t);
+if(idx > -1) cart.splice(idx, 1);
+        else { const s = [...songs, ...top50].find(x => x.tytul === t); if(s) cart.push(s);
+}
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+        render();
+}
 
     function renderTopPanel() {
         const panel = document.getElementById('top-panel');
-        if (!topSongs.length) return;
-        const top3 = topSongs.slice(0, 3);
-        let html = `<div class="top-header-title">${activeTopName}</div><div style="display: flex; gap: 10px;"><div class="top-mini-grid" style="flex: 2;">`;
-        top3.forEach(s => {
-            html += `<div class="card" onclick="openYT('${s.yt}')" style="padding: 6px;"><div class="thumb-container"><img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb"></div><div class="card-title" style="font-size:10px;">${s.tytul}</div></div>`;
+if (!top50.length) return;
+        
+        const top3 = top50.slice(0, 3);
+let html = `<div class="top-header-title">TOP TYGODNIA POLSKIEJ PIEŚNI RELIGIJNEJ NR 1</div>`;
+        html += `<div style="display: flex; gap: 10px; align-items: stretch;">`;
+        
+        html += `<div class="top-mini-grid" style="flex: 2;">`;
+top3.forEach(s => {
+            const isFav = cart.some(x => x.tytul === s.tytul);
+            const jsTytul = s.tytul.replace(/'/g, "\\'");
+            html += `
+                <div class="card" onclick="openYT('${s.yt}')" style="padding: 6px; border-radius: 8px;">
+                    <div class="thumb-container" style="margin-bottom: 5px;">
+                        <img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb">
+                        <div class="play-overlay">KLIKNIJ, ABY OTWORZYĆ NA YOUTUBE 🎶</div>
+                    </div>
+                    <div class="card-title">${s.tytul}</div>
+              <button class="btn-fav-toggle ${isFav ? 'is-active' : ''}" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">
+                        ${isFav ? '❌ USUŃ Z ULUBIONYCH' : '➕ DODAJ DO ULUBIONYCH'}
+                    </button>
+                </div>
+    `;
         });
-        html += `</div><button class="top-btn-more" style="flex: 1;" onclick="setView('top50')">CAŁE<br>TOP 50</button></div>`;
-        panel.innerHTML = html;
-    }
+        html += `</div>`;
+        
+        html += `<button class="top-btn-more" style="flex: 1;" onclick="setView('top50')">
+                    KLIKNIJ,<br>ZOBACZ<br>CAŁE<br>TOP 50
+                 </button>`;
+        
+        html += `</div>`;
+panel.innerHTML = html;
+}
 
     function render() {
-        const out = document.getElementById('main-display'); out.innerHTML = '';
-        renderTopPanel();
-        let list = (currentView === 'cart') ? [...cart] : (currentView === 'top50' ? [...topSongs] : (currentView === 'all' ? [...songs] : songs.filter(s => s.kategorie.includes(currentView))));
-        if(query) list = list.filter(s => s.tytul.toLowerCase().includes(query));
+        const out = document.getElementById('main-display');
+out.innerHTML = '';
+        document.getElementById('count').innerText = cart.length + " UTWORÓW";
         
-        const container = document.createElement('div');
-        container.className = displayMode === 'grid' ? 'items-grid' : 'list-container';
-        container.style.padding = "20px";
+        renderTopPanel();
+        document.querySelectorAll('.nav-btn').forEach(b => {
+            b.classList.remove('active');
+            if(currentView === 'cart' && b.id === 'btn-cart') b.classList.add('active');
+            if(currentView === 'all' && b.id === 'cat-all') b.classList.add('active');
+            if(b.classList.contains('category-link') && b.innerText === currentView) b.classList.add('active');
+        });
+        document.querySelectorAll('.ctrl-btn').forEach(b => {
+            b.classList.remove('active');
+            if(b.id === 's-' + sortType.replace('newest','new').replace('oldest','old')) b.classList.add('active');
+            if(b.id === 'm-' + displayMode) b.classList.add('active');
+        });
+const showAlphaBar = (displayMode === 'list' && currentView !== 'cart');
+        document.getElementById('alpha-shelf').style.display = showAlphaBar ? 'block' : 'none';
+let list = (currentView === 'cart') ?
+            [...cart] : (currentView === 'top50' ? [...top50] : (currentView === 'all' ? [...songs] : songs.filter(s => s.kategorie.includes(currentView))));
+if(query) list = list.filter(s => s.tytul.toLowerCase().includes(query));
+        if(sortType === 'newest') list.sort((a,b) => b.originalIndex - a.originalIndex);
+else if(sortType === 'oldest') list.sort((a,b) => a.originalIndex - b.originalIndex);
+        else if(sortType === 'az') list.sort((a,b) => a.tytul.localeCompare(b.tytul, 'pl'));
+else if(sortType === 'za') list.sort((a,b) => b.tytul.localeCompare(a.tytul, 'pl'));
 
-        list.forEach(s => {
+        const header = document.createElement('div');
+        header.className = 'view-title-header';
+header.innerText = currentView === 'all' ? 'WSZYSTKIE PIEŚNI' : (currentView === 'cart' ? '❤️ MOJE ULUBIONE' : (currentView === 'top50' ? 'TOP 50' : '📂 ' + currentView));
+out.appendChild(header);
+
+        const contentBox = document.createElement('div');
+        contentBox.className = 'display-padding';
+        const container = document.createElement('div');
+        
+        container.className = displayMode === 'grid' ?
+'items-grid' : 'list-container';
+        
+        let lastChar = "";
+        const showHeaders = (sortType === 'az' || sortType === 'za') && !query;
+list.forEach(s => {
+            const firstChar = s.tytul.charAt(0).toUpperCase();
+            if(showHeaders && firstChar !== lastChar) {
+                const h = document.createElement('div'); h.className = 'alpha-header'; h.id = "anchor-" + firstChar; h.innerText = firstChar; container.appendChild(h); lastChar = firstChar;
+            }
+
             const item = document.createElement('div');
-            item.className = 'card'; item.onclick = () => openYT(s.yt);
-            item.innerHTML = `<div class="thumb-container"><img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb"></div><div class="card-title">${s.tytul}</div>`;
+     
+       const isFav = cart.some(x => x.tytul === s.tytul);
+            const jsTytul = s.tytul.replace(/'/g, "\\'");
+            
+            if(displayMode === 'grid') {
+                item.className = 'card';
+                item.onclick = () => openYT(s.yt);
+     
+           item.innerHTML = `
+                    <div class="thumb-container">
+                        <img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb">
+                        <div class="play-overlay">
+               
+             <div class="yt-btn-fake">KLIKNIJ, ABY OTWORZYĆ NA YOUTUBE 🎶</div>
+                        </div>
+                    </div>
+                    <div class="card-title">${s.tytul}</div>
+                
+    <button class="btn-fav-toggle ${isFav ? 'is-active' : ''}" onclick="event.stopPropagation();
+toggleFav('${jsTytul}')">
+                        ${isFav ? '❌ USUŃ Z ULUBIONYCH' : '➕ DODAJ DO ULUBIONYCH'}
+                    </button>
+                `;
+            } else {
+                
+item.className = 'list-card';
+                item.onclick = () => openYT(s.yt);
+                item.innerHTML = `
+                    <div class="list-overlay">KLIKNIJ, ABY OTWORZYĆ NA YOUTUBE 🎶</div>
+                    <span class="list-title">${s.tytul}</span>
+             
+       <button class="heart-btn" onclick="event.stopPropagation();
+toggleFav('${jsTytul}')">${isFav ? '❤️' : '🤍'}</button>
+                `;
+            }
             container.appendChild(item);
         });
-        out.appendChild(container);
-        document.getElementById('count').innerText = cart.length + " UTWORÓW";
+        contentBox.appendChild(container);
+        out.appendChild(contentBox);
     }
 
-    function updateSize(s) { document.body.className = s; localStorage.setItem('mv_font_permanent', s); }
-    function setMode(m) { displayMode = m; render(); }
+    function setMode(m) { 
+        displayMode = m; 
+        if(m === 
+'grid') {
+            sortType = 'newest';
+        } else if(m === 'list') {
+            sortType = 'az';
+        }
+        render(); 
+        window.scrollTo(0, 0);
+    }
     function setSort(s) { sortType = s; render(); }
-    function setView(v) { currentView = v; render(); }
-    function doSearch() { query = document.getElementById('search').value.toLowerCase(); render(); }
+    function setView(v) { currentView = v; render(); window.scrollTo(0,0); }
+    function 
+doSearch() { query = document.getElementById('search').value.toLowerCase(); render(); }
     init();
 </script>
 </body>
