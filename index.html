@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Melodia Wiary - v42 (Pełna Stabilizacja)</title>
+    <title>Katalog Melodia Wiary - v43 (Pełny Powrót do v34 + Panel)</title>
     <style>
         :root { 
             --active-orange: #fbda80; --bg: #f4f9f8; --card-bg: #f9fffe;
@@ -13,64 +13,64 @@
         body.standard { --f-size: 16px; --f-btn: 13px; --f-ctrl: 11px; --f-search: 1.1em; }
         body.senior { --f-size: 22px; --f-btn: 18px; --f-ctrl: 16px; --f-search: 1.4em; }
 
-        body { background: var(--bg); color: var(--deep-brown); font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; min-height: 100vh; font-size: var(--f-size); overflow: hidden; }
+        body { background: var(--bg); color: var(--deep-brown); font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; min-height: 100vh; font-size: var(--f-size); overflow-x: hidden; }
 
-        /* LEWY PANEL */
-        #sidebar-left { width: var(--sidebar-width); background: var(--card-bg); border-right: 4px solid var(--active-orange); display: flex; flex-direction: column; height: 100vh; flex-shrink: 0; }
-        
-        /* PRAWY PANEL (TOP LISTA) */
-        #sidebar-right { width: var(--chart-width); background: var(--card-bg); border-left: 4px solid var(--active-orange); display: flex; flex-direction: column; height: 100vh; flex-shrink: 0; }
+        /* BOCZNE PANELE */
+        #sidebar-left { width: var(--sidebar-width); background: var(--card-bg); border-right: 4px solid var(--active-orange); display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 1000; }
+        #sidebar-right { width: var(--chart-width); background: var(--card-bg); border-left: 4px solid var(--active-orange); position: fixed; right: 0; height: 100vh; z-index: 1000; display: flex; flex-direction: column; }
 
         /* ŚRODEK */
-        #main-content { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow-y: auto; }
+        #main-content { margin-left: var(--sidebar-width); margin-right: var(--chart-width); flex: 1; display: flex; flex-direction: column; }
 
-        .panel-top { padding: 15px 10px; text-align: center; border-bottom: 2px solid var(--active-orange); flex-shrink: 0; }
+        .panel-top { padding: 15px 10px; text-align: center; border-bottom: 2px solid var(--active-orange); }
         .panel-scroll { flex-grow: 1; overflow-y: auto; padding: 10px; }
-        
-        .logo-img { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--active-orange); background: white; object-fit: cover; }
-        .section-label { font-size: 0.9em; font-weight: 900; text-transform: uppercase; margin: 10px 0; display: block; border-bottom: 2px solid var(--active-orange); padding-bottom: 5px; text-align: center; }
+        .logo-img { width: 110px; height: 110px; border-radius: 50%; border: 3px solid var(--active-orange); background: white; object-fit: cover; margin-bottom: 10px; }
 
-        /* PRZYCISKI */
-        .nav-btn, .size-btn, .ctrl-btn { width: 100%; padding: 12px 8px; margin-bottom: 6px; border-radius: 8px; border: 1px solid var(--deep-brown); cursor: pointer; font-weight: 900; text-transform: uppercase; font-size: var(--f-btn); background: var(--soft-cyan); color: var(--deep-brown); transition: 0.2s; box-sizing: border-box; }
-        .nav-btn.active, .size-btn.active, .ctrl-btn.active { background: var(--active-orange) !important; border: 2.5px solid var(--deep-brown) !important; }
+        /* PRZYCISKI I ETYKIETY */
+        .section-label { font-size: 1em; font-weight: 900; text-transform: uppercase; margin: 15px 0 10px 0; display: block; border-bottom: 3px solid var(--active-orange); padding-bottom: 5px; text-align: center; }
+        .nav-btn, .size-btn, .ctrl-btn { width: 100%; padding: 12px 8px; margin-bottom: 8px; border-radius: 8px; border: 1px solid var(--deep-brown); cursor: pointer; font-weight: 900; text-transform: uppercase; font-size: var(--f-btn); background: var(--soft-cyan); color: var(--deep-brown); transition: 0.2s; box-sizing: border-box; }
+        .nav-btn:hover, .nav-btn.active, .size-btn.active, .ctrl-btn.active { background: var(--active-orange) !important; border: 2.5px solid var(--deep-brown) !important; }
         .fav-btn { background: #fff1f1 !important; border-color: #ffb3b3 !important; min-height: 70px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
-        /* TOP LISTA (PRAWA) */
-        .chart-item { display: flex; flex-direction: column; padding: 10px; border-bottom: 1px solid rgba(0,0,0,0.08); cursor: pointer; align-items: center; text-align: center; }
-        .chart-item:hover { background: var(--soft-cyan); }
-        .chart-rank { font-size: 1.5em; font-weight: 900; color: var(--active-orange); -webkit-text-stroke: 1px var(--deep-brown); margin-bottom: -15px; z-index: 5; }
-        .chart-thumb { width: 100%; aspect-ratio: 16/9; border-radius: 8px; border: 2px solid var(--deep-brown); object-fit: cover; }
-        .chart-title { font-size: 11px; font-weight: 900; text-transform: uppercase; line-height: 1.2; margin-top: 5px; }
+        /* NAGŁÓWEK ŚRODKOWY */
+        .header-sticky { position: sticky; top: 0; z-index: 900; background: var(--bg); padding: 20px 25px; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .search-box { width: 100%; padding: 15px; border-radius: 15px; border: 3px solid var(--deep-brown); font-size: var(--f-search); font-weight: 900; text-align: center; background: var(--card-bg); margin-bottom: 10px; }
+        .btn-group { display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; }
+        .ctrl-btn { flex: 1; min-width: 100px; padding: 10px 5px; font-size: var(--f-ctrl); }
 
-        /* NAGŁÓWEK ŚRODKA - PRZYWRÓCONE STEROWANIE */
-        .header-area { position: sticky; top: 0; background: var(--bg); padding: 20px 25px; z-index: 100; border-bottom: 1px solid rgba(0,0,0,0.05); }
-        .search-box { width: 100%; padding: 15px; border-radius: 15px; border: 3px solid var(--deep-brown); font-size: var(--f-search); font-weight: 900; text-align: center; background: var(--card-bg); margin-bottom: 15px; }
-        .btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
-        .ctrl-btn { flex: 1; min-width: 80px; padding: 10px 5px; font-size: var(--f-ctrl); }
-
-        /* GRID I KARTY */
-        .view-title { background: var(--soft-cyan); padding: 12px 25px; font-weight: 900; text-transform: uppercase; border-bottom: 5px solid var(--active-orange); }
+        /* KARTY PIEŚNI - PRZYWRÓCONE EFEKTY */
+        .view-title-header { background: var(--soft-cyan); padding: 15px 25px; font-weight: 900; text-transform: uppercase; font-size: 1.4em; border-bottom: 5px solid var(--active-orange); }
         .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 20px; }
-        .card { background: var(--card-bg); border: 2px solid rgba(0,0,0,0.08); padding: 12px; border-radius: 15px; text-align: center; position: relative; cursor: pointer; display: flex; flex-direction: column; }
-        .card:hover { border: 2px solid var(--deep-brown); }
-        .thumb-container { width: 100%; aspect-ratio: 16/9; border-radius: 10px; overflow: hidden; margin-bottom: 10px; border: 1px solid rgba(0,0,0,0.05); }
-        .thumb-img { width: 100%; height: 100%; object-fit: cover; }
-        .heart-btn { position: absolute; top: 15px; right: 15px; font-size: 28px; border: none; background: none; cursor: pointer; z-index: 10; }
         
-        /* TRYB LISTY */
-        .items-list { display: flex; flex-direction: column; gap: 10px; padding: 20px; }
-        .items-list .card { flex-direction: row; align-items: center; text-align: left; gap: 20px; padding: 10px; }
-        .items-list .thumb-container { width: 150px; margin-bottom: 0; }
+        .card { background: var(--card-bg); border: 2px solid rgba(59, 42, 0, 0.08); padding: 12px; border-radius: 15px; text-align: center; position: relative; cursor: pointer; transition: 0.3s; overflow: hidden; }
+        .card:hover { background: var(--active-orange); border: 2px solid var(--deep-brown); transform: translateY(-5px); }
+        
+        .thumb-container { width: 100%; aspect-ratio: 16/9; border-radius: 10px; overflow: hidden; margin-bottom: 10px; border: 1px solid rgba(0,0,0,0.05); position: relative; }
+        .thumb-img { width: 100%; height: 100%; object-fit: cover; }
+        
+        /* NAPIS PO NAJECHANIU */
+        .card-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(251, 218, 128, 0.9); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.3s; font-weight: 900; text-transform: uppercase; font-size: 0.8em; color: var(--deep-brown); padding: 10px; }
+        .card:hover .card-overlay { opacity: 1; }
+
+        .heart-btn { position: absolute; top: 15px; right: 15px; font-size: 28px; border: none; background: none; cursor: pointer; z-index: 10; transition: 0.2s; }
+        .heart-btn:hover { transform: scale(1.2); }
+
+        /* TOP LISTA (PRAWA) */
+        .chart-item { display: flex; flex-direction: column; padding: 12px; border-bottom: 2px solid var(--soft-cyan); cursor: pointer; align-items: center; text-align: center; transition: 0.2s; }
+        .chart-item:hover { background: var(--active-orange); }
+        .chart-rank { font-size: 1.8em; font-weight: 900; color: var(--active-orange); -webkit-text-stroke: 1.5px var(--deep-brown); margin-bottom: -20px; z-index: 5; }
+        .chart-thumb { width: 100%; aspect-ratio: 16/9; border-radius: 8px; border: 2px solid var(--deep-brown); object-fit: cover; }
+        .chart-title { font-size: 11px; font-weight: 900; text-transform: uppercase; margin-top: 8px; line-height: 1.2; }
     </style>
 </head>
 <body class="standard">
 
 <div id="sidebar-left">
     <div class="panel-top">
-        <img src="logo.png" class="logo-img" onerror="this.src='https://via.placeholder.com/100?text=LOGO'">
+        <img src="logo.png" class="logo-img" onerror="this.src='https://via.placeholder.com/110?text=LOGO'">
         <button class="nav-btn fav-btn" id="btn-cart" onclick="setView('cart')">
-            <span style="font-weight:900;">❤️ MOJE ULUBIONE</span>
-            <span id="count" style="font-size: 0.9em;">(0)</span>
+            <span style="font-weight:900;">❤️ ULUBIONE</span>
+            <span id="count">(0)</span>
         </button>
         <button class="size-btn" id="s-std" onclick="updateSize('standard')">LITERY ZWYKŁE</button>
         <button class="size-btn" id="s-big" onclick="updateSize('senior')">LITERY DUŻE</button>
@@ -83,17 +83,17 @@
 </div>
 
 <div id="main-content">
-    <div class="header-area">
+    <div class="header-sticky">
         <input type="text" id="search" class="search-box" placeholder="SZUKAJ PIEŚNI..." onkeyup="doSearch()">
         <div class="btn-group">
             <button class="ctrl-btn active" id="s-new" onclick="setSort('newest')">Najnowsze</button>
+            <button class="ctrl-btn" id="s-old" onclick="setSort('oldest')">Najstarsze</button>
             <button class="ctrl-btn" id="s-az" onclick="setSort('az')">A - Z</button>
-            <button class="ctrl-btn active" id="m-grid" onclick="setMode('grid')">Kwadraty</button>
-            <button class="ctrl-btn" id="m-list" onclick="setMode('list')">Lista</button>
+            <button class="ctrl-btn" id="s-za" onclick="setSort('za')">Z - A</button>
         </div>
     </div>
-    <div id="view-header" class="view-title">WSZYSTKIE PIEŚNI</div>
-    <div id="main-display"></div>
+    <div id="view-header" class="view-title-header">WSZYSTKIE PIEŚNI</div>
+    <div id="main-display" class="items-grid"></div>
 </div>
 
 <div id="sidebar-right">
@@ -107,7 +107,7 @@
 <script>
     const CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTSIMZUO8ZkisiFoqOfypL9hOQBnTbAvtMmBeIuK56_QoiXFu_b7i-de1Jn6Km9symosxJBV6V5PxKO/pub?output=csv';
     const STORAGE_KEY = 'melodia_wiary_permanent_storage';
-    let songs = [], cart = [], currentView = 'all', displayMode = 'grid', sortType = 'newest', query = "";
+    let songs = [], cart = [], currentView = 'all', sortType = 'newest', query = "";
 
     const top10 = [
         { tytul: "Kłaniam się Tobie", yt: "K0S1jD3H7wA" },
@@ -122,6 +122,17 @@
         document.getElementById('s-std').classList.toggle('active', s==='standard');
         document.getElementById('s-big').classList.toggle('active', s==='senior');
         localStorage.setItem('mv_font_permanent', s);
+    }
+
+    function parseCSVLine(text) {
+        const result = []; let cur = '', inQuotes = false;
+        for (let i = 0; i < text.length; i++) {
+            let char = text[i];
+            if (char === '"') inQuotes = !inQuotes;
+            else if (char === ',' && !inQuotes) { result.push(cur.trim()); cur = ''; }
+            else cur += char;
+        }
+        result.push(cur.trim()); return result;
     }
 
     async function init() {
@@ -144,10 +155,10 @@
             const rows = text.split(/\r?\n/).filter(x => x.trim() !== "").slice(1);
             let catsSet = new Set();
             songs = rows.map((line, idx) => {
-                const cols = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/); // Stabilny parser CSV
-                let rawCats = (cols[1] || "Inne").replace(/"/g, '').split(',').map(c => c.trim()).filter(c => c.length > 2);
+                const cols = parseCSVLine(line);
+                let rawCats = (cols[1] || "Inne").split(',').map(c => c.trim()).filter(c => c.length > 2);
                 rawCats.forEach(c => catsSet.add(c));
-                return { tytul: (cols[0]||"").replace(/"/g, ''), kategorie: rawCats, yt: (cols[2]||"").trim().replace(/"/g, ''), id: idx };
+                return { tytul: cols[0], kategorie: rawCats, yt: (cols[2]||"").trim(), id: idx };
             });
             
             const catBox = document.getElementById('cat-list');
@@ -169,18 +180,17 @@
 
     function render() {
         const out = document.getElementById('main-display'); out.innerHTML = '';
-        document.getElementById('count').innerText = cart.length;
+        document.getElementById('count').innerText = `(${cart.length})`;
         document.getElementById('view-header').innerText = currentView === 'all' ? 'WSZYSTKIE PIEŚNI' : (currentView === 'cart' ? '❤️ MOJE ULUBIONE' : '📂 ' + currentView);
         
         let list = (currentView === 'cart') ? [...cart] : (currentView === 'all' ? [...songs] : songs.filter(s => s.kategorie.includes(currentView)));
         if(query) list = list.filter(s => s.tytul.toLowerCase().includes(query));
 
         if(sortType === 'az') list.sort((a,b) => a.tytul.localeCompare(b.tytul));
+        else if(sortType === 'za') list.sort((a,b) => b.tytul.localeCompare(a.tytul));
+        else if(sortType === 'oldest') list.sort((a,b) => a.id - b.id);
         else list.sort((a,b) => b.id - a.id);
 
-        const container = document.createElement('div');
-        container.className = (displayMode === 'grid') ? 'items-grid' : 'items-list';
-        
         list.forEach(s => {
             const card = document.createElement('div');
             card.className = 'card';
@@ -188,12 +198,14 @@
             const isFav = cart.some(x => x.tytul === s.tytul);
             card.innerHTML = `
                 <button class="heart-btn" onclick="event.stopPropagation(); toggleFav('${s.tytul.replace(/'/g, "\\'")}')">${isFav ? '❤️' : '🤍'}</button>
-                <div class="thumb-container"><img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb-img"></div>
-                <div style="font-weight:900; text-transform:uppercase;">${s.tytul}</div>
+                <div class="thumb-container">
+                    <img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb-img">
+                    <div class="card-overlay">KLIKNIJ, ABY OTWORZYĆ NA YOUTUBE 🎶</div>
+                </div>
+                <div style="font-weight:900; text-transform:uppercase; padding: 5px;">${s.tytul}</div>
             `;
-            container.appendChild(card);
+            out.appendChild(card);
         });
-        out.appendChild(container);
     }
 
     function setView(v) { 
@@ -203,14 +215,7 @@
     }
     function setSort(s) { 
         sortType = s; 
-        document.getElementById('s-new').classList.toggle('active', s === 'newest');
-        document.getElementById('s-az').classList.toggle('active', s === 'az');
-        render(); 
-    }
-    function setMode(m) { 
-        displayMode = m; 
-        document.getElementById('m-grid').classList.toggle('active', m === 'grid');
-        document.getElementById('m-list').classList.toggle('active', m === 'list');
+        document.querySelectorAll('.ctrl-btn').forEach(b => b.classList.toggle('active', b.id === 's-'+s));
         render(); 
     }
     function doSearch() { query = document.getElementById('search').value.toLowerCase(); render(); }
