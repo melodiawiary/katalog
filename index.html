@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Melodia Wiary - v51</title>
+    <title>Katalog Melodia Wiary - v52</title>
     <style>
         :root { 
             --active-orange: #fbda80; --bg: #f4f9f8; --card-bg: #f9fffe;
@@ -21,6 +21,7 @@
         .sidebar-scroll { flex-grow: 1; overflow-y: auto; padding: 10px; }
         .logo-img { width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--active-orange); background: white; object-fit: cover; margin-bottom: 15px; }
         
+        .section-label { font-size: 16px; font-weight: 900; color: var(--deep-brown); text-transform: uppercase; margin: 15px 0 10px 5px; display: block; border-bottom: 3px solid var(--active-orange); padding-bottom: 5px; }
         .nav-btn, .size-btn { width: 100%; padding: 12px 10px; margin-bottom: 8px; border-radius: 8px; border: 1px solid var(--deep-brown); cursor: pointer; font-weight: 800; text-align: left; text-transform: uppercase; font-size: var(--f-btn); background: var(--soft-cyan); color: var(--deep-brown); display: flex; align-items: center; gap: 8px; transition: 0.2s; box-sizing: border-box; }
         .nav-btn.active, .size-btn.active { background: var(--active-orange) !important; border: 2.5px solid var(--deep-brown) !important; }
         .nav-btn.fav-btn { background: #fff1f1; border-color: #ffb3b3; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 10px; min-height: 60px; }
@@ -35,44 +36,47 @@
         .ctrl-btn { flex: 1; padding: 12px 4px; border: 1px solid var(--deep-brown); background: var(--soft-cyan); color: var(--deep-brown); font-weight: 800; cursor: pointer; border-radius: 6px; text-transform: uppercase; font-size: var(--f-ctrl); transition: 0.2s; }
         .ctrl-btn.active { background: var(--active-orange) !important; border: 2.5px solid var(--deep-brown); }
 
-        .ad-placeholder { height: 80px; background: white; margin-top: 15px; border: 1px dashed #ccc; display: flex; align-items: center; justify-content: center; color: #999; font-weight: bold; border-radius: 10px; }
+        .ad-placeholder { height: 100px; background: white; margin-top: 15px; border: 1px dashed #ccc; display: flex; align-items: center; justify-content: center; color: #999; font-weight: bold; border-radius: 10px; }
 
-        /* ALFABET */
+        /* PANEL ALFABETU */
         .alpha-shelf { border-top: 3px solid var(--active-orange); border-bottom: 3px solid var(--active-orange); background: var(--bg); padding: 10px 25px; display: none; }
         #alpha-row { display: flex; flex-wrap: wrap; gap: 6px; }
-        .alpha-btn { padding: 6px 12px; font-size: 14px; font-weight: 900; border: 1px solid var(--deep-brown); background: var(--soft-cyan); cursor: pointer; border-radius: 4px; }
+        .alpha-btn { padding: 6px 12px; font-size: 14px; font-weight: 900; border: 1px solid var(--deep-brown); background: var(--soft-cyan); color: var(--deep-brown); cursor: pointer; border-radius: 4px; min-width: 38px; }
         .alpha-btn.active { background: var(--active-orange) !important; border: 2px solid var(--deep-brown); }
 
         .view-title-header { background: var(--soft-cyan); color: var(--deep-brown); padding: 15px 25px; font-weight: 900; text-transform: uppercase; font-size: 1.5em; border-bottom: 5px solid var(--active-orange); border-top: 2px solid var(--active-orange); }
-        #main-display { padding: 0 0 400px 0; }
+        #main-display { padding: 0 0 400px 0; min-height: 100vh; }
         .display-padding { padding: 0 25px; }
         
-        /* KARTY I WYRÓŻNIENIE ULUBIONYCH */
-        .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
-        .card { background: var(--card-bg); border: 2px solid rgba(59, 42, 0, 0.1); padding: 12px; border-radius: 15px; text-align: center; position: relative; transition: 0.3s; cursor: pointer; display: flex; flex-direction: column; }
+        .alpha-header { grid-column: 1 / -1; background: var(--active-orange); padding: 8px 20px; border-radius: 8px; font-weight: 900; margin: 40px 0 15px 0; border: 2px solid var(--deep-brown); font-size: 1.3em; }
         
-        /* Styl dla piosenki, która JEST w ulubionych */
-        .card.is-fav { border: 4px solid var(--active-orange); background: #fffcf0; box-shadow: 0 5px 15px rgba(251, 218, 128, 0.3); }
+        /* MINIATURY I WYRÓŻNIENIE */
+        .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
+        .card { background: var(--card-bg); border: 2px solid rgba(59, 42, 0, 0.08); padding: 12px; border-radius: 15px; text-align: center; position: relative; transition: 0.3s; display: flex; flex-direction: column; cursor: pointer; }
+        
+        /* Styl dla ulubionych (v52) */
+        .card.is-fav { border: 5px solid var(--active-orange); background: #fffcf0; }
 
         .thumb-container { width: 100%; aspect-ratio: 16/9; border-radius: 10px; overflow: hidden; margin-bottom: 10px; position: relative; }
         .thumb { width: 100%; height: 100%; object-fit: cover; }
-        .play-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(251, 218, 128, 0.9); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.2s; color: var(--deep-brown); font-weight: 900; text-transform: uppercase; padding: 10px; }
+        .play-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(251, 218, 128, 0.95); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.2s; color: var(--deep-brown); font-weight: 900; text-align: center; padding: 10px; font-size: 1.1em; text-transform: uppercase; }
         .card:hover .play-overlay { opacity: 1; }
 
-        .card-title { font-weight: 900; font-size: var(--f-card-title); text-transform: uppercase; margin-bottom: 8px; flex-grow: 1; }
+        .card-title { font-weight: 900; font-size: var(--f-card-title); text-transform: uppercase; padding: 5px; line-height: 1.2; flex-grow: 1; }
         
-        /* Przycisk pod tytułem */
-        .fav-action-btn { background: #eee; border: 1px solid #ccc; padding: 6px; border-radius: 6px; font-size: 11px; font-weight: 900; text-transform: uppercase; cursor: pointer; transition: 0.2s; }
-        .is-fav .fav-action-btn { background: var(--active-orange); border-color: var(--deep-brown); color: var(--deep-brown); }
+        /* Dodatkowy przycisk statusu ulubionych */
+        .fav-status-tag { margin-top: 5px; padding: 6px; border-radius: 8px; font-size: 11px; font-weight: 900; background: #eee; border: 1px solid #ccc; text-transform: uppercase; }
+        .is-fav .fav-status-tag { background: var(--active-orange); border-color: var(--deep-brown); }
 
         /* LISTA */
-        .list-card { background: var(--card-bg); border: 2px solid rgba(59, 42, 0, 0.1); border-radius: 10px; padding: 10px 15px; margin-bottom: 8px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: 0.2s; }
+        .list-card { background: var(--card-bg); border: 2px solid rgba(59, 42, 0, 0.08); border-radius: 10px; padding: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; margin-bottom: 5px; }
         .list-card.is-fav { border: 3px solid var(--active-orange); background: #fffcf0; }
-        .list-title { font-weight: 800; font-size: var(--f-list-title); text-transform: uppercase; flex: 1; }
+        .list-title { font-weight: 800; font-size: var(--f-list-title); flex: 1; text-transform: uppercase; }
+        
+        .heart-btn { font-size: 28px; cursor: pointer; border: none; background: none; }
     </style>
 </head>
 <body class="standard">
-
 <div id="sidebar">
     <div class="sidebar-top">
         <img src="logo.png" class="logo-img" onerror="this.src='https://via.placeholder.com/120?text=LOGO'">
@@ -86,6 +90,7 @@
         </div>
     </div>
     <div class="sidebar-scroll">
+        <span class="section-label">KATEGORIE</span>
         <button class="nav-btn" id="cat-all" onclick="setView('all')">WSZYSTKIE PIEŚNI</button>
         <div id="cat-list"></div>
     </div>
@@ -94,16 +99,16 @@
 <div id="main-content">
     <div class="header-sticky">
         <div class="top-padding">
-            <input type="text" id="search" class="search-box" placeholder="SZUKAJ PIEŚNI..." onkeyup="doSearch()">
+            <input type="text" id="search" class="search-box" placeholder="SZUKAJ W KATALOGU PIEŚNI MELODII WIARY..." onkeyup="doSearch()">
             <div class="btn-group">
-                <button class="ctrl-btn" id="s-new" onclick="setSort('newest')">OD NAJNOWSZYCH</button>
-                <button class="ctrl-btn" id="s-old" onclick="setSort('oldest')">OD NAJSTARSZYCH</button>
-                <button class="ctrl-btn" id="s-az" onclick="setSort('az')">A DO Z</button>
-                <button class="ctrl-btn" id="s-za" onclick="setSort('za')">Z DO A</button>
+                <button class="ctrl-btn" id="s-new" onclick="setSort('newest')">Sortuj od najnowszych</button>
+                <button class="ctrl-btn" id="s-old" onclick="setSort('oldest')">Sortuj od najstarszych</button>
+                <button class="ctrl-btn" id="s-az" onclick="setSort('az')">Sortuj od A do Z</button>
+                <button class="ctrl-btn" id="s-za" onclick="setSort('za')">Sortuj od Z do A</button>
             </div>
             <div class="btn-group">
-                <button class="ctrl-btn" id="m-grid" onclick="setMode('grid')">WIDOK MINIATURY</button>
-                <button class="ctrl-btn" id="m-list" onclick="setMode('list')">WIDOK LISTA</button>
+                <button class="ctrl-btn" id="m-grid" onclick="setMode('grid')">Widok miniatury pieśni</button>
+                <button class="ctrl-btn" id="m-list" onclick="setMode('list')">Widok lista tytułów pieśni</button>
             </div>
             <div class="ad-placeholder">MIEJSCE NA REKLAMĘ</div>
         </div>
@@ -114,16 +119,37 @@
 
 <script>
     const CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTSIMZUO8ZkisiFoqOfypL9hOQBnTbAvtMmBeIuK56_QoiXFu_b7i-de1Jn6Km9symosxJBV6V5PxKO/pub?output=csv';
-    const STORAGE_KEY = 'melodia_wiary_v51_storage'; 
+    const STORAGE_KEY = 'melodia_wiary_v52_final'; 
     let songs = [], cart = [], currentView = 'all', displayMode = 'grid', query = "", sortType = 'newest';
 
     function openYT(id) {
-        const w = 800, h = 600;
+        const w = 800, h = 800;
         const l = (window.screen.width/2)-(w/2), t = (window.screen.height/2)-(h/2);
-        window.open(`https://www.youtube.com/watch?v=${id}`, 'YT', `width=${w},height=${h},top=${t},left=${l}`);
+        window.open(`https://www.youtube.com/watch?v=${id}`, 'YTWindow', `width=${w},height=${h},top=${t},left=${l}`);
     }
 
-    function updateSize(s) { document.body.className = s; localStorage.setItem('mv_font', s); }
+    // Bezpieczny parser CSV dla dwuprzecinków i cudzysłowów
+    function parseCSV(text) {
+        const lines = text.split(/\r?\n/).filter(x => x.trim() !== "");
+        return lines.slice(1).map((line, idx) => {
+            const cells = []; let cur = '', inQ = false;
+            for (let i = 0; i < line.length; i++) {
+                if (line[i] === '"') inQ = !inQ;
+                else if (line[i] === ',' && !inQ) { cells.push(cur.trim()); cur = ''; }
+                else cur += line[i];
+            }
+            cells.push(cur.trim());
+            const cats = (cells[1] || "Inne").split(',').map(c => c.trim()).filter(c => c.length > 1);
+            return { tytul: cells[0] || "Bez tytułu", kategorie: cats, yt: (cells[2] || "").trim(), originalIndex: idx };
+        });
+    }
+
+    function updateSize(s) { 
+        document.body.className = s; 
+        document.getElementById('s-std').classList.toggle('active', s==='standard');
+        document.getElementById('s-big').classList.toggle('active', s==='senior');
+        localStorage.setItem('mv_font', s);
+    }
 
     async function init() {
         const saved = localStorage.getItem(STORAGE_KEY);
@@ -134,33 +160,30 @@
         const row = document.getElementById('alpha-row');
         alpha.forEach(l => {
             const b = document.createElement('button'); b.className = 'alpha-btn'; b.innerText = l;
-            b.onclick = () => { sortType = 'az'; render(); /* scroll logic here */ };
+            b.onclick = () => { sortType = 'az'; render(); /* scroll logic */ };
             row.appendChild(b);
         });
 
-        const r = await fetch(CSV + '&cb=' + Date.now());
-        const text = await r.text();
-        const rows = text.split(/\r?\n/).filter(x => x.trim() !== "").slice(1);
-        let catsSet = new Set();
-        songs = rows.map((line, index) => {
-            const cols = line.split(","); 
-            const cat = cols[1] || "Inne";
-            catsSet.add(cat);
-            return { tytul: cols[0], kategorie: [cat], yt: cols[2], originalIndex: index };
-        });
-        
-        const catBox = document.getElementById('cat-list');
-        Array.from(catsSet).sort().forEach(cat => {
-            const b = document.createElement('button'); b.className = 'nav-btn'; b.innerText = cat; 
-            b.onclick = () => setView(cat); catBox.appendChild(b);
-        });
-        render();
+        try {
+            const r = await fetch(CSV + '&cb=' + Date.now());
+            const text = await r.text();
+            songs = parseCSV(text);
+            
+            let catsSet = new Set();
+            songs.forEach(s => s.kategorie.forEach(c => catsSet.add(c)));
+            const catBox = document.getElementById('cat-list');
+            Array.from(catsSet).sort().forEach(cat => {
+                const b = document.createElement('button'); b.className = 'nav-btn'; b.innerText = cat; 
+                b.onclick = () => setView(cat); catBox.appendChild(b);
+            });
+            render();
+        } catch(e) { console.error(e); }
     }
 
-    function toggleFav(tytul) {
-        const idx = cart.findIndex(x => x.tytul === tytul);
+    function toggleFav(t) {
+        const idx = cart.findIndex(x => x.tytul === t);
         if(idx > -1) cart.splice(idx, 1);
-        else { const s = songs.find(x => x.tytul === tytul); if(s) cart.push(s); }
+        else { const s = songs.find(x => x.tytul === t); if(s) cart.push(s); }
         localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
         render();
     }
@@ -168,18 +191,19 @@
     function render() {
         const out = document.getElementById('main-display'); out.innerHTML = '';
         document.getElementById('count').innerText = cart.length + " UTWORÓW";
-        
-        document.getElementById('alpha-shelf').style.display = (displayMode === 'list') ? 'block' : 'none';
+        document.getElementById('alpha-shelf').style.display = (displayMode === 'list' && currentView !== 'cart') ? 'block' : 'none';
 
         let list = (currentView === 'cart') ? [...cart] : (currentView === 'all' ? [...songs] : songs.filter(s => s.kategorie.includes(currentView)));
         if(query) list = list.filter(s => s.tytul.toLowerCase().includes(query));
 
         if(sortType === 'newest') list.sort((a,b) => b.originalIndex - a.originalIndex);
+        else if(sortType === 'oldest') list.sort((a,b) => a.originalIndex - b.originalIndex);
         else if(sortType === 'az') list.sort((a,b) => a.tytul.localeCompare(b.tytul, 'pl'));
+        else if(sortType === 'za') list.sort((a,b) => b.tytul.localeCompare(a.tytul, 'pl'));
 
         const header = document.createElement('div');
         header.className = 'view-title-header';
-        header.innerText = currentView === 'all' ? 'WSZYSTKIE PIEŚNI' : (currentView === 'cart' ? '❤️ MOJE ULUBIONE' : currentView);
+        header.innerText = currentView === 'all' ? 'WSZYSTKIE PIEŚNI' : (currentView === 'cart' ? '❤️ MOJE ULUBIONE' : '📂 ' + currentView);
         out.appendChild(header);
 
         const container = document.createElement('div');
@@ -189,45 +213,46 @@
             const isFav = cart.some(x => x.tytul === s.tytul);
             const item = document.createElement('div');
             item.className = isFav ? 'card is-fav' : 'card';
-            
+            const jsTytul = s.tytul.replace(/'/g, "\\'");
+
             if(displayMode === 'grid') {
                 item.onclick = () => openYT(s.yt);
                 item.innerHTML = `
+                    <button class="heart-btn" style="position:absolute; top:10px; right:10px; z-index:10;" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">${isFav ? '❤️' : '🤍'}</button>
                     <div class="thumb-container">
                         <img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb">
                         <div class="play-overlay">KLIKNIJ, ABY OTWORZYĆ NA YOUTUBE 🎶</div>
                     </div>
                     <div class="card-title">${s.tytul}</div>
-                    <button class="fav-action-btn" onclick="event.stopPropagation(); toggleFav('${s.tytul.replace(/'/g, "\\'")}')">
-                        ${isFav ? '⭐ JEST W ULUBIONYCH' : '➕ DODAJ DO ULUBIONYCH'}
-                    </button>
+                    <div class="fav-status-tag" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">
+                        ${isFav ? '⭐ JEST W TWOICH ULUBIONYCH' : '➕ DODAJ DO ULUBIONYCH'}
+                    </div>
                 `;
             } else {
                 item.className = isFav ? 'list-card is-fav' : 'list-card';
                 item.onclick = () => openYT(s.yt);
                 item.innerHTML = `
                     <span class="list-title">${s.tytul}</span>
-                    <button class="fav-action-btn" onclick="event.stopPropagation(); toggleFav('${s.tytul.replace(/'/g, "\\'")}')">
-                        ${isFav ? '⭐ ULUBIONA' : 'DODAJ'}
-                    </button>
+                    <button class="fav-action-btn" style="padding:8px; font-weight:900; margin-right:10px;" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">${isFav ? '⭐ USUŃ' : '➕ DODAJ'}</button>
+                    <button class="heart-btn" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">${isFav ? '❤️' : '🤍'}</button>
                 `;
             }
             container.appendChild(item);
         });
         out.appendChild(container);
+
+        document.querySelectorAll('.ctrl-btn').forEach(b => {
+            if(b.id.startsWith('s-')) b.classList.toggle('active', b.id === 's-'+sortType);
+            if(b.id.startsWith('m-')) b.classList.toggle('active', b.id === 'm-'+displayMode);
+        });
     }
 
-    // TWOJA KLUCZOWA FUNKCJA (v51)
     function setView(v) { 
         currentView = v; 
-        if (v === 'cart') { 
-            displayMode = 'grid'; 
-            sortType = 'newest'; 
-        }
+        if (v === 'cart') { displayMode = 'grid'; sortType = 'newest'; }
         render(); 
         window.scrollTo(0,0);
     }
-
     function setMode(m) { displayMode = m; render(); }
     function setSort(s) { sortType = s; render(); }
     function doSearch() { query = document.getElementById('search').value.toLowerCase(); render(); }
