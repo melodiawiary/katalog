@@ -1,179 +1,338 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Katalog Melodia Wiary - v33</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katalog Melodia Wiary - v33</title>
+    <style>
+        :root { 
+            --active-orange: #fbda80; 
+            /* TŁO STRONY - lekki, świeży odcień */
+            --bg: #f4f9f8; 
+            /* TŁO KART I SIDEBARA - Twój krystaliczny kolor */
+            --card-bg: #f9fffe;
+            --soft-cyan: #d2e9e6; 
+            --deep-brown: #3b2a00; 
+            --sidebar-width: 220px; 
+        }
+        
+        body.standard { --f-size: 16px; --f-btn: 13px; --f-ctrl: 11px; --f-search: 1.1em; }
+        body.senior { --f-size: 22px; --f-btn: 18px; --f-ctrl: 16px; --f-search: 1.4em; }
 
-<style>
-:root { 
-    --active-orange: #fbda80; 
-    --bg: #f4f9f8; 
-    --card-bg: #f9fffe;
-    --soft-cyan: #d2e9e6; 
-    --deep-brown: #3b2a00; 
-    --sidebar-width: 220px; 
-}
+        body { background: var(--bg); color: var(--deep-brown); font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; min-height: 100vh; font-size: var(--f-size); overflow-x: hidden; }
 
-body.standard { --f-size: 16px; --f-btn: 13px; --f-ctrl: 11px; --f-search: 1.1em; }
-body.senior { --f-size: 22px; --f-btn: 18px; --f-ctrl: 16px; --f-search: 1.4em; }
+        /* SIDEBAR */
+        #sidebar { width: var(--sidebar-width); background: var(--card-bg); border-right: 4px solid var(--active-orange); display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 1000; box-shadow: 2px 0 10px rgba(0,0,0,0.02); }
+        .sidebar-top { padding: 15px 10px; text-align: center; border-bottom: 1px solid rgba(59, 42, 0, 0.08); }
+        .sidebar-scroll { flex-grow: 1; overflow-y: auto; padding: 10px; }
+        .logo-img { width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--active-orange); background: white; object-fit: cover; margin-bottom: 15px; }
+        
+        .section-label { font-size: 16px; font-weight: 900; color: var(--deep-brown); text-transform: uppercase; margin: 15px 0 10px 5px; display: block; border-bottom: 3px solid var(--active-orange); padding-bottom: 5px; }
 
-body { background: var(--bg); color: var(--deep-brown); font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; min-height: 100vh; font-size: var(--f-size); overflow-x: hidden; }
+        .nav-btn, .size-btn { 
+            width: 100%; padding: 12px 10px; margin-bottom: 8px; border-radius: 8px; 
+            border: 1px solid var(--deep-brown); cursor: pointer; font-weight: 800; 
+            text-align: left; text-transform: uppercase; font-size: var(--f-btn); 
+            background: var(--soft-cyan); color: var(--deep-brown); display: flex; align-items: center; 
+            gap: 8px; transition: 0.2s; box-sizing: border-box;
+        }
+        .nav-btn:hover, .nav-btn.active, .size-btn:hover, .size-btn.active { 
+            background: var(--active-orange) !important; border: 2px solid var(--deep-brown) !important; 
+        }
+        
+        .nav-btn.fav-btn { 
+            background: #fff1f1; border-color: #ffb3b3; 
+            flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; padding: 10px; min-height: 60px;
+        }
+        .fav-label { font-size: 1.1em; font-weight: 900; margin-bottom: 2px; }
+        .fav-count-label { font-size: 0.8em; font-weight: 700; opacity: 0.8; }
 
-/* SIDEBAR */
-#sidebar { width: var(--sidebar-width); background: var(--card-bg); border-right: 4px solid var(--active-orange); display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 1000; }
-.sidebar-top { padding: 15px 10px; text-align: center; }
-.sidebar-scroll { flex-grow: 1; overflow-y: auto; padding: 10px; }
+        /* MAIN CONTENT */
+        #main-content { margin-left: var(--sidebar-width); flex: 1; display: flex; flex-direction: column; }
+        .header-sticky { position: sticky; top: 0; z-index: 900; background: var(--bg); width: 100%; box-sizing: border-box; }
+        .top-padding { padding: 20px 25px 15px 25px; }
+        .top-layout { display: flex; gap: 25px; align-items: flex-start; }
+        .controls-area { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+        
+        #player-section { width: 600px; background: #000; aspect-ratio: 16/9; border: 4px solid var(--deep-brown); border-radius: 12px; overflow: hidden; flex-shrink: 0; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+        .search-box { width: 100%; padding: 12px; border-radius: 15px; border: 2px solid var(--deep-brown); font-size: var(--f-search); font-weight: bold; text-align: center; background: var(--card-bg); box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        
+        .btn-group { display: flex; gap: 5px; flex-wrap: wrap; }
+        .ctrl-btn { flex: 1; padding: 12px 4px; border: 1px solid var(--deep-brown); background: var(--soft-cyan); color: var(--deep-brown); font-weight: 800; cursor: pointer; border-radius: 6px; text-transform: uppercase; font-size: var(--f-ctrl); transition: 0.2s; }
+        .ctrl-btn:hover, .ctrl-btn.active { background: var(--active-orange) !important; border: 2px solid var(--deep-brown); }
 
-.logo-img { width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--active-orange); }
+        .alpha-shelf { border-top: 3px solid var(--active-orange); border-bottom: 3px solid var(--active-orange); background: var(--bg); padding: 10px 25px; display: none; }
+        #alpha-row { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-start; }
+        .alpha-btn { padding: 6px 12px; font-size: 14px; font-weight: 900; border: 1px solid var(--deep-brown); background: var(--soft-cyan); color: var(--deep-brown); cursor: pointer; border-radius: 4px; min-width: 38px; transition: 0.2s; }
+        .alpha-btn:hover, .alpha-btn.active { background: var(--active-orange) !important; border: 2px solid var(--deep-brown); }
 
-.nav-btn, .size-btn {
-    width: 100%; padding: 12px; margin-bottom: 8px;
-    border-radius: 8px; border: 1px solid var(--deep-brown);
-    cursor: pointer; font-weight: 800;
-    background: var(--soft-cyan);
-}
+        .view-title-header { 
+            background: var(--soft-cyan); color: var(--deep-brown); 
+            padding: 15px 25px; margin: 0 0 20px 0; 
+            font-weight: 900; text-transform: uppercase; 
+            font-size: 1.5em; letter-spacing: 1px; 
+            border-bottom: 5px solid var(--active-orange);
+            display: flex; align-items: center; gap: 15px;
+        }
 
-.nav-btn.active { background: var(--active-orange); }
+        #main-display { padding: 0 0 400px 0; min-height: 100vh; }
+        .display-padding { padding: 0 25px; }
+        
+        .alpha-header { grid-column: 1 / -1; background: var(--active-orange); padding: 8px 20px; border-radius: 8px; font-weight: 900; margin: 40px 0 15px 0; border: 2px solid var(--deep-brown); font-size: 1.3em; text-align: left; scroll-margin-top: 380px; }
+        .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        
+        /* KARTY - Teraz delikatnie odcinają się od tła strony */
+        .card { background: var(--card-bg); border: 2px solid rgba(59, 42, 0, 0.08); padding: 12px; border-radius: 15px; text-align: center; position: relative; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; flex-direction: column; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .card:hover { border: 2px solid var(--deep-brown); background: var(--card-bg); transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+        
+        .thumb-container { width: 100%; aspect-ratio: 16/9; border-radius: 10px; overflow: hidden; cursor: pointer; margin-bottom: 10px; border: 1px solid rgba(0,0,0,0.05); position: relative; }
+        .thumb { width: 100%; height: 100%; object-fit: cover; }
+        .play-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(251, 218, 128, 0.95); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.2s; color: var(--deep-brown); font-weight: 900; text-align: center; padding: 10px; font-size: 1.4em; line-height: 1.1; text-transform: uppercase; }
+        .thumb-container:hover .play-overlay { opacity: 1; }
 
-/* MAIN */
-#main-content { margin-left: var(--sidebar-width); flex: 1; }
+        .list-card { background: var(--card-bg); border: 2px solid rgba(59, 42, 0, 0.08); border-radius: 10px; padding: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; min-height: 70px; position: relative; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+        .list-card:hover { border: 2px solid var(--deep-brown); background: var(--active-orange); transform: scale(1.01); }
+        
+        .list-title { font-weight: 800; font-size: 1em; flex: 1; padding-right: 10px; line-height: 1.2; text-transform: uppercase; transition: 0.2s; color: var(--deep-brown); }
+        .list-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: var(--active-orange); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.2s; color: var(--deep-brown); font-weight: 900; text-align: center; font-size: 1.1em; pointer-events: none; }
+        .list-card:hover .list-overlay { opacity: 1; }
 
-.header-sticky { position: sticky; top: 0; background: var(--bg); }
-
-.top-padding { padding: 20px; }
-
-.top-layout {
-    display: flex;
-    justify-content: center;
-}
-
-.controls-area {
-    width: 100%;
-    max-width: 800px;
-}
-
-.search-box { width: 100%; padding: 12px; border-radius: 15px; border: 2px solid var(--deep-brown); }
-
-.btn-group { display: flex; gap: 5px; flex-wrap: wrap; }
-
-.ctrl-btn {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid var(--deep-brown);
-    background: var(--soft-cyan);
-    font-weight: 800;
-    cursor: pointer;
-}
-
-.items-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
-    padding: 20px;
-}
-
-.card {
-    background: var(--card-bg);
-    padding: 10px;
-    border-radius: 12px;
-}
-
-.thumb-container { cursor: pointer; }
-
-</style>
+        .heart-btn { font-size: 28px; cursor: pointer; border: none; background: none; transition: transform 0.1s; position: relative; z-index: 5; }
+        .heart-btn:active { transform: scale(1.3); }
+        
+        .size-box { border: 2px solid var(--deep-brown); padding: 8px; border-radius: 12px; margin: 10px 5px; background: rgba(255,255,255,0.6); text-align: center; }
+        .size-btn { width: 100%; padding: 6px; margin-top: 4px; font-weight: 900; cursor: pointer; border: 1px solid var(--deep-brown); background: var(--soft-cyan); color: var(--deep-brown); border-radius: 8px; font-size: 10px; }
+        .size-btn.active { background: var(--active-orange); }
+    </style>
 </head>
-
 <body class="standard">
-
 <div id="sidebar">
     <div class="sidebar-top">
-        <img src="logo.png" class="logo-img">
-
-        <button class="nav-btn" id="btn-cart" onclick="setView('cart')">
-            ❤️ ULUBIONE (<span id="count">0</span>)
+        <img src="logo.png" class="logo-img" onerror="this.src='https://via.placeholder.com/120?text=LOGO'">
+        
+        <button class="nav-btn fav-btn" id="btn-cart" onclick="setView('cart')">
+            <span class="fav-label">❤️ MOJE ULUBIONE</span>
+            <span class="fav-count-label">(<span id="count">0</span> UTWORÓW)</span>
         </button>
+        
+        <div class="size-box">
+            <button class="size-btn" id="s-std" onclick="updateSize('standard')">LITERY ZWYKŁE</button>
+            <button class="size-btn" id="s-big" onclick="updateSize('senior')">LITERY DUŻE</button>
+        </div>
     </div>
-
     <div class="sidebar-scroll">
-        <button class="nav-btn" onclick="setView('all')">WSZYSTKIE</button>
+        <span class="section-label">KATEGORIE</span>
+        <button class="nav-btn" id="cat-all" onclick="setView('all')">WSZYSTKIE PIEŚNI</button>
         <div id="cat-list"></div>
     </div>
 </div>
 
 <div id="main-content">
-
     <div class="header-sticky">
         <div class="top-padding">
             <div class="top-layout">
                 <div class="controls-area">
-
-                    <input type="text" id="search" class="search-box" placeholder="SZUKAJ..." onkeyup="doSearch()">
-
+                    <input type="text" id="search" class="search-box" placeholder="SZUKAJ W KATALOGU PIEŚNI MELODII WIARY..." onkeyup="doSearch()">
                     <div class="btn-group">
-                        <button class="ctrl-btn" onclick="setSort('az')">A-Z</button>
-                        <button class="ctrl-btn" onclick="setSort('za')">Z-A</button>
+                        <button class="ctrl-btn" id="s-new" onclick="setSort('newest')">Sortuj od najnowszych</button>
+                        <button class="ctrl-btn" id="s-old" onclick="setSort('oldest')">Sortuj od najstarszych</button>
+                        <button class="ctrl-btn" id="s-az" onclick="setSort('az')">Sortuj od A do Z</button>
+                        <button class="ctrl-btn" id="s-za" onclick="setSort('za')">Sortuj od Z do A</button>
                     </div>
-
+                    <div class="btn-group">
+                        <button class="ctrl-btn" id="m-grid" onclick="setMode('grid')">Widok miniatury pieśni</button>
+                        <button class="ctrl-btn" id="m-list" onclick="setMode('list')">Widok lista tytułów pieśni</button>
+                    </div>
+                </div>
+                <div id="player-section">
+                    <div id="yt-player-container" style="height:100%; background:#000; color:#fff; display:flex; align-items:center; justify-content:center; text-align:center; padding:20px; font-weight: 900;">
+                        KLIKNIJ W PIEŚŃ, BY ZACZĄĆ ODTWARZANIE 🎶
+                    </div>
                 </div>
             </div>
+        </div>
+        
+        <div id="alpha-shelf" class="alpha-shelf">
+            <div id="alpha-row"></div>
         </div>
     </div>
 
     <div id="main-display"></div>
-
 </div>
 
 <script>
+    const CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTSIMZUO8ZkisiFoqOfypL9hOQBnTbAvtMmBeIuK56_QoiXFu_b7i-de1Jn6Km9symosxJBV6V5PxKO/pub?output=csv';
+    const STORAGE_KEY = 'melodia_wiary_permanent_storage'; 
+    
+    let songs = [], cart = [], currentView = 'all', displayMode = 'grid', query = "", sortType = 'newest';
 
-const CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTSIMZUO8ZkisiFoqOfypL9hOQBnTbAvtMmBeIuK56_QoiXFu_b7i-de1Jn6Km9symosxJBV6V5PxKO/pub?output=csv';
+    function parseCSVLine(text) {
+        const result = []; let cur = '', inQuotes = false;
+        for (let i = 0; i < text.length; i++) {
+            let char = text[i];
+            if (char === '"') inQuotes = !inQuotes;
+            else if (char === ',' && !inQuotes) { result.push(cur.trim()); cur = ''; }
+            else cur += char;
+        }
+        result.push(cur.trim()); return result;
+    }
 
-let songs = [], cart = [], currentView = 'all', query = "", sortType = 'az';
+    function updateSize(s) { 
+        document.body.className = s; 
+        document.getElementById('s-std').classList.toggle('active', s==='standard'); 
+        document.getElementById('s-big').classList.toggle('active', s==='senior'); 
+        localStorage.setItem('mv_font_permanent', s);
+    }
 
-function playSong(ytId) {
-    window.open(`https://www.youtube.com/watch?v=${ytId}`, '_blank');
-}
+    function playSong(ytId) {
+        document.getElementById('yt-player-container').innerHTML = 
+            `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+    }
 
-async function init() {
-    const r = await fetch(CSV);
-    const text = await r.text();
-    const rows = text.split("\n").slice(1);
+    async function init() {
+        let saved = localStorage.getItem(STORAGE_KEY);
+        if(saved) cart = JSON.parse(saved);
+        updateSize(localStorage.getItem('mv_font_permanent') || 'standard');
+        
+        const alphabet = "ABCDEFGHIJKLŁMNOPRSTUWZŻ".split("");
+        const row = document.getElementById('alpha-row');
+        alphabet.forEach(l => {
+            const b = document.createElement('button'); b.className = 'alpha-btn'; b.innerText = l; b.id = "alpha-"+l;
+            b.onclick = () => {
+                document.querySelectorAll('.alpha-btn').forEach(x => x.classList.remove('active'));
+                b.classList.add('active');
+                if(sortType !== 'az' && sortType !== 'za') sortType = 'az';
+                render();
+                const target = document.getElementById("anchor-" + l);
+                if(target) {
+                    const pos = target.getBoundingClientRect().top + window.pageYOffset - 380;
+                    window.scrollTo({ top: pos, behavior: 'smooth' });
+                }
+            };
+            row.appendChild(b);
+        });
 
-    songs = rows.map(line => {
-        let [title, cat, yt] = line.split(",");
-        return { tytul: title, yt: yt };
-    });
+        try {
+            const r = await fetch(CSV + '&cb=' + Date.now());
+            const text = await r.text();
+            const rows = text.split(/\r?\n/).filter(x => x.trim() !== "").slice(1);
+            let catsSet = new Set();
+            songs = rows.map((line, index) => {
+                const cols = parseCSVLine(line);
+                let rawCats = (cols[1] || "Inne").split(',').map(c => c.trim()).filter(c => c.length > 2);
+                rawCats.forEach(c => catsSet.add(c));
+                return { tytul: cols[0] || "Bez tytułu", kategorie: rawCats, yt: (cols[2] || "").trim(), originalIndex: index };
+            });
+            const catBox = document.getElementById('cat-list');
+            Array.from(catsSet).sort().forEach(cat => {
+                const b = document.createElement('button'); 
+                b.className = 'nav-btn category-link'; 
+                b.innerText = cat; 
+                b.id = 'cat-btn-' + cat.replace(/\s+/g, '-');
+                b.onclick = () => setView(cat); catBox.appendChild(b);
+            });
+            render();
+        } catch(e) { console.error(e); }
+    }
 
-    render();
-}
+    function toggleFav(t) {
+        const idx = cart.findIndex(x => x.tytul === t);
+        if(idx > -1) cart.splice(idx, 1);
+        else { const s = songs.find(x => x.tytul === t); if(s) cart.push(s); }
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+        render();
+    }
 
-function render() {
-    const out = document.getElementById('main-display');
-    out.innerHTML = "";
+    function render() {
+        const out = document.getElementById('main-display'); out.innerHTML = '';
+        document.getElementById('count').innerText = cart.length;
 
-    songs.forEach(s => {
-        const div = document.createElement('div');
-        div.className = 'card';
-        div.innerHTML = `
-            <div class="thumb-container" onclick="playSong('${s.yt}')">
-                ${s.tytul}
-            </div>
-        `;
-        out.appendChild(div);
-    });
-}
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        if(currentView === 'cart') document.getElementById('btn-cart').classList.add('active');
+        else if(currentView === 'all') document.getElementById('cat-all').classList.add('active');
+        else {
+            const targetId = 'cat-btn-' + currentView.replace(/\s+/g, '-');
+            const targetBtn = document.getElementById(targetId);
+            if(targetBtn) targetBtn.classList.add('active');
+        }
+        
+        const showAlphaBar = (displayMode === 'list' && currentView !== 'cart');
+        document.getElementById('alpha-shelf').style.display = showAlphaBar ? 'block' : 'none';
 
-function doSearch() {
-    query = document.getElementById('search').value.toLowerCase();
-    render();
-}
+        document.querySelectorAll('.ctrl-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('s-new').classList.toggle('active', sortType === 'newest');
+        document.getElementById('s-old').classList.toggle('active', sortType === 'oldest');
+        document.getElementById('s-az').classList.toggle('active', sortType === 'az');
+        document.getElementById('s-za').classList.toggle('active', sortType === 'za');
+        document.getElementById('m-grid').classList.toggle('active', displayMode === 'grid');
+        document.getElementById('m-list').classList.toggle('active', displayMode === 'list');
 
-function setView(v){ currentView = v; render(); }
-function setSort(s){ sortType = s; render(); }
+        const header = document.createElement('div');
+        header.className = 'view-title-header';
+        let viewLabel = currentView === 'all' ? 'WSZYSTKIE PIEŚNI' : (currentView === 'cart' ? '❤️ MOJE ULUBIONE' : '📂 KATEGORIA: ' + currentView);
+        if(query) viewLabel = '🔍 WYNIKI WYSZUKIWANIA: ' + query.toUpperCase();
+        header.innerText = viewLabel;
+        out.appendChild(header);
 
-init();
+        const contentBox = document.createElement('div');
+        contentBox.className = 'display-padding';
+        out.appendChild(contentBox);
 
+        let list = (currentView === 'cart') ? [...cart] : (currentView === 'all' ? [...songs] : songs.filter(s => s.kategorie.includes(currentView)));
+        if(query) list = list.filter(s => s.tytul.toLowerCase().includes(query));
+
+        if(sortType === 'newest') list.sort((a,b) => b.originalIndex - a.originalIndex);
+        else if(sortType === 'oldest') list.sort((a,b) => a.originalIndex - b.originalIndex);
+        else if(sortType === 'az') list.sort((a,b) => a.tytul.localeCompare(b.tytul, 'pl'));
+        else if(sortType === 'za') list.sort((a,b) => b.tytul.localeCompare(a.tytul, 'pl'));
+
+        const container = document.createElement('div');
+        container.className = 'items-grid';
+        
+        let lastChar = "";
+        const showHeaders = (sortType === 'az' || sortType === 'za') && !query;
+
+        list.forEach(s => {
+            const firstChar = s.tytul.charAt(0).toUpperCase();
+            if(showHeaders && firstChar !== lastChar) {
+                const h = document.createElement('div'); h.className = 'alpha-header'; 
+                h.id = "anchor-" + firstChar; h.innerText = firstChar; 
+                container.appendChild(h); lastChar = firstChar;
+            }
+            const item = document.createElement('div');
+            const isFav = cart.some(x => x.tytul === s.tytul);
+            const jsTytul = s.tytul.replace(/'/g, "\\'");
+            
+            if(displayMode === 'grid') {
+                item.className = 'card';
+                item.innerHTML = `
+                    <button class="heart-btn" style="position:absolute; top:10px; right:10px; z-index:10;" onclick="toggleFav('${jsTytul}')">${isFav ? '❤️' : '🤍'}</button>
+                    <div class="thumb-container" onclick="playSong('${s.yt}')">
+                        <img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb">
+                        <div class="play-overlay">KLIKNIJ, ABY<br>POSŁUCHAĆ 🎶</div>
+                    </div>
+                    <div style="font-weight:900; font-size:14px; text-transform:uppercase;">${s.tytul}</div>
+                `;
+            } else {
+                item.className = 'list-card';
+                item.onclick = (e) => { if(!e.target.closest('.heart-btn')) playSong(s.yt); };
+                item.innerHTML = `
+                    <div class="list-overlay">▶ KLIKNIJ, ABY POSŁUCHAĆ 🎶</div>
+                    <span class="list-title">${s.tytul}</span>
+                    <button class="heart-btn" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">${isFav ? '❤️' : '🤍'}</button>
+                `;
+            }
+            container.appendChild(item);
+        });
+        contentBox.appendChild(container);
+    }
+
+    function setMode(m) { displayMode = m; if(m === 'list' && sortType === 'newest') sortType = 'az'; render(); window.scrollTo(0,0); }
+    function setSort(s) { sortType = s; render(); window.scrollTo(0,0); }
+    function setView(v) { currentView = v; render(); window.scrollTo(0,0); }
+    function doSearch() { query = document.getElementById('search').value.toLowerCase(); render(); window.scrollTo(0,0); }
+    init();
 </script>
-
 </body>
 </html>
