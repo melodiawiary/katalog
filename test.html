@@ -383,7 +383,7 @@ top3.forEach((s, idx) => {
                     </div>
                     <div class="card-title">${s.tytul}</div>
               <button class="btn-fav-toggle ${isFav ? 'is-active' : ''}" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">
-                        ${isFav ? '❌ USUŃ' : '➕ DODAJ'}
+                        ${isFav ? '❌ USUŃ Z ULUBIONYCH' : '➕ DODAJ DO ULUBIONYCH'}
                     </button>
                 </div>
     `;
@@ -480,7 +480,7 @@ list.forEach((s, idx) => {
                     ${!s.dummy ? `
     <button class="btn-fav-toggle ${isFav ? 'is-active' : ''}" onclick="event.stopPropagation();
 toggleFav('${jsTytul}')">
-                        ${isFav ? '❌ USUŃ' : '➕ DODAJ'}
+                        ${isFav ? '❌ USUŃ Z ULUBIONYCH' : '➕ DODAJ DO ULUBIONYCH'}
                     </button>` : ''}
                 `;
             } else {
