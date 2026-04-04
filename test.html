@@ -57,7 +57,7 @@
             
         .nav-btn.fav-btn { background: #fff1f1;
             border-color: #ffb3b3;
-            flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 10px; min-height: 60px;
+            align-items: center; justify-content: center; text-align: center; padding: 10px; min-height: 40px; margin-bottom: 5px;
             }
 
         /* MAIN CONTENT */
@@ -86,9 +86,10 @@
         .top-mini-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
             }
         .top-btn-more { width: 100%; padding: 8px; background: var(--active-orange);
-            border: 2px solid var(--deep-brown); border-radius: 8px; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 11px;
-            line-height: 1.2; display: flex; align-items: center; justify-content: center; text-align: center;
+            border: 2px solid var(--deep-brown); border-radius: 8px; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 12px;
+            line-height: 1.3; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
             }
+        .top-btn-more span { width: 100%; display: block; }
 
         .search-box { width: 100%;
             padding: 12px; border-radius: 15px; border: 2px solid var(--deep-brown);
@@ -170,6 +171,8 @@
         
         .card:hover { border: 2px solid var(--deep-brown);
             background: var(--soft-cyan); transform: translateY(-5px); }
+
+        .card-rank { font-weight: 900; font-size: 1.2em; color: var(--deep-brown); margin-bottom: 5px; text-align: center; border-bottom: 1px solid var(--active-orange); padding-bottom: 2px; }
         
         .thumb-container { width: 100%;
             aspect-ratio: 16/9; border-radius: 10px;
@@ -221,8 +224,10 @@
     <div class="sidebar-top">
         <img src="logo.png" class="logo-img" onerror="this.src='https://via.placeholder.com/120?text=LOGO'">
         <button class="nav-btn fav-btn" id="btn-cart" onclick="setView('cart')">
-            <span class="fav-label">❤️ MOJE ULUBIONE</span>
-            <span id="count" style="font-weight:900;">0 UTWORÓW</span>
+            ❤️ MOJE ULUBIONE
+        </button>
+        <button class="nav-btn fav-btn" id="btn-top50-side" onclick="setView('top50')">
+            🏆 TOP 50
         </button>
         <div style="margin-top:10px; padding:5px; border: 1px solid var(--deep-brown); border-radius:10px;">
            <button class="size-btn" id="s-std" onclick="updateSize('standard')">LITERY ZWYKŁE</button>
@@ -271,6 +276,7 @@ const STORAGE_KEY = 'melodia_wiary_permanent_storage';
     let songs = [], top50 = [], cart = [], currentView = 'all', displayMode = 'grid', query = "", sortType = 'newest';
 
 function openYT(id) {
+        if(!id) return;
         const width = 800; const height = 600;
 const left = (window.screen.width / 2) - (width / 2);
         const top = (window.screen.height / 2) - (height / 2);
@@ -362,21 +368,22 @@ if (!top50.length) return;
         
         const top3 = top50.slice(0, 3);
 let html = `<div class="top-header-title">TYGODNIOWA LISTA PRZEBOJÓW POLSKIEJ PIEŚNI RELIGIJNEJ NR 1</div>`;
-        html += `<div style="display: flex; gap: 10px; align-items: stretch;">`;
+        html += `<div style="display: flex; gap: 10px; align-items: stretch; flex-grow: 1;">`;
         
         html += `<div class="top-mini-grid" style="flex: 2;">`;
-top3.forEach(s => {
+top3.forEach((s, idx) => {
             const isFav = cart.some(x => x.tytul === s.tytul);
             const jsTytul = s.tytul.replace(/'/g, "\\'");
             html += `
                 <div class="card" onclick="openYT('${s.yt}')" style="padding: 6px; border-radius: 8px;">
+                    <div class="card-rank">MIEJSCE ${idx+1}</div>
                     <div class="thumb-container" style="margin-bottom: 5px;">
                         <img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb">
                         <div class="play-overlay">KLIKNIJ, ABY OTWORZYĆ NA YOUTUBE 🎶</div>
                     </div>
                     <div class="card-title">${s.tytul}</div>
               <button class="btn-fav-toggle ${isFav ? 'is-active' : ''}" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">
-                        ${isFav ? '❌ USUŃ Z ULUBIONYCH' : '➕ DODAJ DO ULUBIONYCH'}
+                        ${isFav ? '❌ USUŃ' : '➕ DODAJ'}
                     </button>
                 </div>
     `;
@@ -384,7 +391,8 @@ top3.forEach(s => {
         html += `</div>`;
         
         html += `<button class="top-btn-more" style="flex: 1;" onclick="setView('top50')">
-                    KLIKNIJ,<br>ZOBACZ<br>CAŁE<br>TOP 50
+                    <span>KLIKNIJ I ZOBACZ CAŁĄ</span>
+                    <span>TYGODNIOWĄ LISTĘ PRZEBOJÓW</span>
                  </button>`;
         
         html += `</div>`;
@@ -394,12 +402,12 @@ panel.innerHTML = html;
     function render() {
         const out = document.getElementById('main-display');
 out.innerHTML = '';
-        document.getElementById('count').innerText = cart.length + " UTWORÓW";
         
         renderTopPanel();
         document.querySelectorAll('.nav-btn').forEach(b => {
             b.classList.remove('active');
             if(currentView === 'cart' && b.id === 'btn-cart') b.classList.add('active');
+            if(currentView === 'top50' && b.id === 'btn-top50-side') b.classList.add('active');
             if(currentView === 'all' && b.id === 'cat-all') b.classList.add('active');
             if(b.classList.contains('category-link') && b.innerText === currentView) b.classList.add('active');
         });
@@ -408,19 +416,33 @@ out.innerHTML = '';
             if(b.id === 's-' + sortType.replace('newest','new').replace('oldest','old')) b.classList.add('active');
             if(b.id === 'm-' + displayMode) b.classList.add('active');
         });
-const showAlphaBar = (displayMode === 'list' && currentView !== 'cart');
+const showAlphaBar = (displayMode === 'list' && currentView !== 'cart' && currentView !== 'top50');
         document.getElementById('alpha-shelf').style.display = showAlphaBar ? 'block' : 'none';
-let list = (currentView === 'cart') ?
-            [...cart] : (currentView === 'top50' ? [...top50] : (currentView === 'all' ? [...songs] : songs.filter(s => s.kategorie.includes(currentView))));
+
+let list = [];
+        if(currentView === 'cart') list = [...cart];
+        else if(currentView === 'top50') {
+            list = [...top50];
+            while(list.length < 50) {
+                list.push({ tytul: "MIEJSCE WOLNE", yt: "", dummy: true });
+            }
+        }
+        else if(currentView === 'all') list = [...songs];
+        else list = songs.filter(s => s.kategorie.includes(currentView));
+
 if(query) list = list.filter(s => s.tytul.toLowerCase().includes(query));
-        if(sortType === 'newest') list.sort((a,b) => b.originalIndex - a.originalIndex);
-else if(sortType === 'oldest') list.sort((a,b) => a.originalIndex - b.originalIndex);
-        else if(sortType === 'az') list.sort((a,b) => a.tytul.localeCompare(b.tytul, 'pl'));
-else if(sortType === 'za') list.sort((a,b) => b.tytul.localeCompare(a.tytul, 'pl'));
+
+        if(currentView !== 'top50') {
+            if(sortType === 'newest') list.sort((a,b) => b.originalIndex - a.originalIndex);
+            else if(sortType === 'oldest') list.sort((a,b) => a.originalIndex - b.originalIndex);
+            else if(sortType === 'az') list.sort((a,b) => a.tytul.localeCompare(b.tytul, 'pl'));
+            else if(sortType === 'za') list.sort((a,b) => b.tytul.localeCompare(a.tytul, 'pl'));
+        }
 
         const header = document.createElement('div');
         header.className = 'view-title-header';
-header.innerText = currentView === 'all' ? 'WSZYSTKIE PIEŚNI' : (currentView === 'cart' ? '❤️ MOJE ULUBIONE' : (currentView === 'top50' ? 'TOP 50' : '📂 ' + currentView));
+        const today = new Date().toLocaleDateString('pl-PL');
+header.innerText = currentView === 'all' ? 'WSZYSTKIE PIEŚNI' : (currentView === 'cart' ? '❤️ MOJE ULUBIONE' : (currentView === 'top50' ? 'TYGODNIOWA LISTA PRZEBOJÓW POLSKIEJ PIEŚNI RELIGIJNEJ NR 1 - ' + today : '📂 ' + currentView));
 out.appendChild(header);
 
         const contentBox = document.createElement('div');
@@ -431,8 +453,8 @@ out.appendChild(header);
 'items-grid' : 'list-container';
         
         let lastChar = "";
-        const showHeaders = (sortType === 'az' || sortType === 'za') && !query;
-list.forEach(s => {
+        const showHeaders = (sortType === 'az' || sortType === 'za') && !query && currentView !== 'top50';
+list.forEach((s, idx) => {
             const firstChar = s.tytul.charAt(0).toUpperCase();
             if(showHeaders && firstChar !== lastChar) {
                 const h = document.createElement('div'); h.className = 'alpha-header'; h.id = "anchor-" + firstChar; h.innerText = firstChar; container.appendChild(h); lastChar = firstChar;
@@ -445,33 +467,32 @@ list.forEach(s => {
             
             if(displayMode === 'grid') {
                 item.className = 'card';
-                item.onclick = () => openYT(s.yt);
+                if(!s.dummy) item.onclick = () => openYT(s.yt);
      
            item.innerHTML = `
+                    ${currentView === 'top50' ? `<div class="card-rank">MIEJSCE ${idx + 1}</div>` : ''}
                     <div class="thumb-container">
-                        <img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb">
-                        <div class="play-overlay">
-               
-             <div class="yt-btn-fake">KLIKNIJ, ABY OTWORZYĆ NA YOUTUBE 🎶</div>
-                        </div>
+                        <img src="${s.dummy ? 'https://via.placeholder.com/320x180?text=...' : `https://img.youtube.com/vi/${s.yt}/mqdefault.jpg`}" class="thumb">
+                        ${!s.dummy ? `<div class="play-overlay"><div class="yt-btn-fake">KLIKNIJ, ABY OTWORZYĆ NA YOUTUBE 🎶</div></div>` : ''}
                     </div>
                     <div class="card-title">${s.tytul}</div>
                 
+                    ${!s.dummy ? `
     <button class="btn-fav-toggle ${isFav ? 'is-active' : ''}" onclick="event.stopPropagation();
 toggleFav('${jsTytul}')">
-                        ${isFav ? '❌ USUŃ Z ULUBIONYCH' : '➕ DODAJ DO ULUBIONYCH'}
-                    </button>
+                        ${isFav ? '❌ USUŃ' : '➕ DODAJ'}
+                    </button>` : ''}
                 `;
             } else {
                 
 item.className = 'list-card';
-                item.onclick = () => openYT(s.yt);
+                if(!s.dummy) item.onclick = () => openYT(s.yt);
                 item.innerHTML = `
-                    <div class="list-overlay">KLIKNIJ, ABY OTWORZYĆ NA YOUTUBE 🎶</div>
-                    <span class="list-title">${s.tytul}</span>
+                    ${!s.dummy ? `<div class="list-overlay">KLIKNIJ, ABY OTWORZYĆ NA YOUTUBE 🎶</div>` : ''}
+                    <span class="list-title">${currentView === 'top50' ? (idx+1) + '. ' : ''}${s.tytul}</span>
              
-       <button class="heart-btn" onclick="event.stopPropagation();
-toggleFav('${jsTytul}')">${isFav ? '❤️' : '🤍'}</button>
+       ${!s.dummy ? `<button class="heart-btn" onclick="event.stopPropagation();
+toggleFav('${jsTytul}')">${isFav ? '❤️' : '🤍'}</button>` : ''}
                 `;
             }
             container.appendChild(item);
@@ -482,19 +503,22 @@ toggleFav('${jsTytul}')">${isFav ? '❤️' : '🤍'}</button>
 
     function setMode(m) { 
         displayMode = m; 
-        if(m === 
-'grid') {
-            sortType = 'newest';
+        if(m === 'grid') {
+            if(currentView !== 'top50') sortType = 'newest';
         } else if(m === 'list') {
-            sortType = 'az';
+            if(currentView !== 'top50') sortType = 'az';
         }
         render(); 
         window.scrollTo(0, 0);
     }
     function setSort(s) { sortType = s; render(); }
-    function setView(v) { currentView = v; render(); window.scrollTo(0,0); }
-    function 
-doSearch() { query = document.getElementById('search').value.toLowerCase(); render(); }
+    function setView(v) { 
+        currentView = v; 
+        if(v === 'top50') sortType = 'none';
+        render(); 
+        window.scrollTo(0,0); 
+    }
+    function doSearch() { query = document.getElementById('search').value.toLowerCase(); render(); }
     init();
 </script>
 </body>
