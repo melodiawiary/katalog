@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Melodia Wiary - Edycja v21</title>
+    <title>Katalog Melodia Wiary - v22</title>
     <style>
         :root { 
             --active-orange: #fbda80; 
@@ -17,77 +17,74 @@
         body.standard { --f-size: 16px; --f-btn: 13px; --f-ctrl: 11px; --f-search: 1.1em; }
         body.senior { --f-size: 22px; --f-btn: 18px; --f-ctrl: 16px; --f-search: 1.4em; }
 
-        body { background: var(--bg); color: var(--deep-brown); font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; min-height: 100vh; font-size: var(--f-size); }
+        body { background: var(--bg); color: var(--deep-brown); font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; min-height: 100vh; font-size: var(--f-size); overflow-x: hidden; }
 
         /* SIDEBAR */
-        #sidebar { width: var(--sidebar-width); background: var(--sidebar-bg); border-right: 4px solid var(--active-orange); display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 1000; box-shadow: 2px 0 10px rgba(0,0,0,0.05); }
+        #sidebar { width: var(--sidebar-width); background: var(--sidebar-bg); border-right: 4px solid var(--active-orange); display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 1000; }
         .sidebar-top { padding: 20px 15px; text-align: center; border-bottom: 1px solid #eee; }
         .sidebar-scroll { flex-grow: 1; overflow-y: auto; padding: 10px; }
-        .logo-img { width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--active-orange); background: white; object-fit: cover; margin-bottom: 15px; }
+        .logo-img { width: 140px; height: 140px; border-radius: 50%; border: 3px solid var(--active-orange); background: white; object-fit: cover; margin-bottom: 10px; }
         
-        .section-label { font-size: 18px; font-weight: 900; color: var(--deep-brown); text-transform: uppercase; margin: 25px 0 10px 5px; display: block; border-bottom: 3px solid var(--active-orange); padding-bottom: 5px; }
+        .section-label { font-size: 18px; font-weight: 900; color: var(--deep-brown); text-transform: uppercase; margin: 20px 0 10px 5px; display: block; border-bottom: 3px solid var(--active-orange); padding-bottom: 5px; }
 
-        .nav-btn { width: 100%; padding: 12px 10px; margin-bottom: 8px; border-radius: 8px; border: 1px solid var(--deep-brown); cursor: pointer; font-weight: 700; text-align: left; text-transform: uppercase; font-size: var(--f-btn); background: var(--soft-cyan); transition: 0.2s; display: flex; align-items: center; gap: 10px; }
+        .nav-btn { width: 100%; padding: 12px 10px; margin-bottom: 8px; border-radius: 8px; border: 1px solid var(--deep-brown); cursor: pointer; font-weight: 700; text-align: left; text-transform: uppercase; font-size: var(--f-btn); background: var(--soft-cyan); display: flex; align-items: center; gap: 10px; }
         .nav-btn:hover, .nav-btn.active { background: var(--active-orange) !important; border: 2px solid var(--deep-brown) !important; }
-        .nav-btn.fav-btn { background: #fff1f1; border-color: #ffb3b3; margin-top: 5px; }
+        .nav-btn.fav-btn { background: #fff1f1; border-color: #ffb3b3; }
 
         /* MAIN CONTENT */
-        #main-content { margin-left: var(--sidebar-width); flex: 1; display: flex; flex-direction: column; padding-bottom: 500px; /* Dodatkowy margines na dole dla przewijania liter */ }
-        .header-sticky { position: sticky; top: 0; z-index: 900; background: var(--bg); padding: 15px 25px; border-bottom: 3px solid var(--active-orange); width: 100%; box-sizing: border-box; }
+        #main-content { margin-left: var(--sidebar-width); flex: 1; display: flex; flex-direction: column; }
+        .header-sticky { position: sticky; top: 0; z-index: 900; background: var(--bg); padding: 15px 25px 10px 25px; border-bottom: 3px solid var(--active-orange); width: 100%; box-sizing: border-box; }
         .top-layout { display: flex; gap: 20px; align-items: flex-start; }
         .controls-area { flex: 1; display: flex; flex-direction: column; gap: 8px; }
         
         #player-section { width: 480px; background: #000; aspect-ratio: 16/9; border: 3px solid var(--deep-brown); border-radius: 12px; overflow: hidden; flex-shrink: 0; }
-        .search-box { width: 100%; padding: 10px; border-radius: 15px; border: 2px solid var(--deep-brown); font-size: var(--f-search); font-weight: bold; text-align: center; }
+        .search-box { width: 100%; padding: 10px; border-radius: 15px; border: 2px solid var(--deep-brown); font-size: var(--f-search); font-weight: bold; text-align: center; margin-bottom: 5px; }
         
-        .btn-group { display: flex; gap: 5px; flex-wrap: wrap; }
-        .ctrl-btn { flex: 1; padding: 10px 4px; border: 1px solid var(--deep-brown); background: var(--soft-cyan); color: var(--deep-brown); font-weight: 800; cursor: pointer; border-radius: 6px; text-transform: uppercase; font-size: var(--f-ctrl); min-width: 145px; }
+        .btn-group { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 5px; }
+        .ctrl-btn { flex: 1; padding: 10px 4px; border: 1px solid var(--deep-brown); background: var(--soft-cyan); color: var(--deep-brown); font-weight: 800; cursor: pointer; border-radius: 6px; text-transform: uppercase; font-size: var(--f-ctrl); }
         .ctrl-btn.active { background: var(--active-orange) !important; border: 2px solid var(--deep-brown); }
 
-        /* ALFABET */
-        #alpha-bar { width: 45px; display: flex; flex-direction: column; gap: 2px; position: fixed; left: calc(var(--sidebar-width) + 15px); top: 350px; max-height: calc(100vh - 370px); overflow-y: auto; z-index: 850; padding-right: 5px; scrollbar-width: none; }
-        #alpha-bar::-webkit-scrollbar { display: none; }
-        .alpha-btn { width: 100%; padding: 6px 0; font-size: 13px; font-weight: 900; border: 1px solid var(--deep-brown); background: var(--soft-cyan); cursor: pointer; border-radius: 4px; text-align: center; }
-        .alpha-btn.active { background: var(--active-orange) !important; border: 2px solid var(--deep-brown); }
+        /* POZIOMY PANEL LITEREK */
+        #alpha-row { display: flex; flex-wrap: wrap; gap: 4px; padding: 5px 0; justify-content: center; border-top: 1px solid #eee; margin-top: 5px; }
+        .alpha-btn { padding: 5px 10px; font-size: 14px; font-weight: 900; border: 1px solid var(--deep-brown); background: #fff; cursor: pointer; border-radius: 4px; min-width: 35px; }
+        .alpha-btn:hover, .alpha-btn.active { background: var(--active-orange); border: 2px solid var(--deep-brown); }
 
-        #main-display { flex: 1; margin-left: 65px; padding: 20px; }
+        #main-display { padding: 20px; min-height: 100vh; padding-bottom: 400px; }
 
         /* NAGŁÓWKI LITER */
-        .alpha-header { grid-column: 1 / -1; background: var(--active-orange); padding: 8px 20px; border-radius: 8px; font-weight: 900; margin: 60px 0 10px 0; border: 2px solid var(--deep-brown); font-size: 1.2em; text-align: left; scroll-margin-top: 220px; }
+        .alpha-header { grid-column: 1 / -1; background: var(--active-orange); padding: 8px 20px; border-radius: 8px; font-weight: 900; margin: 50px 0 15px 0; border: 2px solid var(--deep-brown); font-size: 1.3em; scroll-margin-top: 280px; }
 
-        /* WIDOKI */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
-        .card { background: #fff; border: 2px solid #ddd; padding: 12px; border-radius: 15px; text-align: center; position: relative; transition: 0.2s; display: flex; flex-direction: column; }
-        .card:hover { background: var(--active-orange); border: 2px solid var(--deep-brown); transform: translateY(-3px); }
+        /* SIATKA I LISTA */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .card { background: #fff; border: 2px solid #ddd; padding: 12px; border-radius: 15px; text-align: center; position: relative; transition: 0.2s; }
+        .card:hover { background: var(--active-orange); border: 2px solid var(--deep-brown); }
         
         .thumb-container { width: 100%; aspect-ratio: 16/9; border-radius: 10px; overflow: hidden; cursor: pointer; margin-bottom: 10px; border: 1px solid #ddd; position: relative; }
         .thumb { width: 100%; height: 100%; object-fit: cover; }
-        .play-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(251, 218, 128, 0.9); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.2s; color: var(--deep-brown); font-weight: 900; text-align: center; padding: 10px; }
+        .play-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(251, 218, 128, 0.9); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.2s; color: var(--deep-brown); font-weight: 900; text-align: center; }
         .thumb-container:hover .play-overlay { opacity: 1; }
 
-        .list-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(450px, 1fr)); gap: 12px; }
-        .list-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; background: #fff; border: 2px solid #ddd; border-radius: 10px; transition: 0.2s; cursor: pointer; }
+        .list-container { display: grid; grid-template-columns: 1fr; gap: 8px; }
+        .list-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; background: #fff; border: 2px solid #ddd; border-radius: 10px; cursor: pointer; }
         .list-item:hover { background: var(--active-orange); border: 2px solid var(--deep-brown); }
-        .list-item:hover .list-title::before { content: "▶ KLIKNIJ, ABY POSŁUCHAĆ: "; font-size: 0.8em; }
+        .list-item:hover .list-title::before { content: "▶ KLIKNIJ, ABY POSŁUCHAĆ: "; font-size: 0.85em; }
 
         .fav-heart, .heart-btn { font-size: 26px; cursor: pointer; border: none; background: none; }
         .size-box { border: 2px solid var(--deep-brown); padding: 10px; border-radius: 12px; margin: 15px 5px; background: #f9f9f9; text-align: center; }
         .size-btn { width: 100%; padding: 8px; margin-top: 5px; font-weight: 900; cursor: pointer; border: 1px solid var(--deep-brown); background: var(--soft-cyan); border-radius: 8px; }
-        .size-btn.active { background: var(--active-orange); border: 2px solid var(--deep-brown); }
-
-        @media (max-width: 1200px) { #alpha-bar { display: none; } #main-display { margin-left: 0; } }
+        .size-btn.active { background: var(--active-orange); }
     </style>
 </head>
 <body class="standard">
 
 <div id="sidebar">
     <div class="sidebar-top">
-        <img src="logo.png" class="logo-img" onerror="this.src='https://via.placeholder.com/120?text=LOGO'">
+        <img src="logo.png" class="logo-img" onerror="this.src='https://via.placeholder.com/140?text=LOGO'">
         <button class="nav-btn fav-btn" id="btn-cart" onclick="setView('cart')">❤️ MOJE ULUBIONE (<span id="count">0</span>)</button>
         <div class="size-box">
             <div style="font-size: 10px; font-weight: 900; margin-bottom: 5px;">ROZMIAR TEKSTU</div>
-            <button class="size-btn" id="s-std" onclick="updateSize('standard')">ZWYKŁE</button>
-            <button class="size-btn" id="s-big" onclick="updateSize('senior')">DUŻE</button>
+            <button class="size-btn" id="s-std" onclick="updateSize('standard')">LITERY ZWYKŁE</button>
+            <button class="size-btn" id="s-big" onclick="updateSize('senior')">LITERY DUŻE</button>
         </div>
     </div>
     <div class="sidebar-scroll">
@@ -101,7 +98,7 @@
     <div class="header-sticky">
         <div class="top-layout">
             <div class="controls-area">
-                <input type="text" id="search" class="search-box" placeholder="SZUKAJ W KATALOGU. WPISZ LITERKI Z TYTUŁU..." onkeyup="doSearch()">
+                <input type="text" id="search" class="search-box" placeholder="SZUKAJ W KATALOGU PIEŚNI MELODII WIARY. WPISZ LITERKI Z TYTUŁU..." onkeyup="doSearch()">
                 <div class="btn-group">
                     <button class="ctrl-btn" id="s-new" onclick="setSort('newest')">SORTUJ OD NAJNOWSZYCH</button>
                     <button class="ctrl-btn" id="s-old" onclick="setSort('oldest')">SORTUJ OD NAJSTARSZYCH</button>
@@ -112,6 +109,7 @@
                     <button class="ctrl-btn" id="m-grid" onclick="setMode('grid')">WIDOK MINIATURY FILMÓW</button>
                     <button class="ctrl-btn" id="m-list" onclick="setMode('list')">WIDOK LISTA TYTUŁÓW FILMÓW</button>
                 </div>
+                <div id="alpha-row"></div>
             </div>
             <div id="player-section">
                 <div id="yt-player-container" style="height:100%; background:#000; color:#fff; display:flex; align-items:center; justify-content:center; text-align:center; padding:20px;">
@@ -121,15 +119,12 @@
         </div>
     </div>
 
-    <div class="content-with-alpha">
-        <div id="alpha-bar"></div>
-        <div id="main-display"></div>
-    </div>
+    <div id="main-display"></div>
 </div>
 
 <script>
     const CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTSIMZUO8ZkisiFoqOfypL9hOQBnTbAvtMmBeIuK56_QoiXFu_b7i-de1Jn6Km9symosxJBV6V5PxKO/pub?output=csv';
-    const STORAGE_KEY = 'mv_ulubione_v21'; 
+    const STORAGE_KEY = 'mv_fav_v22'; 
     let songs = [], cart = [], currentView = 'all', displayMode = 'grid', query = "", sortType = 'newest';
 
     function parseCSVLine(text) {
@@ -147,7 +142,7 @@
         document.body.className = s; 
         document.getElementById('s-std').classList.toggle('active', s==='standard'); 
         document.getElementById('s-big').classList.toggle('active', s==='senior'); 
-        localStorage.setItem('mv_font_pref', s);
+        localStorage.setItem('mv_font', s);
     }
 
     function playSong(ytId) {
@@ -156,25 +151,26 @@
     }
 
     async function init() {
-        const savedCart = localStorage.getItem(STORAGE_KEY);
-        if(savedCart) cart = JSON.parse(savedCart);
-        updateSize(localStorage.getItem('mv_font_pref') || 'standard');
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if(saved) cart = JSON.parse(saved);
+        updateSize(localStorage.getItem('mv_font') || 'standard');
         
-        const ab = document.getElementById('alpha-bar');
-        const plChars = "AĄBCĆDEĘFGHIJKLŁMNŃOÓPQRSŚTUVWXYZŹŻ".split("");
-        plChars.forEach(l => {
-            const b = document.createElement('button'); b.className = 'alpha-btn'; b.innerText = l; b.id = "alpha-" + l;
+        // Budowa poziomego paska liter (tylko wskazane)
+        const alphabet = "ABCDEFGHIJKLŁMNOPRSTUWZŻ".split("");
+        const row = document.getElementById('alpha-row');
+        alphabet.forEach(l => {
+            const b = document.createElement('button'); b.className = 'alpha-btn'; b.innerText = l; b.id = "alpha-"+l;
             b.onclick = () => {
-                document.querySelectorAll('.alpha-btn').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.alpha-btn').forEach(x => x.classList.remove('active'));
                 b.classList.add('active');
                 sortType = 'az'; render();
                 const target = document.getElementById("anchor-" + l);
                 if(target) {
-                    const offset = 230; // Wyższy offset, by widzieć pasek i trochę ogona poprzedniej litery
-                    window.scrollTo({ top: target.offsetTop - offset, behavior: 'smooth' });
+                    const pos = target.getBoundingClientRect().top + window.pageYOffset - 280;
+                    window.scrollTo({ top: pos, behavior: 'smooth' });
                 }
             };
-            ab.appendChild(b);
+            row.appendChild(b);
         });
 
         try {
@@ -191,7 +187,7 @@
             const catBox = document.getElementById('cat-list');
             Array.from(catsSet).sort().forEach(cat => {
                 const b = document.createElement('button'); b.className = 'nav-btn'; b.innerText = cat; 
-                b.id = "btn-" + cat.replace(/\s/g, ''); b.onclick = () => setView(cat); catBox.appendChild(b);
+                b.onclick = () => setView(cat); catBox.appendChild(b);
             });
             render();
         } catch(e) { console.error(e); }
@@ -209,15 +205,11 @@
         const out = document.getElementById('main-display'); out.innerHTML = '';
         document.getElementById('count').innerText = cart.length;
         
-        const isListAZ = (displayMode === 'list' && currentView !== 'cart');
-        document.getElementById('alpha-bar').style.display = isListAZ ? 'flex' : 'none';
-        document.getElementById('main-display').style.marginLeft = isListAZ ? '65px' : '0';
+        // Pasek liter widoczny tylko w trybie listy A-Z
+        const showAlpha = (displayMode === 'list' && currentView !== 'cart' && sortType === 'az');
+        document.getElementById('alpha-row').style.display = showAlpha ? 'flex' : 'none';
 
-        document.querySelectorAll('.nav-btn, .ctrl-btn').forEach(b => b.classList.remove('active'));
-        if(currentView === 'all') document.getElementById('cat-all').classList.add('active');
-        else if(currentView === 'cart') document.getElementById('btn-cart').classList.add('active');
-        else { const b = document.getElementById("btn-" + currentView.replace(/\s/g, '')); if(b) b.classList.add('active'); }
-
+        document.querySelectorAll('.ctrl-btn').forEach(b => b.classList.remove('active'));
         document.getElementById('s-new').classList.toggle('active', sortType === 'newest');
         document.getElementById('s-old').classList.toggle('active', sortType === 'oldest');
         document.getElementById('s-az').classList.toggle('active', sortType === 'az');
@@ -239,9 +231,10 @@
         let lastChar = "";
         list.forEach(s => {
             const firstChar = s.tytul.charAt(0).toUpperCase();
-            if(isListAZ && sortType === 'az' && firstChar !== lastChar && !query) {
+            if(showAlpha && firstChar !== lastChar && !query) {
                 const h = document.createElement('div'); h.className = 'alpha-header'; 
-                h.id = "anchor-" + firstChar; h.innerText = firstChar; 
+                h.id = "anchor-" + (firstChar === 'Ł' ? 'Ł' : (firstChar === 'Ż' ? 'Ż' : firstChar)); 
+                h.innerText = firstChar; 
                 container.appendChild(h); lastChar = firstChar;
             }
 
