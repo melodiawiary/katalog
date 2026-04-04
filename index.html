@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Melodia Wiary - Edycja v15</title>
+    <title>Katalog Melodia Wiary - Edycja v16</title>
     <style>
         :root { 
             --active-orange: #fbda80; 
@@ -12,7 +12,7 @@
             --soft-cyan: #d2e9e6; 
             --deep-brown: #3b2a00; 
             --sidebar-border: #e2e8f0;
-            --sidebar-width: 240px; 
+            --sidebar-width: 250px; 
         }
         
         body.standard { --f-size: 16px; --f-btn: 13px; --f-ctrl: 12px; --f-search: 1.2em; }
@@ -20,20 +20,20 @@
 
         body { background: var(--bg); color: var(--deep-brown); font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; min-height: 100vh; font-size: var(--f-size); }
 
-        /* SIDEBAR PRZEBUDOWANY */
+        /* SIDEBAR */
         #sidebar { width: var(--sidebar-width); background: var(--sidebar-bg); border-right: 4px solid var(--active-orange); display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 1000; box-shadow: 2px 0 10px rgba(0,0,0,0.05); }
-        .sidebar-top { padding: 15px; text-align: center; }
+        .sidebar-top { padding: 15px; text-align: center; border-bottom: 1px solid #eee; }
         .sidebar-scroll { flex-grow: 1; overflow-y: auto; padding: 10px; }
         .logo-img { width: 110px; height: 110px; border-radius: 50%; border: 3px solid var(--active-orange); background: white; object-fit: cover; margin-bottom: 5px; }
         
-        .section-label { font-size: 11px; font-weight: 900; color: #888; text-transform: uppercase; letter-spacing: 2px; margin: 20px 0 10px 10px; border-bottom: 2px solid var(--soft-cyan); padding-bottom: 5px; }
+        /* DUŻY NAPIS KATEGORIE */
+        .section-label { font-size: 20px; font-weight: 900; color: var(--deep-brown); text-transform: uppercase; letter-spacing: 1px; margin: 25px 0 15px 5px; display: block; border-bottom: 3px solid var(--active-orange); padding-bottom: 5px; }
 
-        .nav-btn { width: 100%; padding: 12px 10px; margin-bottom: 6px; border-radius: 8px; border: 1px solid var(--deep-brown); cursor: pointer; font-weight: 700; text-align: left; text-transform: uppercase; font-size: var(--f-btn); color: var(--deep-brown); background: var(--soft-cyan); transition: 0.2s; display: flex; align-items: center; gap: 8px; }
-        .nav-btn:hover, .nav-btn.active { background: var(--active-orange) !important; border: 2px solid var(--deep-brown) !important; transform: scale(1.02); }
-        .nav-btn.fav-btn { background: #fff1f1; border-color: #ffb3b3; } /* Specjalny kolor dla ulubionych */
+        .nav-btn { width: 100%; padding: 12px 10px; margin-bottom: 8px; border-radius: 8px; border: 1px solid var(--deep-brown); cursor: pointer; font-weight: 700; text-align: left; text-transform: uppercase; font-size: var(--f-btn); color: var(--deep-brown); background: var(--soft-cyan); transition: 0.2s; display: flex; align-items: center; gap: 10px; }
+        .nav-btn:hover, .nav-btn.active { background: var(--active-orange) !important; border: 2px solid var(--deep-brown) !important; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .nav-btn.fav-btn { background: #fff1f1; border-color: #ffb3b3; margin-top: 10px; }
 
-        /* RAMKA DLA ROZMIARU CZCIONKI */
-        .size-box { border: 2px dashed var(--soft-cyan); padding: 10px; border-radius: 12px; margin: 10px; background: #fafafa; }
+        .size-box { border: 2px solid var(--deep-brown); padding: 10px; border-radius: 12px; margin: 15px 5px; background: #f9f9f9; }
 
         #main-content { margin-left: var(--sidebar-width); flex: 1; display: flex; flex-direction: column; }
         
@@ -41,55 +41,40 @@
         .top-layout { display: flex; gap: 30px; align-items: flex-start; width: 100%; }
         .controls-area { flex: 1; display: flex; flex-direction: column; }
         
-        #player-section { width: 520px; background: #000; aspect-ratio: 16/9; border: 3px solid var(--deep-brown); border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.15); flex-shrink: 0; }
-        .search-box { width: 100%; padding: 12px; border-radius: 20px; border: 2px solid var(--soft-cyan); font-size: var(--f-search); font-weight: bold; margin-bottom: 10px; box-sizing: border-box; text-align: center; color: var(--deep-brown); background: #fff; }
+        #player-section { width: 520px; background: #000; aspect-ratio: 16/9; border: 3px solid var(--deep-brown); border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.2); flex-shrink: 0; }
+        .search-box { width: 100%; padding: 12px; border-radius: 20px; border: 2px solid var(--deep-brown); font-size: var(--f-search); font-weight: bold; margin-bottom: 15px; box-sizing: border-box; text-align: center; color: var(--deep-brown); }
         
-        .btn-group { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
-        .ctrl-btn { flex: 1; min-width: 100px; padding: 10px; border: 1px solid var(--deep-brown); background: var(--soft-cyan); color: var(--deep-brown); font-weight: 800; cursor: pointer; border-radius: 6px; text-transform: uppercase; font-size: var(--f-ctrl); transition: 0.2s; }
+        .btn-group { display: flex; gap: 10px; margin-bottom: 10px; }
+        .ctrl-btn { flex: 1; padding: 12px; border: 1px solid var(--deep-brown); background: var(--soft-cyan); color: var(--deep-brown); font-weight: 800; cursor: pointer; border-radius: 8px; text-transform: uppercase; font-size: var(--f-ctrl); transition: 0.2s; }
         .ctrl-btn:hover, .ctrl-btn.active { background: var(--active-orange) !important; border: 2px solid var(--deep-brown); }
 
-        /* ALFABET - OBNIŻONY I SZTYWNY */
-        #alpha-bar { 
-            width: 45px; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 2px; 
-            position: fixed; 
-            left: calc(var(--sidebar-width) + 15px);
-            top: 360px; /* Jeszcze niżej, by nie zasłaniać liter */
-            max-height: calc(100vh - 380px);
-            overflow-y: auto;
-            z-index: 850;
-            padding-right: 5px;
-            scrollbar-width: none;
-        }
+        /* ALFABET */
+        #alpha-bar { width: 45px; display: flex; flex-direction: column; gap: 2px; position: fixed; left: calc(var(--sidebar-width) + 15px); top: 350px; max-height: calc(100vh - 370px); overflow-y: auto; z-index: 850; padding-right: 5px; scrollbar-width: none; }
         #alpha-bar::-webkit-scrollbar { display: none; }
-
-        .alpha-btn { width: 100%; padding: 5px 0; font-size: 13px; font-weight: 900; border: 1px solid var(--deep-brown); background: var(--soft-cyan); color: var(--deep-brown); cursor: pointer; border-radius: 4px; text-align: center; }
+        .alpha-btn { width: 100%; padding: 6px 0; font-size: 13px; font-weight: 900; border: 1px solid var(--deep-brown); background: var(--soft-cyan); cursor: pointer; border-radius: 4px; text-align: center; }
         .alpha-btn:hover, .alpha-btn.active { background: var(--active-orange); border: 2px solid var(--deep-brown); }
 
-        #main-display { flex: 1; margin-left: 65px; padding: 20px 30px; min-height: 1000px; }
+        #main-display { flex: 1; margin-left: 65px; padding: 20px 30px; }
 
-        /* KARTY I LISTA */
+        /* KARTY */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 25px; }
-        .card { background: #fff; border: 2px solid var(--sidebar-border); padding: 12px; border-radius: 15px; text-align: center; position: relative; transition: 0.2s; }
+        .card { background: #fff; border: 2px solid #eee; padding: 12px; border-radius: 15px; text-align: center; position: relative; transition: 0.2s; }
         .card:hover { background: var(--active-orange); border: 2px solid var(--deep-brown); transform: translateY(-3px); }
+        .fav-heart { position: absolute; top: 10px; right: 10px; z-index: 10; font-size: 28px; cursor: pointer; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
 
-        .fav-heart { position: absolute; top: 10px; right: 10px; z-index: 10; font-size: 28px; cursor: pointer; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); transition: 0.2s; }
-        .fav-heart:hover { transform: scale(1.2); }
-
-        .thumb-container { width: 100%; aspect-ratio: 16/9; border-radius: 10px; overflow: hidden; cursor: pointer; margin-bottom: 8px; border: 1px solid #eee; }
+        .thumb-container { width: 100%; aspect-ratio: 16/9; border-radius: 10px; overflow: hidden; cursor: pointer; margin-bottom: 10px; border: 1px solid #ddd; }
         .thumb { width: 100%; height: 100%; object-fit: cover; }
         
         /* LISTA */
-        .list-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 10px; }
-        .list-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; background: #fff; border: 2px solid #ddd; border-radius: 10px; transition: 0.2s; cursor: pointer; }
+        .list-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(450px, 1fr)); gap: 12px; }
+        .list-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #fff; border: 2px solid #ddd; border-radius: 10px; transition: 0.2s; cursor: pointer; }
         .list-item:hover { background: var(--active-orange); border: 2px solid var(--deep-brown); }
-        .list-item:hover .list-title::before { content: "▶ KLIKNIJ, BY SŁUCHAĆ: "; font-size: 0.85em; }
+        .list-item:hover .list-title::before { content: "▶ SŁUCHAJ: "; font-size: 0.8em; }
         
-        .heart-btn { background: none; border: none; font-size: 24px; cursor: pointer; padding: 0 10px; }
+        .heart-btn { background: none; border: none; font-size: 26px; cursor: pointer; padding: 0 10px; transition: 0.2s; }
+        .heart-btn:hover { transform: scale(1.2); }
 
-        .size-btn { width: 100%; padding: 8px; margin-top: 5px; font-weight: 900; cursor: pointer; border: 1px solid var(--deep-brown); background: var(--soft-cyan); border-radius: 6px; font-size: var(--f-ctrl); text-transform: uppercase; }
+        .size-btn { width: 100%; padding: 10px; margin-top: 8px; font-weight: 900; cursor: pointer; border: 1px solid var(--deep-brown); background: var(--soft-cyan); border-radius: 8px; font-size: var(--f-ctrl); text-transform: uppercase; }
         .size-btn.active { background: var(--active-orange); border: 2px solid var(--deep-brown); }
 
         @media (max-width: 1200px) { #alpha-bar { display: none; } #main-display { margin-left: 0; } }
@@ -100,18 +85,19 @@
 <div id="sidebar">
     <div class="sidebar-top">
         <img src="logo.png" class="logo-img" onerror="this.src='https://via.placeholder.com/110?text=LOGO'">
-        <div style="font-weight: 900; font-size: 12px; margin-bottom: 15px;">MELODIA WIARY</div>
+        <div style="font-weight: 900; font-size: 14px; color: var(--deep-brown);">MELODIA WIARY</div>
         
-        <button class="nav-btn fav-btn" id="btn-cart" onclick="setView('cart')">❤️ MOJE ULUBIONE (<span id="count">0</span>)</button>
+        <button class="nav-btn fav-btn" id="btn-cart" onclick="setView('cart')">❤️ TWOJE ULUBIONE (<span id="count">0</span>)</button>
         
         <div class="size-box">
-            <button class="size-btn" id="s-std" onclick="updateSize('standard')">LITERY ZWYKŁE</button>
-            <button class="size-btn" id="s-big" onclick="updateSize('senior')">LITERY DUŻE</button>
+            <div style="font-size: 10px; font-weight: 900; margin-bottom: 5px;">ROZMIAR TEKSTU</div>
+            <button class="size-btn" id="s-std" onclick="updateSize('standard')">ZWYKŁE</button>
+            <button class="size-btn" id="s-big" onclick="updateSize('senior')">DUŻE</button>
         </div>
     </div>
     
     <div class="sidebar-scroll">
-        <div class="section-label">KATEGORIE</div>
+        <span class="section-label">KATEGORIE</span>
         <button class="nav-btn" id="cat-all" onclick="setView('all')">🏠 WSZYSTKIE PIEŚNI</button>
         <div id="cat-list"></div>
     </div>
@@ -121,21 +107,19 @@
     <div class="header-sticky" id="toolbar">
         <div class="top-layout">
             <div class="controls-area">
-                <input type="text" id="search" class="search-box" placeholder="SZUKAJ W KATALOGU..." onkeyup="doSearch()">
+                <input type="text" id="search" class="search-box" placeholder="WPISZ TYTUŁ, BY SZUKAĆ..." onkeyup="doSearch()">
                 <div class="btn-group">
                     <button class="ctrl-btn" id="s-new" onclick="setSort('newest')">NAJNOWSZE</button>
-                    <button class="ctrl-btn" id="s-old" onclick="setSort('oldest')">NAJSTARSZE</button>
-                    <button class="ctrl-btn" id="s-az" onclick="setSort('az')">A-Z</button>
-                    <button class="ctrl-btn" id="s-za" onclick="setSort('za')">Z-A</button>
+                    <button class="ctrl-btn" id="s-az" onclick="setSort('az')">ALFABETYCZNIE A-Z</button>
                 </div>
                 <div class="btn-group">
-                    <button class="ctrl-btn" id="m-grid" onclick="setMode('grid')">OBRAZKI</button>
-                    <button class="ctrl-btn" id="m-list" onclick="setMode('list')">LISTA</button>
+                    <button class="ctrl-btn" id="m-grid" onclick="setMode('grid')">WIDOK MINIATUR</button>
+                    <button class="ctrl-btn" id="m-list" onclick="setMode('list')">WIDOK LISTY</button>
                 </div>
             </div>
             <div id="player-section">
-                <div id="yt-player-container" style="height:100%; background:#000; color:#fff; display:flex; align-items:center; justify-content:center; text-align:center; padding:20px;">
-                    WYBIERZ PIEŚŃ I ZACZNIJ SŁUCHANIE 🎶
+                <div id="yt-player-container" style="height:100%; background:#000; color:#fff; display:flex; align-items:center; justify-content:center; text-align:center; padding:20px; font-weight: bold;">
+                    WYBIERZ UTWÓR, ABY ROZPOCZĄĆ ODTWARZANIE 🎶
                 </div>
             </div>
         </div>
@@ -148,8 +132,8 @@
 </div>
 
 <script>
-    const CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTSIMZUO8ZkisiFoqOfypL9hOQBnTbAvtMmBeIuK56_QoiXFu_b7i-de1Jn6Jn6Km9symosxJBV6V5PxKO/pub?output=csv';
-    const STORAGE_KEY = 'mv_ulubione_v15'; 
+    const CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTSIMZUO8ZkisiFoqOfypL9hOQBnTbAvtMmBeIuK56_QoiXFu_b7i-de1Jn6Km9symosxJBV6V5PxKO/pub?output=csv';
+    const STORAGE_KEY = 'mv_ulubione_v16'; 
     let songs = [], cart = [], currentView = 'all', displayMode = 'grid', query = "", sortType = 'newest', alphaFilter = "";
 
     function parseCSVLine(text) {
@@ -196,7 +180,7 @@
                 const cols = parseCSVLine(line);
                 let rawCats = (cols[1] || "Inne").split(',').map(c => c.trim()).filter(c => c.length > 2);
                 rawCats.forEach(c => catsSet.add(c));
-                return { tytul: cols[0] || "Bez tytułu", kategorie: rawCats, yt: (cols[2] || "").trim(), czas: (cols[3] || "0:00").trim(), originalIndex: index };
+                return { tytul: cols[0] || "Bez tytułu", kategorie: rawCats, yt: (cols[2] || "").trim(), originalIndex: index };
             });
             const catBox = document.getElementById('cat-list');
             Array.from(catsSet).sort().forEach(cat => {
@@ -204,7 +188,7 @@
                 b.id = "btn-" + cat.replace(/\s/g, ''); b.onclick = () => setView(cat); catBox.appendChild(b);
             });
             render();
-        } catch(e) { console.error(e); }
+        } catch(e) { console.error("Błąd ładowania:", e); }
     }
 
     function setAlpha(l) {
@@ -230,13 +214,11 @@
         document.getElementById('alpha-bar').style.display = showAlpha ? 'flex' : 'none';
         document.getElementById('main-display').style.marginLeft = showAlpha ? '65px' : '0';
 
-        // PODŚWIETLANIE MENU
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         if(currentView === 'all') document.getElementById('cat-all').classList.add('active');
         else if(currentView === 'cart') document.getElementById('btn-cart').classList.add('active');
         else { const b = document.getElementById("btn-" + currentView.replace(/\s/g, '')); if(b) b.classList.add('active'); }
 
-        // SORTY I TRYBY
         document.getElementById('s-new').classList.toggle('active', sortType === 'newest');
         document.getElementById('s-az').classList.toggle('active', sortType === 'az');
         document.getElementById('m-grid').classList.toggle('active', displayMode === 'grid');
@@ -248,29 +230,20 @@
 
         if(sortType === 'newest') list.sort((a,b) => b.originalIndex - a.originalIndex);
         else if(sortType === 'az') list.sort((a,b) => a.tytul.localeCompare(b.tytul, 'pl'));
-        else if(sortType === 'za') list.sort((a,b) => b.tytul.localeCompare(a.tytul, 'pl'));
 
         if(list.length === 0 && currentView === 'cart') {
-            out.innerHTML = `<div style="text-align:center; padding:50px;"><h2>Twoja lista ulubionych jest pusta</h2><p>Kliknij serduszko przy pieśni, aby ją tutaj dodać.</p></div>`;
+            out.innerHTML = `<div style="text-align:center; padding:100px;"><h2>Lista ulubionych jest pusta ❤️</h2><p>Kliknij serduszko przy piosence, by stworzyć własną playlistę.</p></div>`;
             return;
         }
 
         const container = document.createElement('div');
         container.className = (displayMode === 'grid') ? 'grid' : 'list-container';
         
-        let lastChar = "";
         list.forEach(s => {
             const isFav = cart.some(x => x.tytul === s.tytul);
             const jsTytul = s.tytul.replace(/'/g, "\\'");
-            const firstChar = s.tytul.charAt(0).toUpperCase();
-
-            if(displayMode === 'list' && !alphaFilter && firstChar !== lastChar && currentView !== 'cart') {
-                const h = document.createElement('div'); h.className = 'alpha-header'; 
-                h.style = "grid-column: 1/-1; background: var(--active-orange); padding: 10px; border: 2px solid var(--deep-brown); border-radius: 8px; font-weight: 900; margin-top: 15px;";
-                h.innerText = firstChar; container.appendChild(h); lastChar = firstChar;
-            }
-
             const item = document.createElement('div');
+            
             if(displayMode === 'grid') {
                 item.className = 'card';
                 item.innerHTML = `
@@ -278,13 +251,13 @@
                     <div class="thumb-container" onclick="playSong('${s.yt}')">
                         <img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb">
                     </div>
-                    <div style="font-weight:800; text-transform:uppercase; font-size:14px; min-height:40px;">${s.tytul}</div>
+                    <div style="font-weight:800; text-transform:uppercase; font-size:14px;">${s.tytul}</div>
                 `;
             } else {
                 item.className = 'list-item';
                 item.onclick = (e) => { if(!e.target.closest('.heart-btn')) playSong(s.yt); };
                 item.innerHTML = `
-                    <span style="font-weight:700;">${s.tytul}</span>
+                    <span class="list-title" style="font-weight:700;">${s.tytul}</span>
                     <button class="heart-btn" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">${isFav ? '❤️' : '🤍'}</button>
                 `;
             }
@@ -293,9 +266,9 @@
         out.appendChild(container);
     }
 
-    function setMode(m) { displayMode = m; if(m === 'list' && currentView !== 'cart') sortType = 'az'; render(); }
-    function setSort(s) { sortType = s; render(); }
-    function setView(v) { currentView = v; alphaFilter = ""; render(); window.scrollTo(0,0); }
+    function setMode(m) { displayMode = m; render(); }
+    function setSort(s) { sortType = s; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+    function setView(v) { currentView = v; alphaFilter = ""; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
     function doSearch() { query = document.getElementById('search').value.toLowerCase(); render(); }
     init();
 </script>
