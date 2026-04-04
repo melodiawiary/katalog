@@ -65,8 +65,8 @@
             flex: 1; display: flex; flex-direction: column; width: calc(100% - var(--sidebar-width));
             }
         .header-sticky { position: sticky; top: 0;
-            z-index: 900; background: var(--bg); width: 100%;
-            box-sizing: border-box; }
+            z-index: 950; background: var(--bg); width: 100%;
+            box-sizing: border-box; border-bottom: 2px solid var(--active-orange); }
         
         /* UKŁAD PANELI 50/50 */
         .top-padding { display: flex;
@@ -163,7 +163,8 @@
 
         .view-title-header { background: var(--soft-cyan); color: var(--deep-brown); padding: 15px 25px; font-weight: 900;
             text-transform: uppercase; font-size: 1.5em; border-bottom: 5px solid var(--active-orange); border-top: 2px solid var(--active-orange);
-            position: sticky; top: 0; z-index: 850; display: flex; flex-direction: column; gap: 10px;
+            position: sticky; top: 240px; z-index: 900; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
             }
 
         #main-display { padding: 0 0 400px 0; min-height: 100vh; width: 100%;
@@ -173,7 +174,7 @@
         
         .alpha-header { grid-column: 1 / -1;
             background: var(--active-orange); padding: 8px 20px; border-radius: 8px; font-weight: 900; margin: 40px 0 15px 0; border: 2px solid var(--deep-brown); font-size: 1.3em;
-            text-align: left; scroll-margin-top: 300px; }
+            text-align: left; scroll-margin-top: 400px; }
         
         .items-grid { 
             display: grid;
@@ -254,12 +255,11 @@
             z-index: 5; }
 
         .vote-btn-header {
-            width: 100%; background: var(--active-orange); color: var(--deep-brown); border: 3px solid var(--deep-brown);
-            padding: 12px; border-radius: 10px; font-weight: 900; text-transform: uppercase;
-            cursor: pointer; font-size: 0.7em; transition: transform 0.2s, background 0.2s;
-            margin-top: 5px;
+            width: 100%; max-width: 600px; background: var(--active-orange); color: var(--deep-brown); border: 3px solid var(--deep-brown);
+            padding: 10px; border-radius: 10px; font-weight: 900; text-transform: uppercase;
+            cursor: pointer; font-size: 0.6em; transition: transform 0.2s; margin-top: 5px;
         }
-        .vote-btn-header:hover { transform: scale(1.01); filter: brightness(1.05); }
+        .vote-btn-header:hover { transform: scale(1.02); }
         
         .instruction-box {
             margin-top: 50px; padding: 40px; background: white; border: 4px solid var(--active-orange);
@@ -450,10 +450,11 @@
         document.querySelectorAll('.nav-btn').forEach(b => {
             b.classList.remove('active');
             if(currentView === 'cart' && b.id === 'btn-cart') b.classList.add('active');
-            if(currentView === 'top50' && b.id === 'btn-top50-side') b.classList.add('active');
-            if(currentView === 'all' && b.id === 'cat-all') b.classList.add('active');
-            if(b.classList.contains('category-link') && b.innerText === currentView) b.classList.add('active');
+            else if(currentView === 'top50' && b.id === 'btn-top50-side') b.classList.add('active');
+            else if(currentView === 'all' && b.id === 'cat-all') b.classList.add('active');
+            else if(b.classList.contains('category-link') && b.innerText === currentView) b.classList.add('active');
         });
+
         document.querySelectorAll('.ctrl-btn').forEach(b => {
             b.classList.remove('active');
             if(b.id === 's-' + sortType.replace('newest','new').replace('oldest','old')) b.classList.add('active');
@@ -485,6 +486,7 @@
         header.className = 'view-title-header';
         
         let titleLine = document.createElement('div');
+        titleLine.style.width = "100%";
         titleLine.innerText = currentView === 'all' ? 'WSZYSTKIE PIEŚNI' : (currentView === 'cart' ? '❤️ MOJE ULUBIONE' : (currentView === 'top50' ? 'TYGODNIOWA LISTA PRZEBOJÓW POLSKIEJ PIEŚNI RELIGIJNEJ NR 1 - 4.4.2026' : '📂 ' + currentView));
         header.appendChild(titleLine);
 
