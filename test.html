@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Melodia Wiary - v58 STABILNA</title>
+    <title>Katalog Melodia Wiary - v57 (WERSJA OSTATECZNA - DANE BEZPIECZNE)</title>
     <style>
         :root { 
             --active-orange: #fbda80; --bg: #f4f9f8; --card-bg: #f9fffe;
@@ -42,7 +42,7 @@
         #main-display { padding: 0 0 400px 0; min-height: 100vh; }
         .display-padding { padding: 0 25px; }
         
-        /* KARTY */
+        /* GRID */
         .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
         .card { background: var(--card-bg); border: 2px solid rgba(59, 42, 0, 0.08); padding: 12px; border-radius: 15px; text-align: center; position: relative; transition: 0.3s; display: flex; flex-direction: column; cursor: pointer; }
         .card.is-fav { border: 5px solid var(--active-orange); background: #fffcf0; }
@@ -102,62 +102,20 @@
 <script>
     const CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTSIMZUO8ZkisiFoqOfypL9hOQBnTbAvtMmBeIuK56_QoiXFu_b7i-de1Jn6Km9symosxJBV6V5PxKO/pub?output=csv';
     
-    // !!! KLUCZ GŁÓWNY - TEGO NIE ZMIENIMY JUŻ NIGDY !!!
-    const STABLE_DB_KEY = 'MELODIA_WIARY_FINAL_DB';
+    // TYCH KLUCZY NIGDY NIE DOTYKAĆ
+    const PERMANENT_FAV_KEY = 'MELODIA_WIARY_PERMANENT_DATA';
+    const FONT_KEY = 'melodia_wiary_font_pref';
 
-    const OLD_RECOVERY_KEYS = [
+    const RECOVERY_KEYS = [
         'favs', 'melodia_wiary_v33_storage', 'melodia_wiary_v34_storage', 
         'melodia_wiary_v51_storage', 'melodia_wiary_v52_final', 
-        'melodia_wiary_v54_final', 'melodia_wiary_active_storage', 'MELODIA_WIARY_PERMANENT_DATA'
+        'melodia_wiary_v54_final', 'melodia_wiary_active_storage'
     ];
 
     let songs = [], cart = [], currentView = 'all', displayMode = 'grid', query = "", sortType = 'newest';
 
-    async function init() {
-        // PROCEDURA IMPORTU ZE WSZYSTKIEGO CO BYŁO
-        let mainStore = localStorage.getItem(STABLE_DB_KEY);
-        let currentCart = mainStore ? JSON.parse(mainStore) : [];
+    function openYT(id) { window.open(`https://www.youtube.com/watch?v=${id}`, '_blank'); }
 
-        OLD_RECOVERY_KEYS.forEach(key => {
-            let data = localStorage.getItem(key);
-            if (data) {
-                try {
-                    let parsed = JSON.parse(data);
-                    if (Array.isArray(parsed)) {
-                        parsed.forEach(oldItem => {
-                            if (!currentCart.some(s => s.tytul === oldItem.tytul)) {
-                                currentCart.push(oldItem);
-                            }
-                        });
-                    }
-                } catch(e) {}
-            }
-        });
-
-        cart = currentCart;
-        localStorage.setItem(STABLE_DB_KEY, JSON.stringify(cart));
-        
-        // Render reszty...
-        try {
-            const r = await fetch(CSV + '&cb=' + Date.now());
-            const text = await r.text();
-            songs = parseCSV(text);
-            renderSidebar();
-            render();
-        } catch(e) { console.error(e); }
-    }
-    
-    // ... reszta funkcji pomocniczych (parseCSV, toggleFav, render) pozostaje bez zmian, 
-    // ale zawsze korzysta z STABLE_DB_KEY ...
-    
-    function toggleFav(t) {
-        const idx = cart.findIndex(x => x.tytul === t);
-        if(idx > -1) cart.splice(idx, 1);
-        else { const s = songs.find(x => x.tytul === t); if(s) cart.push(s); }
-        localStorage.setItem(STABLE_DB_KEY, JSON.stringify(cart));
-        render();
-    }
-    
     function parseCSV(text) {
         const lines = text.split(/\r?\n/).filter(x => x.trim() !== "");
         return lines.slice(1).map((line, idx) => {
@@ -172,24 +130,72 @@
         });
     }
 
-    function renderSidebar() {
-        let catsSet = new Set();
-        songs.forEach(s => s.kategorie.forEach(c => catsSet.add(c)));
-        const catBox = document.getElementById('cat-list');
-        catBox.innerHTML = '';
-        Array.from(catsSet).sort().forEach(cat => {
-            const b = document.createElement('button'); b.className = 'nav-btn'; b.innerText = cat; 
-            b.onclick = () => setView(cat); catBox.appendChild(b);
+    function updateSize(s) { 
+        document.body.className = s; 
+        document.getElementById('s-std').classList.toggle('active', s==='standard');
+        document.getElementById('s-big').classList.toggle('active', s==='senior');
+        localStorage.setItem(FONT_KEY, s);
+    }
+
+    async function init() {
+        // --- TOTALNA PROCEDURA ODZYSKIWANIA ---
+        let mainStore = localStorage.getItem(PERMANENT_FAV_KEY);
+        let currentCart = mainStore ? JSON.parse(mainStore) : [];
+
+        RECOVERY_KEYS.forEach(key => {
+            let oldData = localStorage.getItem(key);
+            if (oldData) {
+                let parsed = JSON.parse(oldData);
+                if (Array.isArray(parsed)) {
+                    parsed.forEach(oldItem => {
+                        if (!currentCart.some(s => s.tytul === oldItem.tytul)) {
+                            currentCart.push(oldItem);
+                        }
+                    });
+                }
+            }
         });
+
+        cart = currentCart;
+        localStorage.setItem(PERMANENT_FAV_KEY, JSON.stringify(cart));
+        updateSize(localStorage.getItem(FONT_KEY) || 'standard');
+
+        try {
+            const r = await fetch(CSV + '&cb=' + Date.now());
+            const text = await r.text();
+            songs = parseCSV(text);
+            
+            let catsSet = new Set();
+            songs.forEach(s => s.kategorie.forEach(c => catsSet.add(c)));
+            const catBox = document.getElementById('cat-list');
+            Array.from(catsSet).sort().forEach(cat => {
+                const b = document.createElement('button'); b.className = 'nav-btn'; b.innerText = cat; 
+                b.onclick = () => setView(cat); catBox.appendChild(b);
+            });
+            render();
+        } catch(e) { console.error("CSV error", e); }
+    }
+
+    function toggleFav(t) {
+        const idx = cart.findIndex(x => x.tytul === t);
+        if(idx > -1) cart.splice(idx, 1);
+        else { const s = songs.find(x => x.tytul === t); if(s) cart.push(s); }
+        localStorage.setItem(PERMANENT_FAV_KEY, JSON.stringify(cart));
+        render();
     }
 
     function render() {
         const out = document.getElementById('main-display'); out.innerHTML = '';
         document.getElementById('count').innerText = cart.length + " UTWORÓW";
+
         let list = (currentView === 'cart') ? [...cart] : (currentView === 'all' ? [...songs] : songs.filter(s => s.kategorie.includes(currentView)));
         if(query) list = list.filter(s => s.tytul.toLowerCase().includes(query));
-        
-        // Sortowanie i wyświetlanie...
+
+        if(sortType === 'newest') list.sort((a,b) => b.originalIndex - a.originalIndex);
+        else if(sortType === 'oldest') list.sort((a,b) => a.originalIndex - b.originalIndex);
+        else if(sortType === 'az') list.sort((a,b) => a.tytul.localeCompare(b.tytul, 'pl'));
+        else if(sortType === 'za') list.sort((a,b) => b.tytul.localeCompare(a.tytul, 'pl'));
+
         const header = document.createElement('div');
         header.className = 'view-title-header';
         header.innerText = currentView === 'cart' ? '❤️ MOJE ULUBIONE' : (currentView === 'all' ? 'WSZYSTKIE PIEŚNI' : currentView);
@@ -197,26 +203,43 @@
 
         const container = document.createElement('div');
         container.className = 'display-padding items-grid';
+        
         list.forEach(s => {
             const isFav = cart.some(x => x.tytul === s.tytul);
             const item = document.createElement('div');
             item.className = isFav ? 'card is-fav' : 'card';
-            item.onclick = () => window.open(`https://www.youtube.com/watch?v=${s.yt}`, '_blank');
+            const jsTytul = s.tytul.replace(/'/g, "\\'");
+
+            item.onclick = () => openYT(s.yt);
             item.innerHTML = `
+                <button class="heart-btn" style="position:absolute; top:10px; right:10px; z-index:10;" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">${isFav ? '❤️' : '🤍'}</button>
                 <div class="thumb-container">
                     <img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb">
+                    <div class="play-overlay">KLIKNIJ, ABY OTWORZYĆ 🎶</div>
                 </div>
                 <div class="card-title">${s.tytul}</div>
-                <div class="fav-status-tag" onclick="event.stopPropagation(); toggleFav('${s.tytul.replace(/'/g, "\\'")}')">
+                <div class="fav-status-tag" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">
                     ${isFav ? '⭐ JEST W TWOICH ULUBIONYCH' : '➕ DODAJ DO ULUBIONYCH'}
                 </div>
             `;
             container.appendChild(item);
         });
         out.appendChild(container);
+
+        document.querySelectorAll('.ctrl-btn').forEach(b => {
+            if(b.id.startsWith('s-')) b.classList.toggle('active', b.id === 's-'+sortType);
+            if(b.id.startsWith('m-')) b.classList.toggle('active', b.id === 'm-'+displayMode);
+        });
     }
 
-    function setView(v) { currentView = v; render(); window.scrollTo(0,0); }
+    function setView(v) { 
+        currentView = v; 
+        if (v === 'cart') { displayMode = 'grid'; sortType = 'newest'; }
+        render(); 
+        window.scrollTo(0,0);
+    }
+    function setMode(m) { displayMode = m; render(); }
+    function setSort(s) { sortType = s; render(); }
     function doSearch() { query = document.getElementById('search').value.toLowerCase(); render(); }
     init();
 </script>
