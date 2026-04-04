@@ -3,17 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Melodia Wiary - v33 (Bez odtwarzacza)</title>
+    <title>Katalog Melodia Wiary - v47 (Poprawione Ulubione)</title>
     <style>
         :root { 
-            --active-orange: #fbda80;
-            --bg: #f4f9f8;
-            --card-bg: #f9fffe;
-            --soft-cyan: #d2e9e6; 
-            --deep-brown: #3b2a00; 
-            --sidebar-width: 220px; 
+            --active-orange: #fbda80; --bg: #f4f9f8; --card-bg: #f9fffe;
+            --soft-cyan: #d2e9e6; --deep-brown: #3b2a00; --sidebar-width: 220px;
         }
-        
         body.standard { --f-size: 16px; --f-btn: 13px; --f-ctrl: 11px; --f-search: 1.1em; }
         body.senior { --f-size: 22px; --f-btn: 18px; --f-ctrl: 16px; --f-search: 1.4em; }
 
@@ -196,6 +191,11 @@
     function render() {
         const out = document.getElementById('main-display'); out.innerHTML = '';
         document.getElementById('count').innerText = cart.length;
+
+        // Podświetlanie aktywnej kategorii
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        if(currentView === 'cart') document.getElementById('btn-cart').classList.add('active');
+        else if(currentView === 'all') document.getElementById('cat-all').classList.add('active');
         
         const showAlphaBar = (displayMode === 'list' && currentView !== 'cart');
         document.getElementById('alpha-shelf').style.display = showAlphaBar ? 'block' : 'none';
@@ -262,7 +262,7 @@
 
     function setMode(m) { displayMode = m; render(); }
     function setSort(s) { sortType = s; render(); }
-    function setView(v) { currentView = v; render(); }
+    function setView(v) { currentView = v; render(); window.scrollTo(0,0); }
     function doSearch() { query = document.getElementById('search').value.toLowerCase(); render(); }
     init();
 </script>
