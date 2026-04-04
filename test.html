@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Melodia Wiary - v61</title>
+    <title>Katalog Melodia Wiary - v62</title>
     <style>
         :root { 
             --active-orange: #fbda80;
@@ -85,11 +85,43 @@
             }
         .top-mini-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
             }
-        .top-btn-more { width: 100%; padding: 8px; background: var(--active-orange);
-            border: 2px solid var(--deep-brown); border-radius: 8px; font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 12px;
-            line-height: 1.3; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
-            }
-        .top-btn-more span { width: 100%; display: block; }
+        
+        .top-btn-container { 
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            border: 2px solid var(--deep-brown); 
+            border-radius: 8px; 
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .top-btn-text-part { 
+            height: 33.33%; 
+            background: var(--active-orange); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            text-align: center; 
+            padding: 5px; 
+            font-weight: 900; 
+            text-transform: uppercase; 
+            font-size: 14px; 
+            line-height: 1.2;
+            border-bottom: 2px solid var(--deep-brown);
+        }
+        .top-btn-ad-part { 
+            flex-grow: 1; 
+            background: white; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            text-align: center; 
+            padding: 10px; 
+            font-size: 10px; 
+            font-weight: 800; 
+            color: #999;
+            text-transform: uppercase;
+        }
 
         .search-box { width: 100%;
             padding: 12px; border-radius: 15px; border: 2px solid var(--deep-brown);
@@ -257,7 +289,7 @@
                     <button class="ctrl-btn" id="m-grid" onclick="setMode('grid')">Widok miniatury pieśni</button>
                     <button class="ctrl-btn" id="m-list" onclick="setMode('list')">Widok lista tytułów pieśni</button>
                 </div>
-               <div class="ad-placeholder">MIEJSCE NA REKLAMĘ</div>
+               <div class="ad-placeholder" style="background: white; border: 1px dashed #ccc;"></div>
             </div>
           <div class="header-right" id="top-panel">
                 </div>
@@ -390,10 +422,14 @@ top3.forEach((s, idx) => {
         });
         html += `</div>`;
         
-        html += `<button class="top-btn-more" style="flex: 1;" onclick="setView('top50')">
-                    <span>KLIKNIJ I ZOBACZ CAŁĄ</span>
-                    <span>TYGODNIOWĄ LISTĘ PRZEBOJÓW</span>
-                 </button>`;
+        html += `<div class="top-btn-container" onclick="setView('top50')">
+                    <div class="top-btn-text-part">
+                        KLIKNIJ TUTAJ I ZOBACZ CAŁĄ TYGODNIOWĄ LISTĘ PRZEBOJÓW
+                    </div>
+                    <div class="top-btn-ad-part">
+                        MIEJSCE NA REKLAMĘ SPONSORA TYGODNIOWEJ LISTY PRZEBOJÓW
+                    </div>
+                 </div>`;
         
         html += `</div>`;
 panel.innerHTML = html;
