@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Melodia Wiary - v27</title>
+    <title>Katalog Melodia Wiary - v28</title>
     <style>
         :root { 
             --active-orange: #fbda80; 
@@ -27,9 +27,20 @@
         
         .section-label { font-size: 16px; font-weight: 900; color: var(--deep-brown); text-transform: uppercase; margin: 15px 0 10px 5px; display: block; border-bottom: 3px solid var(--active-orange); padding-bottom: 5px; }
 
-        .nav-btn { width: 100%; padding: 10px; margin-bottom: 8px; border-radius: 8px; border: 1px solid var(--deep-brown); cursor: pointer; font-weight: 700; text-align: left; text-transform: uppercase; font-size: var(--f-btn); background: var(--soft-cyan); display: flex; align-items: center; gap: 8px; transition: 0.2s; }
-        .nav-btn:hover, .nav-btn.active { background: var(--active-orange) !important; border: 2px solid var(--deep-brown) !important; }
-        .nav-btn.fav-btn { background: #fff1f1; border-color: #ffb3b3; }
+        /* UJEDNOLICONY STYL PRZYCISKÓW W SIDEBARZE */
+        .nav-btn, .size-btn { 
+            width: 100%; padding: 12px 10px; margin-bottom: 8px; border-radius: 8px; 
+            border: 1px solid var(--deep-brown); cursor: pointer; font-weight: 800; 
+            text-align: left; text-transform: uppercase; font-size: var(--f-btn); 
+            background: var(--soft-cyan); display: flex; align-items: center; 
+            gap: 8px; transition: 0.2s; box-sizing: border-box;
+            font-family: inherit;
+        }
+        .nav-btn:hover, .nav-btn.active, .size-btn:hover, .size-btn.active { 
+            background: var(--active-orange) !important; border: 2px solid var(--deep-brown) !important; 
+        }
+        
+        .nav-btn.fav-btn { background: #fff1f1; border-color: #ffb3b3; justify-content: center; text-align: center; }
 
         /* MAIN CONTENT */
         #main-content { margin-left: var(--sidebar-width); flex: 1; display: flex; flex-direction: column; }
@@ -45,7 +56,6 @@
         .ctrl-btn { flex: 1; padding: 12px 4px; border: 1px solid var(--deep-brown); background: var(--soft-cyan); color: var(--deep-brown); font-weight: 800; cursor: pointer; border-radius: 6px; text-transform: uppercase; font-size: var(--f-ctrl); transition: 0.2s; }
         .ctrl-btn:hover, .ctrl-btn.active { background: var(--active-orange) !important; border: 2px solid var(--deep-brown); }
 
-        /* PÓŁKA NA LITERKI */
         .alpha-shelf { border-top: 3px solid var(--active-orange); border-bottom: 3px solid var(--active-orange); background: #fff; padding: 10px 25px; display: none; }
         #alpha-row { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-start; }
         .alpha-btn { padding: 6px 12px; font-size: 14px; font-weight: 900; border: 1px solid var(--deep-brown); background: var(--soft-cyan); cursor: pointer; border-radius: 4px; min-width: 38px; transition: 0.2s; }
@@ -56,51 +66,24 @@
         .alpha-header { grid-column: 1 / -1; background: var(--active-orange); padding: 8px 20px; border-radius: 8px; font-weight: 900; margin: 40px 0 15px 0; border: 2px solid var(--deep-brown); font-size: 1.3em; text-align: left; scroll-margin-top: 380px; }
         .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
         
-        /* WIDOK MINIATURY PIEŚNI */
+        /* WIDOK MINIATURY */
         .card { background: #fff; border: 2px solid #ddd; padding: 12px; border-radius: 15px; text-align: center; position: relative; transition: 0.2s; display: flex; flex-direction: column; }
         .card:hover { border: 2px solid var(--deep-brown); }
         .thumb-container { width: 100%; aspect-ratio: 16/9; border-radius: 10px; overflow: hidden; cursor: pointer; margin-bottom: 10px; border: 1px solid #ddd; position: relative; }
         .thumb { width: 100%; height: 100%; object-fit: cover; }
-        
-        /* WIELKI NAPIS NA MINIATURZE */
-        .play-overlay { 
-            position: absolute; top:0; left:0; width:100%; height:100%; 
-            background: rgba(251, 218, 128, 0.95); 
-            display: flex; align-items: center; justify-content: center; 
-            opacity: 0; transition: 0.2s; color: var(--deep-brown); 
-            font-weight: 900; text-align: center; padding: 10px;
-            font-size: 1.4em; line-height: 1.1; text-transform: uppercase;
-        }
+        .play-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(251, 218, 128, 0.95); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.2s; color: var(--deep-brown); font-weight: 900; text-align: center; padding: 10px; font-size: 1.4em; line-height: 1.1; text-transform: uppercase; }
         .thumb-container:hover .play-overlay { opacity: 1; }
 
-        /* WIDOK LISTA TYTUŁÓW PIEŚNI - WIELKI HOVER */
-        .list-card { 
-            background: #fff; border: 2px solid #ddd; border-radius: 10px; 
-            padding: 15px; cursor: pointer; display: flex; justify-content: space-between; 
-            align-items: center; transition: 0.2s; min-height: 70px; position: relative; overflow: hidden;
-        }
+        /* WIDOK LISTA */
+        .list-card { background: #fff; border: 2px solid #ddd; border-radius: 10px; padding: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; min-height: 70px; position: relative; overflow: hidden; }
         .list-card:hover { border: 2px solid var(--deep-brown); background: var(--active-orange); }
-        
         .list-title { font-weight: 800; font-size: 1em; flex: 1; padding-right: 10px; line-height: 1.2; text-transform: uppercase; transition: 0.2s; }
-        
-        /* WIELKI NAPIS NA LIŚCIE */
-        .list-overlay {
-            position: absolute; top:0; left:0; width:100%; height:100%;
-            background: var(--active-orange);
-            display: flex; align-items: center; justify-content: center;
-            opacity: 0; transition: 0.2s; color: var(--deep-brown);
-            font-weight: 900; text-align: center; font-size: 1.1em;
-            pointer-events: none; /* Żeby serce pod spodem było klikalne jeśli trzeba */
-        }
+        .list-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: var(--active-orange); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.2s; color: var(--deep-brown); font-weight: 900; text-align: center; font-size: 1.1em; pointer-events: none; }
         .list-card:hover .list-overlay { opacity: 1; }
         .list-card:hover .list-title { opacity: 0; }
 
         .heart-btn { font-size: 28px; cursor: pointer; border: none; background: none; transition: transform 0.1s; position: relative; z-index: 5; }
         .heart-btn:active { transform: scale(1.3); }
-        
-        .size-box { border: 2px solid var(--deep-brown); padding: 8px; border-radius: 12px; margin: 10px 5px; background: #f9f9f9; text-align: center; }
-        .size-btn { width: 100%; padding: 6px; margin-top: 4px; font-weight: 900; cursor: pointer; border: 1px solid var(--deep-brown); background: var(--soft-cyan); border-radius: 8px; font-size: 10px; }
-        .size-btn.active { background: var(--active-orange); }
     </style>
 </head>
 <body class="standard">
@@ -109,10 +92,10 @@
     <div class="sidebar-top">
         <img src="logo.png" class="logo-img" onerror="this.src='https://via.placeholder.com/120?text=LOGO'">
         <button class="nav-btn fav-btn" id="btn-cart" onclick="setView('cart')">❤️ MOJE ULUBIONE (<span id="count">0</span>)</button>
-        <div class="size-box">
-            <button class="size-btn" id="s-std" onclick="updateSize('standard')">LITERY ZWYKŁE</button>
-            <button class="size-btn" id="s-big" onclick="updateSize('senior')">LITERY DUŻE</button>
-        </div>
+        
+        <span class="section-label">Rozmiar tekstu</span>
+        <button class="size-btn" id="s-std" onclick="updateSize('standard')">LITERY ZWYKŁE</button>
+        <button class="size-btn" id="s-big" onclick="updateSize('senior')">LITERY DUŻE</button>
     </div>
     <div class="sidebar-scroll">
         <span class="section-label">KATEGORIE</span>
@@ -237,7 +220,6 @@
     function render() {
         const out = document.getElementById('main-display'); out.innerHTML = '';
         document.getElementById('count').innerText = cart.length;
-        
         const showAlphaBar = (displayMode === 'list' && currentView !== 'cart');
         document.getElementById('alpha-shelf').style.display = showAlphaBar ? 'block' : 'none';
 
@@ -270,7 +252,6 @@
                 h.id = "anchor-" + firstChar; h.innerText = firstChar; 
                 container.appendChild(h); lastChar = firstChar;
             }
-
             const item = document.createElement('div');
             const isFav = cart.some(x => x.tytul === s.tytul);
             const jsTytul = s.tytul.replace(/'/g, "\\'");
