@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Melodia Wiary - Edycja v9</title>
+    <title>Katalog Melodia Wiary - Edycja v10</title>
     <style>
         :root { 
             --active-orange: #fbda80; 
@@ -46,7 +46,6 @@
         .top-layout { display: flex; gap: 30px; align-items: flex-start; width: 100%; }
         .controls-area { flex: 1; display: flex; flex-direction: column; }
         
-        /* POWIĘKSZONY ODTWARZACZ */
         #player-section { 
             width: 520px; 
             background: #000; 
@@ -65,27 +64,46 @@
         .ctrl-btn:hover { background: var(--active-orange); }
         .ctrl-btn.active { background: var(--active-orange) !important; border: 2px solid var(--deep-brown); }
 
-        /* PASEK REKLAMOWY */
-        #ad-space {
-            width: 100%;
-            height: 60px;
-            background: #ffffff;
-            border: 1px dashed var(--soft-cyan);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            color: #aaa;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
+        #ad-space { width: 100%; height: 60px; background: #ffffff; border: 1px dashed var(--soft-cyan); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: 2px; }
 
         #main-display { padding: 0 30px 60px 30px; }
+        
+        /* GRID DLA OBRAZKÓW */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 25px; }
         
+        /* MULTI-KOLUMNY DLA LISTY */
+        .list-container { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); 
+            gap: 10px; 
+        }
+
         .card { background: #fff; border: 1px solid var(--sidebar-border); padding: 12px; border-radius: 15px; text-align: center; display: flex; flex-direction: column; transition: 0.3s; }
         .card:hover { border-color: var(--active-orange); transform: translateY(-3px); }
+
+        /* STYL LISTY */
+        .list-item { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 12px 15px; 
+            background: #fff; 
+            border: 1px solid #ddd; 
+            border-radius: 10px; 
+            transition: 0.2s; 
+        }
+        .list-item:hover { background: var(--active-orange); border-color: var(--deep-brown); }
+        
+        .list-title { 
+            font-weight: 700; 
+            cursor: pointer; 
+            flex-grow: 1; 
+            margin-right: 15px; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+        }
+        .list-item:hover .list-title::before { content: "▶ KLIKNIJ, ABY POSŁUCHAĆ: "; font-size: 0.8em; opacity: 0.8; }
 
         .thumb-container { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: 10px; overflow: hidden; cursor: pointer; margin-bottom: 8px; }
         .thumb { width: 100%; height: 100%; object-fit: cover; }
@@ -94,8 +112,11 @@
 
         .card-title { font-weight: 800; margin-bottom: 12px; text-transform: uppercase; font-size: 0.95em; line-height: 1.2; height: 2.4em; overflow: hidden; color: var(--deep-brown); }
         .btn-add { background: var(--soft-cyan); color: var(--deep-brown); border: 1px solid var(--sidebar-border); padding: 10px; border-radius: 8px; font-weight: 800; cursor: pointer; text-transform: uppercase; width: 100%; font-size: var(--f-btn); transition: 0.2s; }
-        .btn-add:hover { background: var(--active-orange); }
+        .btn-add:hover { background: var(--active-orange); border-color: var(--deep-brown); }
         .btn-add.selected { background: var(--active-orange); border: 2px solid var(--deep-brown); }
+        
+        /* Specyficzny guzik dla listy (nie zajmuje 100% szerokości) */
+        .btn-list-add { width: auto; padding: 6px 15px; min-width: 80px; }
 
         .size-btn { width: 100%; padding: 8px; margin-top: 5px; font-weight: 900; cursor: pointer; border: 1px solid var(--sidebar-border); background: var(--soft-cyan); color: var(--deep-brown); border-radius: 6px; font-size: var(--f-ctrl); text-transform: uppercase; transition: 0.2s; }
         .size-btn:hover { background: var(--active-orange); }
@@ -108,6 +129,7 @@
         @media (max-width: 1200px) { 
             .top-layout { flex-direction: column; }
             #player-section { width: 100%; }
+            .list-container { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -141,12 +163,12 @@
                     <button class="ctrl-btn active" id="m-grid" onclick="setMode('grid')">OBRAZKI</button>
                     <button class="ctrl-btn" id="m-list" onclick="setMode('list')">LISTA</button>
                 </div>
-                <div id="ad-space">MIEJSCE NA REKLAMĘ</div>
+                <div id="ad-space">MIEJSCE NA TWOJĄ REKLAMĘ</div>
             </div>
 
             <div id="player-section">
                 <div id="yt-player-container" style="height:100%; background:#000; color:#555; display:flex; align-items:center; justify-content:center; text-align:center; font-weight:bold; font-size:14px; padding:20px;">
-                    KLIKNIJ MINIATURKĘ, ABY POSŁUCHAĆ 🎶
+                    KLIKNIJ PIEŚŃ, ABY POSŁUCHAĆ 🎶
                 </div>
             </div>
         </div>
@@ -244,7 +266,9 @@
         else if(sortType === 'az') list.sort((a,b) => a.tytul.localeCompare(b.tytul, 'pl'));
         else if(sortType === 'za') list.sort((a,b) => b.tytul.localeCompare(a.tytul, 'pl'));
 
-        const g = document.createElement('div'); g.className = (displayMode === 'grid') ? 'grid' : '';
+        const g = document.createElement('div'); 
+        g.className = (displayMode === 'grid') ? 'grid' : 'list-container';
+        
         list.forEach(s => {
             const isSel = cart.some(x => x.tytul === s.tytul);
             const jsTytul = s.tytul.replace(/'/g, "\\'");
@@ -258,9 +282,9 @@
                     <button class="btn-add ${isSel ? 'selected' : ''}" onclick="toggleSong('${jsTytul}')">${isSel ? 'USUŃ' : 'DODAJ'}</button>
                 </div>`;
             } else {
-                g.innerHTML += `<div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #ddd; background:white; margin-bottom:5px; border-radius:10px; align-items:center;">
-                    <span style="font-weight:700; cursor:pointer;" onclick="playSong('${s.yt}')">▶ ${s.tytul}</span>
-                    <button class="btn-add ${isSel ? 'selected' : ''}" style="width:auto; padding:5px 20px;" onclick="toggleSong('${jsTytul}')">${isSel ? 'USUŃ' : 'DODAJ'}</button>
+                g.innerHTML += `<div class="list-item">
+                    <span class="list-title" onclick="playSong('${s.yt}')">${s.tytul}</span>
+                    <button class="btn-add btn-list-add ${isSel ? 'selected' : ''}" onclick="toggleSong('${jsTytul}')">${isSel ? 'USUŃ' : 'DODAJ'}</button>
                 </div>`;
             }
         });
