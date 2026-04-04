@@ -99,14 +99,15 @@
             height: 33.33%; 
             background: var(--active-orange); 
             display: flex; 
+            flex-direction: column;
             align-items: center; 
             justify-content: center; 
             text-align: center; 
-            padding: 5px; 
+            padding: 8px; 
             font-weight: 900; 
             text-transform: uppercase; 
-            font-size: 14px; 
-            line-height: 1.2;
+            font-size: 18px; 
+            line-height: 1.1;
             border-bottom: 2px solid var(--deep-brown);
         }
         .top-btn-ad-part { 
@@ -116,11 +117,12 @@
             align-items: center; 
             justify-content: center; 
             text-align: center; 
-            padding: 10px; 
-            font-size: 10px; 
-            font-weight: 800; 
-            color: #999;
+            padding: 15px; 
+            font-size: 16px; 
+            font-weight: 900; 
+            color: var(--deep-brown);
             text-transform: uppercase;
+            line-height: 1.2;
         }
 
         .search-box { width: 100%;
@@ -424,7 +426,8 @@ top3.forEach((s, idx) => {
         
         html += `<div class="top-btn-container" onclick="setView('top50')">
                     <div class="top-btn-text-part">
-                        KLIKNIJ TUTAJ I ZOBACZ CAŁĄ TYGODNIOWĄ LISTĘ PRZEBOJÓW
+                        <div style="font-size: 1.1em;">KLIKNIJ TUTAJ I ZOBACZ CAŁĄ</div>
+                        <div style="font-size: 0.9em;">TYGODNIOWĄ LISTĘ PRZEBOJÓW</div>
                     </div>
                     <div class="top-btn-ad-part">
                         MIEJSCE NA REKLAMĘ SPONSORA TYGODNIOWEJ LISTY PRZEBOJÓW
