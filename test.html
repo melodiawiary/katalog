@@ -68,12 +68,10 @@
         .ctrl-btn.active { background: var(--active-orange) !important; border: 2.5px solid var(--deep-brown);
             }
 
-        /* MIEJSCE NA REKLAMĘ - BIAŁE POLE */
         .ad-placeholder { height: 100px;
             background: white; margin-top: 15px; border: 1px dashed #ccc; display: flex; align-items: center; justify-content: center; color: #999; font-weight: bold; border-radius: 10px;
             }
 
-        /* PANEL ALFABETU */
         .alpha-shelf { border-top: 3px solid var(--active-orange);
             border-bottom: 3px solid var(--active-orange); background: var(--bg); padding: 10px 25px; display: none;
             }
@@ -82,7 +80,7 @@
         .alpha-btn { padding: 6px 12px; font-size: 14px; font-weight: 900;
             border: 1px solid var(--deep-brown); background: var(--soft-cyan); color: var(--deep-brown); cursor: pointer; border-radius: 4px; min-width: 38px; transition: 0.2s;
             }
-        .alpha-btn.active { background: var(--active-orange) !important; border: 2px solid var(--deep-brown);
+        .alpha-btn.active { background: var(--active-orange) !important; border: 2.5px solid var(--deep-brown);
             }
 
         .view-title-header { background: var(--soft-cyan); color: var(--deep-brown); padding: 15px 25px; font-weight: 900;
@@ -103,8 +101,11 @@
         .card { background: var(--card-bg);
             border: 2px solid rgba(59, 42, 0, 0.08); padding: 12px; border-radius: 15px; text-align: center; position: relative; transition: 0.3s; display: flex;
             flex-direction: column; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        
+        /* ZMIANA: Najechanie na kartę podświetla ją na Twoją zieleń, nie na żółto */
         .card:hover { border: 2px solid var(--deep-brown);
-            background: var(--active-orange); transform: translateY(-5px); }
+            background: var(--soft-cyan); transform: translateY(-5px); }
+        
         .thumb-container { width: 100%; aspect-ratio: 16/9; border-radius: 10px;
             overflow: hidden; margin-bottom: 10px; border: 1px solid rgba(0,0,0,0.05); position: relative;
             }
@@ -113,15 +114,17 @@
         .card-title { font-weight: 900; font-size: var(--f-card-title); text-transform: uppercase; padding: 5px; line-height: 1.2;
             }
 
+        /* ZMIANA: Overlay na Twoją zieleń, Przycisk YT żółty w ramce */
         .play-overlay { position: absolute; top:0; left:0; width:100%; height:100%;
-            background: rgba(251, 218, 128, 0.95); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.2s; color: var(--deep-brown); font-weight: 900;
+            background: rgba(210, 233, 230, 0.95); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.2s; color: var(--deep-brown); font-weight: 900;
             text-align: center; padding: 10px; font-size: 1.1em; text-transform: uppercase; }
         .card:hover .play-overlay { opacity: 1;
             }
+        .yt-btn-fake { background: var(--active-orange); border: 2px solid var(--deep-brown); padding: 8px 12px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
 
-        /* NOWY PRZYCISK POD MINIATURĄ */
-        .btn-fav-toggle { margin-top: 10px; padding: 10px; border-radius: 10px; border: 1px solid #ccc; background: #eee; font-weight: 900; font-size: 12px; text-transform: uppercase; cursor: pointer; transition: 0.2s; }
-        .btn-fav-toggle.is-active { background: var(--active-orange); border-color: var(--deep-brown); }
+        /* ZMIANA: Kolory przycisku ulubionych pod miniaturą */
+        .btn-fav-toggle { margin-top: 10px; padding: 10px; border-radius: 10px; border: 1px solid var(--deep-brown); background: var(--soft-cyan); color: var(--deep-brown); font-weight: 900; font-size: 12px; text-transform: uppercase; cursor: pointer; transition: 0.2s; }
+        .btn-fav-toggle.is-active { background: var(--active-orange); border-width: 2.5px; }
 
         .list-card { background: var(--card-bg); border: 2px solid rgba(59, 42, 0, 0.08);
             border-radius: 10px; padding: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; min-height: 70px; position: relative; overflow: hidden;
@@ -149,7 +152,6 @@
             <span id="count" style="font-weight:900;">0 UTWORÓW</span>
         </button>
         <div style="margin-top:10px; padding:5px; border: 1px solid var(--deep-brown); border-radius:10px;">
-           
              <button class="size-btn" id="s-std" onclick="updateSize('standard')">LITERY ZWYKŁE</button>
             <button class="size-btn" id="s-big" onclick="updateSize('senior')">LITERY DUŻE</button>
         </div>
@@ -170,14 +172,12 @@
                 <button class="ctrl-btn" id="s-new" onclick="setSort('newest')">Sortuj od najnowszych</button>
                 <button class="ctrl-btn" id="s-old" onclick="setSort('oldest')">Sortuj od najstarszych</button>
                 <button class="ctrl-btn" id="s-az" onclick="setSort('az')">Sortuj od A do Z</button>
-             
                 <button class="ctrl-btn" id="s-za" onclick="setSort('za')">Sortuj od Z do A</button>
             </div>
             <div class="btn-group">
                 <button class="ctrl-btn" id="m-grid" onclick="setMode('grid')">Widok miniatury pieśni</button>
                 <button class="ctrl-btn" id="m-list" onclick="setMode('list')">Widok lista tytułów pieśni</button>
             </div>
-          
            <div class="ad-placeholder">MIEJSCE NA REKLAMĘ</div>
         </div>
         <div id="alpha-shelf" class="alpha-shelf">
@@ -191,6 +191,7 @@
     const CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTSIMZUO8ZkisiFoqOfypL9hOQBnTbAvtMmBeIuK56_QoiXFu_b7i-de1Jn6Km9symosxJBV6V5PxKO/pub?output=csv';
     const STORAGE_KEY = 'melodia_wiary_permanent_storage'; 
     let songs = [], cart = [], currentView = 'all', displayMode = 'grid', query = "", sortType = 'newest';
+
     function openYT(id) {
         const width = 800; const height = 600;
         const left = (window.screen.width / 2) - (width / 2);
@@ -213,7 +214,6 @@
     function updateSize(s) { 
         document.body.className = s; 
         document.getElementById('s-std').classList.toggle('active', s==='standard');
-      
         document.getElementById('s-big').classList.toggle('active', s==='senior'); 
         localStorage.setItem('mv_font_permanent', s);
     }
@@ -223,11 +223,9 @@
         if(saved) cart = JSON.parse(saved);
         updateSize(localStorage.getItem('mv_font_permanent') || 'standard');
 
-        // INICJALIZACJA ALFABETU
         const alphabet = "ABCDEFGHIJKLŁMNOPRSTUWZŻ".split("");
         const row = document.getElementById('alpha-row');
         alphabet.forEach(l => {
-  
             const b = document.createElement('button'); b.className = 'alpha-btn'; b.innerText = l;
             b.onclick = () => {
                 document.querySelectorAll('.alpha-btn').forEach(x => x.classList.remove('active'));
@@ -277,7 +275,6 @@
         if(currentView === 'cart') document.getElementById('btn-cart').classList.add('active');
         else if(currentView === 'all') document.getElementById('cat-all').classList.add('active');
 
-        // POKAZYWANIE ALFABETU TYLKO W WIDOKU LISTY
         const showAlphaBar = (displayMode === 'list' && currentView !== 'cart');
         document.getElementById('alpha-shelf').style.display = showAlphaBar ? 'block' : 'none';
 
@@ -297,7 +294,7 @@
         const contentBox = document.createElement('div');
         contentBox.className = 'display-padding';
         const container = document.createElement('div');
-        container.className = 'items-grid';
+        container.className = displayMode === 'grid' ? 'items-grid' : 'list-container';
         
         let lastChar = "";
         const showHeaders = (sortType === 'az' || sortType === 'za') && !query;
@@ -308,18 +305,18 @@
             }
 
             const item = document.createElement('div');
-     
             const isFav = cart.some(x => x.tytul === s.tytul);
             const jsTytul = s.tytul.replace(/'/g, "\\'");
             
             if(displayMode === 'grid') {
                 item.className = 'card';
                 item.onclick = () => openYT(s.yt);
-     
                 item.innerHTML = `
                     <div class="thumb-container">
                         <img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb">
-                        <div class="play-overlay">KLIKNIJ, ABY OTWORZYĆ NA YOUTUBE 🎶</div>
+                        <div class="play-overlay">
+                            <div class="yt-btn-fake">KLIKNIJ, ABY OTWORZYĆ NA YOUTUBE 🎶</div>
+                        </div>
                     </div>
                     <div class="card-title">${s.tytul}</div>
                     <button class="btn-fav-toggle ${isFav ? 'is-active' : ''}" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">
@@ -332,8 +329,7 @@
                 item.innerHTML = `
                     <div class="list-overlay">KLIKNIJ, ABY OTWORZYĆ NA YOUTUBE 🎶</div>
                     <span class="list-title">${s.tytul}</span>
-                    <button class="heart-btn" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">${isFav ?
-                    '❤️' : '🤍'}</button>
+                    <button class="heart-btn" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">${isFav ? '❤️' : '🤍'}</button>
                 `;
             }
             container.appendChild(item);
@@ -346,12 +342,9 @@
         });
     }
 
-    function setMode(m) { displayMode = m; render();
-    }
-    function setSort(s) { sortType = s; render();
-    }
-    function setView(v) { currentView = v; render(); window.scrollTo(0,0);
-    }
+    function setMode(m) { displayMode = m; render(); }
+    function setSort(s) { sortType = s; render(); }
+    function setView(v) { currentView = v; render(); window.scrollTo(0,0); }
     function doSearch() { query = document.getElementById('search').value.toLowerCase(); render(); }
     init();
 </script>
