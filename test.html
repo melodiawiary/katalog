@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Melodia Wiary - v53</title>
+    <title>Katalog Melodia Wiary - v54</title>
     <style>
         :root { 
             --active-orange: #fbda80;
@@ -37,11 +37,11 @@
             border: 3px solid var(--active-orange); background: white; object-fit: cover; margin-bottom: 15px;
             }
         
+        /* Wyśrodkowany i nieprzesuwalny nagłówek kategorii */
         .section-label { font-size: 16px;
-            font-weight: 900; color: var(--deep-brown); text-transform: uppercase; margin: 15px 0 10px 5px; display: block; border-bottom: 3px solid var(--active-orange); padding-bottom: 5px;
+            font-weight: 900; color: var(--deep-brown); text-transform: uppercase; margin: 15px 0 0 0; display: block; border-bottom: 3px solid var(--active-orange); padding-bottom: 5px; text-align: center;
             }
         
-        /* Zmiany kosmetyczne w przyciskach bocznych */
         .nav-btn, .size-btn { width: 100%; padding: 12px 10px; margin-bottom: 8px; border-radius: 8px;
             border: 1px solid var(--deep-brown); cursor: pointer; font-weight: 800; text-align: left; text-transform: uppercase; font-size: var(--f-btn); background: var(--soft-cyan); color: var(--deep-brown); display: flex;
             align-items: center; gap: 8px; transition: transform 0.2s, background 0.2s; box-sizing: border-box; }
@@ -175,9 +175,9 @@
              <button class="size-btn" id="s-std" onclick="updateSize('standard')">LITERY ZWYKŁE</button>
             <button class="size-btn" id="s-big" onclick="updateSize('senior')">LITERY DUŻE</button>
         </div>
+        <span class="section-label">KATEGORIE</span>
     </div>
     <div class="sidebar-scroll">
-        <span class="section-label">KATEGORIE</span>
         <button class="nav-btn" id="cat-all" onclick="setView('all')">WSZYSTKIE PIEŚNI</button>
         <div id="cat-list"></div>
     </div>
@@ -291,7 +291,6 @@
         out.innerHTML = '';
         document.getElementById('count').innerText = cart.length + " UTWORÓW";
 
-        // Poprawiona logika podświetlania aktywnego widoku/kategorii
         document.querySelectorAll('.nav-btn').forEach(b => {
             b.classList.remove('active');
             if(currentView === 'cart' && b.id === 'btn-cart') b.classList.add('active');
@@ -367,7 +366,11 @@
         });
     }
 
-    function setMode(m) { displayMode = m; render(); }
+    function setMode(m) { 
+        displayMode = m; 
+        if(m === 'list') sortType = 'az'; // Automatyczne sortowanie A-Z dla widoku listy
+        render(); 
+    }
     function setSort(s) { sortType = s; render(); }
     function setView(v) { currentView = v; render(); window.scrollTo(0,0); }
     function doSearch() { query = document.getElementById('search').value.toLowerCase(); render(); }
