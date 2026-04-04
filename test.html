@@ -9,6 +9,7 @@
             --active-orange: #fbda80;
             --bg: #f4f9f8; --card-bg: #f9fffe;
             --soft-cyan: #d2e9e6; --deep-brown: #3b2a00; --sidebar-width: 220px;
+            --vote-blue: #007bff;
         }
         
         body.standard { 
@@ -163,6 +164,7 @@
 
         .view-title-header { background: var(--soft-cyan); color: var(--deep-brown); padding: 15px 25px; font-weight: 900;
             text-transform: uppercase; font-size: 1.5em; border-bottom: 5px solid var(--active-orange); border-top: 2px solid var(--active-orange);
+            display: flex; align-items: center; justify-content: space-between;
             }
 
         #main-display { padding: 0 0 400px 0; min-height: 100vh; width: 100%;
@@ -251,6 +253,19 @@
 
         .heart-btn { font-size: 24px; cursor: pointer; border: none; background: none; position: relative;
             z-index: 5; }
+
+        .vote-btn-top {
+            background: var(--vote-blue); color: white; border: 2px solid var(--deep-brown);
+            padding: 10px 20px; border-radius: 8px; font-weight: 900; text-transform: uppercase;
+            cursor: pointer; font-size: 0.6em; transition: transform 0.2s; margin-left: 20px;
+            white-space: nowrap; flex-shrink: 0;
+        }
+        .vote-btn-top:hover { transform: scale(1.05); filter: brightness(1.1); }
+        
+        .instruction-box {
+            margin-top: 50px; padding: 30px; background: white; border: 4px solid var(--active-orange);
+            border-radius: 15px; text-align: center; font-weight: 800; font-size: 1.2em;
+        }
     </style>
 </head>
 <body class="standard">
@@ -401,7 +416,7 @@ if(idx > -1) cart.splice(idx, 1);
 if (!top50.length) return;
         
         const top3 = top50.slice(0, 3);
-let html = `<div class="top-header-title">TYGODNIOWA LISTA PRZEBOJÓW POLSKIEJ PIEŚNI RELIGIJNEJ NR 1</div>`;
+let html = `<div class="top-header-title">TYGODNIOWA LISTA PRZEBOJÓW POLSKIEJ PIEŚNI RELIGIJNEJ NR 1 - 4.4.2026</div>`;
         html += `<div style="display: flex; gap: 10px; align-items: stretch; flex-grow: 1;">`;
         
         html += `<div class="top-mini-grid" style="flex: 2;">`;
@@ -481,7 +496,22 @@ if(query) list = list.filter(s => s.tytul.toLowerCase().includes(query));
         const header = document.createElement('div');
         header.className = 'view-title-header';
         const today = new Date().toLocaleDateString('pl-PL');
-header.innerText = currentView === 'all' ? 'WSZYSTKIE PIEŚNI' : (currentView === 'cart' ? '❤️ MOJE ULUBIONE' : (currentView === 'top50' ? 'TYGODNIOWA LISTA PRZEBOJÓW POLSKIEJ PIEŚNI RELIGIJNEJ NR 1 - ' + today : '📂 ' + currentView));
+        
+        let titleSpan = document.createElement('span');
+        titleSpan.innerText = currentView === 'all' ? 'WSZYSTKIE PIEŚNI' : (currentView === 'cart' ? '❤️ MOJE ULUBIONE' : (currentView === 'top50' ? 'TYGODNIOWA LISTA PRZEBOJÓW POLSKIEJ PIEŚNI RELIGIJNEJ NR 1 - 4.4.2026' : '📂 ' + currentView));
+        header.appendChild(titleSpan);
+
+        if(currentView === 'top50') {
+            const voteBtn = document.createElement('button');
+            voteBtn.className = 'vote-btn-top';
+            voteBtn.innerText = 'ZAGŁOSUJ NA LISTĘ TYGODNIOWĄ';
+            voteBtn.onclick = () => {
+                const instr = document.getElementById('instruction-anchor');
+                if(instr) instr.scrollIntoView({ behavior: 'smooth' });
+            };
+            header.appendChild(voteBtn);
+        }
+
 out.appendChild(header);
 
         const contentBox = document.createElement('div');
@@ -537,6 +567,19 @@ toggleFav('${jsTytul}')">${isFav ? '❤️' : '🤍'}</button>` : ''}
             container.appendChild(item);
         });
         contentBox.appendChild(container);
+
+        if(currentView === 'top50') {
+            const instr = document.createElement('div');
+            instr.id = 'instruction-anchor';
+            instr.className = 'instruction-box';
+            instr.innerHTML = `
+                <h2 style="text-transform:uppercase; margin-top:0;">Jak zagłosować na listę tygodniową?</h2>
+                <p>TUTAJ POJAWI SIĘ INSTRUKCJA GŁOSOWANIA ORAZ ODNOŚNIK DO STRONY Z FORMULARZEM.</p>
+                <p style="font-size: 0.8em; color: #666;">Sekcja przygotowana do aktualizacji.</p>
+            `;
+            contentBox.appendChild(instr);
+        }
+
         out.appendChild(contentBox);
     }
 
