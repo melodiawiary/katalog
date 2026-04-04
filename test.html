@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Melodia Wiary - v54</title>
+    <title>Katalog Melodia Wiary - v55</title>
     <style>
         :root { 
             --active-orange: #fbda80;
@@ -37,7 +37,6 @@
             border: 3px solid var(--active-orange); background: white; object-fit: cover; margin-bottom: 15px;
             }
         
-        /* Wyśrodkowany i nieprzesuwalny nagłówek kategorii */
         .section-label { font-size: 16px;
             font-weight: 900; color: var(--deep-brown); text-transform: uppercase; margin: 15px 0 0 0; display: block; border-bottom: 3px solid var(--active-orange); padding-bottom: 5px; text-align: center;
             }
@@ -368,7 +367,8 @@
 
     function setMode(m) { 
         displayMode = m; 
-        if(m === 'list') sortType = 'az'; // Automatyczne sortowanie A-Z dla widoku listy
+        if(m === 'list') sortType = 'az'; 
+        if(m === 'grid') sortType = 'newest'; // Automatyczne sortowanie od najnowszych dla widoku miniatur
         render(); 
     }
     function setSort(s) { sortType = s; render(); }
