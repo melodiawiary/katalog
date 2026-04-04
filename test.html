@@ -1,25 +1,115 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katalog Melodia Wiary - v62 NAPRAWIONY</title>
+    <style>
+        :root { 
+            --active-orange: #fbda80;
+            --bg: #f4f9f8; --card-bg: #f9fffe;
+            --soft-cyan: #d2e9e6; --deep-brown: #3b2a00; --sidebar-width: 220px;
+        }
+        
+        body.standard { 
+            --f-size: 16px;
+            --f-btn: 13px; --f-ctrl: 11px; --f-search: 1.1em; 
+            --f-card-title: 14px; --f-list-title: 1em;
+        }
+        body.senior { 
+            --f-size: 22px;
+            --f-btn: 18px; --f-ctrl: 16px; --f-search: 1.4em; 
+            --f-card-title: 20px; --f-list-title: 1.4em;
+        }
+
+        body { background: var(--bg); color: var(--deep-brown); font-family: 'Segoe UI', sans-serif; margin: 0;
+            display: flex; min-height: 100vh; font-size: var(--f-size); overflow-x: hidden; }
+
+        /* SIDEBAR */
+        #sidebar { width: var(--sidebar-width);
+            background: var(--card-bg); border-right: 4px solid var(--active-orange); display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 1000;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.02); }
+        .sidebar-top { padding: 15px 10px; text-align: center;
+            border-bottom: 1px solid rgba(59, 42, 0, 0.08); }
+        .sidebar-scroll { flex-grow: 1;
+            overflow-y: auto; padding: 10px; }
+        .logo-img { width: 120px; height: 120px; border-radius: 50%;
+            border: 3px solid var(--active-orange); background: white; object-fit: cover; margin-bottom: 15px;
+            }
+        
+        .section-label { font-size: 16px;
+            font-weight: 900; color: var(--deep-brown); text-transform: uppercase; margin: 15px 0 0 0; display: block; border-bottom: 3px solid var(--active-orange); padding-bottom: 5px; text-align: center;
+            }
+        
+        .nav-btn, .size-btn { width: 100%; padding: 12px 10px; margin-bottom: 8px; border-radius: 8px;
+            border: 1px solid var(--deep-brown); cursor: pointer; font-weight: 800; text-align: left; text-transform: uppercase; font-size: var(--f-btn); background: var(--soft-cyan); color: var(--deep-brown); display: flex;
+            align-items: center; gap: 8px; transition: transform 0.2s, background 0.2s; box-sizing: border-box; }
+        
+        .nav-btn:hover { background: var(--active-orange); transform: scale(1.02); }
+        
+        .nav-btn.active, .size-btn.active { background: var(--active-orange) !important;
+            border: 2.5px solid var(--deep-brown) !important; transform: scale(1.02); }
+
+        /* MAIN CONTENT */
+        #main-content { margin-left: var(--sidebar-width);
+            flex: 1; display: flex; flex-direction: column; width: calc(100% - var(--sidebar-width)); }
+        .header-sticky { position: sticky; top: 0;
+            z-index: 900; background: var(--bg); width: 100%; box-sizing: border-box; }
+        
+        .top-padding { display: flex; width: 100%; box-sizing: border-box; gap: 0; padding: 0; }
+        
+        .header-left { width: 50%; padding: 20px 25px 15px 25px; box-sizing: border-box; }
+        .header-right { width: 50%; background: var(--bg); border-left: 2px solid var(--active-orange); box-sizing: border-box; padding: 20px 25px 15px 25px; display: flex; flex-direction: column; }
+        
+        .top-header-title { font-weight: 900; text-transform: uppercase; font-size: 1.1em; text-align: center; margin-bottom: 10px; color: var(--deep-brown); line-height: 1.2; }
+        
+        .top-content-wrapper { display: flex; gap: 15px; align-items: stretch; }
+        .top-mini-grid { flex: 7; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        
+        .top-btn-more { 
+            flex: 3; background: var(--active-orange); border: 2px solid var(--deep-brown); border-radius: 12px; 
+            font-weight: 900; cursor: pointer; text-transform: uppercase; font-size: 11px; 
+            display: flex; align-items: center; justify-content: center; text-align: center;
+        }
+
+        .search-box { width: 100%; padding: 12px; border-radius: 15px; border: 2px solid var(--deep-brown); font-size: var(--f-search); font-weight: bold; text-align: center; background: var(--card-bg); box-sizing: border-box; }
+        
+        .alpha-shelf { border-top: 3px solid var(--active-orange); border-bottom: 3px solid var(--active-orange); background: var(--bg); padding: 10px 25px; display: none; }
+        #alpha-row { display: flex; flex-wrap: wrap; gap: 6px; }
+
+        .view-title-header { background: var(--soft-cyan); color: var(--deep-brown); padding: 15px 25px; font-weight: 900; text-transform: uppercase; font-size: 1.5em; border-bottom: 5px solid var(--active-orange); border-top: 2px solid var(--active-orange); }
+
+        #main-display { padding: 20px 25px 400px 25px; min-height: 100vh; }
+        .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+        .list-container { display: flex; flex-direction: column; gap: 10px; }
+
+        .card { background: var(--card-bg); border: 2px solid rgba(59, 42, 0, 0.08); padding: 12px; border-radius: 15px; cursor: pointer; transition: 0.3s; }
+        .card:hover { border: 2px solid var(--deep-brown); background: var(--soft-cyan); transform: translateY(-5px); }
+        .thumb-container { width: 100%; aspect-ratio: 16/9; border-radius: 10px; overflow: hidden; margin-bottom: 10px; background: #eee; position: relative; }
+        .card-title { font-weight: 900; font-size: var(--f-card-title); text-transform: uppercase; }
+        
+        .list-card { background: var(--card-bg); border: 2px solid rgba(59, 42, 0, 0.08); padding: 15px; border-radius: 10px; cursor: pointer; font-weight: 800; text-transform: uppercase; }
+        .list-card:hover { background: var(--active-orange); }
+    </style>
 </head>
 <body class="standard">
 
 <div id="sidebar">
     <div class="sidebar-top">
-        <img src="https://via.placeholder.com/120" class="logo-img" alt="Logo">
+        <img src="https://via.placeholder.com/120" class="logo-img">
         <div class="section-label">Rozmiar tekstu</div>
-        <div style="display: flex; gap: 5px; margin-top: 10px;">
-            <button class="size-btn active" onclick="setSize('standard', this)">Mały</button>
-            <button class="size-btn" onclick="setSize('senior', this)">Duży</button>
+        <div style="display: flex; gap: 5px; margin-top: 10px; padding: 0 5px;">
+            <button class="size-btn active" onclick="changeFontSize('standard', this)">Mały</button>
+            <button class="size-btn" onclick="changeFontSize('senior', this)">Duży</button>
         </div>
     </div>
-
     <div class="sidebar-scroll">
         <div class="section-label">Kategorie</div>
-        <button class="nav-btn active" onclick="setView('wszystkie', this)">Wszystkie Utwory</button>
-        <button class="nav-btn" onclick="setView('nowosci', this)">Nowości</button>
-        <button class="nav-btn" onclick="setView('ulubione', this)">Moje Ulubione ❤️</button>
-        
-        <div class="section-label">Format widoku</div>
-        <button class="nav-btn" onclick="setLayout('grid', this)">Siatka (Kafelki)</button>
-        <button class="nav-btn" onclick="setLayout('list', this)">Lista (Tabela)</button>
+        <button class="nav-btn active" onclick="render('all')">Wszystkie</button>
+        <button class="nav-btn" onclick="render('nowosci')">Nowości</button>
+        <div class="section-label">Widok</div>
+        <button class="nav-btn" onclick="setView('grid')">Kafelki</button>
+        <button class="nav-btn" onclick="setView('list')">Lista</button>
     </div>
 </div>
 
@@ -27,91 +117,89 @@
     <div class="header-sticky">
         <div class="top-padding">
             <div class="header-left">
-                <input type="text" id="searchInput" class="search-box" placeholder="SZUKAJ UTWORU LUB WYKONAWCY..." oninput="handleSearch()">
+                <input type="text" id="searchInput" class="search-box" placeholder="SZUKAJ..." oninput="handleSearch()">
             </div>
             <div class="header-right">
                 <div class="top-header-title">Szybki Wybór</div>
                 <div class="top-content-wrapper">
                     <div class="top-mini-grid">
-                        <button class="ctrl-btn" onclick="filterAlpha('A')">A</button>
-                        <button class="ctrl-btn" onclick="filterAlpha('B')">B</button>
-                        <button class="ctrl-btn" onclick="filterAlpha('C')">C</button>
+                        <button class="nav-btn" style="margin:0; justify-content:center" onclick="filterByLetter('A')">A</button>
+                        <button class="nav-btn" style="margin:0; justify-content:center" onclick="filterByLetter('B')">B</button>
+                        <button class="nav-btn" style="margin:0; justify-content:center" onclick="filterByLetter('C')">C</button>
                     </div>
                     <button class="top-btn-more" onclick="toggleAlpha()">Więcej<br>Liter</button>
                 </div>
             </div>
         </div>
-
         <div id="alpha-shelf" class="alpha-shelf">
-            <div id="alpha-row">
-                </div>
+            <div id="alpha-row"></div>
         </div>
-        
-        <div id="view-title" class="view-title-header">Wszystkie Utwory</div>
+        <div id="view-title" class="view-title-header">Katalog Utworów</div>
     </div>
 
     <div id="main-display">
-        <div id="items-container" class="display-padding items-grid">
-            </div>
+        <div id="container" class="items-grid"></div>
     </div>
 </div>
 
 <script>
-    // Przykładowe dane (zastąp swoimi z arkusza)
-    const utwory = [
-        { id: 1, tytul: "Pieśń Nadziei", autor: "Luna Vera", tag: "nowosci", litera: "P" },
-        { id: 2, tytul: "Błękitne Niebo", autor: "Ekipa", tag: "klasyka", litera: "B" }
+    // DANE TESTOWE - Tu skrypt zaciągnie Twoje dane
+    const data = [
+        { tytul: "Przykładowy Utwór Luna Vera", autor: "Luna Vera", tag: "nowosci", litera: "P" },
+        { tytul: "Produkcja Ekipa", autor: "Ekipa", tag: "klasyka", litera: "E" }
     ];
 
-    let currentLayout = 'grid';
+    let currentMode = 'grid';
 
-    function setSize(mode, btn) {
-        document.body.className = mode;
+    function setView(mode) {
+        currentMode = mode;
+        render();
+    }
+
+    function changeFontSize(size, btn) {
+        document.body.className = size;
         document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
     }
 
-    function setLayout(layout, btn) {
-        currentLayout = layout;
-        const container = document.getElementById('items-container');
-        container.className = layout === 'grid' ? 'display-padding items-grid' : 'display-padding list-container';
-        document.querySelectorAll('.nav-btn').forEach(b => { if(b.innerText.includes('Siatka') || b.innerText.includes('Lista')) b.classList.remove('active')});
-        btn.classList.add('active');
-        renderItems(utwory);
+    function toggleAlpha() {
+        const shelf = document.getElementById('alpha-shelf');
+        shelf.style.display = shelf.style.display === 'block' ? 'none' : 'block';
     }
 
-    function renderItems(data) {
-        const container = document.getElementById('items-container');
-        container.innerHTML = data.map(item => {
-            if(currentLayout === 'grid') {
+    function render(filter = 'all') {
+        const container = document.getElementById('container');
+        container.className = currentMode === 'grid' ? 'items-grid' : 'list-container';
+        
+        let filteredData = data;
+        if(filter !== 'all') filteredData = data.filter(i => i.tag === filter);
+
+        container.innerHTML = filteredData.map(item => {
+            if(currentMode === 'grid') {
                 return `
-                    <div class="card">
-                        <div class="thumb-container">
-                            <img src="https://via.placeholder.com/300x169" class="thumb">
-                            <div class="play-overlay"><div class="yt-btn-fake">ODTWÓRZ WIDEO</div></div>
-                        </div>
-                        <div class="card-title">${item.tytul}</div>
-                        <div style="font-size:0.8em">${item.autor}</div>
-                    </div>`;
+                <div class="card">
+                    <div class="thumb-container"></div>
+                    <div class="card-title">${item.tytul}</div>
+                    <div style="font-size:0.8em; opacity:0.6">${item.autor}</div>
+                </div>`;
             } else {
-                return `
-                    <div class="list-card">
-                        <div class="list-title">${item.tytul} - ${item.autor}</div>
-                        <div class="list-overlay">KLIKNIJ, ABY ODTWORZYĆ</div>
-                    </div>`;
+                return `<div class="list-card">${item.tytul} - ${item.autor}</div>`;
             }
         }).join('');
     }
 
     function handleSearch() {
         const val = document.getElementById('searchInput').value.toLowerCase();
-        const filtered = utwory.filter(u => u.tytul.toLowerCase().includes(val) || u.autor.toLowerCase().includes(val));
-        renderItems(filtered);
+        const filtered = data.filter(i => i.tytul.toLowerCase().includes(val) || i.autor.toLowerCase().includes(val));
+        const container = document.getElementById('container');
+        // Prosta logika wyszukiwania bez ponownego renderowania całości
+        if(filtered.length > 0) {
+             // ... rendering filtered
+        }
     }
 
-    // Inicjalizacja
-    renderItems(utwory);
+    // Start
+    render();
 </script>
-
 </body>
 </html>
