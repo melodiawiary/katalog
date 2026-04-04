@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Melodia Wiary - v57 (WERSJA OSTATECZNA - DANE BEZPIECZNE)</title>
+    <title>Katalog Melodia Wiary - v56 (BEZPIECZNA HISTORIA)</title>
     <style>
         :root { 
             --active-orange: #fbda80; --bg: #f4f9f8; --card-bg: #f9fffe;
@@ -42,11 +42,10 @@
         #main-display { padding: 0 0 400px 0; min-height: 100vh; }
         .display-padding { padding: 0 25px; }
         
-        /* GRID */
+        /* KARTY */
         .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 20px; }
         .card { background: var(--card-bg); border: 2px solid rgba(59, 42, 0, 0.08); padding: 12px; border-radius: 15px; text-align: center; position: relative; transition: 0.3s; display: flex; flex-direction: column; cursor: pointer; }
         .card.is-fav { border: 5px solid var(--active-orange); background: #fffcf0; }
-        
         .fav-status-tag { margin-top: 8px; padding: 8px; border-radius: 8px; font-size: 12px; font-weight: 900; background: #eee; border: 1px solid #ccc; text-transform: uppercase; }
         .is-fav .fav-status-tag { background: var(--active-orange); border-color: var(--deep-brown); }
 
@@ -102,19 +101,25 @@
 <script>
     const CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTSIMZUO8ZkisiFoqOfypL9hOQBnTbAvtMmBeIuK56_QoiXFu_b7i-de1Jn6Km9symosxJBV6V5PxKO/pub?output=csv';
     
-    // TYCH KLUCZY NIGDY NIE DOTYKAĆ
-    const PERMANENT_FAV_KEY = 'MELODIA_WIARY_PERMANENT_DATA';
-    const FONT_KEY = 'melodia_wiary_font_pref';
-
+    // NADRZĘDNY KLUCZ - NIGDY NIE ZMIENIAĆ
+    const PERMANENT_KEY = 'MELODIA_WIARY_PERMANENT_DATA';
+    
+    // Lista kluczy z błędnych/starych wersji do odzysku
     const RECOVERY_KEYS = [
-        'favs', 'melodia_wiary_v33_storage', 'melodia_wiary_v34_storage', 
-        'melodia_wiary_v51_storage', 'melodia_wiary_v52_final', 
-        'melodia_wiary_v54_final', 'melodia_wiary_active_storage'
+        'favs', 
+        'melodia_wiary_v33_storage', 
+        'melodia_wiary_v34_storage', 
+        'melodia_wiary_v51_storage', 
+        'melodia_wiary_v52_final', 
+        'melodia_wiary_v54_final',
+        'melodia_wiary_active_storage'
     ];
 
     let songs = [], cart = [], currentView = 'all', displayMode = 'grid', query = "", sortType = 'newest';
 
-    function openYT(id) { window.open(`https://www.youtube.com/watch?v=${id}`, '_blank'); }
+    function openYT(id) {
+        window.open(`https://www.youtube.com/watch?v=${id}`, '_blank');
+    }
 
     function parseCSV(text) {
         const lines = text.split(/\r?\n/).filter(x => x.trim() !== "");
@@ -134,31 +139,34 @@
         document.body.className = s; 
         document.getElementById('s-std').classList.toggle('active', s==='standard');
         document.getElementById('s-big').classList.toggle('active', s==='senior');
-        localStorage.setItem(FONT_KEY, s);
+        localStorage.setItem('mv_font_pref', s);
     }
 
     async function init() {
-        // --- TOTALNA PROCEDURA ODZYSKIWANIA ---
-        let mainStore = localStorage.getItem(PERMANENT_FAV_KEY);
-        let currentCart = mainStore ? JSON.parse(mainStore) : [];
+        // --- ŻELAZNA PROCEDURA ODZYSKIWANIA ---
+        let mainData = localStorage.getItem(PERMANENT_KEY);
+        let recoveredCart = mainData ? JSON.parse(mainData) : [];
 
+        // Jeśli główna baza jest pusta lub ma mało danych, przeszukaj stare klucze
         RECOVERY_KEYS.forEach(key => {
             let oldData = localStorage.getItem(key);
             if (oldData) {
-                let parsed = JSON.parse(oldData);
-                if (Array.isArray(parsed)) {
-                    parsed.forEach(oldItem => {
-                        if (!currentCart.some(s => s.tytul === oldItem.tytul)) {
-                            currentCart.push(oldItem);
+                let parsedOld = JSON.parse(oldData);
+                if (Array.isArray(parsedOld)) {
+                    parsedOld.forEach(oldSong => {
+                        if (!recoveredCart.some(s => s.tytul === oldSong.tytul)) {
+                            recoveredCart.push(oldSong);
                         }
                     });
                 }
             }
         });
 
-        cart = currentCart;
-        localStorage.setItem(PERMANENT_FAV_KEY, JSON.stringify(cart));
-        updateSize(localStorage.getItem(FONT_KEY) || 'standard');
+        cart = recoveredCart;
+        localStorage.setItem(PERMANENT_KEY, JSON.stringify(cart));
+        // --------------------------------------
+
+        updateSize(localStorage.getItem('mv_font_pref') || 'standard');
 
         try {
             const r = await fetch(CSV + '&cb=' + Date.now());
@@ -173,14 +181,14 @@
                 b.onclick = () => setView(cat); catBox.appendChild(b);
             });
             render();
-        } catch(e) { console.error("CSV error", e); }
+        } catch(e) { console.error("CSV Error", e); }
     }
 
     function toggleFav(t) {
         const idx = cart.findIndex(x => x.tytul === t);
         if(idx > -1) cart.splice(idx, 1);
         else { const s = songs.find(x => x.tytul === t); if(s) cart.push(s); }
-        localStorage.setItem(PERMANENT_FAV_KEY, JSON.stringify(cart));
+        localStorage.setItem(PERMANENT_KEY, JSON.stringify(cart));
         render();
     }
 
