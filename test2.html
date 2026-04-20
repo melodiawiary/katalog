@@ -42,7 +42,6 @@
             height: 100%;
         }
 
-        /* Twój oryginalny kod pozycjonowania - przyklejony do góry */
         #player {
             width: 100vw;
             height: 56.25vw; 
@@ -190,18 +189,17 @@
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
         var player;
-        function onYouTubeIframeAPIReady() {
-            var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth <= 850;
-            var currentVideoId = isMobile ? 'fYAvT76Nsco' : 'a6b-OhYAXQs';
+        var videoId = 'a6b-OhYAXQs'; // Jeden film dla wszystkich urządzeń
 
+        function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
-                videoId: currentVideoId,
+                videoId: videoId,
                 playerVars: {
                     'autoplay': 1,
                     'mute': 1,
                     'controls': 0,
                     'loop': 1,
-                    'playlist': currentVideoId,
+                    'playlist': videoId,
                     'showinfo': 0,
                     'modestbranding': 1,
                     'iv_load_policy': 3,
