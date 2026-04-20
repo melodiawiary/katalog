@@ -9,6 +9,7 @@
         :root {
             --dark-blue: #1D2B36; 
             --white: #ffffff;
+            --light-bg: #fdfdfd;
         }
 
         body, html {
@@ -16,18 +17,21 @@
             padding: 0;
             font-family: 'Comfortaa', cursive;
             color: var(--dark-blue);
+            line-height: 1.8;
             background-color: var(--white);
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
+            scroll-behavior: smooth;
         }
 
-        /* --- Sekcja Hero --- */
+        /* --- Sekcja Hero (Poprawiona) --- */
         .hero {
             position: relative;
-            height: 85vh; 
+            height: 90vh; 
             width: 100%;
             overflow: hidden;
-            background-color: white;
+            background-color: white; /* Tło pod filmem */
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .video-background {
@@ -36,16 +40,15 @@
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none;
         }
 
+        /* Ustawienie filmu tak, by ZAWSZE widzieć dół (object-fit: contain dla iframe) */
         #player {
             width: 100vw;
-            height: 56.25vw;
-            min-height: 95vh; 
-            min-width: 120vh; /* Zmniejszone, by odzyskać dół filmu na desktopie */
+            height: 56.25vw; /* Proporcje 16:9 */
+            min-height: 70vh; /* Nie pozwalamy mu być za małym */
             position: absolute;
-            top: -5vh; /* Stałe 5% cięcia góry */
+            top: 0; /* Przyklejony do góry */
             left: 50%;
             transform: translateX(-50%);
         }
@@ -56,23 +59,27 @@
             left: 0;
             width: 100%;
             height: 100%;
-            /* Gradient, który płynnie "wtapia" film w tło */
-            background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 80%, rgba(255, 255, 255, 1) 100%);
+            /* Bardzo delikatny gradient, by film "płynął" w stronę */
+            background: linear-gradient(to bottom, 
+                rgba(255, 255, 255, 0) 80%, 
+                rgba(255, 255, 255, 1) 100%);
             z-index: 1;
         }
 
+        /* --- Przycisk dźwięku --- */
         #mute-btn {
             position: absolute;
-            bottom: 30px;
-            right: 20px;
+            bottom: 40px;
+            right: 40px;
             z-index: 10;
             background: rgba(255, 255, 255, 0.7);
             border: 1px solid var(--dark-blue);
-            padding: 8px 16px;
+            color: var(--dark-blue);
+            padding: 10px 22px;
             border-radius: 30px;
             cursor: pointer;
             font-family: 'Comfortaa', cursive;
-            font-size: 0.8rem;
+            font-weight: 600;
             backdrop-filter: blur(5px);
         }
 
@@ -80,59 +87,54 @@
             position: relative;
             z-index: 2;
             text-align: center;
-            margin-top: 75vh;
+            color: var(--dark-blue);
+            margin-top: 10vh;
         }
 
         .hero-content h1 {
             font-weight: 600;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             text-transform: uppercase;
-            font-size: 1.2rem;
-            text-shadow: 0px 0px 10px rgba(255,255,255,0.8);
+            font-size: 1.4rem;
+            text-shadow: 0px 0px 15px rgba(255,255,255,0.8);
         }
 
-        /* --- Treść --- */
+        /* --- Układ z Logo i Tekstem --- */
         .main-container {
             max-width: 1100px;
             margin: 0 auto;
-            padding: 60px 20px;
+            padding: 80px 20px;
             display: flex;
             align-items: center;
             gap: 60px;
         }
 
         .logo-side { flex: 1; text-align: right; }
-        .logo-side img { max-width: 430px; width: 100%; height: auto; }
+        .logo-side img { max-width: 350px; height: auto; }
         .text-side { flex: 1.5; text-align: left; }
 
+        .mission-text { font-size: 1.25rem; margin-bottom: 30px; font-weight: 400; }
+        .details-text { font-weight: 400; font-size: 1rem; margin-bottom: 20px; }
+        .quote { margin-top: 40px; font-style: italic; font-weight: 400; font-size: 1.1rem; }
+
+        /* --- Kontakt --- */
         .contact-section {
-            background-color: #fdfdfd;
-            padding: 80px 20px;
+            background-color: var(--light-bg);
+            padding: 100px 20px;
             text-align: center;
             border-top: 1px solid #f0f0f0;
         }
 
-        .contact-link { 
-            display: block; font-size: 1.2rem; color: var(--dark-blue); 
-            text-decoration: none; margin: 15px 0; font-weight: 600;
-        }
+        .contact-link { display: block; font-size: 1.35rem; color: var(--dark-blue); text-decoration: none; margin: 15px 0; font-weight: 600; }
+        .social-links { margin-top: 40px; }
+        .social-links a { margin: 0 20px; color: var(--dark-blue); text-decoration: none; font-weight: 600; }
 
-        .mobile-break { display: none; }
+        footer { padding: 60px; font-size: 0.8rem; opacity: 0.6; text-align: center; }
 
-        /* --- TYLKO POPRAWKI MOBILNE --- */
         @media (max-width: 850px) {
-            .hero { height: 65vh; }
-            #player { 
-                width: 100vw; 
-                height: 56.25vw; /* Przywrócenie proporcji, by nie ucinało boków */
-                min-width: 100vw; 
-                min-height: 35vh;
-                top: 0; 
-            }
-            .hero-content { margin-top: 55vh; }
             .main-container { flex-direction: column; text-align: center; }
-            .logo-side img { max-width: 280px; }
-            .mobile-break { display: block; }
+            .logo-side, .text-side { text-align: center; }
+            .logo-side img { max-width: 250px; }
         }
     </style>
 </head>
@@ -143,9 +145,11 @@
             <div id="player"></div>
         </div>
         <div class="video-overlay"></div>
+        
         <button id="mute-btn">
-            <span id="mute-icon">🔈</span> <span id="mute-text">Dźwięk</span>
+            <span id="mute-icon">🔈</span> <span id="mute-text">Włącz dźwięk</span>
         </button>
+
         <div class="hero-content">
             <h1>Zatrzymaj się i odnajdź spokój</h1>
         </div>
@@ -153,21 +157,38 @@
 
     <div class="main-container">
         <div class="logo-side">
-            <img src="logo2.png" alt="Harmonia Forest Logo">
+            <img src="logo.png" alt="Harmonia Forest Logo">
         </div>
         <div class="text-side">
-            <p><strong>Harmonia Forest</strong> to ogólnopolska pracownia autorska, łącząca pasję do przyrody ze szlachetnymi technikami artystycznymi.</p>
-            <p>Uczymy kontaktu z naturą poprzez działania twórcze, oferując powrót do uważności i sprawczości rąk.</p>
+            <p class="mission-text">
+                <strong>Harmonia Forest</strong> to ogólnopolska pracownia autorska, w której łączymy pasję do przyrody ze szlachetnymi technikami artystycznymi.
+            </p>
+            <p class="details-text">
+                Uczymy kontaktu z naturą poprzez działania twórcze, do których zapraszamy dzieci, dorosłych i firmy. Oferujemy powrót do uważności i do sprawczości płynącej z pracy własnych rąk.
+            </p>
+            <p class="details-text">
+                Naszą misją jest utrwalenie piękna natury w skupieniu na estetyce i szacunku do roślin. Łączymy doświadczenia zebrane podczas życia w Azji i Australii z zawodowymi umiejętnościami pracy z ludźmi.
+            </p>
+            <p class="quote">
+                Gdy zmęczy Cię pośpiech i nowoczesność, zatrzymaj się z nami i odnajdź spokój.
+            </p>
         </div>
     </div>
 
     <section class="contact-section">
         <h2>Kontakt</h2>
         <a href="tel:724549009" class="contact-link">tel. 724 54 90 09</a>
-        <a href="mailto:harmonia@harmoniaforest.pl" class="contact-link">
-            harmonia<span class="mobile-break"></span>@harmoniaforest.pl
-        </a>
+        <a href="mailto:harmonia@harmoniaforest.pl" class="contact-link">harmonia@harmoniaforest.pl</a>
+        
+        <div class="social-links">
+            <a href="https://facebook.com/HarmoniaForest" target="_blank">Facebook</a>
+            <a href="https://instagram.com/harmonia_forest" target="_blank">Instagram</a>
+        </div>
     </section>
+
+    <footer>
+        &copy; 2026 Harmonia Forest | Autorska Pracownia Przyrodnicza
+    </footer>
 
     <script>
         var tag = document.createElement('script');
@@ -179,21 +200,39 @@
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
                 videoId: 'EhPrt5puEe8',
-                playerVars: { 'autoplay': 1, 'mute': 1, 'controls': 0, 'loop': 1, 'playlist': 'EhPrt5puEe8', 'showinfo': 0, 'modestbranding': 1 }
+                playerVars: {
+                    'autoplay': 1,
+                    'mute': 1,
+                    'controls': 0,
+                    'loop': 1,
+                    'playlist': 'EhPrt5puEe8',
+                    'showinfo': 0,
+                    'modestbranding': 1,
+                    'iv_load_policy': 3,
+                    'rel': 0
+                },
+                events: { 'onReady': onPlayerReady }
             });
         }
 
-        document.getElementById('mute-btn').addEventListener('click', function() {
-            if (player.isMuted()) {
-                player.unMute();
-                document.getElementById('mute-text').innerText = "Wycisz";
-                document.getElementById('mute-icon').innerText = "🔊";
-            } else {
-                player.mute();
-                document.getElementById('mute-text').innerText = "Dźwięk";
-                document.getElementById('mute-icon').innerText = "🔈";
-            }
-        });
+        function onPlayerReady(event) {
+            event.target.playVideo();
+            var muteBtn = document.getElementById('mute-btn');
+            var muteText = document.getElementById('mute-text');
+            var muteIcon = document.getElementById('mute-icon');
+
+            muteBtn.addEventListener('click', function() {
+                if (player.isMuted()) {
+                    player.unMute();
+                    muteText.innerText = "Wycisz";
+                    muteIcon.innerText = "🔊";
+                } else {
+                    player.mute();
+                    muteText.innerText = "Włącz dźwięk";
+                    muteIcon.innerText = "🔈";
+                }
+            });
+        }
     </script>
 </body>
 </html>
