@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harmonia Forest</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Paleta kolorów: Biel i Granat z Logo */
+        :root {
+            --dark-blue: #1D2B36; /* Kolor z Twojego logo */
+            --white: #ffffff;
+            --light-bg: #f9f9f9;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            color: var(--dark-blue);
+            line-height: 1.6;
+            scroll-behavior: smooth;
+        }
+
+        /* --- Sekcja Video (Hero) --- */
+        .hero {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--dark-blue);
+        }
+
+        .hero video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+            opacity: 0.7; /* Przyciemnienie wideo dla czytelności */
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            color: var(--white);
+        }
+
+        .hero-content img {
+            max-width: 200px; /* Twoje logo na środku */
+            margin-bottom: 20px;
+            filter: brightness(0) invert(1); /* Zmienia logo na białe na tle wideo */
+        }
+
+        /* --- Sekcja O Nas / Co Robimy --- */
+        .section {
+            padding: 100px 20px;
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        h2 {
+            font-weight: 300;
+            font-size: 2.5rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .grid-item h3 {
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
+        /* --- Sekcja Kontakt --- */
+        .contact {
+            background-color: var(--light-bg);
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .contact-info {
+            font-size: 1.2rem;
+            margin-top: 20px;
+        }
+
+        .contact-info a {
+            color: var(--dark-blue);
+            text-decoration: none;
+            font-weight: 600;
+            border-bottom: 1px solid var(--dark-blue);
+        }
+
+        footer {
+            padding: 40px;
+            font-size: 0.8rem;
+            text-align: center;
+            letter-spacing: 1px;
+            opacity: 0.6;
+        }
+
+        /* Przycisk */
+        .btn {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 30px;
+            border: 1px solid var(--dark-blue);
+            color: var(--dark-blue);
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background-color: var(--dark-blue);
+            color: var(--white);
+        }
+    </style>
+</head>
+<body>
+
+    <section class="hero">
+        <video autoplay muted loop playsinline poster="poster.jpg">
+            <source src="hero-video.mp4" type="video/mp4">
+        </video>
+        <div class="hero-content">
+            <img src="logo.jpg" alt="Harmonia Forest Logo">
+            <p style="font-weight: 300; letter-spacing: 5px; text-transform: uppercase;">Naturalna Elegancja</p>
+        </div>
+    </section>
+
+    <section class="section" id="about">
+        <h2>Co robimy</h2>
+        <p>Tworzymy przestrzenie i doświadczenia w harmonii z naturą. Skupiamy się na surowym pięknie i autentyczności.</p>
+        
+        <div class="grid">
+            <div class="grid-item">
+                <h3>Produkcja</h3>
+                <p>Tworzymy unikalne treści wizualne inspirowane naturą i spokojem lasu.</p>
+            </div>
+            <div class="grid-item">
+                <h3>Design</h3>
+                <p>Projektujemy z myślą o minimalizmie, używając szlachetnych barw i prostych form.</p>
+            </div>
+            <div class="grid-item">
+                <h3>Warsztaty</h3>
+                <p>Dzielimy się pasją do tworzenia w duchu slow life.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact">
+        <h2>Kontakt</h2>
+        <div class="contact-info">
+            <p>Masz pytania? Napisz do nas.</p>
+            <p><a href="mailto:kontakt@harmoniaforest.pl">kontakt@harmoniaforest.pl</a></p>
+            <p>+48 000 000 000</p>
+        </div>
+        <a href="#about" class="btn">Dowiedz się więcej</a>
+    </section>
+
+    <footer>
+        &copy; 2026 HARMONIA FOREST. ALL RIGHTS RESERVED.
+    </footer>
+
+</body>
+</html>
