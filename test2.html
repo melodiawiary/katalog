@@ -25,7 +25,7 @@
         /* --- Sekcja Hero --- */
         .hero {
             position: relative;
-            height: 90vh; 
+            height: 90vh; /* Desktop trzyma wysokość */
             width: 100%;
             overflow: hidden;
             background-color: white;
@@ -64,16 +64,15 @@
             z-index: 1;
         }
 
-        /* PRZYCISK: Przesunięty na dół ramki */
         #mute-btn {
             position: absolute;
-            bottom: 15px; /* Tuż nad krawędzią sekcji hero */
+            bottom: 20px;
             right: 20px;
-            z-index: 10;
-            background: rgba(255, 255, 255, 0.7);
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.8);
             border: 1px solid var(--dark-blue);
             color: var(--dark-blue);
-            padding: 8px 18px;
+            padding: 8px 16px;
             border-radius: 30px;
             cursor: pointer;
             font-family: 'Comfortaa', cursive;
@@ -116,7 +115,7 @@
 
         .contact-section {
             background-color: var(--light-bg);
-            padding: 100px 20px;
+            padding: 80px 20px;
             text-align: center;
             border-top: 1px solid #f0f0f0;
         }
@@ -125,18 +124,36 @@
         .social-links { margin-top: 40px; }
         .social-links a { margin: 0 20px; color: var(--dark-blue); text-decoration: none; font-weight: 600; }
 
-        footer { padding: 60px; font-size: 0.8rem; opacity: 0.6; text-align: center; }
+        footer { padding: 40px; font-size: 0.8rem; opacity: 0.6; text-align: center; }
 
+        /* --- POPRAWKI MOBILNE --- */
         @media (max-width: 850px) {
-            #player {
-                top: 0 !important;
-                min-height: auto !important;
-                transform: translateX(-50%);
+            .hero { 
+                height: 56.25vw; /* Wysokość idealnie pod film 16:9 */
+                min-height: auto;
             }
-            .main-container { flex-direction: column; text-align: center; }
+            #player {
+                position: relative;
+                min-height: auto !important;
+                height: 56.25vw;
+                top: 0;
+            }
+            .hero-content { display: none; } /* Wywalamy napis na mobile */
+            
+            #mute-btn {
+                bottom: 10px;
+                right: 10px;
+                padding: 6px 12px;
+                font-size: 0.75rem;
+            }
+
+            .main-container { 
+                flex-direction: column; 
+                padding: 40px 20px;
+                gap: 30px;
+            }
             .logo-side, .text-side { text-align: center; }
-            .logo-side img { max-width: 250px; }
-            #mute-btn { bottom: 10px; right: 10px; padding: 6px 14px; font-size: 0.8rem; }
+            .logo-side img { max-width: 200px; }
         }
     </style>
 </head>
