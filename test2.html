@@ -42,15 +42,24 @@
             height: 100%;
         }
 
-        /* IDENTYCZNE POZYCJONOWANIE JAK WCZEŚNIEJ */
         #player {
             width: 100vw;
             height: 56.25vw; 
-            min-height: 70vh; 
+            min-height: 75vh; /* Zwiększone, by wymusić crop na mobile */
             position: absolute;
             top: 0; 
             left: 50%;
             transform: translateX(-50%);
+        }
+
+        /* Na bardzo wąskich ekranach (mobile) musimy "rozciągnąć" wysokość filmu, by obciąć boki */
+        @media (max-width: 850px) {
+            #player {
+                width: 177.78vh; /* Wymuszenie proporcji 16:9 względem wysokości, co tnie boki */
+                height: 75vh;
+                min-width: 100vw;
+                top: 0;
+            }
         }
 
         .video-overlay {
@@ -60,7 +69,7 @@
             width: 100%;
             height: 100%;
             background: linear-gradient(to bottom, 
-                rgba(255, 255, 255, 0) 80%, 
+                rgba(255, 255, 255, 0) 70%, 
                 rgba(255, 255, 255, 1) 100%);
             z-index: 1;
         }
@@ -157,10 +166,10 @@
         </div>
         <div class="text-side">
             <p class="mission-text">
-                <strong>Harmonia Forest</strong> to ogólnopolska pracownia autorska, w której łączymy pasję do przyrody ze szlachetnymi technikami artystycznymi. Nasza misją jest utrwalenie piękna natury w skupieniu na estetyce i szacunku do roślin.
+                <strong>Harmonia Forest</strong> to ogólnopolska pracownia autorska, w której łączymy pasję do przyrody ze szlachetnymi technikami artystycznymi.
             </p>
-            <p class="mission-text">
-                Uczymy kontaktu z naturą poprzez działania twórcze, do których zapraszamy dzieci, dorosłych i firmy. Oferujemy powrót do uważności i do sprawczości płynącej z pracy własnych rąk. Łączymy doświadczenia zebrane podczas życia w Azji, Australii z zawodowymi umiejętnościami pracy z ludźmi. Przekazując wiedzę i techniki dbamy, by każde spotkanie sprzyjało wspólnemu dobrostanowi oraz wewnętrznej równowadze.
+            <p class="details-text">
+                Uczymy kontaktu z naturą poprzez działania twórcze, do których zapraszamy dzieci, dorosłych i firmy. Oferujemy powrót do uważności i do sprawczości płynącej z pracy własnych rąk.
             </p>
             <p class="quote">
                 Gdy zmęczy Cię pośpiech i nowoczesność, zatrzymaj się z nami i odnajdź spokój.
