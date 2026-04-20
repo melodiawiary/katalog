@@ -22,13 +22,13 @@
             scroll-behavior: smooth;
         }
 
-        /* --- Sekcja Hero --- */
+        /* --- Sekcja Hero (Poprawiona) --- */
         .hero {
             position: relative;
             height: 90vh; 
             width: 100%;
             overflow: hidden;
-            background-color: white;
+            background-color: white; /* Tło pod filmem */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -42,13 +42,13 @@
             height: 100%;
         }
 
-        /* Desktop - Twoje ustawienia bazowe */
+        /* Ustawienie filmu tak, by ZAWSZE widzieć dół (object-fit: contain dla iframe) */
         #player {
             width: 100vw;
-            height: 56.25vw; 
-            min-height: 70vh; 
+            height: 56.25vw; /* Proporcje 16:9 */
+            min-height: 70vh; /* Nie pozwalamy mu być za małym */
             position: absolute;
-            top: 0; 
+            top: 0; /* Przyklejony do góry */
             left: 50%;
             transform: translateX(-50%);
         }
@@ -59,12 +59,14 @@
             left: 0;
             width: 100%;
             height: 100%;
+            /* Bardzo delikatny gradient, by film "płynął" w stronę */
             background: linear-gradient(to bottom, 
                 rgba(255, 255, 255, 0) 80%, 
                 rgba(255, 255, 255, 1) 100%);
             z-index: 1;
         }
 
+        /* --- Przycisk dźwięku --- */
         #mute-btn {
             position: absolute;
             bottom: 40px;
@@ -97,6 +99,7 @@
             text-shadow: 0px 0px 15px rgba(255,255,255,0.8);
         }
 
+        /* --- Układ z Logo i Tekstem --- */
         .main-container {
             max-width: 1100px;
             margin: 0 auto;
@@ -111,8 +114,10 @@
         .text-side { flex: 1.5; text-align: left; }
 
         .mission-text { font-size: 1.25rem; margin-bottom: 30px; font-weight: 400; }
+        .details-text { font-weight: 400; font-size: 1rem; margin-bottom: 20px; }
         .quote { margin-top: 40px; font-style: italic; font-weight: 400; font-size: 1.1rem; }
 
+        /* --- Kontakt --- */
         .contact-section {
             background-color: var(--light-bg);
             padding: 100px 20px;
@@ -126,13 +131,7 @@
 
         footer { padding: 60px; font-size: 0.8rem; opacity: 0.6; text-align: center; }
 
-        /* --- POPRAWKA MOBILNA --- */
         @media (max-width: 850px) {
-            #player {
-                top: 0 !important;
-                min-height: auto !important; /* Usuwa blokadę wysokości, która mogła wypychać film */
-                transform: translateX(-50%);
-            }
             .main-container { flex-direction: column; text-align: center; }
             .logo-side, .text-side { text-align: center; }
             .logo-side img { max-width: 250px; }
@@ -164,8 +163,11 @@
             <p class="mission-text">
                 <strong>Harmonia Forest</strong> to ogólnopolska pracownia autorska, w której łączymy pasję do przyrody ze szlachetnymi technikami artystycznymi. Nasza misją jest utrwalenie piękna natury w skupieniu na estetyce i szacunku do roślin.
             </p>
-            <p class="mission-text">
-                Uczymy kontaktu z naturą poprzez działania twórcze, do których zapraszamy dzieci, dorosłych i firmy. Oferujemy powrót do uważności i do sprawczości płynącej z pracy własnych rąk. Łączymy doświadczenia zebrane podczas życia w Azji, Australii z zawodowymi umiejętnościami pracy z ludźmi. Przekazując wiedzę i techniki dbamy, by każde spotkanie sprzyjało wspólnemu dobrostanowi oraz wewnętrznej równowadze.
+            <p class="details-text">
+                Uczymy kontaktu z naturą poprzez działania twórcze, do których zapraszamy dzieci, dorosłych i firmy. Oferujemy powrót do uważności i do sprawczości płynącej z pracy własnych rąk.
+            </p>
+            <p class="details-text">
+                Oferujemy powrót do uważności i do sprawczości płynącej z pracy własnych rąk. Łączymy doświadczenia zebrane podczas życia w Azji i Australii z zawodowymi umiejętnościami pracy z ludźmi. Przekazując wiedzę i techniki dbamy, by każde spotkanie sprzyjało wspólnemu dobrostanowi oraz wewnętrznej równowadze.
             </p>
             <p class="quote">
                 Gdy zmęczy Cię pośpiech i nowoczesność, zatrzymaj się z nami i odnajdź spokój.
@@ -185,7 +187,7 @@
     </section>
 
     <footer>
-        &copy; 2026 Harmonia Forest | Autorska Pracownia Przyrodnicza
+        &copy; 2026 Harmonia Forest
     </footer>
 
     <script>
@@ -195,17 +197,15 @@
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
         var player;
-        var videoId = 'a6b-OhYAXQs';
-
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
-                videoId: videoId,
+                videoId: 'a6b-OhYAXQs',
                 playerVars: {
                     'autoplay': 1,
                     'mute': 1,
                     'controls': 0,
                     'loop': 1,
-                    'playlist': videoId,
+                    'playlist': 'a6b-OhYAXQs',
                     'showinfo': 0,
                     'modestbranding': 1,
                     'iv_load_policy': 3,
