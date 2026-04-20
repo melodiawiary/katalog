@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Harmonia Forest | Pracownia Autorska</title>
-    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --dark-blue: #1D2B36; 
@@ -20,6 +20,7 @@
             line-height: 1.8;
             background-color: var(--white);
             scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased; /* Poprawia renderowanie czcionki */
         }
 
         /* --- Sekcja Hero --- */
@@ -43,15 +44,16 @@
             pointer-events: none;
         }
 
-        .video-background iframe {
+        /* Przyklejenie do góry, by nie ucinało góry filmu */
+        #player {
             width: 100vw;
-            height: 56.25vw;
+            height: 56.25vw; /* 16:9 */
             min-height: 100vh;
             min-width: 177.77vh;
             position: absolute;
-            top: 50%;
+            top: 0; 
             left: 50%;
-            transform: translate(-50%, -50%);
+            transform: translateX(-50%);
         }
 
         .video-overlay {
@@ -60,10 +62,38 @@
             left: 0;
             width: 100%;
             height: 100%;
+            /* Przejście w biel na dole */
             background: linear-gradient(to bottom, 
-                rgba(255, 255, 255, 0) 60%, 
+                rgba(255, 255, 255, 0) 50%, 
                 rgba(255, 255, 255, 1) 100%);
             z-index: 1;
+        }
+
+        /* --- Przycisk dźwięku --- */
+        #mute-btn {
+            position: absolute;
+            bottom: 40px;
+            right: 40px;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid var(--dark-blue);
+            color: var(--dark-blue);
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: 'Comfortaa', cursive;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            backdrop-filter: blur(5px);
+        }
+
+        #mute-btn:hover {
+            background: var(--dark-blue);
+            color: white;
         }
 
         .hero-content {
@@ -71,26 +101,27 @@
             z-index: 2;
             text-align: center;
             color: var(--dark-blue);
+            margin-top: 20vh; /* Obniżenie napisu, by nie zasłaniał góry filmu */
         }
 
         .hero-content h1 {
-            font-weight: 300;
-            letter-spacing: 4px;
+            font-weight: 600; /* Grubsza czcionka */
+            letter-spacing: 3px;
             text-transform: uppercase;
             font-size: 1.4rem;
             margin: 0;
         }
 
-        /* --- Treść --- */
+        /* --- Sekcja Treści --- */
         .content-wrapper {
-            padding: 60px 20px 100px 20px;
+            padding: 80px 20px 100px 20px;
             max-width: 850px;
             margin: 0 auto;
             text-align: center;
         }
 
         .mission-text {
-            font-size: 1.15rem;
+            font-size: 1.2rem;
             margin-bottom: 50px;
             font-weight: 400;
         }
@@ -104,8 +135,15 @@
         }
 
         .details-grid p {
-            font-weight: 300;
-            font-size: 0.95rem;
+            font-weight: 400; /* Grubsza czcionka dla czytelności */
+            font-size: 1rem;
+        }
+
+        .quote {
+            margin-top: 60px;
+            font-style: italic;
+            font-weight: 400;
+            color: var(--dark-blue);
         }
 
         /* --- Kontakt --- */
@@ -116,51 +154,25 @@
             text-align: center;
         }
 
-        .contact-section h2 {
-            font-weight: 300;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            margin-bottom: 40px;
-        }
-
         .contact-link {
             display: block;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             color: var(--dark-blue);
             text-decoration: none;
-            margin: 10px 0;
-            font-weight: 400;
+            margin: 15px 0;
+            font-weight: 600;
         }
 
-        .social-links {
-            margin-top: 40px;
-        }
+        .social-links { margin-top: 40px; }
+        .social-links a { margin: 0 20px; color: var(--dark-blue); text-decoration: none; font-size: 0.9rem; font-weight: 600; border-bottom: 1px solid transparent; transition: border 0.3s; }
+        .social-links a:hover { border-bottom: 1px solid var(--dark-blue); }
 
-        .social-links a {
-            margin: 0 20px;
-            color: var(--dark-blue);
-            text-decoration: none;
-            font-size: 0.85rem;
-            border-bottom: 1px solid transparent;
-            transition: border 0.3s;
-        }
-
-        .social-links a:hover {
-            border-bottom: 1px solid var(--dark-blue);
-        }
-
-        footer {
-            padding: 60px;
-            font-size: 0.7rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            opacity: 0.4;
-            text-align: center;
-        }
+        footer { padding: 60px; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; opacity: 0.6; text-align: center; }
 
         @media (max-width: 768px) {
             .details-grid { grid-template-columns: 1fr; }
-            .hero-content h1 { font-size: 1rem; letter-spacing: 2px; }
+            .hero-content h1 { font-size: 1.1rem; }
+            #mute-btn { bottom: 20px; right: 20px; }
         }
     </style>
 </head>
@@ -168,14 +180,14 @@
 
     <section class="hero">
         <div class="video-background">
-            <iframe 
-                src="https://www.youtube.com/embed/r4GlCvsGiPQ?autoplay=1&mute=1&controls=0&loop=1&playlist=r4GlCvsGiPQ&rel=0&showinfo=0&modestbranding=1&iv_load_policy=3" 
-                frameborder="0" 
-                allow="autoplay; encrypted-media">
-            </iframe>
+            <div id="player"></div>
         </div>
         <div class="video-overlay"></div>
         
+        <button id="mute-btn">
+            <span id="mute-icon">🔈</span> <span id="mute-text">Włącz dźwięk</span>
+        </button>
+
         <div class="hero-content">
             <h1>Zatrzymaj się i odnajdź spokój</h1>
         </div>
@@ -195,7 +207,7 @@
             </div>
         </div>
         
-        <p style="margin-top: 40px; font-style: italic; font-weight: 300;">
+        <p class="quote">
             Gdy zmęczy Cię pośpiech i nowoczesność, zatrzymaj się z nami i odnajdź spokój.
         </p>
     </div>
@@ -215,5 +227,52 @@
         &copy; 2026 Harmonia Forest | Autorska Pracownia Przyrodnicza
     </footer>
 
+    <script>
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        var player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                videoId: 'EhPrt5puEe8',
+                playerVars: {
+                    'autoplay': 1,
+                    'mute': 1,
+                    'controls': 0,
+                    'loop': 1,
+                    'playlist': 'EhPrt5puEe8',
+                    'showinfo': 0,
+                    'modestbranding': 1,
+                    'iv_load_policy': 3,
+                    'rel': 0
+                },
+                events: {
+                    'onReady': onPlayerReady
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            event.target.playVideo();
+            
+            var muteBtn = document.getElementById('mute-btn');
+            var muteText = document.getElementById('mute-text');
+            var muteIcon = document.getElementById('mute-icon');
+
+            muteBtn.addEventListener('click', function() {
+                if (player.isMuted()) {
+                    player.unMute();
+                    muteText.innerText = "Wycisz";
+                    muteIcon.innerText = "🔊";
+                } else {
+                    player.mute();
+                    muteText.innerText = "Włącz dźwięk";
+                    muteIcon.innerText = "🔈";
+                }
+            });
+        }
+    </script>
 </body>
 </html>
