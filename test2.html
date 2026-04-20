@@ -20,16 +20,15 @@
             line-height: 1.8;
             background-color: var(--white);
             scroll-behavior: smooth;
-            -webkit-font-smoothing: antialiased;
         }
 
-        /* --- Sekcja Hero --- */
+        /* --- Sekcja Hero (Poprawiona) --- */
         .hero {
             position: relative;
             height: 90vh; 
             width: 100%;
             overflow: hidden;
-            background-color: white;
+            background-color: white; /* Tło pod filmem */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -41,16 +40,15 @@
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none;
         }
 
+        /* Ustawienie filmu tak, by ZAWSZE widzieć dół (object-fit: contain dla iframe) */
         #player {
             width: 100vw;
-            height: 56.25vw;
-            min-height: 90vh; 
-            min-width: 160vh; 
+            height: 56.25vw; /* Proporcje 16:9 */
+            min-height: 70vh; /* Nie pozwalamy mu być za małym */
             position: absolute;
-            top: 0; 
+            top: 0; /* Przyklejony do góry */
             left: 50%;
             transform: translateX(-50%);
         }
@@ -61,8 +59,9 @@
             left: 0;
             width: 100%;
             height: 100%;
+            /* Bardzo delikatny gradient, by film "płynął" w stronę */
             background: linear-gradient(to bottom, 
-                rgba(255, 255, 255, 0) 88%, 
+                rgba(255, 255, 255, 0) 80%, 
                 rgba(255, 255, 255, 1) 100%);
             z-index: 1;
         }
@@ -81,22 +80,15 @@
             cursor: pointer;
             font-family: 'Comfortaa', cursive;
             font-weight: 600;
-            font-size: 0.85rem;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 10px;
             backdrop-filter: blur(5px);
         }
-
-        #mute-btn:hover { background: var(--dark-blue); color: white; }
 
         .hero-content {
             position: relative;
             z-index: 2;
             text-align: center;
             color: var(--dark-blue);
-            margin-top: 15vh;
+            margin-top: 10vh;
         }
 
         .hero-content h1 {
@@ -104,91 +96,45 @@
             letter-spacing: 3px;
             text-transform: uppercase;
             font-size: 1.4rem;
-            margin: 0;
             text-shadow: 0px 0px 15px rgba(255,255,255,0.8);
         }
 
-        /* --- Sekcja Treści (UKŁAD Z LOGO PO LEWEJ) --- */
+        /* --- Układ z Logo i Tekstem --- */
         .main-container {
             max-width: 1100px;
             margin: 0 auto;
             padding: 80px 20px;
             display: flex;
-            align-items: center; /* Wyrównanie w pionie */
-            gap: 60px; /* Odstęp między logo a tekstem */
+            align-items: center;
+            gap: 60px;
         }
 
-        .logo-side {
-            flex: 1;
-            text-align: right;
-        }
+        .logo-side { flex: 1; text-align: right; }
+        .logo-side img { max-width: 350px; height: auto; }
+        .text-side { flex: 1.5; text-align: left; }
 
-        .logo-side img {
-            max-width: 350px; /* Możesz dostosować wielkość logo */
-            height: auto;
-        }
-
-        .text-side {
-            flex: 1.5;
-            text-align: left;
-        }
-
-        .mission-text {
-            font-size: 1.2rem;
-            margin-bottom: 30px;
-            font-weight: 400;
-        }
-
-        .details-text {
-            font-weight: 400;
-            font-size: 1rem;
-            margin-bottom: 20px;
-        }
-
-        .quote {
-            margin-top: 40px;
-            font-style: italic;
-            font-weight: 400;
-            font-size: 1.1rem;
-            color: var(--dark-blue);
-        }
+        .mission-text { font-size: 1.25rem; margin-bottom: 30px; font-weight: 400; }
+        .details-text { font-weight: 400; font-size: 1rem; margin-bottom: 20px; }
+        .quote { margin-top: 40px; font-style: italic; font-weight: 400; font-size: 1.1rem; }
 
         /* --- Kontakt --- */
         .contact-section {
             background-color: var(--light-bg);
             padding: 100px 20px;
-            border-top: 1px solid #f0f0f0;
             text-align: center;
+            border-top: 1px solid #f0f0f0;
         }
 
-        .contact-link {
-            display: block;
-            font-size: 1.35rem;
-            color: var(--dark-blue);
-            text-decoration: none;
-            margin: 15px 0;
-            font-weight: 600;
-        }
-
+        .contact-link { display: block; font-size: 1.35rem; color: var(--dark-blue); text-decoration: none; margin: 15px 0; font-weight: 600; }
         .social-links { margin-top: 40px; }
-        .social-links a { margin: 0 20px; color: var(--dark-blue); text-decoration: none; font-size: 0.9rem; font-weight: 600; border-bottom: 1px solid transparent; transition: border 0.3s; }
-        .social-links a:hover { border-bottom: 1px solid var(--dark-blue); }
+        .social-links a { margin: 0 20px; color: var(--dark-blue); text-decoration: none; font-weight: 600; }
 
-        footer { padding: 60px; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; opacity: 0.6; text-align: center; }
+        footer { padding: 60px; font-size: 0.8rem; opacity: 0.6; text-align: center; }
 
-        /* Responsywność - na telefonach logo nad tekstem */
         @media (max-width: 850px) {
-            .main-container {
-                flex-direction: column;
-                text-align: center;
-                padding: 40px 20px;
-            }
-            .logo-side, .text-side {
-                text-align: center;
-                flex: none;
-            }
+            .main-container { flex-direction: column; text-align: center; }
+            .logo-side, .text-side { text-align: center; }
             .logo-side img { max-width: 250px; }
-            .hero { height: 80vh; }
         }
     </style>
 </head>
@@ -265,9 +211,7 @@
                     'iv_load_policy': 3,
                     'rel': 0
                 },
-                events: {
-                    'onReady': onPlayerReady
-                }
+                events: { 'onReady': onPlayerReady }
             });
         }
 
