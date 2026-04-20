@@ -42,7 +42,6 @@
             height: 100%;
         }
 
-        /* Desktop - Twoje ustawienia bazowe */
         #player {
             width: 100vw;
             height: 56.25vw; 
@@ -65,20 +64,22 @@
             z-index: 1;
         }
 
+        /* PRZYCISK: Przesunięty na dół ramki */
         #mute-btn {
             position: absolute;
-            bottom: 40px;
-            right: 40px;
+            bottom: 15px; /* Tuż nad krawędzią sekcji hero */
+            right: 20px;
             z-index: 10;
             background: rgba(255, 255, 255, 0.7);
             border: 1px solid var(--dark-blue);
             color: var(--dark-blue);
-            padding: 10px 22px;
+            padding: 8px 18px;
             border-radius: 30px;
             cursor: pointer;
             font-family: 'Comfortaa', cursive;
             font-weight: 600;
             backdrop-filter: blur(5px);
+            font-size: 0.9rem;
         }
 
         .hero-content {
@@ -126,16 +127,16 @@
 
         footer { padding: 60px; font-size: 0.8rem; opacity: 0.6; text-align: center; }
 
-        /* --- POPRAWKA MOBILNA --- */
         @media (max-width: 850px) {
             #player {
                 top: 0 !important;
-                min-height: auto !important; /* Usuwa blokadę wysokości, która mogła wypychać film */
+                min-height: auto !important;
                 transform: translateX(-50%);
             }
             .main-container { flex-direction: column; text-align: center; }
             .logo-side, .text-side { text-align: center; }
             .logo-side img { max-width: 250px; }
+            #mute-btn { bottom: 10px; right: 10px; padding: 6px 14px; font-size: 0.8rem; }
         }
     </style>
 </head>
