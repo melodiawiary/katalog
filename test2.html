@@ -22,13 +22,13 @@
             scroll-behavior: smooth;
         }
 
-        /* --- Sekcja Hero (Poprawiona) --- */
+        /* --- Sekcja Hero --- */
         .hero {
             position: relative;
             height: 90vh; 
             width: 100%;
             overflow: hidden;
-            background-color: white; /* Tło pod filmem */
+            background-color: white;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -42,13 +42,12 @@
             height: 100%;
         }
 
-        /* Ustawienie filmu tak, by ZAWSZE widzieć dół (object-fit: contain dla iframe) */
         #player {
             width: 100vw;
-            height: 56.25vw; /* Proporcje 16:9 */
-            min-height: 70vh; /* Nie pozwalamy mu być za małym */
+            height: 56.25vw; 
+            min-height: 70vh; 
             position: absolute;
-            top: 0; /* Przyklejony do góry */
+            top: 0; 
             left: 50%;
             transform: translateX(-50%);
         }
@@ -59,14 +58,12 @@
             left: 0;
             width: 100%;
             height: 100%;
-            /* Bardzo delikatny gradient, by film "płynął" w stronę */
             background: linear-gradient(to bottom, 
                 rgba(255, 255, 255, 0) 80%, 
                 rgba(255, 255, 255, 1) 100%);
             z-index: 1;
         }
 
-        /* --- Przycisk dźwięku --- */
         #mute-btn {
             position: absolute;
             bottom: 40px;
@@ -99,7 +96,6 @@
             text-shadow: 0px 0px 15px rgba(255,255,255,0.8);
         }
 
-        /* --- Układ z Logo i Tekstem --- */
         .main-container {
             max-width: 1100px;
             margin: 0 auto;
@@ -117,7 +113,6 @@
         .details-text { font-weight: 400; font-size: 1rem; margin-bottom: 20px; }
         .quote { margin-top: 40px; font-style: italic; font-weight: 400; font-size: 1.1rem; }
 
-        /* --- Kontakt --- */
         .contact-section {
             background-color: var(--light-bg);
             padding: 100px 20px;
@@ -163,11 +158,8 @@
             <p class="mission-text">
                 <strong>Harmonia Forest</strong> to ogólnopolska pracownia autorska, w której łączymy pasję do przyrody ze szlachetnymi technikami artystycznymi. Nasza misją jest utrwalenie piękna natury w skupieniu na estetyce i szacunku do roślin.
             </p>
-            <p class="details-text">
-                Uczymy kontaktu z naturą poprzez działania twórcze, do których zapraszamy dzieci, dorosłych i firmy. Oferujemy powrót do uważności i do sprawczości płynącej z pracy własnych rąk.
-            </p>
-            <p class="details-text">
-                Oferujemy powrót do uważności i do sprawczości płynącej z pracy własnych rąk. Łączymy doświadczenia zebrane podczas życia w Azji i Australii z zawodowymi umiejętnościami pracy z ludźmi. Przekazując wiedzę i techniki dbamy, by każde spotkanie sprzyjało wspólnemu dobrostanowi oraz wewnętrznej równowadze.
+            <p class="mission-text">
+                Uczymy kontaktu z naturą poprzez działania twórcze, do których zapraszamy dzieci, dorosłych i firmy. Oferujemy powrót do uważności i do sprawczości płynącej z pracy własnych rąk. Łączymy doświadczenia zebrane podczas życia w Azji, Australii z zawodowymi umiejętnościami pracy z ludźmi. Przekazując wiedzę i techniki dbamy, by każde spotkanie sprzyjało wspólnemu dobrostanowi oraz wewnętrznej równowadze.
             </p>
             <p class="quote">
                 Gdy zmęczy Cię pośpiech i nowoczesność, zatrzymaj się z nami i odnajdź spokój.
@@ -187,7 +179,7 @@
     </section>
 
     <footer>
-        &copy; 2026 Harmonia Forest
+        &copy; 2026 Harmonia Forest 
     </footer>
 
     <script>
@@ -197,15 +189,17 @@
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
         var player;
+        var videoId = 'a6b-OhYAXQs'; // Jeden film dla wszystkich urządzeń
+
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
-                videoId: 'a6b-OhYAXQs',
+                videoId: videoId,
                 playerVars: {
                     'autoplay': 1,
                     'mute': 1,
                     'controls': 0,
                     'loop': 1,
-                    'playlist': 'a6b-OhYAXQs',
+                    'playlist': videoId,
                     'showinfo': 0,
                     'modestbranding': 1,
                     'iv_load_policy': 3,
