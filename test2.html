@@ -42,7 +42,7 @@
             height: 100%;
         }
 
-        /* Twój oryginalny kod pozycjonowania - przyklejony do góry */
+        /* IDENTYCZNE POZYCJONOWANIE JAK WCZEŚNIEJ */
         #player {
             width: 100vw;
             height: 56.25vw; 
@@ -128,11 +128,6 @@
         footer { padding: 60px; font-size: 0.8rem; opacity: 0.6; text-align: center; }
 
         @media (max-width: 850px) {
-            /* POPRAWKA: Podniesienie filmu do góry i przywrócenie przenikania */
-            #player {
-                top: 0 !important;
-                transform: translateX(-50%) !important;
-            }
             .main-container { flex-direction: column; text-align: center; }
             .logo-side, .text-side { text-align: center; }
             .logo-side img { max-width: 250px; }
