@@ -21,10 +21,10 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* --- Sekcja Hero - Skrócona, by wszystko było widać --- */
+        /* --- Sekcja Hero --- */
         .hero {
             position: relative;
-            height: 70vh; /* Zmniejszona wysokość, by treść pod spodem "weszła" na ekran */
+            height: 80vh; 
             width: 100%;
             overflow: hidden;
             background-color: white;
@@ -45,32 +45,31 @@
         #player {
             width: 100vw;
             height: 56.25vw;
-            min-height: 85vh; /* Zapas wysokości do cięcia */
-            min-width: 150vh;
+            min-height: 100vh; 
+            min-width: 125vh; /* Optymalne dla odzyskania dołu kadru */
             position: absolute;
-            /* PRZYWRÓCONE CIĘCIE 5% OD GÓRY */
             top: -5vh; 
             left: 50%;
             transform: translateX(-50%);
         }
 
+        /* PRZENIKANIE - Teraz działa wszędzie */
         .video-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            /* Miękki gradient na dole, by dłoń była czysta */
             background: linear-gradient(to bottom, 
-                rgba(255, 255, 255, 0) 75%, 
+                rgba(255, 255, 255, 0) 80%, 
                 rgba(255, 255, 255, 1) 100%);
             z-index: 1;
         }
 
         #mute-btn {
             position: absolute;
-            bottom: 20px;
-            right: 20px;
+            bottom: 25px;
+            right: 25px;
             z-index: 10;
             background: rgba(255, 255, 255, 0.7);
             border: 1px solid var(--dark-blue);
@@ -83,11 +82,11 @@
         }
 
         .hero-content {
-            position: absolute;
-            bottom: 40px; /* Napis jest teraz blisko dołu filmu, widoczny od razu */
+            position: relative;
             z-index: 2;
             text-align: center;
             width: 100%;
+            margin-top: 72vh; /* Pozycjonowanie napisu na granicy przenikania */
         }
 
         .hero-content h1 {
@@ -103,10 +102,10 @@
         .main-container {
             max-width: 1100px;
             margin: 0 auto;
-            padding: 50px 20px;
+            padding: 60px 20px;
             display: flex;
             align-items: center;
-            gap: 40px;
+            gap: 50px;
         }
 
         .logo-side { flex: 1; text-align: right; }
@@ -121,19 +120,28 @@
         }
 
         .contact-link { 
-            display: block; 
-            font-size: 1.15rem; 
-            color: var(--dark-blue); 
-            text-decoration: none; 
-            margin: 12px 0; 
-            font-weight: 600;
+            display: block; font-size: 1.2rem; color: var(--dark-blue); 
+            text-decoration: none; margin: 15px 0; font-weight: 600;
         }
 
         .mobile-break { display: none; }
 
+        /* --- POPRAWKI MOBILNE Z PRZENIKANIEM --- */
         @media (max-width: 850px) {
-            .hero { height: 60vh; } /* Jeszcze niższe hero na mobile, by tekst pod spodem wystawał */
-            #player { min-width: 200vw; top: -5vh; }
+            .hero { 
+                height: 56.25vw; /* Idealne 16:9 na start */
+                min-height: 250px;
+            }
+            #player { 
+                width: 100%; 
+                height: 100%; 
+                min-width: 100%; 
+                min-height: 100%;
+                top: 0; 
+            }
+            .hero-content { 
+                margin-top: 30px; 
+            }
             .main-container { flex-direction: column; text-align: center; }
             .logo-side, .text-side { text-align: center; }
             .logo-side img { max-width: 250px; }
@@ -151,10 +159,11 @@
         <button id="mute-btn">
             <span id="mute-icon">🔈</span> <span id="mute-text">Dźwięk</span>
         </button>
-        <div class="hero-content">
-            <h1>Zatrzymaj się i odnajdź spokój</h1>
-        </div>
     </section>
+    
+    <div class="hero-content">
+        <h1>Zatrzymaj się i odnajdź spokój</h1>
+    </div>
 
     <div class="main-container">
         <div class="logo-side">
