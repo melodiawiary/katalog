@@ -44,10 +44,9 @@
             pointer-events: none;
         }
 
-        /* Film przyklejony do góry i mniej powiększony, by widzieć dół */
         #player {
             width: 100vw;
-            height: 56.25vw; /* 16:9 */
+            height: 56.25vw;
             min-height: 90vh; 
             min-width: 160vh; 
             position: absolute;
@@ -62,7 +61,6 @@
             left: 0;
             width: 100%;
             height: 100%;
-            /* Gradient zaczyna się bardzo nisko (na 88%), by nie zasłaniać filmu */
             background: linear-gradient(to bottom, 
                 rgba(255, 255, 255, 0) 88%, 
                 rgba(255, 255, 255, 1) 100%);
@@ -91,17 +89,14 @@
             backdrop-filter: blur(5px);
         }
 
-        #mute-btn:hover {
-            background: var(--dark-blue);
-            color: white;
-        }
+        #mute-btn:hover { background: var(--dark-blue); color: white; }
 
         .hero-content {
             position: relative;
             z-index: 2;
             text-align: center;
             color: var(--dark-blue);
-            margin-top: 15vh; /* Przesunięcie napisu lekko w dół od góry filmu */
+            margin-top: 15vh;
         }
 
         .hero-content h1 {
@@ -110,38 +105,48 @@
             text-transform: uppercase;
             font-size: 1.4rem;
             margin: 0;
-            text-shadow: 0px 0px 15px rgba(255,255,255,0.8); /* Lekka poświata dla czytelności na filmie */
+            text-shadow: 0px 0px 15px rgba(255,255,255,0.8);
         }
 
-        /* --- Sekcja Treści --- */
-        .content-wrapper {
-            padding: 80px 20px 100px 20px;
-            max-width: 850px;
+        /* --- Sekcja Treści (UKŁAD Z LOGO PO LEWEJ) --- */
+        .main-container {
+            max-width: 1100px;
             margin: 0 auto;
-            text-align: center;
+            padding: 80px 20px;
+            display: flex;
+            align-items: center; /* Wyrównanie w pionie */
+            gap: 60px; /* Odstęp między logo a tekstem */
+        }
+
+        .logo-side {
+            flex: 1;
+            text-align: right;
+        }
+
+        .logo-side img {
+            max-width: 350px; /* Możesz dostosować wielkość logo */
+            height: auto;
+        }
+
+        .text-side {
+            flex: 1.5;
+            text-align: left;
         }
 
         .mission-text {
-            font-size: 1.25rem;
-            margin-bottom: 50px;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
             font-weight: 400;
         }
 
-        .details-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 50px;
-            text-align: left;
-            margin-top: 50px;
-        }
-
-        .details-grid p {
+        .details-text {
             font-weight: 400;
-            font-size: 1.05rem;
+            font-size: 1rem;
+            margin-bottom: 20px;
         }
 
         .quote {
-            margin-top: 70px;
+            margin-top: 40px;
             font-style: italic;
             font-weight: 400;
             font-size: 1.1rem;
@@ -154,13 +159,6 @@
             padding: 100px 20px;
             border-top: 1px solid #f0f0f0;
             text-align: center;
-        }
-
-        .contact-section h2 {
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 40px;
         }
 
         .contact-link {
@@ -178,11 +176,19 @@
 
         footer { padding: 60px; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; opacity: 0.6; text-align: center; }
 
-        @media (max-width: 768px) {
-            .details-grid { grid-template-columns: 1fr; }
-            .hero-content h1 { font-size: 1.1rem; }
-            #mute-btn { bottom: 20px; right: 20px; }
-            .hero { height: 80vh; } /* Krótszy hero na komórkach */
+        /* Responsywność - na telefonach logo nad tekstem */
+        @media (max-width: 850px) {
+            .main-container {
+                flex-direction: column;
+                text-align: center;
+                padding: 40px 20px;
+            }
+            .logo-side, .text-side {
+                text-align: center;
+                flex: none;
+            }
+            .logo-side img { max-width: 250px; }
+            .hero { height: 80vh; }
         }
     </style>
 </head>
@@ -203,23 +209,24 @@
         </div>
     </section>
 
-    <div class="content-wrapper">
-        <p class="mission-text">
-            <strong>Harmonia Forest</strong> to ogólnopolska pracownia autorska, w której łączymy pasję do przyrody ze szlachetnymi technikami artystycznymi. Naszą misją jest utrwalenie piękna natury w skupieniu na estetyce i szacunku do roślin.
-        </p>
-
-        <div class="details-grid">
-            <div>
-                <p>Uczymy kontaktu z naturą poprzez działania twórcze, do których zapraszamy dzieci, dorosłych i firmy. Oferujemy powrót do uważności i do sprawczości płynącej z pracy własnych rąk.</p>
-            </div>
-            <div>
-                <p>Łączymy doświadczenia zebrane podczas życia w Azji i Australii z zawodowymi umiejętnościami pracy z ludźmi. Dbamy, by każde spotkanie sprzyjało wspólnemu dobrostanowi oraz wewnętrznej równowadze.</p>
-            </div>
+    <div class="main-container">
+        <div class="logo-side">
+            <img src="logo.png" alt="Harmonia Forest Logo">
         </div>
-        
-        <p class="quote">
-            Gdy zmęczy Cię pośpiech i nowoczesność, zatrzymaj się z nami i odnajdź spokój.
-        </p>
+        <div class="text-side">
+            <p class="mission-text">
+                <strong>Harmonia Forest</strong> to ogólnopolska pracownia autorska, w której łączymy pasję do przyrody ze szlachetnymi technikami artystycznymi.
+            </p>
+            <p class="details-text">
+                Uczymy kontaktu z naturą poprzez działania twórcze, do których zapraszamy dzieci, dorosłych i firmy. Oferujemy powrót do uważności i do sprawczości płynącej z pracy własnych rąk.
+            </p>
+            <p class="details-text">
+                Naszą misją jest utrwalenie piękna natury w skupieniu na estetyce i szacunku do roślin. Łączymy doświadczenia zebrane podczas życia w Azji i Australii z zawodowymi umiejętnościami pracy z ludźmi.
+            </p>
+            <p class="quote">
+                Gdy zmęczy Cię pośpiech i nowoczesność, zatrzymaj się z nami i odnajdź spokój.
+            </p>
+        </div>
     </div>
 
     <section class="contact-section">
@@ -266,7 +273,6 @@
 
         function onPlayerReady(event) {
             event.target.playVideo();
-            
             var muteBtn = document.getElementById('mute-btn');
             var muteText = document.getElementById('mute-text');
             var muteIcon = document.getElementById('mute-icon');
