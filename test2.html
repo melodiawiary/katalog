@@ -42,14 +42,13 @@
             height: 100%;
         }
 
-        /* Ustawienie filmu: Odzyskanie połowy uciętego dołu poprzez zmniejszenie min-width i min-height względem vh */
+        /* Ustawienie filmu tak, by ZAWSZE widzieć dół (object-fit: contain dla iframe) */
         #player {
             width: 100vw;
             height: 56.25vw; /* Proporcje 16:9 */
-            min-height: 100vh; 
-            min-width: 135vh; /* Zmniejszone z poprzednich wartości, by odzyskać dół kadru */
+            min-height: 70vh; /* Nie pozwalamy mu być za małym */
             position: absolute;
-            top: 0; 
+            top: 0; /* Przyklejony do góry */
             left: 50%;
             transform: translateX(-50%);
         }
@@ -200,13 +199,13 @@
         var player;
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
-                videoId: '7oVjRRcSXZk',
+                videoId: 'Bv_F9LZFE8c',
                 playerVars: {
                     'autoplay': 1,
                     'mute': 1,
                     'controls': 0,
                     'loop': 1,
-                    'playlist': '7oVjRRcSXZk',
+                    'playlist': 'EhPrt5puEe8',
                     'showinfo': 0,
                     'modestbranding': 1,
                     'iv_load_policy': 3,
