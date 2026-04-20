@@ -45,18 +45,18 @@
         #player {
             width: 100vw;
             height: 56.25vw; 
-            min-height: 75vh; /* Zwiększone, by wymusić crop na mobile */
+            min-height: 70vh; 
             position: absolute;
             top: 0; 
             left: 50%;
             transform: translateX(-50%);
         }
 
-        /* Na bardzo wąskich ekranach (mobile) musimy "rozciągnąć" wysokość filmu, by obciąć boki */
+        /* POPRAWKA MOBILE: Efekt 1:1 i przyciągnięcie do góry */
         @media (max-width: 850px) {
             #player {
-                width: 177.78vh; /* Wymuszenie proporcji 16:9 względem wysokości, co tnie boki */
-                height: 75vh;
+                width: 120vh; /* Zmniejszone z 177, żeby boki nie uciekały za mocno */
+                height: 70vh;
                 min-width: 100vw;
                 top: 0;
             }
@@ -69,7 +69,7 @@
             width: 100%;
             height: 100%;
             background: linear-gradient(to bottom, 
-                rgba(255, 255, 255, 0) 70%, 
+                rgba(255, 255, 255, 0) 80%, 
                 rgba(255, 255, 255, 1) 100%);
             z-index: 1;
         }
