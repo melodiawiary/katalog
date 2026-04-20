@@ -3,30 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Harmonia Forest</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>Harmonia Forest | Pracownia Autorska</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        /* Paleta kolorów oparta na Twoim logo */
         :root {
             --dark-blue: #1D2B36; 
             --white: #ffffff;
-            --light-bg: #f9f9f9;
+            --light-bg: #fdfdfd;
         }
 
         body, html {
             margin: 0;
             padding: 0;
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Comfortaa', cursive; /* Twoja wybrana czcionka */
             color: var(--dark-blue);
-            line-height: 1.6;
-            overflow-x: hidden;
+            line-height: 1.8;
+            background-color: var(--white);
             scroll-behavior: smooth;
         }
 
-        /* --- Sekcja Video Hero (YouTube) --- */
+        /* --- Sekcja Video Hero (92% wysokości dla efektu niedomknięcia) --- */
         .hero {
             position: relative;
-            height: 100vh;
+            height: 92vh; /* Zostawiamy 8% bieli na dole dla zachęty do scrollowania */
             width: 100%;
             overflow: hidden;
             background-color: black;
@@ -41,12 +40,12 @@
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none; /* Blokuje interakcję z playerem YT */
+            pointer-events: none;
         }
 
         .video-background iframe {
             width: 100vw;
-            height: 56.25vw; /* 16:9 */
+            height: 56.25vw;
             min-height: 100vh;
             min-width: 177.77vh;
             position: absolute;
@@ -55,14 +54,14 @@
             transform: translate(-50%, -50%);
         }
 
-        /* Granatowa nakładka (Overlay) nad filmem */
+        /* Subtelny gradient przechodzący w biel na samym dole filmu */
         .video-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(29, 43, 54, 0.4); /* Subtelny granat dla klimatu */
+            background: linear-gradient(to bottom, rgba(29, 43, 54, 0.2) 70%, rgba(255, 255, 255, 1) 100%);
             z-index: 1;
         }
 
@@ -71,116 +70,77 @@
             z-index: 2;
             text-align: center;
             color: var(--white);
+            text-shadow: 0px 2px 10px rgba(0,0,0,0.3);
         }
 
-        .hero-content img {
-            max-width: 250px;
-            margin-bottom: 20px;
-            /* Zmienia granatowe logo na białe dla kontrastu na filmie */
-            filter: brightness(0) invert(1);
-        }
-
-        .hero-content p {
+        .hero-content h1 {
             font-weight: 300;
-            letter-spacing: 6px;
+            letter-spacing: 4px;
             text-transform: uppercase;
-            font-size: 1.1rem;
-            margin: 0;
+            font-size: 1.5rem;
         }
 
-        /* --- Sekcje Treści --- */
-        .section {
-            padding: 120px 20px;
-            max-width: 1000px;
+        /* --- Sekcja Treści --- */
+        .content-wrapper {
+            padding: 80px 20px;
+            max-width: 800px;
             margin: 0 auto;
             text-align: center;
         }
 
-        h2 {
-            font-weight: 300;
-            font-size: 2.2rem;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            margin-bottom: 50px;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 60px;
-            margin-top: 60px;
-        }
-
-        .grid-item h3 {
-            font-weight: 600;
+        .mission-text {
             font-size: 1.1rem;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-            color: var(--dark-blue);
-        }
-
-        .grid-item p {
+            margin-bottom: 60px;
             font-weight: 300;
-            color: #555;
         }
 
-        /* --- Kontakt --- */
-        .contact {
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            text-align: left;
+            margin-top: 40px;
+        }
+
+        /* --- Kontakt i Stopka --- */
+        .contact-section {
             background-color: var(--light-bg);
-            padding: 100px 20px;
+            padding: 80px 20px;
+            border-top: 1px solid #eee;
             text-align: center;
         }
 
-        .contact-info {
-            font-size: 1.3rem;
-            font-weight: 300;
-            margin: 30px 0;
-        }
-
-        .contact-info a {
+        .contact-link {
+            display: block;
+            font-size: 1.2rem;
             color: var(--dark-blue);
             text-decoration: none;
+            margin: 10px 0;
             font-weight: 600;
-            border-bottom: 1px solid var(--dark-blue);
-            transition: opacity 0.3s;
         }
 
-        .contact-info a:hover {
+        .social-links {
+            margin-top: 30px;
+        }
+
+        .social-links a {
+            margin: 0 15px;
+            color: var(--dark-blue);
+            text-decoration: none;
+            font-size: 0.9rem;
             opacity: 0.7;
         }
 
         footer {
-            padding: 50px;
-            font-size: 0.75rem;
-            text-align: center;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            opacity: 0.5;
-        }
-
-        /* Przycisk akcji */
-        .btn {
-            display: inline-block;
-            margin-top: 40px;
-            padding: 15px 40px;
-            border: 1px solid var(--dark-blue);
-            color: var(--dark-blue);
-            text-decoration: none;
-            text-transform: uppercase;
+            padding: 40px;
             font-size: 0.8rem;
-            letter-spacing: 2px;
-            transition: all 0.3s;
+            opacity: 0.4;
+            text-align: center;
         }
 
-        .btn:hover {
-            background-color: var(--dark-blue);
-            color: var(--white);
-        }
-
-        /* Responsywność dla mobile */
         @media (max-width: 768px) {
-            h2 { font-size: 1.8rem; }
-            .hero-content img { max-width: 180px; }
+            .details-grid { grid-template-columns: 1fr; }
+            .hero-content h1 { font-size: 1.1rem; }
         }
     </style>
 </head>
@@ -197,42 +157,38 @@
         <div class="video-overlay"></div>
         
         <div class="hero-content">
-            <img src="logo.jpg" alt="Harmonia Forest Logo">
-            <p>Naturalna Elegancja</p>
+            <h1>Zatrzymaj się i odnajdź spokój</h1>
         </div>
     </section>
 
-    <section class="section" id="about">
-        <h2>Co robimy</h2>
-        <p style="font-size: 1.1rem; font-weight: 300;">Projektujemy rozwiązania, które łączą nowoczesność z surowym pięknem natury.</p>
-        
-        <div class="grid">
-            <div class="grid-item">
-                <h3>Video Production</h3>
-                <p>Tworzymy kinowe obrazy pełne emocji i autentyczności, dbając o każdy techniczny detal.</p>
+    <div class="content-wrapper">
+        <p class="mission-text">
+            <strong>Harmonia Forest</strong> to ogólnopolska pracownia autorska, w której łączymy pasję do przyrody ze szlachetnymi technikami artystycznymi. Naszą misją jest utrwalenie piękna natury w skupieniu na estetyce i szacunku do roślin.
+        </p>
+
+        <div class="details-grid">
+            <div>
+                <p>Uczymy kontaktu z naturą poprzez działania twórcze, do których zapraszamy dzieci, dorosłych i firmy. Oferujemy powrót do uważności i do sprawczości płynącej z pracy własnych rąk.</p>
             </div>
-            <div class="grid-item">
-                <h3>Visual Design</h3>
-                <p>Minimalistyczna estetyka i szlachetna kolorystyka, która buduje profesjonalny wizerunek marki.</p>
-            </div>
-            <div class="grid-item">
-                <h3>Creative Strategy</h3>
-                <p>Planujemy komunikację wizualną, która zapada w pamięć i buduje trwałe relacje.</p>
+            <div>
+                <p>Łączymy doświadczenia zebrane podczas życia w Azji i Australii z zawodowymi umiejętnościami pracy z ludźmi. Dbamy, by każde spotkanie sprzyjało wewnętrznej równowadze.</p>
             </div>
         </div>
-    </section>
+    </div>
 
-    <section class="contact">
+    <section class="contact-section">
         <h2>Kontakt</h2>
-        <div class="contact-info">
-            <p>Stwórzmy razem coś wyjątkowego.</p>
-            <p><a href="mailto:kontakt@harmoniaforest.pl">biuro@harmoniaforest.pl</a></p>
+        <a href="tel:724549009" class="contact-link">tel. 724 54 90 09</a>
+        <a href="mailto:harmonia@harmoniaforest.pl" class="contact-link">harmonia@harmoniaforest.pl</a>
+        
+        <div class="social-links">
+            <a href="https://facebook.com/HarmoniaForest" target="_blank">FB: /HarmoniaForest</a>
+            <a href="https://instagram.com/harmonia_forest" target="_blank">IG: @harmonia_forest</a>
         </div>
-        <a href="mailto:biuro@harmoniaforest.pl" class="btn">Napisz do nas</a>
     </section>
 
     <footer>
-        &copy; 2026 HARMONIA FOREST. Wszystkie prawa zastrzeżone.
+        &copy; 2026 Harmonia Forest | Projektowanie z natury
     </footer>
 
 </body>
