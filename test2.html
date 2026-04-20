@@ -52,13 +52,14 @@
             transform: translateX(-50%);
         }
 
-        /* POPRAWKA MOBILE: Bardzo delikatny crop boków (105vh) */
+        /* POPRAWKA MOBILE: Góra ramki i gradient */
         @media (max-width: 850px) {
             #player {
-                width: 105vh; 
-                height: 70vh;
+                width: 110vh; 
+                height: 80vh; /* Zwiększone, żeby film "wchodził" głębiej pod gradient */
                 min-width: 100vw;
-                top: 0;
+                top: 0 !important; /* Wymuszenie braku paska u góry */
+                transform: translateX(-50%);
             }
         }
 
@@ -69,8 +70,8 @@
             width: 100%;
             height: 100%;
             background: linear-gradient(to bottom, 
-                rgba(255, 255, 255, 0) 80%, 
-                rgba(255, 255, 255, 1) 100%);
+                rgba(255, 255, 255, 0) 60%, 
+                rgba(255, 255, 255, 1) 95%); /* Mocniejszy gradient na dole */
             z-index: 1;
         }
 
