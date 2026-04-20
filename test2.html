@@ -21,25 +21,19 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* --- Sekcja Hero --- */
+        /* --- Sekcja Hero - Skrócona, by wszystko było widać --- */
         .hero {
             position: relative;
+            height: 70vh; /* Zmniejszona wysokość, by treść pod spodem "weszła" na ekran */
             width: 100%;
+            overflow: hidden;
             background-color: white;
             display: flex;
             flex-direction: column;
+            align-items: center;
         }
 
-        .video-wrapper {
-            width: 100%;
-            position: relative;
-            /* To wymusza proporcję 16:9 na każdym urządzeniu */
-            padding-top: 56.25%; 
-            overflow: hidden;
-            background: #000; /* Tło pod filmem na wypadek ładowania */
-        }
-
-        #player {
+        .video-background {
             position: absolute;
             top: 0;
             left: 0;
@@ -48,36 +42,52 @@
             pointer-events: none;
         }
 
-        /* Miękki gradient na dole filmu, żeby przejść w biel strony */
+        #player {
+            width: 100vw;
+            height: 56.25vw;
+            min-height: 85vh; /* Zapas wysokości do cięcia */
+            min-width: 150vh;
+            position: absolute;
+            /* PRZYWRÓCONE CIĘCIE 5% OD GÓRY */
+            top: -5vh; 
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
         .video-overlay {
             position: absolute;
-            bottom: 0;
+            top: 0;
             left: 0;
             width: 100%;
-            height: 25%;
-            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,1));
+            height: 100%;
+            /* Miękki gradient na dole, by dłoń była czysta */
+            background: linear-gradient(to bottom, 
+                rgba(255, 255, 255, 0) 75%, 
+                rgba(255, 255, 255, 1) 100%);
             z-index: 1;
         }
 
-        /* --- Przycisk dźwięku --- */
         #mute-btn {
             position: absolute;
             bottom: 20px;
             right: 20px;
             z-index: 10;
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.7);
             border: 1px solid var(--dark-blue);
             padding: 8px 16px;
             border-radius: 30px;
             cursor: pointer;
             font-family: 'Comfortaa', cursive;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             backdrop-filter: blur(5px);
         }
 
         .hero-content {
-            padding: 40px 20px 20px 20px;
+            position: absolute;
+            bottom: 40px; /* Napis jest teraz blisko dołu filmu, widoczny od razu */
+            z-index: 2;
             text-align: center;
+            width: 100%;
         }
 
         .hero-content h1 {
@@ -85,21 +95,22 @@
             letter-spacing: 2px;
             text-transform: uppercase;
             font-size: 1.1rem;
+            text-shadow: 0px 0px 10px rgba(255,255,255,0.8);
             margin: 0;
         }
 
-        /* --- Treść pod filmem --- */
+        /* --- Treść --- */
         .main-container {
             max-width: 1100px;
             margin: 0 auto;
-            padding: 40px 20px 80px 20px;
+            padding: 50px 20px;
             display: flex;
             align-items: center;
-            gap: 60px;
+            gap: 40px;
         }
 
         .logo-side { flex: 1; text-align: right; }
-        .logo-side img { max-width: 430px; width: 100%; height: auto; }
+        .logo-side img { max-width: 380px; width: 100%; height: auto; }
         .text-side { flex: 1.5; text-align: left; }
 
         .contact-section {
@@ -110,31 +121,36 @@
         }
 
         .contact-link { 
-            display: block; font-size: 1.2rem; color: var(--dark-blue); 
-            text-decoration: none; margin: 10px 0; font-weight: 600;
-            word-break: break-all;
+            display: block; 
+            font-size: 1.15rem; 
+            color: var(--dark-blue); 
+            text-decoration: none; 
+            margin: 12px 0; 
+            font-weight: 600;
         }
 
-        /* --- Responsywność --- */
+        .mobile-break { display: none; }
+
         @media (max-width: 850px) {
-            .main-container { flex-direction: column; text-align: center; gap: 30px; }
+            .hero { height: 60vh; } /* Jeszcze niższe hero na mobile, by tekst pod spodem wystawał */
+            #player { min-width: 200vw; top: -5vh; }
+            .main-container { flex-direction: column; text-align: center; }
             .logo-side, .text-side { text-align: center; }
-            .logo-side img { max-width: 280px; }
-            .hero-content h1 { font-size: 1rem; }
+            .logo-side img { max-width: 250px; }
+            .mobile-break { display: block; }
         }
     </style>
 </head>
 <body>
 
     <section class="hero">
-        <div class="video-wrapper">
+        <div class="video-background">
             <div id="player"></div>
-            <div class="video-overlay"></div>
-            <button id="mute-btn">
-                <span id="mute-icon">🔈</span> <span id="mute-text">Dźwięk</span>
-            </button>
         </div>
-        
+        <div class="video-overlay"></div>
+        <button id="mute-btn">
+            <span id="mute-icon">🔈</span> <span id="mute-text">Dźwięk</span>
+        </button>
         <div class="hero-content">
             <h1>Zatrzymaj się i odnajdź spokój</h1>
         </div>
@@ -146,14 +162,16 @@
         </div>
         <div class="text-side">
             <p><strong>Harmonia Forest</strong> to ogólnopolska pracownia autorska, łącząca pasję do przyrody ze szlachetnymi technikami artystycznymi.</p>
-            <p>Uczymy kontaktu z naturą poprzez działania twórcze, oferując powrót do uważności i sprawczości płynącej z pracy własnych rąk.</p>
+            <p>Uczymy kontaktu z naturą poprzez działania twórcze, oferując powrót do uważności i sprawczości rąk.</p>
         </div>
     </div>
 
     <section class="contact-section">
         <h2>Kontakt</h2>
         <a href="tel:724549009" class="contact-link">tel. 724 54 90 09</a>
-        <a href="mailto:harmonia@harmoniaforest.pl" class="contact-link">harmonia@harmoniaforest.pl</a>
+        <a href="mailto:harmonia@harmoniaforest.pl" class="contact-link">
+            harmonia<span class="mobile-break"></span>@harmoniaforest.pl
+        </a>
     </section>
 
     <script>
@@ -167,19 +185,10 @@
             player = new YT.Player('player', {
                 videoId: 'EhPrt5puEe8',
                 playerVars: { 
-                    'autoplay': 1, 
-                    'mute': 1, 
-                    'controls': 0, 
-                    'loop': 1, 
-                    'playlist': 'EhPrt5puEe8',
-                    'showinfo': 0, 
-                    'modestbranding': 1,
-                    'rel': 0,
-                    'iv_load_policy': 3
+                    'autoplay': 1, 'mute': 1, 'controls': 0, 'loop': 1, 
+                    'playlist': 'EhPrt5puEe8', 'showinfo': 0, 'modestbranding': 1, 'rel': 0
                 },
-                events: {
-                    'onReady': function(e) { e.target.playVideo(); }
-                }
+                events: { 'onReady': function(e) { e.target.playVideo(); } }
             });
         }
 
