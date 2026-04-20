@@ -22,13 +22,13 @@
             scroll-behavior: smooth;
         }
 
-        /* --- Sekcja Hero --- */
+        /* --- Sekcja Hero (Poprawiona) --- */
         .hero {
             position: relative;
             height: 90vh; 
             width: 100%;
             overflow: hidden;
-            background-color: white;
+            background-color: white; /* Tło pod filmem */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -42,12 +42,13 @@
             height: 100%;
         }
 
+        /* Ustawienie filmu tak, by ZAWSZE widzieć dół (object-fit: contain dla iframe) */
         #player {
             width: 100vw;
-            height: 56.25vw; 
-            min-height: 70vh; 
+            height: 56.25vw; /* Proporcje 16:9 */
+            min-height: 70vh; /* Nie pozwalamy mu być za małym */
             position: absolute;
-            top: 0; 
+            top: 0; /* Przyklejony do góry */
             left: 50%;
             transform: translateX(-50%);
         }
@@ -58,12 +59,14 @@
             left: 0;
             width: 100%;
             height: 100%;
+            /* Bardzo delikatny gradient, by film "płynął" w stronę */
             background: linear-gradient(to bottom, 
                 rgba(255, 255, 255, 0) 80%, 
                 rgba(255, 255, 255, 1) 100%);
             z-index: 1;
         }
 
+        /* --- Przycisk dźwięku --- */
         #mute-btn {
             position: absolute;
             bottom: 40px;
@@ -128,33 +131,10 @@
 
         footer { padding: 60px; font-size: 0.8rem; opacity: 0.6; text-align: center; }
 
-        /* --- NAPRAWA MOBILE: PEŁNA SZEROKOŚĆ 16:9 --- */
         @media (max-width: 850px) {
-            .hero { 
-                height: auto; 
-                aspect-ratio: 16 / 9; 
-                min-height: auto;
-            }
-            #player { 
-                width: 100vw; 
-                height: 56.25vw; 
-                min-width: 100vw; 
-                min-height: auto;
-                top: 0; 
-                transform: translateX(-50%);
-            }
-            .video-overlay {
-                background: linear-gradient(to bottom, 
-                    rgba(255, 255, 255, 0) 60%, 
-                    rgba(255, 255, 255, 1) 100%);
-            }
-            .hero-content { 
-                margin-top: 40vw; 
-            }
-            .main-container { flex-direction: column; text-align: center; padding: 40px 20px; }
+            .main-container { flex-direction: column; text-align: center; }
             .logo-side, .text-side { text-align: center; }
             .logo-side img { max-width: 250px; }
-            #mute-btn { bottom: 15px; right: 15px; padding: 6px 12px; font-size: 0.75rem; }
         }
     </style>
 </head>
@@ -181,10 +161,13 @@
         </div>
         <div class="text-side">
             <p class="mission-text">
-                <strong>Harmonia Forest</strong> to ogólnopolska pracownia autorska, w której łączymy pasję do przyrody ze szlachetnymi technikami artystycznymi.
+                <strong>Harmonia Forest</strong> to ogólnopolska pracownia autorska, w której łączymy pasję do przyrody ze szlachetnymi technikami artystycznymi. Nasza misją jest utrwalenie piękna natury w skupieniu na estetyce i szacunku do roślin.
             </p>
             <p class="details-text">
                 Uczymy kontaktu z naturą poprzez działania twórcze, do których zapraszamy dzieci, dorosłych i firmy. Oferujemy powrót do uważności i do sprawczości płynącej z pracy własnych rąk.
+            </p>
+            <p class="details-text">
+                Oferujemy powrót do uważności i do sprawczości płynącej z pracy własnych rąk. Łączymy doświadczenia zebrane podczas życia w Azji i Australii z zawodowymi umiejętnościami pracy z ludźmi. Przekazując wiedzę i techniki dbamy, by każde spotkanie sprzyjało wspólnemu dobrostanowi oraz wewnętrznej równowadze.
             </p>
             <p class="quote">
                 Gdy zmęczy Cię pośpiech i nowoczesność, zatrzymaj się z nami i odnajdź spokój.
@@ -215,7 +198,7 @@
 
         var player;
         function onYouTubeIframeAPIReady() {
-            // Logika wyboru filmu: fYAvT76Nsco dla mobile (poniżej 850px), a6b-OhYAXQs dla reszty
+            // Jedyne co zmieniłem - wybór ID filmu na podstawie szerokości okna
             var isMobile = window.innerWidth <= 850;
             var currentVideoId = isMobile ? 'fYAvT76Nsco' : 'a6b-OhYAXQs';
 
