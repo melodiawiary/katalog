@@ -42,6 +42,7 @@
             height: 100%;
         }
 
+        /* Desktop - Twoje ustawienia bazowe */
         #player {
             width: 100vw;
             height: 56.25vw; 
@@ -125,11 +126,12 @@
 
         footer { padding: 60px; font-size: 0.8rem; opacity: 0.6; text-align: center; }
 
-        /* --- POPRAWKA MOBILNA: Wyłącznie dociągnięcie do góry --- */
+        /* --- POPRAWKA MOBILNA --- */
         @media (max-width: 850px) {
             #player {
                 top: 0 !important;
-                transform: translateX(-50%); /* Zachowanie centrowania w poziomie bez zmiany szerokości */
+                min-height: auto !important; /* Usuwa blokadę wysokości, która mogła wypychać film */
+                transform: translateX(-50%);
             }
             .main-container { flex-direction: column; text-align: center; }
             .logo-side, .text-side { text-align: center; }
