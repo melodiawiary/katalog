@@ -24,16 +24,22 @@
         /* --- Sekcja Hero --- */
         .hero {
             position: relative;
-            height: 85vh;
             width: 100%;
-            overflow: hidden;
             background-color: white;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-direction: column;
         }
 
-        .video-background {
+        .video-wrapper {
+            width: 100%;
+            position: relative;
+            /* To wymusza proporcję 16:9 na każdym urządzeniu */
+            padding-top: 56.25%; 
+            overflow: hidden;
+            background: #000; /* Tło pod filmem na wypadek ładowania */
+        }
+
+        #player {
             position: absolute;
             top: 0;
             left: 0;
@@ -42,77 +48,51 @@
             pointer-events: none;
         }
 
-        /* Domyślny odtwarzacz (Desktop) */
-        #player-desktop {
-            width: 100vw;
-            height: 56.25vw;
-            min-height: 95vh;
-            min-width: 170vh;
-            position: absolute;
-            top: -5vh; 
-            left: 50%;
-            transform: translateX(-50%);
-            display: block;
-        }
-
-        /* Odtwarzacz Mobilny (Pionowy) - domyślnie ukryty */
-        #player-mobile {
-            display: none;
-            width: 100vw;
-            height: 177.77vw; /* Proporcje 9:16 */
-            position: absolute;
-            top: -5vh; /* Przesunięcie 5% od góry zgodnie z prośbą */
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
+        /* Miękki gradient na dole filmu, żeby przejść w biel strony */
         .video-overlay {
             position: absolute;
-            top: 0;
+            bottom: 0;
             left: 0;
             width: 100%;
-            height: 100%;
-            background: linear-gradient(to bottom, 
-                rgba(255, 255, 255, 0) 60%, 
-                rgba(255, 255, 255, 1) 100%);
+            height: 25%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,1));
             z-index: 1;
         }
 
+        /* --- Przycisk dźwięku --- */
         #mute-btn {
             position: absolute;
-            bottom: 30px;
+            bottom: 20px;
             right: 20px;
             z-index: 10;
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.8);
             border: 1px solid var(--dark-blue);
             padding: 8px 16px;
             border-radius: 30px;
             cursor: pointer;
             font-family: 'Comfortaa', cursive;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             backdrop-filter: blur(5px);
         }
 
         .hero-content {
-            position: relative;
-            z-index: 2;
+            padding: 40px 20px 20px 20px;
             text-align: center;
-            margin-top: 10vh;
         }
 
         .hero-content h1 {
             font-weight: 600;
             letter-spacing: 2px;
             text-transform: uppercase;
-            font-size: 1.2rem;
-            text-shadow: 0px 0px 10px rgba(255,255,255,0.8);
+            font-size: 1.1rem;
+            margin: 0;
         }
 
-        /* --- Treść --- */
+        /* --- Treść pod filmem --- */
         .main-container {
             max-width: 1100px;
             margin: 0 auto;
-            padding: 60px 20px;
+            padding: 40px 20px 80px 20px;
             display: flex;
             align-items: center;
             gap: 60px;
@@ -124,39 +104,37 @@
 
         .contact-section {
             background-color: #fdfdfd;
-            padding: 80px 20px;
+            padding: 60px 20px;
             text-align: center;
             border-top: 1px solid #f0f0f0;
         }
 
         .contact-link { 
             display: block; font-size: 1.2rem; color: var(--dark-blue); 
-            text-decoration: none; margin: 15px 0; font-weight: 600;
+            text-decoration: none; margin: 10px 0; font-weight: 600;
             word-break: break-all;
         }
 
-        /* --- LOGIKA MOBILNA --- */
+        /* --- Responsywność --- */
         @media (max-width: 850px) {
-            .hero { height: 75vh; }
-            #player-desktop { display: none; }
-            #player-mobile { display: block; }
-            .main-container { flex-direction: column; text-align: center; }
+            .main-container { flex-direction: column; text-align: center; gap: 30px; }
             .logo-side, .text-side { text-align: center; }
-            .logo-side img { max-width: 260px; }
+            .logo-side img { max-width: 280px; }
+            .hero-content h1 { font-size: 1rem; }
         }
     </style>
 </head>
 <body>
 
     <section class="hero">
-        <div class="video-background">
-            <div id="player-desktop"></div>
-            <div id="player-mobile"></div>
+        <div class="video-wrapper">
+            <div id="player"></div>
+            <div class="video-overlay"></div>
+            <button id="mute-btn">
+                <span id="mute-icon">🔈</span> <span id="mute-text">Dźwięk</span>
+            </button>
         </div>
-        <div class="video-overlay"></div>
-        <button id="mute-btn">
-            <span id="mute-icon">🔈</span> <span id="mute-text">Dźwięk</span>
-        </button>
+        
         <div class="hero-content">
             <h1>Zatrzymaj się i odnajdź spokój</h1>
         </div>
@@ -168,7 +146,7 @@
         </div>
         <div class="text-side">
             <p><strong>Harmonia Forest</strong> to ogólnopolska pracownia autorska, łącząca pasję do przyrody ze szlachetnymi technikami artystycznymi.</p>
-            <p>Uczymy kontaktu z naturą poprzez działania twórcze, oferując powrót do uważności i sprawczości rąk.</p>
+            <p>Uczymy kontaktu z naturą poprzez działania twórcze, oferując powrót do uważności i sprawczości płynącej z pracy własnych rąk.</p>
         </div>
     </div>
 
@@ -184,34 +162,36 @@
         var firstScriptTag = document.getElementsByTagName('script')[0];
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-        var playerDesktop, playerMobile;
-        var isMobile = window.innerWidth <= 850;
-
+        var player;
         function onYouTubeIframeAPIReady() {
-            // Film Desktopowy
-            playerDesktop = new YT.Player('player-desktop', {
+            player = new YT.Player('player', {
                 videoId: 'EhPrt5puEe8',
-                playerVars: { 'autoplay': 1, 'mute': 1, 'controls': 0, 'loop': 1, 'playlist': 'EhPrt5puEe8' }
-            });
-
-            // Film Mobilny (Pionowy)
-            playerMobile = new YT.Player('player-mobile', {
-                videoId: 'lxRiqas9qGk',
-                playerVars: { 'autoplay': 1, 'mute': 1, 'controls': 0, 'loop': 1, 'playlist': 'lxRiqas9qGk' }
+                playerVars: { 
+                    'autoplay': 1, 
+                    'mute': 1, 
+                    'controls': 0, 
+                    'loop': 1, 
+                    'playlist': 'EhPrt5puEe8',
+                    'showinfo': 0, 
+                    'modestbranding': 1,
+                    'rel': 0,
+                    'iv_load_policy': 3
+                },
+                events: {
+                    'onReady': function(e) { e.target.playVideo(); }
+                }
             });
         }
 
-        // Obsługa dźwięku dla obu odtwarzaczy
         document.getElementById('mute-btn').addEventListener('click', function() {
-            var activePlayer = (window.innerWidth <= 850) ? playerMobile : playerDesktop;
-            var muteText = document.getElementById('mute-text');
-            
-            if (activePlayer.isMuted()) {
-                activePlayer.unMute();
-                muteText.innerText = "Wycisz";
+            if (player.isMuted()) {
+                player.unMute();
+                document.getElementById('mute-text').innerText = "Wycisz";
+                document.getElementById('mute-icon').innerText = "🔊";
             } else {
-                activePlayer.mute();
-                muteText.innerText = "Dźwięk";
+                player.mute();
+                document.getElementById('mute-text').innerText = "Dźwięk";
+                document.getElementById('mute-icon').innerText = "🔈";
             }
         });
     </script>
