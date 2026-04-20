@@ -42,6 +42,7 @@
             height: 100%;
         }
 
+        /* Desktop - Twoje ustawienia bazowe */
         #player {
             width: 100vw;
             height: 56.25vw; 
@@ -110,7 +111,6 @@
         .text-side { flex: 1.5; text-align: left; }
 
         .mission-text { font-size: 1.25rem; margin-bottom: 30px; font-weight: 400; }
-        .details-text { font-weight: 400; font-size: 1rem; margin-bottom: 20px; }
         .quote { margin-top: 40px; font-style: italic; font-weight: 400; font-size: 1.1rem; }
 
         .contact-section {
@@ -126,7 +126,13 @@
 
         footer { padding: 60px; font-size: 0.8rem; opacity: 0.6; text-align: center; }
 
+        /* --- POPRAWKA MOBILNA --- */
         @media (max-width: 850px) {
+            #player {
+                top: 0 !important;
+                min-height: auto !important; /* Usuwa blokadę wysokości, która mogła wypychać film */
+                transform: translateX(-50%);
+            }
             .main-container { flex-direction: column; text-align: center; }
             .logo-side, .text-side { text-align: center; }
             .logo-side img { max-width: 250px; }
@@ -179,7 +185,7 @@
     </section>
 
     <footer>
-        &copy; 2026 Harmonia Forest 
+        &copy; 2026 Harmonia Forest | Autorska Pracownia Przyrodnicza
     </footer>
 
     <script>
@@ -189,7 +195,7 @@
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
         var player;
-        var videoId = 'a6b-OhYAXQs'; // Jeden film dla wszystkich urządzeń
+        var videoId = 'a6b-OhYAXQs';
 
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
