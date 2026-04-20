@@ -58,9 +58,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            /* Gradient dopasowany do tła strony */
             background: linear-gradient(to bottom, 
-                rgba(255, 255, 255, 0) 70%, 
+                rgba(255, 255, 255, 0) 80%, 
                 rgba(255, 255, 255, 1) 100%);
             z-index: 1;
         }
@@ -129,27 +128,33 @@
 
         footer { padding: 60px; font-size: 0.8rem; opacity: 0.6; text-align: center; }
 
-        /* --- POPRAWKI MOBILE --- */
+        /* --- NAPRAWA MOBILE: PEŁNA SZEROKOŚĆ 16:9 --- */
         @media (max-width: 850px) {
-            .hero { height: 60vh; } /* Zmniejszenie sekcji, by film wypełniał ją lepiej */
+            .hero { 
+                height: auto; 
+                aspect-ratio: 16 / 9; 
+                min-height: auto;
+            }
             #player { 
-                width: 177.78vh; /* Wymuszenie proporcji 16:9 względem wysokości sekcji */
+                width: 100vw; 
+                height: 56.25vw; 
                 min-width: 100vw; 
-                height: 100%;
-                min-height: 100%;
+                min-height: auto;
                 top: 0; 
+                transform: translateX(-50%);
             }
             .video-overlay {
-                /* Mocniejszy gradient na mobile, by ukryć krawędź filmu */
                 background: linear-gradient(to bottom, 
-                    rgba(255, 255, 255, 0) 50%, 
-                    rgba(255, 255, 255, 1) 95%);
+                    rgba(255, 255, 255, 0) 60%, 
+                    rgba(255, 255, 255, 1) 100%);
             }
-            .hero-content { margin-top: 45vh; }
+            .hero-content { 
+                margin-top: 40vw; 
+            }
             .main-container { flex-direction: column; text-align: center; padding: 40px 20px; }
             .logo-side, .text-side { text-align: center; }
             .logo-side img { max-width: 250px; }
-            #mute-btn { bottom: 20px; right: 20px; padding: 8px 15px; font-size: 0.8rem; }
+            #mute-btn { bottom: 15px; right: 15px; padding: 6px 12px; font-size: 0.75rem; }
         }
     </style>
 </head>
@@ -210,14 +215,18 @@
 
         var player;
         function onYouTubeIframeAPIReady() {
+            // Logika wyboru filmu: fYAvT76Nsco dla mobile (poniżej 850px), a6b-OhYAXQs dla reszty
+            var isMobile = window.innerWidth <= 850;
+            var currentVideoId = isMobile ? 'fYAvT76Nsco' : 'a6b-OhYAXQs';
+
             player = new YT.Player('player', {
-                videoId: 'a6b-OhYAXQs',
+                videoId: currentVideoId,
                 playerVars: {
                     'autoplay': 1,
                     'mute': 1,
                     'controls': 0,
                     'loop': 1,
-                    'playlist': 'a6b-OhYAXQs',
+                    'playlist': currentVideoId,
                     'showinfo': 0,
                     'modestbranding': 1,
                     'iv_load_policy': 3,
