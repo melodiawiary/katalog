@@ -709,7 +709,10 @@
                     const dBox = document.createElement('div');
                     dBox.className = 'disc-box';
                     dBox.innerHTML = `
-                        <div class="disc-header">PŁYTA NUMER ${idx + 1} MELODIA WIARY</div>
+                        <div style="display: flex; gap: 10px; align-items: stretch; margin-bottom: 15px;">
+                            <div class="disc-header" style="flex: 1; margin-bottom: 0;">PŁYTA NUMER ${idx + 1} MELODIA WIARY</div>
+                            <div class="disc-header" style="flex: 1; margin-bottom: 0; background: #fbda80; cursor: pointer;" onclick="alert('Przekierowanie do zamówienia...')">ZAMÓW TĘ PŁYTĘ</div>
+                        </div>
                         <div class="disc-progress">
                             <div class="disc-progress-bar" style="width: ${dPercent}%; background: #4caf50"></div>
                             <div class="disc-progress-text">${secondsToTime(dTotal)} / 50:00</div>
