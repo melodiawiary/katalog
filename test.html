@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Melodia Wiary - v68</title>
+    <title>Katalog Melodia Wiary - v69</title>
     <style>
         :root { 
             --active-orange: #fbda80;
@@ -297,6 +297,18 @@
             border-radius: 10px; font-weight: 900; text-align: center; text-transform: uppercase;
             font-size: 0.7em; flex: 1;
         }
+
+        /* STYLE DLA SELEKTORA ILOŚCI */
+        .qty-controls {
+            display: flex; align-items: center; border: 2px solid var(--deep-brown); border-radius: 8px; overflow: hidden; height: 100%;
+        }
+        .qty-btn {
+            background: var(--soft-cyan); border: none; width: 30px; height: 100%; cursor: pointer; font-weight: 900; font-size: 16px;
+        }
+        .qty-btn:hover { background: var(--active-orange); }
+        .qty-val {
+            width: 40px; text-align: center; font-weight: 900; background: white; border-left: 2px solid var(--deep-brown); border-right: 2px solid var(--deep-brown);
+        }
     </style>
 </head>
 <body class="standard">
@@ -364,7 +376,8 @@
     const CSV_TOP = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQeNOmR7SJ-G5j8DMMXjR1KE4h5w1UiNY5nHhV1mvGNJ63I_-3SQPDMNxNFpakUL4VLFacWFUOmycPB/pub?gid=1082900381&single=true&output=csv';
     const STORAGE_KEY = 'melodia_wiary_permanent_storage'; 
     const STORAGE_DISC = 'melodia_wiary_disc_storage';
-    let songs = [], top50 = [], cart = [], disc = [], currentView = 'all', displayMode = 'grid', query = "", sortType = 'newest';
+    const STORAGE_QTYS = 'melodia_wiary_qty_storage'; // NOWE: do przechowywania ilości
+    let songs = [], top50 = [], cart = [], disc = [], discQtys = {}, currentView = 'all', displayMode = 'grid', query = "", sortType = 'newest';
     let pendingFavTitle = null;
 
     function openYT(id) {
@@ -412,6 +425,8 @@
         if(saved) cart = JSON.parse(saved);
         let savedDisc = localStorage.getItem(STORAGE_DISC);
         if(savedDisc) disc = JSON.parse(savedDisc);
+        let savedQtys = localStorage.getItem(STORAGE_QTYS);
+        if(savedQtys) discQtys = JSON.parse(savedQtys);
 
         updateSize(localStorage.getItem('mv_font_permanent') || 'standard');
 
@@ -522,6 +537,16 @@
         render();
     }
 
+    // NOWE: Funkcja zarządzania ilością sztuk konkretnej płyty
+    function updateDiscQty(discIdx, delta) {
+        let current = discQtys[discIdx] || 0;
+        let newVal = current + delta;
+        if(newVal < 1) newVal = 1; // Minimum 1 sztuka jeśli ktoś kliknął dodaj
+        discQtys[discIdx] = newVal;
+        localStorage.setItem(STORAGE_QTYS, JSON.stringify(discQtys));
+        render();
+    }
+
     function renderTopPanel() {
         const panel = document.getElementById('top-panel');
         if (!top50.length) return;
@@ -585,11 +610,11 @@
         header.className = 'view-title-header';
         
         let titleLine = document.createElement('div');
-        titleLine.style.flex = "3";
+        titleLine.style.flex = "2";
         titleLine.innerText = currentView === 'all' ? 'WSZYSTKIE PIEŚNI' : (currentView === 'cart' ? '❤️ MOJE ULUBIONE' : (currentView === 'top50' ? 'TYGODNIOWA LISTA PRZEBOJÓW POLSKIEJ PIEŚNI RELIGIJNEJ NR 1 - 4.4.2026' : '📂 ' + currentView));
         header.appendChild(titleLine);
 
-        // PRZENIESIONY LICZNIK PŁYT DO NAGŁÓWKA ULUBIONYCH
+        // ZMIENIONY LICZNIK: Pokazuje ile masz jakich płyt i dodaje przycisk Zamów
         if(currentView === 'cart') {
             const discsTmp = [];
             let cIndex = 0; let cTime = 0; const mTime = 50 * 60;
@@ -599,12 +624,30 @@
                 if (cTime + sT > mTime && discsTmp[cIndex].length > 0) { cIndex++; cTime = sT; discsTmp[cIndex] = [s]; }
                 else { cTime += sT; discsTmp[cIndex].push(s); }
             });
-            const dCount = discsTmp.length;
-            const counterLabel = dCount === 1 ? "Masz jedną płytę" : (dCount >= 2 && dCount <= 4 ? `Masz ${dCount} płyty` : `Masz ${dCount} płyt`);
             
+            // Budujemy tekst: "X płyt numer 1, Y płyt numer 2..."
+            let ordersInfo = [];
+            discsTmp.forEach((_, idx) => {
+                let qty = discQtys[idx] || 0;
+                if(qty > 0) {
+                    ordersInfo.push(`${qty} ${qty === 1 ? 'płytę' : (qty < 5 ? 'płyty' : 'płyt')} numer ${idx + 1}`);
+                }
+            });
+
             const counterDiv = document.createElement('div');
             counterDiv.className = 'disc-counter-box';
-            counterDiv.innerText = `${counterLabel} w zamówieniu`;
+            counterDiv.style.flex = "3";
+            counterDiv.style.display = "flex";
+            counterDiv.style.alignItems = "center";
+            counterDiv.style.justifyContent = "space-between";
+            counterDiv.style.padding = "5px 15px";
+
+            let infoText = ordersInfo.length > 0 ? "Masz " + ordersInfo.join(", ") : "Wybierz ilość płyt poniżej";
+            
+            counterDiv.innerHTML = `
+                <div style="text-align:left; line-height:1.2;">${infoText}</div>
+                <button class="ctrl-btn" style="max-width:150px; background:white; margin-left:10px;" onclick="alert('Przejście do finalizacji zamówienia...')">ZAMÓW PŁYTY</button>
+            `;
             header.appendChild(counterDiv);
         }
 
@@ -706,12 +749,24 @@
                 discs.forEach((dSongs, idx) => {
                     let dTotal = dSongs.reduce((acc, s) => acc + timeToSeconds(s.czas), 0);
                     let dPercent = Math.min((dTotal / maxTime) * 100, 100);
+                    let currentQty = discQtys[idx] || 0;
+
                     const dBox = document.createElement('div');
                     dBox.className = 'disc-box';
                     dBox.innerHTML = `
                         <div style="display: flex; gap: 10px; align-items: stretch; margin-bottom: 15px;">
-                            <div class="disc-header" style="flex: 1; margin-bottom: 0;">PŁYTA NUMER ${idx + 1} MELODIA WIARY</div>
-                            <div class="disc-header" style="flex: 1; margin-bottom: 0; background: #fbda80; cursor: pointer;" onclick="alert('Przekierowanie do zamówienia...')">ZAMÓW TĘ PŁYTĘ</div>
+                            <div class="disc-header" style="flex: 2; margin-bottom: 0;">PŁYTA NUMER ${idx + 1} MELODIA WIARY</div>
+                            
+                            <div style="flex: 1.5; display:flex; flex-direction:column; gap:5px;">
+                                <div class="qty-controls">
+                                    <button class="qty-btn" onclick="updateDiscQty(${idx}, -1)">-</button>
+                                    <div class="qty-val">${currentQty}</div>
+                                    <button class="qty-btn" onclick="updateDiscQty(${idx}, 1)">+</button>
+                                </div>
+                                <button class="ctrl-btn" style="background: ${currentQty > 0 ? '#4caf50' : '#fbda80'}; color: ${currentQty > 0 ? 'white' : 'inherit'}; padding:5px; font-size:9px;" onclick="updateDiscQty(${idx}, 1)">
+                                    ${currentQty > 0 ? 'DODANO DO ZAMÓWIENIA' : 'DODAJ PŁYTĘ DO ZAMÓWIENIA'}
+                                </button>
+                            </div>
                         </div>
                         <div class="disc-progress">
                             <div class="disc-progress-bar" style="width: ${dPercent}%; background: #4caf50"></div>
