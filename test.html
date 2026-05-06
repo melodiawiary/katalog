@@ -52,7 +52,6 @@
         .nav-btn:hover { background: var(--active-orange);
             transform: scale(1.02); }
         
-        /* KLUCZOWE: Podświetlenie wybranej kategorii */
         .nav-btn.active, .size-btn.active { 
             background: var(--active-orange) !important;
             border: 3px solid var(--deep-brown) !important; 
@@ -192,14 +191,25 @@
             margin-top: 20px; 
         }
 
-        @media (max-width: 1400px) { .list-container { grid-template-columns: repeat(4, 1fr);
-            } }
-        @media (max-width: 1100px) { .list-container { grid-template-columns: repeat(3, 1fr);
-            } }
-        @media (max-width: 800px) { .list-container { grid-template-columns: repeat(2, 1fr);
-            } }
-        @media (max-width: 500px) { .list-container { grid-template-columns: 1fr;
-            } }
+        /* Widok Ulubione - Dwie kolumny */
+        .cart-split-view {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 20px;
+            align-items: start;
+        }
+        .cart-column {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        @media (max-width: 1400px) { .list-container { grid-template-columns: repeat(4, 1fr); } }
+        @media (max-width: 1100px) { .list-container { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 900px) { .cart-split-view { grid-template-columns: 1fr; } }
+        @media (max-width: 800px) { .list-container { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 500px) { .list-container { grid-template-columns: 1fr; } }
 
         .card { background: var(--card-bg);
             border: 2px solid rgba(59, 42, 0, 0.08);
@@ -256,6 +266,12 @@
         .heart-btn { font-size: 24px; cursor: pointer; border: none; background: none; position: relative;
             z-index: 5; }
 
+        .disk-arrow-btn { 
+            background: var(--active-orange); border: 2px solid var(--deep-brown); 
+            border-radius: 5px; font-weight: 900; cursor: pointer; padding: 5px 10px; 
+            margin-right: 10px; position: relative; z-index: 6;
+        }
+
         .vote-btn-header {
             width: 100%; background: var(--active-orange); color: var(--deep-brown); border: 3px solid var(--deep-brown);
             padding: 12px; border-radius: 10px; font-weight: 900; text-transform: uppercase;
@@ -268,6 +284,18 @@
             margin-top: 50px; padding: 40px; background: white; border: 4px solid var(--active-orange);
             border-radius: 20px; text-align: center; font-weight: 800; font-size: 1.3em;
             box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        /* Pasek postępu płyty */
+        .disk-progress-container {
+            width: 100%; background: #eee; height: 30px; border-radius: 15px; 
+            border: 2px solid var(--deep-brown); position: relative; overflow: hidden; margin: 10px 0;
+        }
+        .disk-progress-bar {
+            height: 100%; background: var(--active-orange); transition: width 0.3s ease;
+        }
+        .disk-progress-text {
+            position: absolute; width: 100%; text-align: center; top: 5px; font-weight: 900; font-size: 0.8em;
         }
     </style>
 </head>
@@ -324,7 +352,9 @@
     const CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTSIMZUO8ZkisiFoqOfypL9hOQBnTbAvtMmBeIuK56_QoiXFu_b7i-de1Jn6Km9symosxJBV6V5PxKO/pub?output=csv';
     const CSV_TOP = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQeNOmR7SJ-G5j8DMMXjR1KE4h5w1UiNY5nHhV1mvGNJ63I_-3SQPDMNxNFpakUL4VLFacWFUOmycPB/pub?gid=1082900381&single=true&output=csv';
     const STORAGE_KEY = 'melodia_wiary_permanent_storage'; 
-    let songs = [], top50 = [], cart = [], currentView = 'all', displayMode = 'grid', query = "", sortType = 'newest';
+    const DISK_KEY = 'melodia_wiary_disk_storage';
+
+    let songs = [], top50 = [], cart = [], disk = [], currentView = 'all', displayMode = 'grid', query = "", sortType = 'newest';
 
     function openYT(id) {
         if(!id) return;
@@ -343,6 +373,19 @@
         result.push(cur.trim()); return result;
     }
 
+    // Pomocnicza funkcja do przeliczania czasu tekstowego (MM:SS) na sekundy
+    function timeToSeconds(timeStr) {
+        if (!timeStr || !timeStr.includes(':')) return 0;
+        const parts = timeStr.split(':');
+        return parseInt(parts[0]) * 60 + parseInt(parts[1]);
+    }
+
+    function secondsToTime(totalSeconds) {
+        const m = Math.floor(totalSeconds / 60);
+        const s = totalSeconds % 60;
+        return `${m}:${s.toString().padStart(2, '0')}`;
+    }
+
     function updateSize(s) { 
         document.body.className = s; 
         document.getElementById('s-std').classList.toggle('active', s==='standard');
@@ -353,6 +396,10 @@
     async function init() {
         let saved = localStorage.getItem(STORAGE_KEY);
         if(saved) cart = JSON.parse(saved);
+        
+        let savedDisk = localStorage.getItem(DISK_KEY);
+        if(savedDisk) disk = JSON.parse(savedDisk);
+
         updateSize(localStorage.getItem('mv_font_permanent') || 'standard');
 
         const alphabet = "ABCDEFGHIJKLŁMNOPRSTUWZŻ".split("");
@@ -382,7 +429,13 @@
                 const cols = parseCSVLine(line);
                 let rawCats = (cols[1] || "Inne").split(',').map(c => c.trim()).filter(c => c.length > 2);
                 rawCats.forEach(c => catsSet.add(c));
-                return { tytul: cols[0] || "Bez tytułu", kategorie: rawCats, yt: (cols[2] || "").trim(), originalIndex: index };
+                return { 
+                    tytul: cols[0] || "Bez tytułu", 
+                    kategorie: rawCats, 
+                    yt: (cols[2] || "").trim(), 
+                    czas: (cols[3] || "0:00").trim(), // Kolumna D
+                    originalIndex: index 
+                };
             });
 
             const rowsTop = text2.split(/\r?\n/).filter(x => x.trim() !== "").slice(1);
@@ -396,7 +449,7 @@
                 const b = document.createElement('button'); 
                 b.className = 'nav-btn category-link'; 
                 b.innerText = cat; 
-                b.dataset.view = cat; // UNIKALNY IDENTYFIKATOR
+                b.dataset.view = cat; 
                 b.onclick = () => setView(cat); 
                 catBox.appendChild(b);
             });
@@ -406,9 +459,40 @@
 
     function toggleFav(t) {
         const idx = cart.findIndex(x => x.tytul === t);
-        if(idx > -1) cart.splice(idx, 1);
-        else { const s = [...songs, ...top50].find(x => x.tytul === t); if(s) cart.push(s); }
+        if(idx > -1) {
+            cart.splice(idx, 1);
+            // Jeśli usuwamy z ulubionych, usuwamy też z płyty
+            disk = disk.filter(x => x.tytul !== t);
+            localStorage.setItem(DISK_KEY, JSON.stringify(disk));
+        } else { 
+            const s = [...songs, ...top50].find(x => x.tytul === t); 
+            if(s) cart.push(s); 
+        }
         localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+        render();
+    }
+
+    function addToDisk(t) {
+        const song = cart.find(x => x.tytul === t);
+        if (!song) return;
+        if (disk.some(x => x.tytul === t)) return;
+
+        const currentTotal = disk.reduce((sum, s) => sum + timeToSeconds(s.czas), 0);
+        const songTime = timeToSeconds(song.czas);
+
+        if (currentTotal + songTime > 50 * 60) {
+            alert("Nie można dodać pieśni. Płyta może pomieścić maksymalnie 50 minut materiału.");
+            return;
+        }
+
+        disk.push(song);
+        localStorage.setItem(DISK_KEY, JSON.stringify(disk));
+        render();
+    }
+
+    function removeFromDisk(t) {
+        disk = disk.filter(x => x.tytul !== t);
+        localStorage.setItem(DISK_KEY, JSON.stringify(disk));
         render();
     }
 
@@ -454,15 +538,11 @@
         stickyTitleContainer.innerHTML = '';
         renderTopPanel();
 
-        // ANALOGIA DO DZIAŁAJĄCEGO "WSZYSTKIE" - POPRAWIONE PODŚWIETLANIE
         document.querySelectorAll('.nav-btn').forEach(b => {
             b.classList.remove('active');
-            
-            // 1. Sprawdzanie stałych ID
             if(currentView === 'cart' && b.id === 'btn-cart') b.classList.add('active');
             else if(currentView === 'top50' && b.id === 'btn-top50-side') b.classList.add('active');
             else if(currentView === 'all' && b.id === 'cat-all') b.classList.add('active');
-            // 2. Sprawdzanie dynamicznych kategorii po przypisanym dataset
             else if(b.dataset.view === currentView) b.classList.add('active');
         });
 
@@ -506,7 +586,7 @@
 
         if(query) list = list.filter(s => s.tytul.toLowerCase().includes(query));
 
-        if(currentView !== 'top50') {
+        if(currentView !== 'top50' && currentView !== 'cart') {
             if(sortType === 'newest') list.sort((a,b) => b.originalIndex - a.originalIndex);
             else if(sortType === 'oldest') list.sort((a,b) => a.originalIndex - b.originalIndex);
             else if(sortType === 'az') list.sort((a,b) => a.tytul.localeCompare(b.tytul, 'pl'));
@@ -515,47 +595,111 @@
 
         const contentBox = document.createElement('div');
         contentBox.className = 'display-padding';
-        const container = document.createElement('div');
-        container.className = displayMode === 'grid' ? 'items-grid' : 'list-container';
-        
-        let lastChar = "";
-        const showHeaders = (sortType === 'az' || sortType === 'za') && !query && currentView !== 'top50';
 
-        list.forEach((s, idx) => {
-            const firstChar = s.tytul.charAt(0).toUpperCase();
-            if(showHeaders && firstChar !== lastChar) {
-                const h = document.createElement('div'); h.className = 'alpha-header'; h.id = "anchor-" + firstChar; h.innerText = firstChar; container.appendChild(h); lastChar = firstChar;
-            }
+        // --- SPECJALNY WIDOK DLA "ULUBIONE" ---
+        if(currentView === 'cart') {
+            const splitView = document.createElement('div');
+            splitView.className = 'cart-split-view';
 
-            const item = document.createElement('div');
-            const isFav = cart.some(x => x.tytul === s.tytul);
-            const jsTytul = s.tytul.replace(/'/g, "\\'");
-            
-            if(displayMode === 'grid') {
-                item.className = 'card';
-                if(!s.dummy) item.onclick = () => openYT(s.yt);
-                item.innerHTML = `
-                    ${currentView === 'top50' ? `<div class="card-rank">MIEJSCE ${idx + 1}</div>` : ''}
-                    <div class="thumb-container">
-                        <img src="${s.dummy ? 'https://via.placeholder.com/320x180?text=...' : `https://img.youtube.com/vi/${s.yt}/mqdefault.jpg`}" class="thumb">
-                        ${!s.dummy ? `<div class="play-overlay"><div class="yt-btn-fake">KLIKNIJ, ABY OTWORZYĆ NA YOUTUBE 🎶</div></div>` : ''}
-                    </div>
-                    <div class="card-title">${s.tytul}</div>
-                    ${!s.dummy ? `<button class="btn-fav-toggle ${isFav ? 'is-active' : ''}" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">${isFav ? '❌ USUŃ Z ULUBIONYCH' : '➕ DODAJ DO ULUBIONYCH'}</button>` : ''}
-                `;
-            } else {
+            // KOLUMNA LEWA: ULUBIONE (PIONOWA LISTA)
+            const favCol = document.createElement('div');
+            favCol.className = 'cart-column';
+            favCol.innerHTML = `<h3 style="text-align:center; text-transform:uppercase;">Moje wybrane utwory</h3>`;
+
+            list.forEach(s => {
+                const jsTytul = s.tytul.replace(/'/g, "\\'");
+                const item = document.createElement('div');
                 item.className = 'list-card';
-                if(!s.dummy) item.onclick = () => openYT(s.yt);
+                item.onclick = () => openYT(s.yt);
                 item.innerHTML = `
-                    ${!s.dummy ? `<div class="list-overlay">KLIKNIJ, ABY OTWORZYĆ NA YOUTUBE 🎶</div>` : ''}
-                    <span class="list-title">${currentView === 'top50' ? (idx+1) + '. ' : ''}${s.tytul}</span>
-                    ${!s.dummy ? `<button class="heart-btn" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">${isFav ? '❤️' : '🤍'}</button>` : ''}
+                    <div class="list-overlay">KLIKNIJ, ABY OTWORZYĆ NA YOUTUBE 🎶</div>
+                    <span class="list-title">${s.tytul} <span style="font-size:0.7em; opacity:0.7;">(${s.czas})</span></span>
+                    <div style="display:flex; align-items:center;">
+                        <button class="disk-arrow-btn" onclick="event.stopPropagation(); addToDisk('${jsTytul}')">DODAJ DO PŁYTY ➔</button>
+                        <button class="heart-btn" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">❤️</button>
+                    </div>
                 `;
-            }
-            container.appendChild(item);
-        });
+                favCol.appendChild(item);
+            });
 
-        contentBox.appendChild(container);
+            // KOLUMNA PRAWA: PŁYTA
+            const diskCol = document.createElement('div');
+            diskCol.className = 'cart-column';
+            diskCol.style.background = "#fff";
+            diskCol.style.padding = "20px";
+            diskCol.style.borderRadius = "15px";
+            diskCol.style.border = "3px solid var(--active-orange)";
+
+            const diskSecTotal = disk.reduce((sum, s) => sum + timeToSeconds(s.czas), 0);
+            const diskPercent = Math.min(100, (diskSecTotal / (50 * 60)) * 100);
+
+            diskCol.innerHTML = `
+                <h3 style="text-align:center; text-transform:uppercase; margin-top:0;">💿 Płyta Numer 1 Melodia Wiary</h3>
+                <div class="disk-progress-container">
+                    <div class="disk-progress-bar" style="width: ${diskPercent}%"></div>
+                    <div class="disk-progress-text">ZAPEŁNIENIE PŁYTY: ${secondsToTime(diskSecTotal)} / 50:00 (${Math.round(diskPercent)}%)</div>
+                </div>
+            `;
+
+            disk.forEach((s, idx) => {
+                const jsTytul = s.tytul.replace(/'/g, "\\'");
+                const item = document.createElement('div');
+                item.className = 'list-card';
+                item.style.minHeight = "40px";
+                item.style.marginBottom = "5px";
+                item.innerHTML = `
+                    <span class="list-title" style="font-size:0.9em;">${idx+1}. ${s.tytul}</span>
+                    <button class="heart-btn" style="font-size:18px;" onclick="removeFromDisk('${jsTytul}')">❌</button>
+                `;
+                diskCol.appendChild(item);
+            });
+
+            splitView.appendChild(favCol);
+            splitView.appendChild(diskCol);
+            contentBox.appendChild(splitView);
+        } else {
+            // --- STANDARDOWY WIDOK DLA INNYCH KATEGORII ---
+            const container = document.createElement('div');
+            container.className = displayMode === 'grid' ? 'items-grid' : 'list-container';
+            
+            let lastChar = "";
+            const showHeaders = (sortType === 'az' || sortType === 'za') && !query && currentView !== 'top50';
+
+            list.forEach((s, idx) => {
+                const firstChar = s.tytul.charAt(0).toUpperCase();
+                if(showHeaders && firstChar !== lastChar) {
+                    const h = document.createElement('div'); h.className = 'alpha-header'; h.id = "anchor-" + firstChar; h.innerText = firstChar; container.appendChild(h); lastChar = firstChar;
+                }
+
+                const item = document.createElement('div');
+                const isFav = cart.some(x => x.tytul === s.tytul);
+                const jsTytul = s.tytul.replace(/'/g, "\\'");
+                
+                if(displayMode === 'grid') {
+                    item.className = 'card';
+                    if(!s.dummy) item.onclick = () => openYT(s.yt);
+                    item.innerHTML = `
+                        ${currentView === 'top50' ? `<div class="card-rank">MIEJSCE ${idx + 1}</div>` : ''}
+                        <div class="thumb-container">
+                            <img src="${s.dummy ? 'https://via.placeholder.com/320x180?text=...' : `https://img.youtube.com/vi/${s.yt}/mqdefault.jpg`}" class="thumb">
+                            ${!s.dummy ? `<div class="play-overlay"><div class="yt-btn-fake">KLIKNIJ, ABY OTWORZYĆ NA YOUTUBE 🎶</div></div>` : ''}
+                        </div>
+                        <div class="card-title">${s.tytul}</div>
+                        ${!s.dummy ? `<button class="btn-fav-toggle ${isFav ? 'is-active' : ''}" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">${isFav ? '❌ USUŃ Z ULUBIONYCH' : '➕ DODAJ DO ULUBIONYCH'}</button>` : ''}
+                    `;
+                } else {
+                    item.className = 'list-card';
+                    if(!s.dummy) item.onclick = () => openYT(s.yt);
+                    item.innerHTML = `
+                        ${!s.dummy ? `<div class="list-overlay">KLIKNIJ, ABY OTWORZYĆ NA YOUTUBE 🎶</div>` : ''}
+                        <span class="list-title">${currentView === 'top50' ? (idx+1) + '. ' : ''}${s.tytul}</span>
+                        ${!s.dummy ? `<button class="heart-btn" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">${isFav ? '❤️' : '🤍'}</button>` : ''}
+                    `;
+                }
+                container.appendChild(item);
+            });
+            contentBox.appendChild(container);
+        }
 
         if(currentView === 'top50') {
             const instr = document.createElement('div');
@@ -571,7 +715,7 @@
                     <a href="http://youtube.com/post/UgkxudR-ghySucG9xp6vcB28mYZ9cBb_B-a0?si=_zkEhGhy1P6Xo9Hw" 
                        target="_blank" 
                        style="display:inline-block; background: #ff0000; color: white; padding: 15px 30px; text-decoration: none; border-radius: 10px; font-weight: 900; border: 3px solid #333;">
-                       PRZEJDŹ DO GŁOSOWANIA NA YOUTUBE 🎶
+                        PRZEJDŹ DO GŁOSOWANIA NA YOUTUBE 🎶
                     </a>
                 </div>
                 <p style="font-size: 0.9em; color: #555;">Wklej swoje 3 propozycje w komentarzu pod postem na YouTube. Głosujemy do piątku do 24:00!</p>
