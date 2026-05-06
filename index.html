@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Melodia Wiary - v65</title>
+    <title>Katalog Melodia Wiary - v69</title>
     <style>
         :root { 
             --active-orange: #fbda80;
@@ -52,7 +52,6 @@
         .nav-btn:hover { background: var(--active-orange);
             transform: scale(1.02); }
         
-        /* KLUCZOWE: Podświetlenie wybranej kategorii */
         .nav-btn.active, .size-btn.active { 
             background: var(--active-orange) !important;
             border: 3px solid var(--deep-brown) !important; 
@@ -166,7 +165,7 @@
 
         .view-title-header { background: var(--soft-cyan); color: var(--deep-brown); padding: 15px 25px; font-weight: 900;
             text-transform: uppercase; font-size: 1.5em; border-bottom: 5px solid var(--active-orange); border-top: 2px solid var(--active-orange);
-            width: 100%; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px;
+            width: 100%; box-sizing: border-box; display: flex; flex-direction: row; align-items: center; text-align: center; gap: 10px;
             }
 
         #main-display { padding: 0 0 400px 0; min-height: 100vh; width: 100%;
@@ -269,6 +268,47 @@
             border-radius: 20px; text-align: center; font-weight: 800; font-size: 1.3em;
             box-shadow: 0 10px 30px rgba(0,0,0,0.05);
         }
+
+        /* NOWE STYLE DLA WIDOKU ULUBIONYCH / PŁYTY */
+        .fav-layout { display: flex; gap: 20px; align-items: flex-start; margin-top: 20px; }
+        .fav-column { flex: 1; display: flex; flex-direction: column; gap: 15px; }
+        .disc-column { flex: 1; display: flex; flex-direction: column; gap: 30px; position: sticky; top: 350px; }
+        .disc-box { border: 4px solid var(--deep-brown); border-radius: 20px; background: white; padding: 20px; min-height: 100px; }
+        .disc-header { background: var(--active-orange); padding: 15px; border-radius: 10px; font-weight: 900; text-align: center; margin-bottom: 15px; border: 2px solid var(--deep-brown); font-size: var(--f-btn); }
+        .disc-progress { background: #eee; border-radius: 10px; height: 25px; margin-top: 10px; overflow: hidden; border: 1px solid var(--deep-brown); position: relative; }
+        .disc-progress-bar { height: 100%; background: #4caf50; transition: 0.3s; width: 0%; }
+        .disc-progress-text { position: absolute; width: 100%; text-align: center; font-size: 12px; font-weight: 900; top: 3px; }
+        
+        .on-disc-badge { color: #d32f2f; font-weight: 900; font-size: 1.1em; text-transform: uppercase; margin-bottom: 5px; }
+        
+        /* MODAL */
+        #fav-modal-overlay { 
+            position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.7); 
+            display: none; align-items: center; justify-content: center; z-index: 2000;
+        }
+        .fav-modal { 
+            background: white; border: 4px solid var(--active-orange); padding: 30px; border-radius: 20px;
+            max-width: 500px; width: 90%; text-align: center; font-weight: 900; 
+        }
+        .modal-btns { display: flex; gap: 10px; margin-top: 20px; }
+
+        .disc-counter-box {
+            background: var(--active-orange); border: 2px solid var(--deep-brown); padding: 10px;
+            border-radius: 10px; font-weight: 900; text-align: center; text-transform: uppercase;
+            font-size: 0.7em; flex: 1;
+        }
+
+        /* STYLE DLA SELEKTORA ILOŚCI */
+        .qty-controls {
+            display: flex; align-items: center; border: 2px solid var(--deep-brown); border-radius: 8px; overflow: hidden; height: 100%;
+        }
+        .qty-btn {
+            background: var(--soft-cyan); border: none; width: 30px; height: 100%; cursor: pointer; font-weight: 900; font-size: 16px;
+        }
+        .qty-btn:hover { background: var(--active-orange); }
+        .qty-val {
+            width: 40px; text-align: center; font-weight: 900; background: white; border-left: 2px solid var(--deep-brown); border-right: 2px solid var(--deep-brown);
+        }
     </style>
 </head>
 <body class="standard">
@@ -320,11 +360,25 @@
     <div id="main-display"></div>
 </div>
 
+<div id="fav-modal-overlay">
+    <div class="fav-modal">
+        <div id="modal-text">Ta piosenka jest na płycie. Czy chcesz usunąć ją z ulubionych i płyty, czy tylko z ulubionych?</div>
+        <div class="modal-btns">
+            <button class="ctrl-btn" style="background:#ffcccc;" onclick="modalAction('both')">Z ULUBIONYCH I PŁYTY</button>
+            <button class="ctrl-btn" onclick="modalAction('fav-only')">TYLKO Z ULUBIONYCH</button>
+            <button class="ctrl-btn" style="background:#eee;" onclick="closeModal()">ANULUJ</button>
+        </div>
+    </div>
+</div>
+
 <script>
     const CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTSIMZUO8ZkisiFoqOfypL9hOQBnTbAvtMmBeIuK56_QoiXFu_b7i-de1Jn6Km9symosxJBV6V5PxKO/pub?output=csv';
     const CSV_TOP = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQeNOmR7SJ-G5j8DMMXjR1KE4h5w1UiNY5nHhV1mvGNJ63I_-3SQPDMNxNFpakUL4VLFacWFUOmycPB/pub?gid=1082900381&single=true&output=csv';
     const STORAGE_KEY = 'melodia_wiary_permanent_storage'; 
-    let songs = [], top50 = [], cart = [], currentView = 'all', displayMode = 'grid', query = "", sortType = 'newest';
+    const STORAGE_DISC = 'melodia_wiary_disc_storage';
+    const STORAGE_QTYS = 'melodia_wiary_qty_storage'; // NOWE: do przechowywania ilości
+    let songs = [], top50 = [], cart = [], disc = [], discQtys = {}, currentView = 'all', displayMode = 'grid', query = "", sortType = 'newest';
+    let pendingFavTitle = null;
 
     function openYT(id) {
         if(!id) return;
@@ -343,16 +397,37 @@
         result.push(cur.trim()); return result;
     }
 
+    function timeToSeconds(t) {
+        if(!t || typeof t !== 'string') return 0;
+        let cleanTime = t.replace(/[^\d:]/g, ''); 
+        let parts = cleanTime.split(':').map(Number);
+        if(parts.length === 2) return (isNaN(parts[0]) ? 0 : parts[0]*60) + (isNaN(parts[1]) ? 0 : parts[1]);
+        if(parts.length === 3) return (isNaN(parts[0]) ? 0 : parts[0]*3600) + (isNaN(parts[1]) ? 0 : parts[1]*60) + (isNaN(parts[2]) ? 0 : parts[2]);
+        return 0;
+    }
+
+    function secondsToTime(s) {
+        let m = Math.floor(s / 60);
+        let sec = s % 60;
+        return m + ":" + (sec < 10 ? '0' : '') + sec;
+    }
+
     function updateSize(s) { 
         document.body.className = s; 
         document.getElementById('s-std').classList.toggle('active', s==='standard');
         document.getElementById('s-big').classList.toggle('active', s==='senior'); 
         localStorage.setItem('mv_font_permanent', s);
+        render(); 
     }
 
     async function init() {
         let saved = localStorage.getItem(STORAGE_KEY);
         if(saved) cart = JSON.parse(saved);
+        let savedDisc = localStorage.getItem(STORAGE_DISC);
+        if(savedDisc) disc = JSON.parse(savedDisc);
+        let savedQtys = localStorage.getItem(STORAGE_QTYS);
+        if(savedQtys) discQtys = JSON.parse(savedQtys);
+
         updateSize(localStorage.getItem('mv_font_permanent') || 'standard');
 
         const alphabet = "ABCDEFGHIJKLŁMNOPRSTUWZŻ".split("");
@@ -382,13 +457,22 @@
                 const cols = parseCSVLine(line);
                 let rawCats = (cols[1] || "Inne").split(',').map(c => c.trim()).filter(c => c.length > 2);
                 rawCats.forEach(c => catsSet.add(c));
-                return { tytul: cols[0] || "Bez tytułu", kategorie: rawCats, yt: (cols[2] || "").trim(), originalIndex: index };
+                return { tytul: cols[0] || "Bez tytułu", kategorie: rawCats, yt: (cols[2] || "").trim(), czas: cols[3] || "0:00", originalIndex: index };
+            });
+
+            cart = cart.map(cItem => {
+                const updated = songs.find(s => s.tytul === cItem.tytul);
+                return updated ? updated : cItem;
+            });
+            disc = disc.map(dItem => {
+                const updated = songs.find(s => s.tytul === dItem.tytul);
+                return updated ? updated : dItem;
             });
 
             const rowsTop = text2.split(/\r?\n/).filter(x => x.trim() !== "").slice(1);
             top50 = rowsTop.map((line, index) => {
                 const cols = parseCSVLine(line);
-                return { tytul: cols[0] || "Bez tytułu", yt: (cols[1] || "").trim(), originalIndex: index };
+                return { tytul: cols[0] || "Bez tytułu", yt: (cols[1] || "").trim(), originalIndex: index, czas: "0:00" };
             });
 
             const catBox = document.getElementById('cat-list');
@@ -396,7 +480,7 @@
                 const b = document.createElement('button'); 
                 b.className = 'nav-btn category-link'; 
                 b.innerText = cat; 
-                b.dataset.view = cat; // UNIKALNY IDENTYFIKATOR
+                b.dataset.view = cat; 
                 b.onclick = () => setView(cat); 
                 catBox.appendChild(b);
             });
@@ -404,11 +488,62 @@
         } catch(e) { console.error(e); }
     }
 
+    function closeModal() {
+        document.getElementById('fav-modal-overlay').style.display = 'none';
+        pendingFavTitle = null;
+    }
+
+    function modalAction(type) {
+        if(!pendingFavTitle) return;
+        const title = pendingFavTitle;
+        
+        const idx = cart.findIndex(x => x.tytul === title);
+        if(idx > -1) cart.splice(idx, 1);
+
+        if(type === 'both') {
+            const dIdx = disc.findIndex(x => x.tytul === title);
+            if(dIdx > -1) disc.splice(dIdx, 1);
+        }
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+        localStorage.setItem(STORAGE_DISC, JSON.stringify(disc));
+        closeModal();
+        render();
+    }
+
     function toggleFav(t) {
         const idx = cart.findIndex(x => x.tytul === t);
-        if(idx > -1) cart.splice(idx, 1);
+        if(idx > -1) {
+            if(disc.some(x => x.tytul === t)) {
+                pendingFavTitle = t;
+                document.getElementById('fav-modal-overlay').style.display = 'flex';
+                return;
+            }
+            cart.splice(idx, 1);
+        }
         else { const s = [...songs, ...top50].find(x => x.tytul === t); if(s) cart.push(s); }
         localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+        render();
+    }
+
+    function toggleDisc(t) {
+        const idx = disc.findIndex(x => x.tytul === t);
+        if(idx > -1) disc.splice(idx, 1);
+        else {
+            const s = [...songs, ...top50].find(x => x.tytul === t);
+            if(s) disc.push(s);
+        }
+        localStorage.setItem(STORAGE_DISC, JSON.stringify(disc));
+        render();
+    }
+
+    // NOWE: Funkcja zarządzania ilością sztuk konkretnej płyty
+    function updateDiscQty(discIdx, delta) {
+        let current = discQtys[discIdx] || 0;
+        let newVal = current + delta;
+        if(newVal < 1) newVal = 1; // Minimum 1 sztuka jeśli ktoś kliknął dodaj
+        discQtys[discIdx] = newVal;
+        localStorage.setItem(STORAGE_QTYS, JSON.stringify(discQtys));
         render();
     }
 
@@ -447,22 +582,98 @@
         panel.innerHTML = html;
     }
 
+    // ZAKTUALIZOWANA FUNKCJA PODSUMOWANIA (MESSENGER + EMAIL)
+    function renderOrderSummary() {
+        currentView = 'order_summary';
+        const out = document.getElementById('main-display');
+        const stick = document.getElementById('sticky-title-container');
+        stick.innerHTML = `<div class="view-title-header" style="justify-content:space-between;">
+            <div>PODSUMOWANIE TWOICH PŁYT</div>
+            <button class="ctrl-btn" style="max-width:200px; background:white;" onclick="setView('cart')">POWRÓT DO EDYCJI</button>
+        </div>`;
+        out.innerHTML = '';
+
+        const discsTmp = [];
+        let cIdx = 0; let cTime = 0;
+        disc.forEach(s => {
+            const sT = timeToSeconds(s.czas);
+            if (!discsTmp[cIdx]) discsTmp[cIdx] = [];
+            if (cTime + sT > 3000 && discsTmp[cIdx].length > 0) { cIdx++; cTime = sT; discsTmp[cIdx] = [s]; }
+            else { cTime += sT; discsTmp[cIdx].push(s); }
+        });
+
+        const container = document.createElement('div');
+        container.className = 'display-padding';
+        container.style.marginTop = '20px';
+
+        let rawTextMsg = "Dzień dobry, chciałbym zamówić płyty z kanału Melodia Wiary:\n\n";
+        
+        discsTmp.forEach((dSongs, idx) => {
+            let qty = discQtys[idx] || 0;
+            if(qty > 0) {
+                const section = document.createElement('div');
+                section.className = 'disc-box';
+                section.style.marginBottom = '20px';
+                let songsList = dSongs.map((s, sIdx) => `${sIdx+1}. ${s.tytul} (${s.czas})`).join('<br>');
+                section.innerHTML = `
+                    <div class="disc-header">PŁYTA NR ${idx + 1} - ILOŚĆ: ${qty} SZT.</div>
+                    <div style="padding:10px; font-weight:bold;">SPIS UTWORÓW NA TEJ PŁYCIE:</div>
+                    <div style="padding:0 10px 10px 10px; font-size:0.9em;">${songsList}</div>
+                `;
+                container.appendChild(section);
+                rawTextMsg += `PŁYTA NR ${idx+1} (${qty} szt.):\n` + dSongs.map(s => `- ${s.tytul}`).join('\n') + "\n\n";
+            }
+        });
+
+        if(container.innerHTML === "") {
+            container.innerHTML = "<h3 style='text-align:center;'>Nie dodano żadnych płyt do zamówienia (ilość 0).</h3>";
+        } else {
+            // Funkcja do kopiowania treści (ważna dla Messengera)
+            window.copyOrderToClipboard = () => {
+                navigator.clipboard.writeText(rawTextMsg).then(() => {
+                    alert("Treść zamówienia została skopiowana! Możesz ją teraz wkleić w wiadomości.");
+                });
+            };
+
+            const footer = document.createElement('div');
+            footer.className = 'instruction-box';
+            footer.innerHTML = `
+                <h2 style="text-transform:uppercase;">Finalizuj zamówienie</h2>
+                <p>1. Najpierw skopiuj treść zamówienia:</p>
+                <button class="ctrl-btn" style="background:var(--active-orange); padding:15px; margin-bottom:20px; width:100%; max-width:400px;" onclick="copyOrderToClipboard()">
+                    📋 KOPIUJ TREŚĆ ZAMÓWIENIA
+                </button>
+                
+                <p>2. Wybierz drogę kontaktu i wklej wiadomość:</p>
+                <div style="display:flex; gap:15px; justify-content:center; margin-top:20px; flex-wrap:wrap;">
+                    <a href="https://m.me/MelodiaWiary" target="_blank" class="ctrl-btn" style="background:#0084ff; color:white; padding:15px; text-decoration:none; display:flex; align-items:center; justify-content:center; min-width:250px;">
+                        OTWÓRZ MESSENGERA
+                    </a>
+                    
+                    <a href="mailto:kontakt@melodiawiary.pl?subject=Zamówienie Płyt - Melodia Wiary&body=${encodeURIComponent(rawTextMsg)}" class="ctrl-btn" style="background:#4caf50; color:white; padding:15px; text-decoration:none; display:flex; align-items:center; justify-content:center; min-width:250px;">
+                        WYŚLIJ E-MAIL
+                    </a>
+                </div>
+                <p style="font-size:0.7em; margin-top:20px; color:#666;">(Adres e-mail: kontakt@melodiawiary.pl)</p>
+            `;
+            container.appendChild(footer);
+        }
+        out.appendChild(container);
+    }
+
     function render() {
+        if(currentView === 'order_summary') { renderOrderSummary(); return; }
         const out = document.getElementById('main-display');
         const stickyTitleContainer = document.getElementById('sticky-title-container');
         out.innerHTML = '';
         stickyTitleContainer.innerHTML = '';
         renderTopPanel();
 
-        // ANALOGIA DO DZIAŁAJĄCEGO "WSZYSTKIE" - POPRAWIONE PODŚWIETLANIE
         document.querySelectorAll('.nav-btn').forEach(b => {
             b.classList.remove('active');
-            
-            // 1. Sprawdzanie stałych ID
             if(currentView === 'cart' && b.id === 'btn-cart') b.classList.add('active');
             else if(currentView === 'top50' && b.id === 'btn-top50-side') b.classList.add('active');
             else if(currentView === 'all' && b.id === 'cat-all') b.classList.add('active');
-            // 2. Sprawdzanie dynamicznych kategorii po przypisanym dataset
             else if(b.dataset.view === currentView) b.classList.add('active');
         });
 
@@ -479,9 +690,44 @@
         header.className = 'view-title-header';
         
         let titleLine = document.createElement('div');
-        titleLine.style.width = "100%";
+        titleLine.style.flex = "2";
         titleLine.innerText = currentView === 'all' ? 'WSZYSTKIE PIEŚNI' : (currentView === 'cart' ? '❤️ MOJE ULUBIONE' : (currentView === 'top50' ? 'TYGODNIOWA LISTA PRZEBOJÓW POLSKIEJ PIEŚNI RELIGIJNEJ NR 1 - 4.4.2026' : '📂 ' + currentView));
         header.appendChild(titleLine);
+
+        if(currentView === 'cart') {
+            const discsTmp = [];
+            let cIndex = 0; let cTime = 0; const mTime = 50 * 60;
+            disc.forEach(s => {
+                const sT = timeToSeconds(s.czas);
+                if (!discsTmp[cIndex]) discsTmp[cIndex] = [];
+                if (cTime + sT > mTime && discsTmp[cIndex].length > 0) { cIndex++; cTime = sT; discsTmp[cIndex] = [s]; }
+                else { cTime += sT; discsTmp[cIndex].push(s); }
+            });
+            
+            let ordersInfo = [];
+            discsTmp.forEach((_, idx) => {
+                let qty = discQtys[idx] || 0;
+                if(qty > 0) {
+                    ordersInfo.push(`${qty} ${qty === 1 ? 'płytę' : (qty < 5 ? 'płyty' : 'płyt')} nr ${idx + 1}`);
+                }
+            });
+
+            const counterDiv = document.createElement('div');
+            counterDiv.className = 'disc-counter-box';
+            counterDiv.style.flex = "3";
+            counterDiv.style.display = "flex";
+            counterDiv.style.alignItems = "center";
+            counterDiv.style.justifyContent = "space-between";
+            counterDiv.style.padding = "5px 15px";
+
+            let infoText = ordersInfo.length > 0 ? "Wybrałeś " + ordersInfo.join(", ") : "Ustal ilość płyt na liście poniżej";
+            
+            counterDiv.innerHTML = `
+                <div style="text-align:left; line-height:1.2;">${infoText}</div>
+                <button class="ctrl-btn" style="max-width:150px; background:white; margin-left:10px;" onclick="renderOrderSummary()">ZAMÓW PŁYTY</button>
+            `;
+            header.appendChild(counterDiv);
+        }
 
         if(currentView === 'top50') {
             const voteBtn = document.createElement('button');
@@ -515,47 +761,158 @@
 
         const contentBox = document.createElement('div');
         contentBox.className = 'display-padding';
-        const container = document.createElement('div');
-        container.className = displayMode === 'grid' ? 'items-grid' : 'list-container';
-        
-        let lastChar = "";
-        const showHeaders = (sortType === 'az' || sortType === 'za') && !query && currentView !== 'top50';
 
-        list.forEach((s, idx) => {
-            const firstChar = s.tytul.charAt(0).toUpperCase();
-            if(showHeaders && firstChar !== lastChar) {
-                const h = document.createElement('div'); h.className = 'alpha-header'; h.id = "anchor-" + firstChar; h.innerText = firstChar; container.appendChild(h); lastChar = firstChar;
-            }
-
-            const item = document.createElement('div');
-            const isFav = cart.some(x => x.tytul === s.tytul);
-            const jsTytul = s.tytul.replace(/'/g, "\\'");
+        if(currentView === 'cart') {
+            const layout = document.createElement('div');
+            layout.className = 'fav-layout';
             
-            if(displayMode === 'grid') {
-                item.className = 'card';
-                if(!s.dummy) item.onclick = () => openYT(s.yt);
-                item.innerHTML = `
-                    ${currentView === 'top50' ? `<div class="card-rank">MIEJSCE ${idx + 1}</div>` : ''}
-                    <div class="thumb-container">
-                        <img src="${s.dummy ? 'https://via.placeholder.com/320x180?text=...' : `https://img.youtube.com/vi/${s.yt}/mqdefault.jpg`}" class="thumb">
-                        ${!s.dummy ? `<div class="play-overlay"><div class="yt-btn-fake">KLIKNIJ, ABY OTWORZYĆ NA YOUTUBE 🎶</div></div>` : ''}
-                    </div>
-                    <div class="card-title">${s.tytul}</div>
-                    ${!s.dummy ? `<button class="btn-fav-toggle ${isFav ? 'is-active' : ''}" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">${isFav ? '❌ USUŃ Z ULUBIONYCH' : '➕ DODAJ DO ULUBIONYCH'}</button>` : ''}
-                `;
-            } else {
-                item.className = 'list-card';
-                if(!s.dummy) item.onclick = () => openYT(s.yt);
-                item.innerHTML = `
-                    ${!s.dummy ? `<div class="list-overlay">KLIKNIJ, ABY OTWORZYĆ NA YOUTUBE 🎶</div>` : ''}
-                    <span class="list-title">${currentView === 'top50' ? (idx+1) + '. ' : ''}${s.tytul}</span>
-                    ${!s.dummy ? `<button class="heart-btn" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">${isFav ? '❤️' : '🤍'}</button>` : ''}
-                `;
-            }
-            container.appendChild(item);
-        });
+            const leftCol = document.createElement('div');
+            leftCol.className = 'fav-column';
+            
+            const discs = [];
+            let currentDiscIndex = 0;
+            let currentDiscTime = 0;
+            const maxTime = 50 * 60;
 
-        contentBox.appendChild(container);
+            disc.forEach(s => {
+                const sTime = timeToSeconds(s.czas);
+                if (!discs[currentDiscIndex]) discs[currentDiscIndex] = [];
+                if (currentDiscTime + sTime > maxTime && discs[currentDiscIndex].length > 0) {
+                    currentDiscIndex++; currentDiscTime = sTime; discs[currentDiscIndex] = [s];
+                } else {
+                    currentDiscTime += sTime; discs[currentDiscIndex].push(s);
+                }
+            });
+
+            list.forEach(s => {
+                const foundDiscIndex = discs.findIndex(d => d.some(x => x.tytul === s.tytul));
+                const isDisc = foundDiscIndex > -1;
+                const jsTytul = s.tytul.replace(/'/g, "\\'");
+                const item = document.createElement('div');
+                item.className = 'card';
+                item.style.flexDirection = 'row';
+                item.style.alignItems = 'center';
+                item.style.padding = '10px';
+                item.onclick = () => openYT(s.yt);
+                item.innerHTML = `
+                    <div class="thumb-container" style="width:160px; margin-bottom:0; aspect-ratio:16/9;">
+                        <img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb">
+                    </div>
+                    <div class="card-title" style="flex:1; text-align:left; padding-left:15px;">
+                        ${isDisc ? `<div class="on-disc-badge">JEST NA PŁYCIE NUMER ${foundDiscIndex + 1}</div>` : ''}
+                        ${s.tytul} <br><small>Czas: ${s.czas}</small>
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:5px;">
+                        <button class="ctrl-btn" style="background:#fff1f1; font-size:var(--f-ctrl); min-width:120px;" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">
+                            USUŃ Z ULUBIONYCH
+                        </button>
+                        ${!isDisc ? `
+                        <button class="ctrl-btn" style="background:var(--active-orange); font-size:var(--f-ctrl); min-width:120px;" onclick="event.stopPropagation(); toggleDisc('${jsTytul}')">
+                            DODAJ DO PŁYTY
+                        </button>` : ''}
+                    </div>
+                `;
+                leftCol.appendChild(item);
+            });
+
+            const rightCol = document.createElement('div');
+            rightCol.className = 'disc-column';
+            
+            if (discs.length === 0) {
+                const emptyBox = document.createElement('div');
+                emptyBox.className = 'disc-box';
+                emptyBox.innerHTML = '<div class="disc-header">PŁYTA JEST PUSTA</div>';
+                rightCol.appendChild(emptyBox);
+            } else {
+                discs.forEach((dSongs, idx) => {
+                    let dTotal = dSongs.reduce((acc, s) => acc + timeToSeconds(s.czas), 0);
+                    let dPercent = Math.min((dTotal / maxTime) * 100, 100);
+                    let currentQty = discQtys[idx] || 0;
+
+                    const dBox = document.createElement('div');
+                    dBox.className = 'disc-box';
+                    dBox.innerHTML = `
+                        <div style="display: flex; gap: 10px; align-items: stretch; margin-bottom: 15px;">
+                            <div class="disc-header" style="flex: 2; margin-bottom: 0;">PŁYTA NUMER ${idx + 1} MELODIA WIARY</div>
+                            
+                            <div style="flex: 1.5; display:flex; flex-direction:column; gap:5px;">
+                                <div class="qty-controls">
+                                    <button class="qty-btn" onclick="updateDiscQty(${idx}, -1)">-</button>
+                                    <div class="qty-val">${currentQty}</div>
+                                    <button class="qty-btn" onclick="updateDiscQty(${idx}, 1)">+</button>
+                                </div>
+                                <button class="ctrl-btn" style="background: ${currentQty > 0 ? '#4caf50' : '#fbda80'}; color: ${currentQty > 0 ? 'white' : 'inherit'}; padding:5px; font-size:9px;" onclick="updateDiscQty(${idx}, 1)">
+                                    ${currentQty > 0 ? 'DODANO DO ZAMÓWIENIA' : 'DODAJ PŁYTĘ DO ZAMÓWIENIA'}
+                                </button>
+                            </div>
+                        </div>
+                        <div class="disc-progress">
+                            <div class="disc-progress-bar" style="width: ${dPercent}%; background: #4caf50"></div>
+                            <div class="disc-progress-text">${secondsToTime(dTotal)} / 50:00</div>
+                        </div>
+                        <div style="margin-top:20px; display:flex; flex-direction:column; gap:10px;">
+                            ${dSongs.map(s => {
+                                const inFav = cart.some(x => x.tytul === s.tytul);
+                                return `
+                                <div class="list-card" style="background:#fff9e6; border:1px solid #333; min-height:40px; padding: 5px 15px;">
+                                    <span class="list-title" style="font-size:var(--f-list-title);">
+                                        ${s.tytul} (${s.czas}) 
+                                        ${!inFav ? '<span class="on-disc-badge" style="margin-left:10px; font-size:0.8em;">- nie jest w ulubionych</span>' : ''}
+                                    </span>
+                                    <button class="ctrl-btn" style="max-width:100px; font-size:var(--f-ctrl); padding:4px;" onclick="event.stopPropagation(); toggleDisc('${s.tytul.replace(/'/g, "\\'")}')">USUŃ Z PŁYTY</button>
+                                </div>
+                            `}).join('')}
+                        </div>
+                    `;
+                    rightCol.appendChild(dBox);
+                });
+            }
+
+            layout.appendChild(leftCol);
+            layout.appendChild(rightCol);
+            contentBox.appendChild(layout);
+        } else {
+            const container = document.createElement('div');
+            container.className = displayMode === 'grid' ? 'items-grid' : 'list-container';
+            
+            let lastChar = "";
+            const showHeaders = (sortType === 'az' || sortType === 'za') && !query && currentView !== 'top50';
+
+            list.forEach((s, idx) => {
+                const firstChar = s.tytul.charAt(0).toUpperCase();
+                if(showHeaders && firstChar !== lastChar) {
+                    const h = document.createElement('div'); h.className = 'alpha-header'; h.id = "anchor-" + firstChar; h.innerText = firstChar; container.appendChild(h); lastChar = firstChar;
+                }
+
+                const item = document.createElement('div');
+                const isFav = cart.some(x => x.tytul === s.tytul);
+                const jsTytul = s.tytul.replace(/'/g, "\\'");
+                
+                if(displayMode === 'grid') {
+                    item.className = 'card';
+                    if(!s.dummy) item.onclick = () => openYT(s.yt);
+                    item.innerHTML = `
+                        ${currentView === 'top50' ? `<div class="card-rank">MIEJSCE ${idx + 1}</div>` : ''}
+                        <div class="thumb-container">
+                            <img src="${s.dummy ? 'https://via.placeholder.com/320x180?text=...' : `https://img.youtube.com/vi/${s.yt}/mqdefault.jpg`}" class="thumb">
+                            ${!s.dummy ? `<div class="play-overlay"><div class="yt-btn-fake">KLIKNIJ, ABY OTWORZYĆ NA YOUTUBE 🎶</div></div>` : ''}
+                        </div>
+                        <div class="card-title">${s.tytul}</div>
+                        ${!s.dummy ? `<button class="btn-fav-toggle ${isFav ? 'is-active' : ''}" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">${isFav ? '❌ USUŃ Z ULUBIONYCH' : '➕ DODAJ DO ULUBIONYCH'}</button>` : ''}
+                    `;
+                } else {
+                    item.className = 'list-card';
+                    if(!s.dummy) item.onclick = () => openYT(s.yt);
+                    item.innerHTML = `
+                        ${!s.dummy ? `<div class="list-overlay">KLIKNIJ, ABY OTWORZYĆ NA YOUTUBE 🎶</div>` : ''}
+                        <span class="list-title">${currentView === 'top50' ? (idx+1) + '. ' : ''}${s.tytul}</span>
+                        ${!s.dummy ? `<button class="heart-btn" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">${isFav ? '❤️' : '🤍'}</button>` : ''}
+                    `;
+                }
+                container.appendChild(item);
+            });
+            contentBox.appendChild(container);
+        }
 
         if(currentView === 'top50') {
             const instr = document.createElement('div');
@@ -571,7 +928,7 @@
                     <a href="http://youtube.com/post/UgkxudR-ghySucG9xp6vcB28mYZ9cBb_B-a0?si=_zkEhGhy1P6Xo9Hw" 
                        target="_blank" 
                        style="display:inline-block; background: #ff0000; color: white; padding: 15px 30px; text-decoration: none; border-radius: 10px; font-weight: 900; border: 3px solid #333;">
-                       PRZEJDŹ DO GŁOSOWANIA NA YOUTUBE 🎶
+                        PRZEJDŹ DO GŁOSOWANIA NA YOUTUBE 🎶
                     </a>
                 </div>
                 <p style="font-size: 0.9em; color: #555;">Wklej swoje 3 propozycje w komentarzu pod postem na YouTube. Głosujemy do piątku do 24:00!</p>
