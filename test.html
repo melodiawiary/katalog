@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Melodia Wiary - v65</title>
+    <title>Katalog Melodia Wiary - v66</title>
     <style>
         :root { 
             --active-orange: #fbda80;
@@ -272,13 +272,16 @@
         /* NOWE STYLE DLA WIDOKU ULUBIONYCH / PŁYTY */
         .fav-layout { display: flex; gap: 20px; align-items: flex-start; margin-top: 20px; }
         .fav-column { flex: 1; display: flex; flex-direction: column; gap: 15px; }
-        .disc-column { flex: 1; border: 4px solid var(--deep-brown); border-radius: 20px; background: white; padding: 20px; min-height: 500px; position: sticky; top: 350px; }
+        .disc-column { flex: 1; display: flex; flex-direction: column; gap: 30px; position: sticky; top: 350px; }
+        .disc-box { border: 4px solid var(--deep-brown); border-radius: 20px; background: white; padding: 20px; min-height: 100px; }
         .disc-header { background: var(--active-orange); padding: 15px; border-radius: 10px; font-weight: 900; text-align: center; margin-bottom: 15px; border: 2px solid var(--deep-brown); font-size: var(--f-btn); }
         .disc-progress { background: #eee; border-radius: 10px; height: 25px; margin-top: 10px; overflow: hidden; border: 1px solid var(--deep-brown); position: relative; }
         .disc-progress-bar { height: 100%; background: #4caf50; transition: 0.3s; width: 0%; }
         .disc-progress-text { position: absolute; width: 100%; text-align: center; font-size: 12px; font-weight: 900; top: 3px; }
         .add-to-disc-btn { background: var(--active-orange); border: 2px solid var(--deep-brown); border-radius: 50%; width: 40px; height: 40px; font-size: 20px; cursor: pointer; font-weight: 900; display: flex; align-items: center; justify-content: center; }
         .add-to-disc-btn:hover { background: white; }
+        
+        .on-disc-badge { color: #d32f2f; font-weight: 900; font-size: 1.1em; text-transform: uppercase; margin-bottom: 5px; }
     </style>
 </head>
 <body class="standard">
@@ -356,7 +359,7 @@
 
     function timeToSeconds(t) {
         if(!t || typeof t !== 'string') return 0;
-        let cleanTime = t.replace(/[^\d:]/g, ''); // Usuwa zbędne znaki/spacje
+        let cleanTime = t.replace(/[^\d:]/g, ''); 
         let parts = cleanTime.split(':').map(Number);
         if(parts.length === 2) return (isNaN(parts[0]) ? 0 : parts[0]*60) + (isNaN(parts[1]) ? 0 : parts[1]);
         if(parts.length === 3) return (isNaN(parts[0]) ? 0 : parts[0]*3600) + (isNaN(parts[1]) ? 0 : parts[1]*60) + (isNaN(parts[2]) ? 0 : parts[2]);
@@ -374,7 +377,7 @@
         document.getElementById('s-std').classList.toggle('active', s==='standard');
         document.getElementById('s-big').classList.toggle('active', s==='senior'); 
         localStorage.setItem('mv_font_permanent', s);
-        render(); // ODŚWIEŻENIE RENDERU ABY ZASTOSOWAĆ ROZMIARY W DYNAMICZNYCH PRZYCISKACH
+        render(); 
     }
 
     async function init() {
@@ -415,7 +418,6 @@
                 return { tytul: cols[0] || "Bez tytułu", kategorie: rawCats, yt: (cols[2] || "").trim(), czas: cols[3] || "0:00", originalIndex: index };
             });
 
-            // AKTUALIZACJA CZASU DLA ISTNIEJĄCYCH UTWORÓW W CART/DISC
             cart = cart.map(cItem => {
                 const updated = songs.find(s => s.tytul === cItem.tytul);
                 return updated ? updated : cItem;
@@ -448,7 +450,6 @@
         const idx = cart.findIndex(x => x.tytul === t);
         if(idx > -1) {
             cart.splice(idx, 1);
-            // Usuwamy też z płyty jeśli tam był
             const dIdx = disc.findIndex(x => x.tytul === t);
             if(dIdx > -1) disc.splice(dIdx, 1);
             localStorage.setItem(STORAGE_DISC, JSON.stringify(disc));
@@ -569,7 +570,6 @@
         const contentBox = document.createElement('div');
         contentBox.className = 'display-padding';
 
-        // SPECJALNY WIDOK DLA ULUBIONYCH (Z PŁYTĄ)
         if(currentView === 'cart') {
             const layout = document.createElement('div');
             layout.className = 'fav-layout';
@@ -577,8 +577,29 @@
             const leftCol = document.createElement('div');
             leftCol.className = 'fav-column';
             
+            // Logika podziału na płyty
+            const discs = [];
+            let currentDiscIndex = 0;
+            let currentDiscTime = 0;
+            const maxTime = 50 * 60;
+
+            disc.forEach(s => {
+                const sTime = timeToSeconds(s.czas);
+                if (!discs[currentDiscIndex]) discs[currentDiscIndex] = [];
+                
+                if (currentDiscTime + sTime > maxTime && discs[currentDiscIndex].length > 0) {
+                    currentDiscIndex++;
+                    currentDiscTime = sTime;
+                    discs[currentDiscIndex] = [s];
+                } else {
+                    currentDiscTime += sTime;
+                    discs[currentDiscIndex].push(s);
+                }
+            });
+
             list.forEach(s => {
-                const isDisc = disc.some(x => x.tytul === s.tytul);
+                const foundDiscIndex = discs.findIndex(d => d.some(x => x.tytul === s.tytul));
+                const isDisc = foundDiscIndex > -1;
                 const jsTytul = s.tytul.replace(/'/g, "\\'");
                 const item = document.createElement('div');
                 item.className = 'card';
@@ -591,15 +612,17 @@
                         <img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb">
                     </div>
                     <div class="card-title" style="flex:1; text-align:left; padding-left:15px;">
+                        ${isDisc ? `<div class="on-disc-badge">JEST NA PŁYCIE NUMER ${foundDiscIndex + 1}</div>` : ''}
                         ${s.tytul} <br><small>Czas: ${s.czas}</small>
                     </div>
                     <div style="display:flex; flex-direction:column; gap:5px;">
-                        <button class="ctrl-btn" style="background:var(--active-orange); font-size:var(--f-ctrl); min-width:120px;" onclick="event.stopPropagation(); toggleDisc('${jsTytul}')">
-                            ${isDisc ? 'USUŃ Z PŁYTY' : 'DODAJ DO PŁYTY'}
-                        </button>
                         <button class="ctrl-btn" style="background:#fff1f1; font-size:var(--f-ctrl); min-width:120px;" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">
                             USUŃ Z ULUBIONYCH
                         </button>
+                        ${!isDisc ? `
+                        <button class="ctrl-btn" style="background:var(--active-orange); font-size:var(--f-ctrl); min-width:120px;" onclick="event.stopPropagation(); toggleDisc('${jsTytul}')">
+                            DODAJ DO PŁYTY
+                        </button>` : ''}
                     </div>
                 `;
                 leftCol.appendChild(item);
@@ -608,31 +631,37 @@
             const rightCol = document.createElement('div');
             rightCol.className = 'disc-column';
             
-            let totalSec = disc.reduce((acc, s) => acc + timeToSeconds(s.czas), 0);
-            let limit = 50 * 60;
-            let percent = Math.min((totalSec / limit) * 100, 100);
-
-            rightCol.innerHTML = `
-                <div class="disc-header">PŁYTA NUMER 1 MELODIA WIARY</div>
-                <div class="disc-progress">
-                    <div class="disc-progress-bar" style="width: ${percent}%; background: ${totalSec > limit ? '#f44336' : '#4caf50'}"></div>
-                    <div class="disc-progress-text">${secondsToTime(totalSec)} / 50:00</div>
-                </div>
-                <div style="margin-top:20px; display:flex; flex-direction:column; gap:10px;">
-                    ${disc.map(s => `
-                        <div class="list-card" style="background:#fff9e6; border:1px solid #333; min-height:40px; padding: 5px 15px;">
-                            <span class="list-title" style="font-size:var(--f-list-title);">${s.tytul} (${s.czas})</span>
-                            <button class="ctrl-btn" style="max-width:100px; font-size:var(--f-ctrl); padding:4px;" onclick="event.stopPropagation(); toggleDisc('${s.tytul.replace(/'/g, "\\'")}')">USUŃ Z PŁYTY</button>
+            if (discs.length === 0) {
+                rightCol.innerHTML = '<div class="disc-box"><div class="disc-header">PŁYTA JEST PUSTA</div></div>';
+            } else {
+                discs.forEach((dSongs, idx) => {
+                    let dTotal = dSongs.reduce((acc, s) => acc + timeToSeconds(s.czas), 0);
+                    let dPercent = Math.min((dTotal / maxTime) * 100, 100);
+                    const dBox = document.createElement('div');
+                    dBox.className = 'disc-box';
+                    dBox.innerHTML = `
+                        <div class="disc-header">PŁYTA NUMER ${idx + 1} MELODIA WIARY</div>
+                        <div class="disc-progress">
+                            <div class="disc-progress-bar" style="width: ${dPercent}%; background: #4caf50"></div>
+                            <div class="disc-progress-text">${secondsToTime(dTotal)} / 50:00</div>
                         </div>
-                    `).join('')}
-                </div>
-            `;
+                        <div style="margin-top:20px; display:flex; flex-direction:column; gap:10px;">
+                            ${dSongs.map(s => `
+                                <div class="list-card" style="background:#fff9e6; border:1px solid #333; min-height:40px; padding: 5px 15px;">
+                                    <span class="list-title" style="font-size:var(--f-list-title);">${s.tytul} (${s.czas})</span>
+                                    <button class="ctrl-btn" style="max-width:100px; font-size:var(--f-ctrl); padding:4px;" onclick="event.stopPropagation(); toggleDisc('${s.tytul.replace(/'/g, "\\'")}')">USUŃ Z PŁYTY</button>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                    rightCol.appendChild(dBox);
+                });
+            }
 
             layout.appendChild(leftCol);
             layout.appendChild(rightCol);
             contentBox.appendChild(layout);
         } else {
-            // STANDARDOWY WIDOK
             const container = document.createElement('div');
             container.className = displayMode === 'grid' ? 'items-grid' : 'list-container';
             
