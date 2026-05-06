@@ -414,6 +414,16 @@
                 return { tytul: cols[0] || "Bez tytułu", kategorie: rawCats, yt: (cols[2] || "").trim(), czas: cols[3] || "0:00", originalIndex: index };
             });
 
+            // AKTUALIZACJA CZASU DLA ISTNIEJĄCYCH UTWORÓW W CART/DISC
+            cart = cart.map(cItem => {
+                const updated = songs.find(s => s.tytul === cItem.tytul);
+                return updated ? updated : cItem;
+            });
+            disc = disc.map(dItem => {
+                const updated = songs.find(s => s.tytul === dItem.tytul);
+                return updated ? updated : dItem;
+            });
+
             const rowsTop = text2.split(/\r?\n/).filter(x => x.trim() !== "").slice(1);
             top50 = rowsTop.map((line, index) => {
                 const cols = parseCSVLine(line);
@@ -579,10 +589,16 @@
                     <div class="thumb-container" style="width:100px; margin-bottom:0; aspect-ratio:1/1;">
                         <img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb">
                     </div>
-                    <div class="card-title" style="flex:1; text-align:left; font-size:14px;">${s.tytul} <br><small>Czas: ${s.czas}</small></div>
-                    <div style="display:flex; gap:10px;">
-                        <button class="add-to-disc-btn" onclick="event.stopPropagation(); toggleDisc('${jsTytul}')">${isDisc ? '✔️' : '➡️'}</button>
-                        <button class="btn-fav-toggle is-active" style="margin-top:0" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">❌</button>
+                    <div class="card-title" style="flex:1; text-align:left; font-size:14px; padding-left:15px;">
+                        ${s.tytul} <br><small>Czas: ${s.czas}</small>
+                    </div>
+                    <div style="display:flex; flex-direction:column; gap:5px;">
+                        <button class="ctrl-btn" style="background:var(--active-orange); font-size:10px; min-width:120px;" onclick="event.stopPropagation(); toggleDisc('${jsTytul}')">
+                            ${isDisc ? 'USUŃ Z PŁYTY' : 'DODAJ DO PŁYTY'}
+                        </button>
+                        <button class="ctrl-btn" style="background:#fff1f1; font-size:10px; min-width:120px;" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">
+                            USUŃ Z ULUBIONYCH
+                        </button>
                     </div>
                 `;
                 leftCol.appendChild(item);
@@ -603,9 +619,9 @@
                 </div>
                 <div style="margin-top:20px; display:flex; flex-direction:column; gap:10px;">
                     ${disc.map(s => `
-                        <div class="list-card" style="background:#fff9e6; border:1px solid #333;">
+                        <div class="list-card" style="background:#fff9e6; border:1px solid #333; min-height:40px; padding: 5px 15px;">
                             <span class="list-title" style="font-size:12px;">${s.tytul} (${s.czas})</span>
-                            <button class="heart-btn" onclick="event.stopPropagation(); toggleDisc('${s.tytul.replace(/'/g, "\\'")}')">🗑️</button>
+                            <button class="ctrl-btn" style="max-width:100px; font-size:9px; padding:4px;" onclick="event.stopPropagation(); toggleDisc('${s.tytul.replace(/'/g, "\\'")}')">USUŃ Z PŁYTY</button>
                         </div>
                     `).join('')}
                 </div>
