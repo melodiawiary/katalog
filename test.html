@@ -582,7 +582,69 @@
         panel.innerHTML = html;
     }
 
+    // NOWE: Funkcja renderująca podstronę podsumowania zamówienia (koszyk)
+    function renderOrderSummary() {
+        currentView = 'order_summary';
+        const out = document.getElementById('main-display');
+        const stick = document.getElementById('sticky-title-container');
+        stick.innerHTML = `<div class="view-title-header" style="justify-content:space-between;">
+            <div>PODSUMOWANIE TWOICH PŁYT</div>
+            <button class="ctrl-btn" style="max-width:200px; background:white;" onclick="setView('cart')">POWRÓT DO EDYCJI</button>
+        </div>`;
+        out.innerHTML = '';
+
+        const discsTmp = [];
+        let cIdx = 0; let cTime = 0;
+        disc.forEach(s => {
+            const sT = timeToSeconds(s.czas);
+            if (!discsTmp[cIdx]) discsTmp[cIdx] = [];
+            if (cTime + sT > 3000 && discsTmp[cIdx].length > 0) { cIdx++; cTime = sT; discsTmp[cIdx] = [s]; }
+            else { cTime += sT; discsTmp[cIdx].push(s); }
+        });
+
+        const container = document.createElement('div');
+        container.className = 'display-padding';
+        container.style.marginTop = '20px';
+
+        let msg = "Dzień dobry, chciałbym zamówić płyty z moimi ulubionymi pieśniami:\n\n";
+        
+        discsTmp.forEach((dSongs, idx) => {
+            let qty = discQtys[idx] || 0;
+            if(qty > 0) {
+                const section = document.createElement('div');
+                section.className = 'disc-box';
+                section.style.marginBottom = '20px';
+                let songsList = dSongs.map((s, sIdx) => `${sIdx+1}. ${s.tytul} (${s.czas})`).join('<br>');
+                section.innerHTML = `
+                    <div class="disc-header">PŁYTA NR ${idx + 1} - ILOŚĆ: ${qty} SZT.</div>
+                    <div style="padding:10px; font-weight:bold;">SPIS UTWORÓW NA TEJ PŁYCIE:</div>
+                    <div style="padding:0 10px 10px 10px; font-size:0.9em;">${songsList}</div>
+                `;
+                container.appendChild(section);
+                msg += `PŁYTA NR ${idx+1} (${qty} szt.):\n` + dSongs.map(s => `- ${s.tytul}`).join('\n') + "\n\n";
+            }
+        });
+
+        if(container.innerHTML === "") {
+            container.innerHTML = "<h3>Nie dodano żadnych płyt do zamówienia (ilość 0).</h3>";
+        } else {
+            const footer = document.createElement('div');
+            footer.className = 'instruction-box';
+            footer.innerHTML = `
+                <h2 style="text-transform:uppercase;">Finalizuj zamówienie</h2>
+                <p>Wybierz formę kontaktu, aby przesłać do mnie listę wybranych przez Ciebie płyt:</p>
+                <div style="display:flex; gap:15px; justify-content:center; margin-top:20px;">
+                    <a href="https://m.me/twoj_profil_fb" target="_blank" class="ctrl-btn" style="background:#0084ff; color:white; padding:15px; text-decoration:none; display:flex; align-items:center; justify-content:center;">NAPISZ NA MESSENGERZE</a>
+                    <a href="mailto:kontakt@melodiawiary.pl?subject=Zamówienie Płyt&body=${encodeURIComponent(msg)}" class="ctrl-btn" style="background:#4caf50; color:white; padding:15px; text-decoration:none; display:flex; align-items:center; justify-content:center;">NAPISZ NA ADRES E-MAIL</a>
+                </div>
+            `;
+            container.appendChild(footer);
+        }
+        out.appendChild(container);
+    }
+
     function render() {
+        if(currentView === 'order_summary') { renderOrderSummary(); return; }
         const out = document.getElementById('main-display');
         const stickyTitleContainer = document.getElementById('sticky-title-container');
         out.innerHTML = '';
@@ -614,7 +676,6 @@
         titleLine.innerText = currentView === 'all' ? 'WSZYSTKIE PIEŚNI' : (currentView === 'cart' ? '❤️ MOJE ULUBIONE' : (currentView === 'top50' ? 'TYGODNIOWA LISTA PRZEBOJÓW POLSKIEJ PIEŚNI RELIGIJNEJ NR 1 - 4.4.2026' : '📂 ' + currentView));
         header.appendChild(titleLine);
 
-        // ZMIENIONY LICZNIK: Pokazuje ile masz jakich płyt i dodaje przycisk Zamów
         if(currentView === 'cart') {
             const discsTmp = [];
             let cIndex = 0; let cTime = 0; const mTime = 50 * 60;
@@ -625,12 +686,11 @@
                 else { cTime += sT; discsTmp[cIndex].push(s); }
             });
             
-            // Budujemy tekst: "X płyt numer 1, Y płyt numer 2..."
             let ordersInfo = [];
             discsTmp.forEach((_, idx) => {
                 let qty = discQtys[idx] || 0;
                 if(qty > 0) {
-                    ordersInfo.push(`${qty} ${qty === 1 ? 'płytę' : (qty < 5 ? 'płyty' : 'płyt')} numer ${idx + 1}`);
+                    ordersInfo.push(`${qty} ${qty === 1 ? 'płytę' : (qty < 5 ? 'płyty' : 'płyt')} nr ${idx + 1}`);
                 }
             });
 
@@ -642,11 +702,11 @@
             counterDiv.style.justifyContent = "space-between";
             counterDiv.style.padding = "5px 15px";
 
-            let infoText = ordersInfo.length > 0 ? "Masz " + ordersInfo.join(", ") : "Wybierz ilość płyt poniżej";
+            let infoText = ordersInfo.length > 0 ? "Wybrałeś " + ordersInfo.join(", ") : "Ustal ilość płyt na liście poniżej";
             
             counterDiv.innerHTML = `
                 <div style="text-align:left; line-height:1.2;">${infoText}</div>
-                <button class="ctrl-btn" style="max-width:150px; background:white; margin-left:10px;" onclick="alert('Przejście do finalizacji zamówienia...')">ZAMÓW PŁYTY</button>
+                <button class="ctrl-btn" style="max-width:150px; background:white; margin-left:10px;" onclick="renderOrderSummary()">ZAMÓW PŁYTY</button>
             `;
             header.appendChild(counterDiv);
         }
