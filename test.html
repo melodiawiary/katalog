@@ -582,7 +582,7 @@
         panel.innerHTML = html;
     }
 
-    // NOWE: Funkcja renderująca podstronę podsumowania zamówienia (koszyk)
+    // ZAKTUALIZOWANA FUNKCJA PODSUMOWANIA (MESSENGER + EMAIL)
     function renderOrderSummary() {
         currentView = 'order_summary';
         const out = document.getElementById('main-display');
@@ -606,7 +606,7 @@
         container.className = 'display-padding';
         container.style.marginTop = '20px';
 
-        let msg = "Dzień dobry, chciałbym zamówić płyty z moimi ulubionymi pieśniami:\n\n";
+        let rawTextMsg = "Dzień dobry, chciałbym zamówić płyty z kanału Melodia Wiary:\n\n";
         
         discsTmp.forEach((dSongs, idx) => {
             let qty = discQtys[idx] || 0;
@@ -621,22 +621,40 @@
                     <div style="padding:0 10px 10px 10px; font-size:0.9em;">${songsList}</div>
                 `;
                 container.appendChild(section);
-                msg += `PŁYTA NR ${idx+1} (${qty} szt.):\n` + dSongs.map(s => `- ${s.tytul}`).join('\n') + "\n\n";
+                rawTextMsg += `PŁYTA NR ${idx+1} (${qty} szt.):\n` + dSongs.map(s => `- ${s.tytul}`).join('\n') + "\n\n";
             }
         });
 
         if(container.innerHTML === "") {
-            container.innerHTML = "<h3>Nie dodano żadnych płyt do zamówienia (ilość 0).</h3>";
+            container.innerHTML = "<h3 style='text-align:center;'>Nie dodano żadnych płyt do zamówienia (ilość 0).</h3>";
         } else {
+            // Funkcja do kopiowania treści (ważna dla Messengera)
+            window.copyOrderToClipboard = () => {
+                navigator.clipboard.writeText(rawTextMsg).then(() => {
+                    alert("Treść zamówienia została skopiowana! Możesz ją teraz wkleić w wiadomości.");
+                });
+            };
+
             const footer = document.createElement('div');
             footer.className = 'instruction-box';
             footer.innerHTML = `
                 <h2 style="text-transform:uppercase;">Finalizuj zamówienie</h2>
-                <p>Wybierz formę kontaktu, aby przesłać do mnie listę wybranych przez Ciebie płyt:</p>
-                <div style="display:flex; gap:15px; justify-content:center; margin-top:20px;">
-                    <a href="https://m.me/twoj_profil_fb" target="_blank" class="ctrl-btn" style="background:#0084ff; color:white; padding:15px; text-decoration:none; display:flex; align-items:center; justify-content:center;">NAPISZ NA MESSENGERZE</a>
-                    <a href="mailto:kontakt@melodiawiary.pl?subject=Zamówienie Płyt&body=${encodeURIComponent(msg)}" class="ctrl-btn" style="background:#4caf50; color:white; padding:15px; text-decoration:none; display:flex; align-items:center; justify-content:center;">NAPISZ NA ADRES E-MAIL</a>
+                <p>1. Najpierw skopiuj treść zamówienia:</p>
+                <button class="ctrl-btn" style="background:var(--active-orange); padding:15px; margin-bottom:20px; width:100%; max-width:400px;" onclick="copyOrderToClipboard()">
+                    📋 KOPIUJ TREŚĆ ZAMÓWIENIA
+                </button>
+                
+                <p>2. Wybierz drogę kontaktu i wklej wiadomość:</p>
+                <div style="display:flex; gap:15px; justify-content:center; margin-top:20px; flex-wrap:wrap;">
+                    <a href="https://m.me/MelodiaWiary" target="_blank" class="ctrl-btn" style="background:#0084ff; color:white; padding:15px; text-decoration:none; display:flex; align-items:center; justify-content:center; min-width:250px;">
+                        OTWÓRZ MESSENGERA
+                    </a>
+                    
+                    <a href="mailto:kontakt@melodiawiary.pl?subject=Zamówienie Płyt - Melodia Wiary&body=${encodeURIComponent(rawTextMsg)}" class="ctrl-btn" style="background:#4caf50; color:white; padding:15px; text-decoration:none; display:flex; align-items:center; justify-content:center; min-width:250px;">
+                        WYŚLIJ E-MAIL
+                    </a>
                 </div>
+                <p style="font-size:0.7em; margin-top:20px; color:#666;">(Adres e-mail: kontakt@melodiawiary.pl)</p>
             `;
             container.appendChild(footer);
         }
