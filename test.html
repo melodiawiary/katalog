@@ -355,10 +355,11 @@
     }
 
     function timeToSeconds(t) {
-        if(!t) return 0;
-        let parts = t.split(':').map(Number);
-        if(parts.length === 2) return parts[0]*60 + parts[1];
-        if(parts.length === 3) return parts[0]*3600 + parts[1]*60 + parts[2];
+        if(!t || typeof t !== 'string') return 0;
+        let cleanTime = t.replace(/[^\d:]/g, ''); // Usuwa zbędne znaki/spacje
+        let parts = cleanTime.split(':').map(Number);
+        if(parts.length === 2) return (isNaN(parts[0]) ? 0 : parts[0]*60) + (isNaN(parts[1]) ? 0 : parts[1]);
+        if(parts.length === 3) return (isNaN(parts[0]) ? 0 : parts[0]*3600) + (isNaN(parts[1]) ? 0 : parts[1]*60) + (isNaN(parts[2]) ? 0 : parts[2]);
         return 0;
     }
 
@@ -434,7 +435,13 @@
 
     function toggleFav(t) {
         const idx = cart.findIndex(x => x.tytul === t);
-        if(idx > -1) cart.splice(idx, 1);
+        if(idx > -1) {
+            cart.splice(idx, 1);
+            // Usuwamy też z płyty jeśli tam był
+            const dIdx = disc.findIndex(x => x.tytul === t);
+            if(dIdx > -1) disc.splice(dIdx, 1);
+            localStorage.setItem(STORAGE_DISC, JSON.stringify(disc));
+        }
         else { const s = [...songs, ...top50].find(x => x.tytul === t); if(s) cart.push(s); }
         localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
         render();
@@ -572,7 +579,7 @@
                     <div class="thumb-container" style="width:100px; margin-bottom:0; aspect-ratio:1/1;">
                         <img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb">
                     </div>
-                    <div class="card-title" style="flex:1; text-align:left; font-size:14px;">${s.tytul} <br><small>${s.czas}</small></div>
+                    <div class="card-title" style="flex:1; text-align:left; font-size:14px;">${s.tytul} <br><small>Czas: ${s.czas}</small></div>
                     <div style="display:flex; gap:10px;">
                         <button class="add-to-disc-btn" onclick="event.stopPropagation(); toggleDisc('${jsTytul}')">${isDisc ? '✔️' : '➡️'}</button>
                         <button class="btn-fav-toggle is-active" style="margin-top:0" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">❌</button>
@@ -598,7 +605,7 @@
                     ${disc.map(s => `
                         <div class="list-card" style="background:#fff9e6; border:1px solid #333;">
                             <span class="list-title" style="font-size:12px;">${s.tytul} (${s.czas})</span>
-                            <button class="heart-btn" onclick="toggleDisc('${s.tytul.replace(/'/g, "\\'")}')">🗑️</button>
+                            <button class="heart-btn" onclick="event.stopPropagation(); toggleDisc('${s.tytul.replace(/'/g, "\\'")}')">🗑️</button>
                         </div>
                     `).join('')}
                 </div>
