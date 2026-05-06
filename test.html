@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog Melodia Wiary - v67</title>
+    <title>Katalog Melodia Wiary - v68</title>
     <style>
         :root { 
             --active-orange: #fbda80;
@@ -165,7 +165,7 @@
 
         .view-title-header { background: var(--soft-cyan); color: var(--deep-brown); padding: 15px 25px; font-weight: 900;
             text-transform: uppercase; font-size: 1.5em; border-bottom: 5px solid var(--active-orange); border-top: 2px solid var(--active-orange);
-            width: 100%; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px;
+            width: 100%; box-sizing: border-box; display: flex; flex-direction: row; align-items: center; text-align: center; gap: 10px;
             }
 
         #main-display { padding: 0 0 400px 0; min-height: 100vh; width: 100%;
@@ -295,7 +295,7 @@
         .disc-counter-box {
             background: var(--active-orange); border: 2px solid var(--deep-brown); padding: 10px;
             border-radius: 10px; font-weight: 900; text-align: center; text-transform: uppercase;
-            font-size: 1.1em; margin-bottom: 10px;
+            font-size: 0.7em; flex: 1;
         }
     </style>
 </head>
@@ -482,7 +482,6 @@
         if(!pendingFavTitle) return;
         const title = pendingFavTitle;
         
-        // Zawsze usuwamy z ulubionych
         const idx = cart.findIndex(x => x.tytul === title);
         if(idx > -1) cart.splice(idx, 1);
 
@@ -500,7 +499,6 @@
     function toggleFav(t) {
         const idx = cart.findIndex(x => x.tytul === t);
         if(idx > -1) {
-            // Jeśli piosenka jest na płycie, pokaż modal
             if(disc.some(x => x.tytul === t)) {
                 pendingFavTitle = t;
                 document.getElementById('fav-modal-overlay').style.display = 'flex';
@@ -587,9 +585,28 @@
         header.className = 'view-title-header';
         
         let titleLine = document.createElement('div');
-        titleLine.style.width = "100%";
+        titleLine.style.flex = "3";
         titleLine.innerText = currentView === 'all' ? 'WSZYSTKIE PIEŚNI' : (currentView === 'cart' ? '❤️ MOJE ULUBIONE' : (currentView === 'top50' ? 'TYGODNIOWA LISTA PRZEBOJÓW POLSKIEJ PIEŚNI RELIGIJNEJ NR 1 - 4.4.2026' : '📂 ' + currentView));
         header.appendChild(titleLine);
+
+        // PRZENIESIONY LICZNIK PŁYT DO NAGŁÓWKA ULUBIONYCH
+        if(currentView === 'cart') {
+            const discsTmp = [];
+            let cIndex = 0; let cTime = 0; const mTime = 50 * 60;
+            disc.forEach(s => {
+                const sT = timeToSeconds(s.czas);
+                if (!discsTmp[cIndex]) discsTmp[cIndex] = [];
+                if (cTime + sT > mTime && discsTmp[cIndex].length > 0) { cIndex++; cTime = sT; discsTmp[cIndex] = [s]; }
+                else { cTime += sT; discsTmp[cIndex].push(s); }
+            });
+            const dCount = discsTmp.length;
+            const counterLabel = dCount === 1 ? "Masz jedną płytę" : (dCount >= 2 && dCount <= 4 ? `Masz ${dCount} płyty` : `Masz ${dCount} płyt`);
+            
+            const counterDiv = document.createElement('div');
+            counterDiv.className = 'disc-counter-box';
+            counterDiv.innerText = `${counterLabel} w zamówieniu`;
+            header.appendChild(counterDiv);
+        }
 
         if(currentView === 'top50') {
             const voteBtn = document.createElement('button');
@@ -639,14 +656,10 @@
             disc.forEach(s => {
                 const sTime = timeToSeconds(s.czas);
                 if (!discs[currentDiscIndex]) discs[currentDiscIndex] = [];
-                
                 if (currentDiscTime + sTime > maxTime && discs[currentDiscIndex].length > 0) {
-                    currentDiscIndex++;
-                    currentDiscTime = sTime;
-                    discs[currentDiscIndex] = [s];
+                    currentDiscIndex++; currentDiscTime = sTime; discs[currentDiscIndex] = [s];
                 } else {
-                    currentDiscTime += sTime;
-                    discs[currentDiscIndex].push(s);
+                    currentDiscTime += sTime; discs[currentDiscIndex].push(s);
                 }
             });
 
@@ -684,14 +697,6 @@
             const rightCol = document.createElement('div');
             rightCol.className = 'disc-column';
             
-            // Licznik płyt
-            const discCount = discs.length;
-            const counterLabel = discCount === 1 ? "Masz jedną płytę" : (discCount === 2 || discCount === 3 || discCount === 4 ? `Masz ${discCount} płyty` : `Masz ${discCount} płyt`);
-            const counterDiv = document.createElement('div');
-            counterDiv.className = 'disc-counter-box';
-            counterDiv.innerText = `${counterLabel} w zamówieniu`;
-            rightCol.appendChild(counterDiv);
-
             if (discs.length === 0) {
                 const emptyBox = document.createElement('div');
                 emptyBox.className = 'disc-box';
