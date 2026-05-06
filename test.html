@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Melodia Wiary</title>
 
 <style>
 
 :root{
-    --bg:#f7f7f7;
+    --bg:#f5f5f5;
     --card:#ffffff;
     --accent:#f4d35e;
     --text:#222;
-    --border:#dcdcdc;
+    --border:#dddddd;
 }
 
 *{
@@ -22,8 +22,8 @@
 
 body{
     margin:0;
-    font-family:Arial,sans-serif;
     background:var(--bg);
+    font-family:Arial,sans-serif;
     color:var(--text);
 }
 
@@ -32,22 +32,22 @@ body{
 .header{
     position:sticky;
     top:0;
-    z-index:1000;
     background:white;
+    z-index:1000;
     padding:15px;
     border-bottom:1px solid var(--border);
 }
 
 .logo{
-    font-size:28px;
-    font-weight:900;
     text-align:center;
+    font-size:30px;
+    font-weight:900;
     margin-bottom:15px;
 }
 
 .search{
     width:100%;
-    padding:16px;
+    padding:18px;
     border-radius:14px;
     border:2px solid #ccc;
     font-size:18px;
@@ -65,32 +65,33 @@ body{
 }
 
 .categories button{
-    flex:none;
     border:none;
     background:#ececec;
     padding:12px 18px;
     border-radius:999px;
-    font-weight:700;
+    font-weight:800;
     cursor:pointer;
     white-space:nowrap;
+    flex:none;
+    font-size:15px;
 }
 
 .categories button.active{
     background:var(--accent);
 }
 
-/* LIST */
+/* SONGS */
 
 #songs{
-    padding:10px;
+    padding:12px;
     padding-bottom:120px;
 }
 
 .song{
-    background:var(--card);
+    background:white;
     border-radius:18px;
     overflow:hidden;
-    margin-bottom:14px;
+    margin-bottom:16px;
     border:1px solid var(--border);
 }
 
@@ -102,19 +103,20 @@ body{
 }
 
 .song-content{
-    padding:14px;
+    padding:15px;
 }
 
 .title{
-    font-size:20px;
-    font-weight:800;
+    font-size:22px;
+    font-weight:900;
     line-height:1.3;
     margin-bottom:8px;
 }
 
 .time{
     color:#777;
-    margin-bottom:14px;
+    margin-bottom:15px;
+    font-size:15px;
 }
 
 .actions{
@@ -125,10 +127,10 @@ body{
 .btn{
     flex:1;
     border:none;
-    padding:14px;
     border-radius:12px;
+    padding:16px;
     font-size:16px;
-    font-weight:800;
+    font-weight:900;
     cursor:pointer;
 }
 
@@ -157,10 +159,11 @@ body{
 }
 
 .cart-btn{
-    background:var(--accent);
     border:none;
+    background:var(--accent);
     padding:14px 18px;
     border-radius:12px;
+    font-size:16px;
     font-weight:900;
     cursor:pointer;
 }
@@ -177,32 +180,43 @@ body{
 }
 
 .modal-content{
-    background:white;
     width:100%;
     max-height:85vh;
     overflow:auto;
+    background:white;
     border-radius:24px 24px 0 0;
     padding:20px;
 }
 
 .modal-title{
-    font-size:24px;
+    font-size:26px;
     font-weight:900;
     margin-bottom:20px;
 }
 
 .cart-item{
-    padding:12px 0;
+    padding:14px 0;
     border-bottom:1px solid #eee;
+    font-size:18px;
+}
+
+.remove-btn{
+    margin-top:8px;
+    border:none;
+    background:#ffdddd;
+    padding:10px;
+    border-radius:10px;
+    font-weight:800;
+    cursor:pointer;
 }
 
 .send-btn{
     width:100%;
-    margin-top:20px;
+    margin-top:25px;
+    border:none;
     background:#4caf50;
     color:white;
-    border:none;
-    padding:18px;
+    padding:20px;
     border-radius:14px;
     font-size:18px;
     font-weight:900;
@@ -211,8 +225,9 @@ body{
 
 .empty{
     text-align:center;
-    padding:40px;
+    padding:50px;
     color:#888;
+    font-size:18px;
 }
 
 </style>
@@ -230,7 +245,7 @@ body{
         class="search"
         id="search"
         placeholder="Szukaj pieśni..."
-    />
+    >
 
 </div>
 
@@ -317,20 +332,18 @@ async function loadSongs(){
 
 }
 
-/* CATEGORIES */
-
 function renderCategories(){
 
     const box = document.getElementById('categories');
 
     const categories = new Set();
 
-    songs.forEach(s=>{
+    songs.forEach(song=>{
 
-        s.categories.forEach(c=>{
+        song.categories.forEach(cat=>{
 
-            if(c.trim()){
-                categories.add(c.trim());
+            if(cat.trim()){
+                categories.add(cat.trim());
             }
 
         });
@@ -349,7 +362,7 @@ function renderCategories(){
 
         currentCategory = 'ALL';
 
-        updateCategoryButtons(allBtn);
+        updateButtons(allBtn);
 
         filterSongs();
 
@@ -367,7 +380,7 @@ function renderCategories(){
 
             currentCategory = cat;
 
-            updateCategoryButtons(btn);
+            updateButtons(btn);
 
             filterSongs();
 
@@ -379,45 +392,44 @@ function renderCategories(){
 
 }
 
-function updateCategoryButtons(active){
+function updateButtons(active){
 
     document.querySelectorAll('.categories button')
-        .forEach(b=>b.classList.remove('active'));
+    .forEach(btn=>btn.classList.remove('active'));
 
     active.classList.add('active');
 
 }
 
-/* SEARCH */
-
-document.getElementById('search')
+document
+.getElementById('search')
 .addEventListener('input',filterSongs);
 
 function filterSongs(){
 
-    const q = document.getElementById('search')
-        .value
-        .toLowerCase();
+    const q =
+    document
+    .getElementById('search')
+    .value
+    .toLowerCase();
 
-    filtered = songs.filter(s=>{
+    filtered = songs.filter(song=>{
 
         const matchesSearch =
-            s.title.toLowerCase().includes(q);
+        song.title.toLowerCase().includes(q);
 
-        const matchesCat =
-            currentCategory === 'ALL'
-            ||
-            s.categories.includes(currentCategory);
+        const matchesCategory =
+        currentCategory === 'ALL'
+        ||
+        song.categories.includes(currentCategory);
 
-        return matchesSearch && matchesCat;
+        return matchesSearch && matchesCategory;
 
     });
 
     renderSongs();
 
 }
-
-/* RENDER */
 
 function renderSongs(){
 
@@ -427,7 +439,8 @@ function renderSongs(){
 
     filtered.forEach(song=>{
 
-        const isFav = cart.some(x=>x.yt===song.yt);
+        const isFav =
+        cart.some(x=>x.yt===song.yt);
 
         const div = document.createElement('div');
 
@@ -478,8 +491,6 @@ function renderSongs(){
 
 }
 
-/* PLAY */
-
 function playSong(id){
 
     window.open(
@@ -489,17 +500,18 @@ function playSong(id){
 
 }
 
-/* CART */
-
 function toggleCart(id){
 
-    const song = songs.find(s=>s.yt===id);
+    const song =
+    songs.find(s=>s.yt===id);
 
-    const exists = cart.find(x=>x.yt===id);
+    const exists =
+    cart.find(x=>x.yt===id);
 
     if(exists){
 
-        cart = cart.filter(x=>x.yt!==id);
+        cart =
+        cart.filter(x=>x.yt!==id);
 
     }else{
 
@@ -515,17 +527,20 @@ function toggleCart(id){
 
 function updateCart(){
 
-    document.getElementById('cart-count')
-        .innerText =
-        `❤️ Wybrane: ${cart.length}`;
+    document
+    .getElementById('cart-count')
+    .innerText =
+    `❤️ Wybrane: ${cart.length}`;
 
 }
 
 function openCart(){
 
-    const modal = document.getElementById('modal');
+    const modal =
+    document.getElementById('modal');
 
-    const box = document.getElementById('cart-items');
+    const box =
+    document.getElementById('cart-items');
 
     modal.style.display = 'flex';
 
@@ -544,14 +559,30 @@ function openCart(){
 
     cart.forEach(song=>{
 
-        const div = document.createElement('div');
+        const div =
+        document.createElement('div');
 
         div.className = 'cart-item';
 
         div.innerHTML = `
-            <strong>${song.title}</strong>
+
+            <strong>
+                ${song.title}
+            </strong>
+
             <br>
+
             ${song.time}
+
+            <br>
+
+            <button
+                class="remove-btn"
+                onclick="toggleCart('${song.yt}')"
+            >
+                USUŃ
+            </button>
+
         `;
 
         box.appendChild(div);
@@ -560,7 +591,8 @@ function openCart(){
 
 }
 
-document.getElementById('modal')
+document
+.getElementById('modal')
 .addEventListener('click',e=>{
 
     if(e.target.id==='modal'){
@@ -570,8 +602,6 @@ document.getElementById('modal')
     }
 
 });
-
-/* SEND */
 
 function sendOrder(){
 
@@ -584,24 +614,36 @@ function sendOrder(){
     }
 
     let text =
-    'Dzień dobry, chciałbym zamówić następujące pieśni:%0A%0A';
+`Dzień dobry, chciałbym zamówić następujące pieśni:
 
-    cart.forEach((s,i)=>{
+`;
+
+    cart.forEach((song,index)=>{
 
         text +=
-        `${i+1}. ${s.title}%0A`;
+`${index+1}. ${song.title}
+`;
 
     });
 
-    window.open(
-        `https://m.me/MelodiaWiary`
-    );
+    navigator.clipboard
+    .writeText(text)
+    .then(()=>{
 
-    alert(
-        'Messenger został otwarty. Skopiuj listę pieśni i wyślij wiadomość.'
-    );
+        window.open(
+            'https://m.me/61574568862717',
+            '_blank'
+        );
 
-    console.log(decodeURIComponent(text));
+        alert(
+`Treść zamówienia została skopiowana.
+
+Messenger został otwarty.
+
+Wklej wiadomość w czacie.`
+        );
+
+    });
 
 }
 
