@@ -457,7 +457,7 @@
                 const cols = parseCSVLine(line);
                 let rawCats = (cols[1] || "Inne").split(',').map(c => c.trim()).filter(c => c.length > 2);
                 rawCats.forEach(c => catsSet.add(c));
-                return { tytul: cols[0] || "Bez tytułu", kategorie: rawCats, yt: (cols[2] || "").trim(), czas: cols[3] || "0:00", originalIndex: index };
+                return { tytul: cols[0] || "Bez tytułu", kategorie: rawCats, yt: (cols[2] || "").trim(), czas: cols[3] || "0:00", numer: (cols[4] || "").trim(), originalIndex: index };
             });
 
             cart = cart.map(cItem => {
@@ -564,7 +564,7 @@
                         <img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb">
                         <div class="play-overlay">KLIKNIJ, ABY OTWORZYĆ NA YOUTUBE 🎶</div>
                     </div>
-                    <div class="card-title">${s.tytul}</div>
+                    <div class="card-title">${s.numer ? s.numer + '. ' : ''}${s.tytul}</div>
                     <button class="btn-fav-toggle ${isFav ? 'is-active' : ''}" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">
                         ${isFav ? '❌ USUŃ Z ULUBIONYCH' : '➕ DODAJ DO ULUBIONYCH'}
                     </button>
@@ -782,7 +782,7 @@
                     </div>
                     <div class="card-title" style="flex:1; text-align:left; padding-left:15px;">
                         ${isDisc ? `<div class="on-disc-badge">JEST NA PŁYCIE NUMER ${foundDiscIndex + 1}</div>` : ''}
-                        ${s.tytul} <br><small>Czas: ${s.czas}</small>
+                        ${s.numer ? s.numer + '. ' : ''}${s.tytul} <br><small>Czas: ${s.czas}</small>
                     </div>
                     <div style="display:flex; flex-direction:column; gap:5px;">
                         <button class="ctrl-btn" style="background:#fff1f1; font-size:var(--f-ctrl); min-width:120px;" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">
@@ -838,7 +838,7 @@
                                 return `
                                 <div class="list-card" style="background:#fff9e6; border:1px solid #333; min-height:40px; padding: 5px 15px;">
                                     <span class="list-title" style="font-size:var(--f-list-title);">
-                                        ${s.tytul} (${s.czas}) 
+                                        ${s.numer ? s.numer + '. ' : ''}${s.tytul} (${s.czas}) 
                                         ${!inFav ? '<span class="on-disc-badge" style="margin-left:10px; font-size:0.8em;">- nie jest w ulubionych</span>' : ''}
                                     </span>
                                     <button class="ctrl-btn" style="max-width:100px; font-size:var(--f-ctrl); padding:4px;" onclick="event.stopPropagation(); toggleDisc('${s.tytul.replace(/'/g, "\\'")}')">USUŃ Z PŁYTY</button>
@@ -879,7 +879,7 @@
                             <img src="${s.dummy ? 'https://via.placeholder.com/320x180?text=...' : `https://img.youtube.com/vi/${s.yt}/mqdefault.jpg`}" class="thumb">
                             ${!s.dummy ? `<div class="play-overlay"><div class="yt-btn-fake">KLIKNIJ, ABY OTWORZYĆ NA YOUTUBE 🎶</div></div>` : ''}
                         </div>
-                        <div class="card-title">${s.tytul}</div>
+                        <div class="card-title">${s.numer ? s.numer + '. ' : ''}${s.tytul}</div>
                         ${!s.dummy ? `<button class="btn-fav-toggle ${isFav ? 'is-active' : ''}" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">${isFav ? '❌ USUŃ Z ULUBIONYCH' : '➕ DODAJ DO ULUBIONYCH'}</button>` : ''}
                     `;
                 } else {
@@ -887,7 +887,7 @@
                     if(!s.dummy) item.onclick = () => openYT(s.yt);
                     item.innerHTML = `
                         ${!s.dummy ? `<div class="list-overlay">KLIKNIJ, ABY OTWORZYĆ NA YOUTUBE 🎶</div>` : ''}
-                        <span class="list-title">${currentView === 'top50' ? (idx+1) + '. ' : ''}${s.tytul}</span>
+                        <span class="list-title">${currentView === 'top50' ? (idx+1) + '. ' : ''}${s.numer ? s.numer + '. ' : ''}${s.tytul}</span>
                         ${!s.dummy ? `<button class="heart-btn" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">${isFav ? '❤️' : '🤍'}</button>` : ''}
                     `;
                 }
