@@ -720,14 +720,7 @@
                 if (cTime + sT > mTime && discsTmp[cIndex].length > 0) { cIndex++; cTime = sT; discsTmp[cIndex] = [s]; }
                 else { cTime += sT; discsTmp[cIndex].push(s); }
             });
-            
-            let ordersInfo = [];
-            discsTmp.forEach((_, idx) => {
-                let qty = discQtys[idx] || 0;
-                if(qty > 0) {
-                    ordersInfo.push(`${qty} ${qty === 1 ? 'płytę' : (qty < 5 ? 'płyty' : 'płyt')} nr ${idx + 1}`);
-                }
-            });
+                  
 
             const counterDiv = document.createElement('div');
             counterDiv.className = 'disc-counter-box';
@@ -736,11 +729,9 @@
             counterDiv.style.alignItems = "center";
             counterDiv.style.justifyContent = "space-between";
             counterDiv.style.padding = "5px 15px";
-
-            let infoText = ordersInfo.length > 0 ? "Wybrałeś " + ordersInfo.join(", ") : "Ustal ilość płyt na liście poniżej";
             
             counterDiv.innerHTML = `
-                <div style="text-align:left; line-height:1.2;">${infoText}</div>
+${infoText}</div>
                 <button onclick="openOrderModal()" style="background:#e53935; color:white; border:4px solid #3b2a00; border-radius:14px; font-size:22px; font-weight:900; padding:18px 32px; cursor:pointer; text-transform:uppercase; letter-spacing:1px; box-shadow:0 6px 18px rgba(229,57,53,0.4); animation: pulse-order 1.5s infinite;">🛒 ZAMÓW PŁYTY</button>
             `;
             header.appendChild(counterDiv);
