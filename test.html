@@ -384,9 +384,7 @@
         <button class="nav-btn fav-btn" id="btn-cart" onclick="setView('cart')">
             ❤️ MOJE ULUBIONE
         </button>
-        <button class="nav-btn fav-btn" id="btn-top50-side" onclick="setView('top50')">
-            🏆 TOP 50
-        </button>
+
         <div style="margin-top:10px; padding:5px; border: 1px solid var(--deep-brown); border-radius:10px;">
            <button class="size-btn" id="s-std" onclick="updateSize('standard')">LITERY ZWYKŁE</button>
             <button class="size-btn" id="s-big" onclick="updateSize('senior')">LITERY DUŻE</button>
@@ -416,7 +414,13 @@
                 </div>
                 <div class="ad-placeholder"></div>
             </div>
-            <div class="header-right" id="top-panel"></div>
+            <div class="header-right" id="top-panel" style="align-items:center; justify-content:center;">
+                <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; border: 3px dashed var(--active-orange); border-radius:12px; background:white;">
+                    <div style="text-align:center; color:#bbb; font-weight:900; font-size:1.4em; text-transform:uppercase; letter-spacing:2px; padding:20px;">
+                        📢 MIEJSCE NA REKLAMĘ
+                    </div>
+                </div>
+            </div>
         </div>
         <div id="alpha-shelf" class="alpha-shelf">
             <div id="alpha-row"></div>
@@ -439,7 +443,7 @@
 
 <script>
     const CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTSIMZUO8ZkisiFoqOfypL9hOQBnTbAvtMmBeIuK56_QoiXFu_b7i-de1Jn6Km9symosxJBV6V5PxKO/pub?output=csv';
-    const CSV_TOP = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQeNOmR7SJ-G5j8DMMXjR1KE4h5w1UiNY5nHhV1mvGNJ63I_-3SQPDMNxNFpakUL4VLFacWFUOmycPB/pub?gid=1082900381&single=true&output=csv';
+
     const STORAGE_KEY = 'melodia_wiary_permanent_storage'; 
     const STORAGE_DISC = 'melodia_wiary_disc_storage';
     const STORAGE_QTYS = 'melodia_wiary_qty_storage'; // NOWE: do przechowywania ilości
@@ -510,12 +514,8 @@
             row.appendChild(b);
         });
         try {
-            const [r1, r2] = await Promise.all([
-                fetch(CSV + '&cb=' + Date.now()),
-                fetch(CSV_TOP + '&cb=' + Date.now())
-            ]);
+            const r1 = await fetch(CSV + '&cb=' + Date.now());
             const text1 = await r1.text();
-            const text2 = await r2.text();
 
             const rows = text1.split(/\r?\n/).filter(x => x.trim() !== "").slice(1);
             let catsSet = new Set();
@@ -533,12 +533,6 @@
             disc = disc.map(dItem => {
                 const updated = songs.find(s => s.tytul === dItem.tytul);
                 return updated ? updated : dItem;
-            });
-
-            const rowsTop = text2.split(/\r?\n/).filter(x => x.trim() !== "").slice(1);
-            top50 = rowsTop.map((line, index) => {
-                const cols = parseCSVLine(line);
-                return { tytul: cols[0] || "Bez tytułu", yt: (cols[1] || "").trim(), originalIndex: index, czas: "0:00" };
             });
 
             const catBox = document.getElementById('cat-list');
@@ -613,40 +607,7 @@
         render();
     }
 
-    function renderTopPanel() {
-        const panel = document.getElementById('top-panel');
-        if (!top50.length) return;
-        const top3 = top50.slice(0, 3);
-        let html = `<div class="top-header-title">TYGODNIOWA LISTA PRZEBOJÓW POLSKIEJ PIEŚNI RELIGIJNEJ NR 1 - 4.4.2026</div>`;
-        html += `<div style="display: flex; gap: 10px; align-items: stretch; flex-grow: 1;">`;
-        html += `<div class="top-mini-grid" style="flex: 2;">`;
-        top3.forEach((s, idx) => {
-            const isFav = cart.some(x => x.tytul === s.tytul);
-            const jsTytul = s.tytul.replace(/'/g, "\\'");
-            html += `
-                <div class="card" onclick="openYT('${s.yt}')" style="padding: 6px; border-radius: 8px;">
-                    <div class="card-rank">MIEJSCE ${idx+1}</div>
-                    <div class="thumb-container" style="margin-bottom: 5px;">
-                        <img src="https://img.youtube.com/vi/${s.yt}/mqdefault.jpg" class="thumb">
-                        <div class="play-overlay">KLIKNIJ, ABY OTWORZYĆ NA YOUTUBE 🎶</div>
-                    </div>
-                    <div class="card-title">${s.numer ? s.numer + '. ' : ''}${s.tytul}</div>
-                    <button class="btn-fav-toggle ${isFav ? 'is-active' : ''}" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">
-                        ${isFav ? '❌ USUŃ Z ULUBIONYCH' : '➕ DODAJ DO ULUBIONYCH'}
-                    </button>
-                </div>`;
-        });
-        html += `</div>`;
-        html += `<div class="top-btn-container" onclick="setView('top50')">
-                    <div class="top-btn-text-part">
-                        <div style="font-size: 1.1em;">KLIKNIJ TUTAJ I ZOBACZ CAŁĄ</div>
-                        <div style="font-size: 0.9em;">TYGODNIOWĄ LISTĘ PRZEBOJÓW</div>
-                    </div>
-                    <div class="top-btn-ad-part">MIEJSCE NA REKLAMĘ SPONSORA TYGODNIOWEJ LISTY PRZEBOJÓW</div>
-                 </div>`;
-        html += `</div>`;
-        panel.innerHTML = html;
-    }
+    function renderTopPanel() { /* usunięto - miejsce na reklamę */ }
 
     // NOWE: Funkcja renderująca podstronę podsumowania zamówienia (koszyk)
     function renderOrderSummary() {
@@ -728,7 +689,7 @@
         document.querySelectorAll('.nav-btn').forEach(b => {
             b.classList.remove('active');
             if(currentView === 'cart' && b.id === 'btn-cart') b.classList.add('active');
-            else if(currentView === 'top50' && b.id === 'btn-top50-side') b.classList.add('active');
+
             else if(currentView === 'all' && b.id === 'cat-all') b.classList.add('active');
             else if(b.dataset.view === currentView) b.classList.add('active');
         });
@@ -739,7 +700,7 @@
             if(b.id === 'm-' + displayMode) b.classList.add('active');
         });
 
-        const showAlphaBar = (displayMode === 'list' && currentView !== 'cart' && currentView !== 'top50');
+        const showAlphaBar = (displayMode === 'list' && currentView !== 'cart');
         document.getElementById('alpha-shelf').style.display = showAlphaBar ? 'block' : 'none';
 
         const header = document.createElement('div');
@@ -747,7 +708,7 @@
         
         let titleLine = document.createElement('div');
         titleLine.style.flex = "2";
-        titleLine.innerText = currentView === 'all' ? 'WSZYSTKIE PIEŚNI' : (currentView === 'cart' ? '❤️ MOJE ULUBIONE' : (currentView === 'top50' ? 'TYGODNIOWA LISTA PRZEBOJÓW POLSKIEJ PIEŚNI RELIGIJNEJ NR 1 - 4.4.2026' : '📂 ' + currentView));
+        titleLine.innerText = currentView === 'all' ? 'WSZYSTKIE PIEŚNI' : (currentView === 'cart' ? '❤️ MOJE ULUBIONE' : '📂 ' + currentView);
         header.appendChild(titleLine);
 
         if(currentView === 'cart') {
@@ -785,35 +746,21 @@
             header.appendChild(counterDiv);
         }
 
-        if(currentView === 'top50') {
-            const voteBtn = document.createElement('button');
-            voteBtn.className = 'vote-btn-header';
-            voteBtn.innerText = 'KLIKNIJ i ZAGŁOSUJ NA LISTĘ TYGODNIOWĄ';
-            voteBtn.onclick = () => {
-                const instr = document.getElementById('instruction-anchor');
-                if(instr) instr.scrollIntoView({ behavior: 'smooth' });
-            };
-            header.appendChild(voteBtn);
-        }
+
         stickyTitleContainer.appendChild(header);
 
         let list = [];
         if(currentView === 'cart') list = [...cart];
-        else if(currentView === 'top50') {
-            list = [...top50];
-            while(list.length < 50) { list.push({ tytul: "MIEJSCE WOLNE", yt: "", dummy: true }); }
-        }
+
         else if(currentView === 'all') list = [...songs];
         else list = songs.filter(s => s.kategorie.includes(currentView));
 
         if(query) list = list.filter(s => s.tytul.toLowerCase().includes(query));
 
-        if(currentView !== 'top50') {
-            if(sortType === 'newest') list.sort((a,b) => b.originalIndex - a.originalIndex);
-            else if(sortType === 'oldest') list.sort((a,b) => a.originalIndex - b.originalIndex);
-            else if(sortType === 'az') list.sort((a,b) => a.tytul.localeCompare(b.tytul, 'pl'));
-            else if(sortType === 'za') list.sort((a,b) => b.tytul.localeCompare(a.tytul, 'pl'));
-        }
+        if(sortType === 'newest') list.sort((a,b) => b.originalIndex - a.originalIndex);
+        else if(sortType === 'oldest') list.sort((a,b) => a.originalIndex - b.originalIndex);
+        else if(sortType === 'az') list.sort((a,b) => a.tytul.localeCompare(b.tytul, 'pl'));
+        else if(sortType === 'za') list.sort((a,b) => b.tytul.localeCompare(a.tytul, 'pl'));
 
         const contentBox = document.createElement('div');
         contentBox.className = 'display-padding';
@@ -939,7 +886,7 @@
             container.className = displayMode === 'grid' ? 'items-grid' : 'list-container';
             
             let lastChar = "";
-            const showHeaders = (sortType === 'az' || sortType === 'za') && !query && currentView !== 'top50';
+            const showHeaders = (sortType === 'az' || sortType === 'za') && !query && currentView !== 'cart';
 
             list.forEach((s, idx) => {
                 const firstChar = s.tytul.charAt(0).toUpperCase();
@@ -955,7 +902,7 @@
                     item.className = 'card';
                     if(!s.dummy) item.onclick = () => openYT(s.yt);
                     item.innerHTML = `
-                        ${currentView === 'top50' ? `<div class="card-rank">MIEJSCE ${idx + 1}</div>` : ''}
+
                         <div class="thumb-container">
                             <img src="${s.dummy ? 'https://via.placeholder.com/320x180?text=...' : `https://img.youtube.com/vi/${s.yt}/mqdefault.jpg`}" class="thumb">
                             ${!s.dummy ? `<div class="play-overlay"><div class="yt-btn-fake">KLIKNIJ, ABY OTWORZYĆ NA YOUTUBE 🎶</div></div>` : ''}
@@ -968,7 +915,7 @@
                     if(!s.dummy) item.onclick = () => openYT(s.yt);
                     item.innerHTML = `
                         ${!s.dummy ? `<div class="list-overlay">KLIKNIJ, ABY OTWORZYĆ NA YOUTUBE 🎶</div>` : ''}
-                        <span class="list-title">${currentView === 'top50' ? (idx+1) + '. ' : ''}${s.numer ? s.numer + '. ' : ''}${s.tytul}</span>
+                        <span class="list-title">${s.numer ? s.numer + '. ' : ''}${s.tytul}</span>
                         ${!s.dummy ? `<button class="heart-btn" onclick="event.stopPropagation(); toggleFav('${jsTytul}')">${isFav ? '❤️' : '🤍'}</button>` : ''}
                     `;
                 }
@@ -977,41 +924,20 @@
             contentBox.appendChild(container);
         }
 
-        if(currentView === 'top50') {
-            const instr = document.createElement('div');
-            instr.id = 'instruction-anchor';
-            instr.className = 'instruction-box';
-            instr.innerHTML = `
-                <h2 style="text-transform:uppercase; margin-top:0;">Jak zagłosować na listę tygodniową?</h2>
-                <p>Głosowanie odbywa się bezpośrednio na naszym profilu YouTube. Każdy głos ma ogromne znaczenie!</p>
-                <div style="padding:25px; border: 3px solid var(--active-orange); margin: 20px 0; border-radius: 15px; background: #fffdf5;">
-                    <p><strong>1. Przygotuj tytuły i linki do 3 dowolnych polskich pieśni religijnych z YouTube.</strong></p>
-                    <p>(Pamiętaj: Jesteśmy otwarci na wszystkich twórców oraz na pieśni tworzone przy wsparciu technologii AI!)</p>
-                    <p><strong>2. Kliknij w przycisk poniżej:</strong></p>
-                    <a href="http://youtube.com/post/UgkxudR-ghySucG9xp6vcB28mYZ9cBb_B-a0?si=_zkEhGhy1P6Xo9Hw" 
-                       target="_blank" 
-                       style="display:inline-block; background: #ff0000; color: white; padding: 15px 30px; text-decoration: none; border-radius: 10px; font-weight: 900; border: 3px solid #333;">
-                        PRZEJDŹ DO GŁOSOWANIA NA YOUTUBE 🎶
-                    </a>
-                </div>
-                <p style="font-size: 0.9em; color: #555;">Wklej swoje 3 propozycje w komentarzu pod postem na YouTube. Głosujemy do piątku do 24:00!</p>
-            `;
-            contentBox.appendChild(instr);
-        }
+
 
         out.appendChild(contentBox);
     }
 
     function setMode(m) { 
         displayMode = m; 
-        if(m === 'grid') { if(currentView !== 'top50') sortType = 'newest'; } 
-        else if(m === 'list') { if(currentView !== 'top50') sortType = 'az'; }
+        if(m === 'grid') { sortType = 'newest'; } 
+        else if(m === 'list') { sortType = 'az'; }
         render(); window.scrollTo(0, 0);
     }
     function setSort(s) { sortType = s; render(); }
     function setView(v) { 
         currentView = v; 
-        if(v === 'top50') sortType = 'none';
         render(); window.scrollTo(0,0); 
     }
     function doSearch() { query = document.getElementById('search').value.toLowerCase(); render(); }
