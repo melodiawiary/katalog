@@ -594,12 +594,22 @@
         out.innerHTML = '';
 
         const discsTmp = [];
-        let cIdx = 0; let cTime = 0;
+        const maxTime = 50 * 60;
         disc.forEach(s => {
             const sT = timeToSeconds(s.czas);
-            if (!discsTmp[cIdx]) discsTmp[cIdx] = [];
-            if (cTime + sT > 3000 && discsTmp[cIdx].length > 0) { cIdx++; cTime = sT; discsTmp[cIdx] = [s]; }
-            else { cTime += sT; discsTmp[cIdx].push(s); }
+            // Znajdź pierwszą płytę gdzie się zmieści (bin packing)
+            let placed = false;
+            for (let i = 0; i < discsTmp.length; i++) {
+                const usedTime = discsTmp[i].reduce((acc, x) => acc + timeToSeconds(x.czas), 0);
+                if (usedTime + sT <= maxTime) {
+                    discsTmp[i].push(s);
+                    placed = true;
+                    break;
+                }
+            }
+            if (!placed) {
+                discsTmp.push([s]);
+            }
         });
 
         const container = document.createElement('div');
@@ -756,11 +766,18 @@
 
             disc.forEach(s => {
                 const sTime = timeToSeconds(s.czas);
-                if (!discs[currentDiscIndex]) discs[currentDiscIndex] = [];
-                if (currentDiscTime + sTime > maxTime && discs[currentDiscIndex].length > 0) {
-                    currentDiscIndex++; currentDiscTime = sTime; discs[currentDiscIndex] = [s];
-                } else {
-                    currentDiscTime += sTime; discs[currentDiscIndex].push(s);
+                // Znajdź pierwszą płytę gdzie się zmieści (bin packing)
+                let placed = false;
+                for (let i = 0; i < discs.length; i++) {
+                    const usedTime = discs[i].reduce((acc, x) => acc + timeToSeconds(x.czas), 0);
+                    if (usedTime + sTime <= maxTime) {
+                        discs[i].push(s);
+                        placed = true;
+                        break;
+                    }
+                }
+                if (!placed) {
+                    discs.push([s]);
                 }
             });
 
