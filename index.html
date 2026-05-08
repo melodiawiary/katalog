@@ -600,11 +600,22 @@ localStorage.setItem(
 JSON.stringify(favs)
 );
 
-const searchVal = document.getElementById("search").value;
-if(searchVal.trim() !== ""){
-// zostań w wynikach wyszukiwania
-document.getElementById("search").dispatchEvent(new Event("input"));
-} else if(currentCat === "❤️ Ulubione" || showingFavs){
+buildCatBar();
+
+const searchVal = document.getElementById("search").value.trim();
+if(searchVal !== ""){
+let pool = videos;
+if(currentCat === "❤️ Ulubione"){
+const favs2 = JSON.parse(localStorage.getItem("favs") || "[]");
+pool = videos.filter(v => favs2.includes(v.youtube));
+} else if(currentCat !== "Wszystkie"){
+pool = videos.filter(v => v.category.split(",").map(c=>c.trim()).includes(currentCat));
+}
+render(pool.filter(v =>
+v.title.toLowerCase().includes(searchVal.toLowerCase()) ||
+v.category.toLowerCase().includes(searchVal.toLowerCase())
+));
+} else if(currentCat === "❤️ Ulubione"){
 setFavCategory();
 } else if(currentCat !== "Wszystkie"){
 setCategory(currentCat);
@@ -616,7 +627,8 @@ render(videos);
 
 function showFavs(){
 
-showingFavs = true;
+showingFavs = false;
+currentCat = "❤️ Ulubione";
 
 const favs =
 JSON.parse(
@@ -635,7 +647,8 @@ render(filtered);
 function showAll(){
 
 showingFavs = false;
-
+currentCat = "Wszystkie";
+buildCatBar();
 render(videos);
 
 }
@@ -825,7 +838,7 @@ bar.appendChild(btn);
 
 function setFavCategory(){
 currentCat = "❤️ Ulubione";
-showingFavs = true;
+showingFavs = false;
 buildCatBar();
 showFavs();
 }
