@@ -479,6 +479,7 @@ const url =
 
 let videos = [];
 let showingFavs = false;
+let currentCat = "Wszystkie";
 
 const container =
 document.getElementById("videos");
@@ -599,14 +600,16 @@ localStorage.setItem(
 JSON.stringify(favs)
 );
 
-if(showingFavs){
-
-showFavs();
-
-}else{
-
+const searchVal = document.getElementById("search").value;
+if(searchVal.trim() !== ""){
+// zostań w wynikach wyszukiwania
+document.getElementById("search").dispatchEvent(new Event("input"));
+} else if(currentCat === "❤️ Ulubione" || showingFavs){
+setFavCategory();
+} else if(currentCat !== "Wszystkie"){
+setCategory(currentCat);
+} else {
 render(videos);
-
 }
 
 }
@@ -785,8 +788,6 @@ if(diff > 60 && touchStartX < 40) openDrawer();
 if(diff < -60) closeDrawer();
 });
 
-
-let currentCat = "Wszystkie";
 
 function buildCatBar(){
 const catSet = new Set();
