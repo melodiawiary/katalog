@@ -609,20 +609,18 @@
         let msg = "Dzień dobry, chciałbym zamówić płyty z moimi ulubionymi pieśniami:\n\n";
         
         discsTmp.forEach((dSongs, idx) => {
-            let qty = discQtys[idx] || 0;
-            if(qty > 0) {
-                const section = document.createElement('div');
-                section.className = 'disc-box';
-                section.style.marginBottom = '20px';
-                let songsList = dSongs.map((s, sIdx) => `${sIdx+1}. ${s.tytul} (${s.czas})`).join('<br>');
-                section.innerHTML = `
-                    <div class="disc-header">PŁYTA NR ${idx + 1} - ILOŚĆ: ${qty} SZT.</div>
-                    <div style="padding:10px; font-weight:bold;">SPIS UTWORÓW NA TEJ PŁYCIE:</div>
-                    <div style="padding:0 10px 10px 10px; font-size:0.9em;">${songsList}</div>
-                `;
-                container.appendChild(section);
-                msg += `PŁYTA NR ${idx+1} (${qty} szt.):\n` + dSongs.map(s => `- ${s.tytul}`).join('\n') + "\n\n";
-            }
+            let qty = discQtys[idx] || 1;
+            const section = document.createElement('div');
+            section.className = 'disc-box';
+            section.style.marginBottom = '20px';
+            let songsList = dSongs.map((s, sIdx) => `${sIdx+1}. ${s.numer ? s.numer + '. ' : ''}${s.tytul} (${s.czas})`).join('<br>');
+            section.innerHTML = `
+                <div class="disc-header">PŁYTA NR ${idx + 1} - ILOŚĆ: ${qty} SZT.</div>
+                <div style="padding:10px; font-weight:bold;">SPIS UTWORÓW NA TEJ PŁYCIE:</div>
+                <div style="padding:0 10px 10px 10px; font-size:0.9em;">${songsList}</div>
+            `;
+            container.appendChild(section);
+            msg += `PŁYTA NR ${idx+1} (${qty} szt.):\n` + dSongs.map(s => `- ${s.tytul}`).join('\n') + "\n\n";
         });
 
         if(container.innerHTML === "") {
