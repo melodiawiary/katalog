@@ -309,6 +309,72 @@
         .qty-val {
             width: 40px; text-align: center; font-weight: 900; background: white; border-left: 2px solid var(--deep-brown); border-right: 2px solid var(--deep-brown);
         }
+
+        @keyframes pulse-order {
+            0%, 100% { transform: scale(1); box-shadow: 0 6px 18px rgba(229,57,53,0.4); }
+            50% { transform: scale(1.04); box-shadow: 0 10px 28px rgba(229,57,53,0.7); }
+        }
+        #order-modal-overlay {
+            position: fixed; top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.75); display:none; align-items:center;
+            justify-content:center; z-index:3000;
+        }
+        .order-modal {
+            background: white; border: 5px solid var(--active-orange);
+            padding: 40px 35px; border-radius: 24px; max-width: 600px;
+            width: 92%; text-align: center; font-weight: 900;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .order-modal h2 {
+            font-size: 1.6em; text-transform: uppercase;
+            color: var(--deep-brown); margin: 0 0 10px 0;
+        }
+        .order-modal p {
+            font-size: 1em; font-weight: 600; color: #555; margin-bottom: 30px;
+        }
+        .order-choice-btns {
+            display: flex; flex-direction: column; gap: 15px;
+        }
+        .order-choice-btn {
+            padding: 22px 20px; border-radius: 14px; border: 3px solid var(--deep-brown);
+            font-size: 1.2em; font-weight: 900; cursor: pointer;
+            text-transform: uppercase; transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none; display: flex; align-items: center;
+            justify-content: center; gap: 12px; line-height: 1.2;
+        }
+        .order-choice-btn:hover { transform: scale(1.02); box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
+        .order-choice-btn.messenger { background: #0084ff; color: white; }
+        .order-choice-btn.email { background: var(--active-orange); color: var(--deep-brown); }
+        .order-modal-close {
+            margin-top: 20px; background: #eee; border: 2px solid #999;
+            border-radius: 10px; padding: 12px 24px; font-size: 1em;
+            font-weight: 900; cursor: pointer; text-transform: uppercase;
+        }
+        /* Podstrona z tekstem zamówienia */
+        #order-text-view {
+            display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.8); z-index:4000;
+            align-items:center; justify-content:center;
+        }
+        .order-text-box {
+            background: white; border: 5px solid var(--active-orange);
+            border-radius: 20px; padding: 35px; max-width: 650px;
+            width: 92%; max-height: 80vh; display: flex; flex-direction: column;
+        }
+        .order-text-box h2 {
+            margin: 0 0 15px 0; font-size: 1.3em; text-transform: uppercase;
+            color: var(--deep-brown); text-align: center;
+        }
+        .order-text-content {
+            flex: 1; overflow-y: auto; background: #fffdf5;
+            border: 2px solid var(--active-orange); border-radius: 10px;
+            padding: 15px; font-size: 0.95em; font-weight: 600;
+            line-height: 1.6; white-space: pre-wrap; text-align: left;
+            color: var(--deep-brown);
+        }
+        .order-text-actions {
+            display: flex; gap: 12px; margin-top: 18px;
+        }
     </style>
 </head>
 <body class="standard">
@@ -714,7 +780,7 @@
             
             counterDiv.innerHTML = `
                 <div style="text-align:left; line-height:1.2;">${infoText}</div>
-                <button class="ctrl-btn" style="max-width:150px; background:white; margin-left:10px;" onclick="renderOrderSummary()">ZAMÓW PŁYTY</button>
+                <button onclick="openOrderModal()" style="background:#e53935; color:white; border:4px solid #3b2a00; border-radius:14px; font-size:22px; font-weight:900; padding:18px 32px; cursor:pointer; text-transform:uppercase; letter-spacing:1px; box-shadow:0 6px 18px rgba(229,57,53,0.4); animation: pulse-order 1.5s infinite;">🛒 ZAMÓW PŁYTY</button>
             `;
             header.appendChild(counterDiv);
         }
@@ -950,6 +1016,101 @@
     }
     function doSearch() { query = document.getElementById('search').value.toLowerCase(); render(); }
     init();
+
+    function buildOrderText() {
+        const discsTmp = [];
+        const maxTime = 50 * 60;
+        disc.forEach(s => {
+            const sT = timeToSeconds(s.czas);
+            let placed = false;
+            for (let i = 0; i < discsTmp.length; i++) {
+                const usedTime = discsTmp[i].reduce((acc, x) => acc + timeToSeconds(x.czas), 0);
+                if (usedTime + sT <= maxTime) { discsTmp[i].push(s); placed = true; break; }
+            }
+            if (!placed) discsTmp.push([s]);
+        });
+        let msg = "Szczęść Boże Melodio Wiary!\nJestem zainteresowany płytami z tą muzyką:\n\n";
+        discsTmp.forEach((dSongs, idx) => {
+            let qty = discQtys[idx] || 1;
+            msg += `PŁYTA NUMER ${idx+1} (${qty} szt.):\n`;
+            dSongs.forEach(s => {
+                msg += `  ${s.numer ? s.numer + '. ' : ''}${s.tytul} (${s.czas})\n`;
+            });
+            msg += "\n";
+        });
+        msg += "Proszę o kontakt w sprawie zamówienia. Bóg zapłać!";
+        return msg;
+    }
+
+    function openOrderModal() {
+        if(disc.length === 0) {
+            alert("Nie masz jeszcze żadnych piosenek na płycie! Dodaj najpierw utwory do płyty.");
+            return;
+        }
+        const msg = buildOrderText();
+        const messengerUrl = "https://m.me/MelodiaWiary?text=" + encodeURIComponent(msg);
+        document.getElementById('messenger-btn').href = messengerUrl;
+        document.getElementById('order-modal-overlay').style.display = 'flex';
+    }
+
+    function closeOrderModal() {
+        document.getElementById('order-modal-overlay').style.display = 'none';
+    }
+
+    function showOrderText() {
+        closeOrderModal();
+        const msg = buildOrderText();
+        document.getElementById('order-text-content').textContent = msg;
+        document.getElementById('order-text-view').style.display = 'flex';
+    }
+
+    function closeOrderText() {
+        document.getElementById('order-text-view').style.display = 'none';
+    }
+
+    function copyOrder() {
+        const text = document.getElementById('order-text-content').textContent;
+        navigator.clipboard.writeText(text).then(() => {
+            const btn = document.querySelector('[onclick="copyOrder()"]');
+            const original = btn.innerHTML;
+            btn.innerHTML = '✅ SKOPIOWANO!';
+            btn.style.background = '#388e3c';
+            setTimeout(() => { btn.innerHTML = original; btn.style.background = '#4caf50'; }, 2500);
+        });
+    }
+
 </script>
+
+<div id="order-modal-overlay">
+    <div class="order-modal">
+        <h2>📀 Jak chcesz wysłać zamówienie?</h2>
+        <p>Wybierz preferowany sposób kontaktu z Melodią Wiary</p>
+        <div class="order-choice-btns">
+            <a id="messenger-btn" href="#" target="_blank" class="order-choice-btn messenger">
+                💬 WYŚLIJ PRZEZ MESSENGERA
+            </a>
+            <button onclick="showOrderText()" class="order-choice-btn email">
+                ✉️ NAPISZ NA MELODIAWIARY@GMAIL.COM<br>
+                <span style="font-size:0.75em; font-weight:700;">(skopiuj swoje zamówienie)</span>
+            </button>
+        </div>
+        <button class="order-modal-close" onclick="closeOrderModal()">ANULUJ</button>
+    </div>
+</div>
+
+<div id="order-text-view">
+    <div class="order-text-box">
+        <h2>✉️ Twoje zamówienie — skopiuj i wyślij</h2>
+        <div id="order-text-content" class="order-text-content"></div>
+        <div class="order-text-actions">
+            <button onclick="copyOrder()" style="flex:2; padding:18px; background:#4caf50; color:white; border:3px solid #333; border-radius:12px; font-size:1.1em; font-weight:900; cursor:pointer; text-transform:uppercase;">
+                📋 KOPIUJ MOJE ZAMÓWIENIE
+            </button>
+            <button onclick="closeOrderText()" style="flex:1; padding:18px; background:#eee; border:2px solid #999; border-radius:12px; font-size:1em; font-weight:900; cursor:pointer; text-transform:uppercase;">
+                ZAMKNIJ
+            </button>
+        </div>
+    </div>
+</div>
 </body>
 </html>
