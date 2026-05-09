@@ -389,15 +389,11 @@ display:none;
   <div class="drawer-blessing">Szczęść Boże,<br>Niech będzie pochwalony<br>Jezus Chrystus 🙏</div>
   <div class="drawer-email">✉️ <a href="mailto:melodiawiary@gmail.com">melodiawiary@gmail.com</a></div>
 
-  <div class="drawer-section">📢 Grupy WhatsApp</div>
+  <div class="drawer-section">📢 Kanał WhatsApp</div>
   <div class="drawer-links">
-    <a href="https://chat.whatsapp.com/Gx5ZUWk1hZz7bAOdsTwldj" target="_blank" class="drawer-link">
+    <a href="https://whatsapp.com/channel/0029Vb8NugtDZ4LUzu4cYk0Z" target="_blank" class="drawer-link">
       <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg">
-      Nowe pieśni – powiadomienia
-    </a>
-    <a href="https://chat.whatsapp.com/HHR95s4ECcGKrTOqiInHTI" target="_blank" class="drawer-link">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg">
-      Wspólna modlitwa i chat
+      Kanał Melodia Wiary
     </a>
   </div>
 
@@ -600,12 +596,11 @@ localStorage.setItem(
 JSON.stringify(favs)
 );
 
-buildCatBar();
-
 const searchVal = document.getElementById("search").value.trim();
 if(searchVal !== ""){
+// zostań w wynikach wyszukiwania - przelicz ręcznie bez event
 let pool = videos;
-if(currentCat === "❤️ Ulubione"){
+if(currentCat === "❤️ Ulubione" || showingFavs){
 const favs2 = JSON.parse(localStorage.getItem("favs") || "[]");
 pool = videos.filter(v => favs2.includes(v.youtube));
 } else if(currentCat !== "Wszystkie"){
@@ -615,7 +610,7 @@ render(pool.filter(v =>
 v.title.toLowerCase().includes(searchVal.toLowerCase()) ||
 v.category.toLowerCase().includes(searchVal.toLowerCase())
 ));
-} else if(currentCat === "❤️ Ulubione"){
+} else if(currentCat === "❤️ Ulubione" || showingFavs){
 setFavCategory();
 } else if(currentCat !== "Wszystkie"){
 setCategory(currentCat);
@@ -627,8 +622,7 @@ render(videos);
 
 function showFavs(){
 
-showingFavs = false;
-currentCat = "❤️ Ulubione";
+showingFavs = true;
 
 const favs =
 JSON.parse(
@@ -647,8 +641,7 @@ render(filtered);
 function showAll(){
 
 showingFavs = false;
-currentCat = "Wszystkie";
-buildCatBar();
+
 render(videos);
 
 }
@@ -838,7 +831,7 @@ bar.appendChild(btn);
 
 function setFavCategory(){
 currentCat = "❤️ Ulubione";
-showingFavs = false;
+showingFavs = true;
 buildCatBar();
 showFavs();
 }
