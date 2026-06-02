@@ -154,16 +154,17 @@ flex-shrink:0;
 }
 
 header input{
-width:65%;
-flex:none;
+width:100%;
+flex:1;
 }
 
 .header-icons{
 display:flex;
 align-items:center;
-gap:12px;
-margin-left:auto;
-flex-shrink:0;
+justify-content:center;
+gap:14px;
+flex-wrap:wrap;
+margin-bottom:12px;
 }
 
 .header-icons a{
@@ -456,12 +457,6 @@ display:none;
 </div>
 
 <header>
-<div class="header-row">
-<button id="drawer-btn" onclick="openDrawer()">☰</button>
-<input
-type="text"
-id="search"
-placeholder="SZUKAJ PIEŚNI...">
 <div class="header-icons">
 <a href="https://open.spotify.com/playlist/7znlESw5iXBSggX8WM0Qxn?si=hpi5yrz7QxOMK_vv7fxu-A" target="_blank" title="Spotify">
 <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg">
@@ -488,6 +483,12 @@ placeholder="SZUKAJ PIEŚNI...">
 <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg">
 </a>
 </div>
+<div class="header-row">
+<button id="drawer-btn" onclick="openDrawer()">☰</button>
+<input
+type="text"
+id="search"
+placeholder="SZUKAJ PIEŚNI...">
 </div>
 </header>
 
