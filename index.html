@@ -154,78 +154,39 @@ flex-shrink:0;
 }
 
 header input{
+width:100%;
 flex:1;
 }
 
-.drawer-logo{
-display:block;
-width:110px;
-height:110px;
-border-radius:50%;
-margin:30px auto 15px;
-object-fit:cover;
-border:3px solid #24424a;
-}
-
-.drawer-blessing{
-text-align:center;
-font-size:15px;
-font-weight:700;
-color:#24424a;
-padding:0 20px 15px;
-border-bottom:2px solid #d6e3e6;
-line-height:1.5;
-}
-
-.drawer-email{
-text-align:center;
-padding:12px 20px;
-font-size:14px;
-font-weight:700;
-color:#24424a;
-border-bottom:2px solid #d6e3e6;
-}
-
-.drawer-email a{
-color:#0078FF;
-font-size:14px;
-}
-
-.drawer-section{
-padding:15px 20px 5px;
-font-size:12px;
-font-weight:900;
-text-transform:uppercase;
-color:#888;
-letter-spacing:1px;
-}
-
-.drawer-links{
-padding:5px 15px 15px;
-display:flex;
-flex-direction:column;
-gap:10px;
-border-bottom:2px solid #d6e3e6;
-}
-
-.drawer-link{
+.header-icons{
 display:flex;
 align-items:center;
-gap:12px;
-padding:12px 15px;
-border-radius:12px;
-background:white;
-text-decoration:none;
-color:#24424a;
-font-weight:700;
-font-size:15px;
-box-shadow:0 2px 6px rgba(0,0,0,0.06);
+justify-content:center;
+gap:14px;
+flex-wrap:wrap;
+margin-bottom:12px;
 }
 
-.drawer-link img{
+.header-icons a{
+display:flex;
+font-size:0;
+border-radius:8px;
+padding:4px;
+transition:transform 0.15s, box-shadow 0.15s, background 0.15s;
+cursor:pointer;
+}
+
+.header-icons a:hover{
+transform:translateY(-2px) scale(1.1);
+background:rgba(255,255,255,0.7);
+box-shadow:0 3px 8px rgba(0,0,0,0.18);
+}
+
+.header-icons img{
 width:28px;
 height:28px;
 border-radius:6px;
+display:block;
 }
 
 /* MODAL EMAIL */
@@ -320,6 +281,77 @@ z-index:500;
 display:flex;
 }
 
+.drawer-logo{
+display:block;
+width:110px;
+height:110px;
+border-radius:50%;
+margin:30px auto 15px;
+object-fit:cover;
+border:3px solid #24424a;
+}
+
+.drawer-blessing{
+text-align:center;
+font-size:15px;
+font-weight:700;
+color:#24424a;
+padding:0 20px 15px;
+border-bottom:2px solid #d6e3e6;
+line-height:1.5;
+}
+
+.drawer-email{
+text-align:center;
+padding:12px 20px;
+font-size:14px;
+font-weight:700;
+color:#24424a;
+border-bottom:2px solid #d6e3e6;
+}
+
+.drawer-email a{
+color:#0078FF;
+font-size:14px;
+}
+
+.drawer-section{
+padding:15px 20px 5px;
+font-size:12px;
+font-weight:900;
+text-transform:uppercase;
+color:#888;
+letter-spacing:1px;
+}
+
+.drawer-links{
+padding:5px 15px 15px;
+display:flex;
+flex-direction:column;
+gap:10px;
+border-bottom:2px solid #d6e3e6;
+}
+
+.drawer-link{
+display:flex;
+align-items:center;
+gap:12px;
+padding:12px 15px;
+border-radius:12px;
+background:white;
+text-decoration:none;
+color:#24424a;
+font-weight:700;
+font-size:15px;
+box-shadow:0 2px 6px rgba(0,0,0,0.06);
+}
+
+.drawer-link img{
+width:28px;
+height:28px;
+border-radius:6px;
+}
+
 .drawer-motto{
 text-align:center;
 padding:20px 20px 30px;
@@ -399,6 +431,14 @@ display:none;
 
   <div class="drawer-section">🌐 Znajdź nas</div>
   <div class="drawer-links">
+    <a href="https://open.spotify.com/playlist/7znlESw5iXBSggX8WM0Qxn?si=hpi5yrz7QxOMK_vv7fxu-A" target="_blank" class="drawer-link">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg">
+      Spotify
+    </a>
+    <a href="https://www.youtube.com/@MelodiaWiary" target="_blank" class="drawer-link">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg">
+      YouTube
+    </a>
     <a href="https://www.facebook.com/MelodiaWiary/" target="_blank" class="drawer-link">
       <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg">
       Facebook
@@ -407,7 +447,7 @@ display:none;
       <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png">
       Instagram
     </a>
-    <a href="https://www.tiktok.com/@melodiawiary1" target="_blank" class="drawer-link">
+    <a href="https://www.tiktok.com/@melodia.wiary" target="_blank" class="drawer-link">
       <img src="https://upload.wikimedia.org/wikipedia/en/a/a9/TikTok_logo.svg">
       TikTok
     </a>
@@ -415,7 +455,7 @@ display:none;
       <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/X_logo_2023_original.svg">
       X (Twitter)
     </a>
-    <a href="https://t.me/+8mxW2mQi2SszMmE1" target="_blank" class="drawer-link">
+    <a href="https://t.me/+TaYQwSuIhK9hNDJl" target="_blank" class="drawer-link">
       <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg">
       Telegram
     </a>
@@ -425,6 +465,32 @@ display:none;
 </div>
 
 <header>
+<div class="header-icons">
+<a href="https://open.spotify.com/playlist/7znlESw5iXBSggX8WM0Qxn?si=hpi5yrz7QxOMK_vv7fxu-A" target="_blank" title="Spotify">
+<img src="https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg">
+</a>
+<a href="https://www.youtube.com/@MelodiaWiary" target="_blank" title="YouTube">
+<img src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg">
+</a>
+<a href="https://www.facebook.com/MelodiaWiary/" target="_blank" title="Facebook">
+<img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg">
+</a>
+<a href="https://www.instagram.com/melodiawiary/" target="_blank" title="Instagram">
+<img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png">
+</a>
+<a href="https://www.tiktok.com/@melodia.wiary" target="_blank" title="TikTok">
+<img src="https://upload.wikimedia.org/wikipedia/en/a/a9/TikTok_logo.svg">
+</a>
+<a href="https://x.com/melodiawiary" target="_blank" title="X (Twitter)">
+<img src="https://upload.wikimedia.org/wikipedia/commons/5/53/X_logo_2023_original.svg">
+</a>
+<a href="https://t.me/+TaYQwSuIhK9hNDJl" target="_blank" title="Telegram">
+<img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg">
+</a>
+<a href="https://whatsapp.com/channel/0029Vb8NugtDZ4LUzu4cYk0Z" target="_blank" title="WhatsApp">
+<img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg">
+</a>
+</div>
 <div class="header-row">
 <button id="drawer-btn" onclick="openDrawer()">☰</button>
 <input
