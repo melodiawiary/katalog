@@ -4,13 +4,12 @@ Ostatnia aktualizacja: 2026-11-13 (po Etapie 1, Kroku 2)
 
 ## NASTĘPNY KROK
 
+Krok 2 jest na `main` (PR #1 zatwierdzony przez Mariusza 2026-11-13). Oba pliki SQL (01, 02) są już w bazie.
+
 **Etap 1, Krok 3: Import z hurtowni (CSV / Excel)** (szablon do pobrania, dopasowanie kolumn zapamiętane
 dla hurtowni, dopasowanie kategorii, reguła ceny, podgląd nowe / zmienione / błędy, aktualizacja po EAN,
 nowe jako szkice, zdjęcia z linków, import partiami). Szczegóły: `PLAN_BUDOWY.md`.
 
-**Mariusz musi jeszcze wkleić w Supabase, po kolei:** `supabase/01_ustawienia.sql`, potem `supabase/02_produkty.sql`.
-Kod działa przed i po wklejeniu (do tego czasu panel pokazuje komunikat o braku tabel; marki, hurtownie,
-warianty, galeria i cechy w panelu działają dopiero po `02`). Krok 2 nie dodał nowego pliku SQL.
 Jeśli kiedyś trzeba będzie ponownie uruchomić `01`, potem trzeba też ponownie uruchomić `02`
 (01 ma starszą wersję `create_order`).
 
@@ -40,8 +39,11 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
   dopisany do tabeli `admins`). Hasło Mariusz ustawił 2026-11-13 poleceniem SQL; przy resecie:
   `update auth.users set encrypted_password = extensions.crypt('HASLO', extensions.gen_salt('bf')) where email = '...';`
 - **Dostęp Claude do GitHuba:** aplikacja Claude ma dostęp do wszystkich repozytoriów (All repositories),
-  więc Claude sam wysyła zmiany.
-- **Użytkownik pracuje z telefonu:** instrukcje krok po kroku, linki bezpośrednie do ekranów Supabase/Vercel.
+  ale sesja nie może pisać prosto do `main`. Claude wysyła gałąź i otwiera pull request (przez `gh api`,
+  bo GraphQL jest zablokowany), a Mariusz zatwierdza go z telefonu: link do PR -> Merge pull request ->
+  Confirm merge. Repo trzeba w sesji podłączyć z prawem zapisu (add_repo, access push).
+- **Użytkownik pracuje z telefonu:** zawsze dawać link, CO skopiować (np. surowy plik SQL z
+  raw.githubusercontent.com) i link, GDZIE wkleić (np. edytor SQL Supabase), plus co ma się pojawić.
 
 ## Co jest zrobione
 
