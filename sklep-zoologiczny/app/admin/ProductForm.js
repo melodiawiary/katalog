@@ -2,6 +2,7 @@
 
 import { useActionState } from 'react';
 import { saveProduct } from './actions';
+import { categoryTree } from '@/lib/categories';
 
 export default function ProductForm({ product, categories }) {
   const [state, formAction, pending] = useActionState(saveProduct, null);
@@ -17,7 +18,9 @@ export default function ProductForm({ product, categories }) {
           Kategoria
           <select name="category_id" defaultValue={p.category_id || ''}>
             <option value="">- brak -</option>
-            {categories.map((c) => <option key={c.id} value={c.id}>{c.emoji} {c.name}</option>)}
+            {categoryTree(categories).map((c) => (
+              <option key={c.id} value={c.id}>{'\u00a0\u00a0\u00a0'.repeat(c.depth)}{c.depth ? '' : `${c.emoji} `}{c.name}</option>
+            ))}
           </select>
         </label>
         <div className="row">

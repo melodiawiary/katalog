@@ -4,8 +4,15 @@ import { createClient } from '@/lib/supabase/server';
 import AddToCart from '@/components/AddToCart';
 import ProductImage from '@/components/ProductImage';
 import { price } from '@/lib/shop';
+import { categoryPath } from '@/lib/categories';
 
 export const dynamic = 'force-dynamic';
+
+async function getCategories() {
+  const supabase = await createClient();
+  const { data } = await supabase.from('categories').select('*');
+  return data || [];
+}
 
 async function getProduct(slug) {
   const supabase = await createClient();
@@ -28,15 +35,21 @@ export default async function ProductPage({ params }) {
   const { slug } = await params;
   const product = await getProduct(slug);
   if (!product) notFound();
+  const path = product.category_id ? categoryPath(await getCategories(), product.category_id) : [];
 
   return (
     <div className="product-page">
       <ProductImage product={product} emoji={product.categories?.emoji} />
       <div>
-        {product.categories && (
-          <Link href={`/?kategoria=${product.categories.slug}`} className="muted">
-            {product.categories.emoji} {product.categories.name}
-          </Link>
+        {path.length > 0 && (
+          <nav className="muted">
+            {path.map((c, i) => (
+              <span key={c.id}>
+                {i > 0 && ' › '}
+                <Link href={`/?kategoria=${c.slug}`}>{i === 0 && `${c.emoji} `}{c.name}</Link>
+              </span>
+            ))}
+          </nav>
         )}
         <h1>{product.name}</h1>
         <p className="price big">{price(product.price)}</p>

@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import AddToCart from '@/components/AddToCart';
 import ProductImage from '@/components/ProductImage';
 import { price } from '@/lib/shop';
+import { topCategories, categoryWithDescendants, categoryPath } from '@/lib/categories';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,8 +19,16 @@ export default async function HomePage({ searchParams }) {
     .eq('active', true)
     .order('created_at', { ascending: false });
 
-  const current = categories?.find((c) => c.slug === kategoria);
-  if (current) query = query.eq('category_id', current.id);
+  const all = categories || [];
+  const current = all.find((c) => c.slug === kategoria);
+  if (current) query = query.in('category_id', categoryWithDescendants(all, current.id));
+
+  // Podkategorie: dzieci wybranej kategorii, a gdy ich nie ma - jej rodzeństwo
+  const path = current ? categoryPath(all, current.id) : [];
+  const pathIds = new Set(path.map((c) => c.id));
+  const childrenOf = (id) => all.filter((c) => c.parent_id === id);
+  const subParent = current && childrenOf(current.id).length > 0 ? current : path[path.length - 2];
+  const subcategories = subParent ? childrenOf(subParent.id) : [];
   if (q) query = query.ilike('name', `%${q.replace(/[%_,()]/g, ' ')}%`);
 
   const { data: products, error } = await query;
@@ -34,12 +43,25 @@ export default async function HomePage({ searchParams }) {
 
       <nav className="chips">
         <Link href="/" className={!current ? 'chip active' : 'chip'}>Wszystko</Link>
-        {categories?.map((c) => (
-          <Link key={c.id} href={`/?kategoria=${c.slug}`} className={current?.id === c.id ? 'chip active' : 'chip'}>
+        {topCategories(all).map((c) => (
+          <Link key={c.id} href={`/?kategoria=${c.slug}`} className={pathIds.has(c.id) ? 'chip active' : 'chip'}>
             {c.emoji} {c.name}
           </Link>
         ))}
       </nav>
+
+      {subcategories.length > 0 && (
+        <nav className="chips">
+          <Link href={`/?kategoria=${subParent.slug}`} className={current?.id === subParent.id ? 'chip active' : 'chip'}>
+            Wszystko: {subParent.name}
+          </Link>
+          {subcategories.map((c) => (
+            <Link key={c.id} href={`/?kategoria=${c.slug}`} className={pathIds.has(c.id) ? 'chip active' : 'chip'}>
+              {c.name}
+            </Link>
+          ))}
+        </nav>
+      )}
 
       {error && <p className="alert">Nie udało się wczytać produktów. Sprawdź konfigurację Supabase.</p>}
       {products && products.length === 0 && <p className="muted">Brak produktów spełniających kryteria.</p>}

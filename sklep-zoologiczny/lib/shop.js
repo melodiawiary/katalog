@@ -1,4 +1,4 @@
-// Koszty dostawy muszą się zgadzać z funkcją create_order (najnowszy plik w supabase/, teraz 01_ustawienia.sql).
+// Koszty dostawy muszą się zgadzać z funkcją create_order (najnowszy plik w supabase/, teraz 02_produkty.sql).
 // Dane firmy i nazwa sklepu są w bazie (tabela settings, panel: /admin/ustawienia), patrz lib/settings.js.
 export const FREE_SHIPPING_FROM = 200;
 

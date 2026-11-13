@@ -23,7 +23,9 @@ Legenda: [Claude] robię ja · [Mariusz] potrzebne działanie z telefonu (wkleje
 - [Claude] Usunięcie opcji "odbiór osobisty".
 - [Mariusz] Wkleić SQL w Supabase.
 
-### Krok 1. Baza produktów 2.0
+### Krok 1. Baza produktów 2.0 - ZROBIONE 2026-11-13 (`supabase/02_produkty.sql`)
+Zmiany względem planu: stawka VAT jest na produkcie (warianty jednego produktu mają tę samą),
+a cena zakupu w tabeli `variant_suppliers` (wariant + hurtownia), żeby klienci nie mogli jej odczytać.
 - [Claude] Plik `supabase/02_produkty.sql` (można uruchamiać wielokrotnie, nie kasuje danych):
   - kategorie drzewem (kategoria nadrzędna), np. Pies -> Karma -> Sucha
   - marki

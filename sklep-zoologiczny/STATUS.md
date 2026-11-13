@@ -1,22 +1,22 @@
 # STATUS - Sklep zoologiczny + katalog groomerów
 
-Ostatnia aktualizacja: 2026-11-13 (po Etapie 1, Kroku 0)
+Ostatnia aktualizacja: 2026-11-13 (po Etapie 1, Kroku 1)
 
 ## NASTĘPNY KROK
 
-**Etap 1, Krok 1: Baza produktów 2.0** (plik `supabase/02_produkty.sql`: kategorie drzewem, marki, cechy,
-warianty, galeria, skład / dawkowanie, hurtownie, historia cen, cena zakupu i VAT; `create_order` po wariantach).
-Szczegóły kroków: `PLAN_BUDOWY.md`. Uwaga: aktualna funkcja `create_order` jest w `01_ustawienia.sql`
-(z blokadą sprzedaży) - w `02` przenieść ją razem z tą blokadą.
+**Etap 1, Krok 2: Panel admina 2.0** (edycja produktu: marka, cechy, warianty w tabelce, galeria,
+skład / dawkowanie, promocja z datami, VAT; drzewo kategorii i marki do edycji; hurtownie i ceny zakupu;
+lista produktów z wyszukiwaniem i filtrem). Szczegóły: `PLAN_BUDOWY.md`.
 
-Krok 0 zrobiony w kodzie 2026-11-13. **Mariusz musi jeszcze wkleić `supabase/01_ustawienia.sql` w Supabase**
-(do tego czasu sklep też działa w trybie "przed startem", ale panel pokaże komunikat o braku tabeli).
+**Mariusz musi jeszcze wkleić w Supabase, po kolei:** `supabase/01_ustawienia.sql`, potem `supabase/02_produkty.sql`.
+Kod działa przed i po wklejeniu (do tego czasu panel ustawień pokaże komunikat o braku tabeli).
+Jeśli kiedyś trzeba będzie ponownie uruchomić `01`, potem trzeba też ponownie uruchomić `02`
+(01 ma starszą wersję `create_order`).
 
 **Etap 1: sklep, który sprzedaje.** Kolejność zmieniona 2026-11-13 po krytyce oczami klienta
 (`KRYTYKA_KLIENTA.md` w dokumentach projektu Claude): najpierw sklep, potem salony.
-Zacząć od bazy: marka, cechy produktu, warianty, hurtownie, cena zakupu, EAN, historia cen, stawka VAT
-(nowy plik SQL, np. `supabase/02_produkty_cechy.sql`), potem import CSV z hurtowni, wyszukiwarka, filtry,
-sortowanie, karta produktu, paczkomat z mapy, BLIK / Przelewy24, e-maile, raporty dla księgowego.
+Dalej: panel admina 2.0, import CSV z hurtowni, wyszukiwarka, filtry, sortowanie, karta produktu,
+paczkomat z mapy, BLIK / Przelewy24, e-maile, raporty dla księgowego.
 Pełny plan: `MAPA_MYSLI.md` (w tym folderze i w dokumentach projektu Claude).
 Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
 
@@ -31,7 +31,8 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
   Każdy push do `main` automatycznie aktualizuje sklep.
 - **Zmienne na Vercelu:** `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_SHOP_NAME`
   (ta ostatnia tylko zapasowo). Dane firmy, konto, kontakt: panel `/admin/ustawienia` (tabela `settings`).
-- **Pliki SQL:** `supabase/schema.sql`, potem po kolei `01_ustawienia.sql`, `02_...` (każdy można uruchomić ponownie).
+- **Pliki SQL:** `supabase/schema.sql`, potem po kolei `01_ustawienia.sql`, `02_produkty.sql`, `03_...`
+  (każdy można uruchomić ponownie).
 - **Adres sklepu:** https://sklep-zoologiczny.vercel.app (panel: `/admin`, ustawienia: `/admin/ustawienia`).
 - **Panel admina:** adres sklepu + `/admin`, logowanie e-mailem właściciela (użytkownik w Supabase Auth,
   dopisany do tabeli `admins`). Hasło Mariusz ustawił 2026-11-13 poleceniem SQL; przy resecie:
@@ -55,6 +56,23 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
       (baza nie pozwoli go włączyć bez kompletu danych i nie przyjmie zamówienia przy wyłączonej sprzedaży);
       pasek "Sklep wkrótce", zablokowany przycisk "Zamawiam"; stopka i dane do przelewu z ustawień;
       usunięty odbiór osobisty. SQL: `supabase/01_ustawienia.sql`.
+- [x] **Etap 1, Krok 1 (2026-11-13): baza produktów 2.0** (`supabase/02_produkty.sql`, przetestowany
+      na lokalnym Postgresie: dwukrotne uruchomienie, zamówienia, Omnibus, uprawnienia):
+      kategorie drzewem (`categories.parent_id`, gotowe drzewo dla psów i kotów: Karma -> Sucha / Mokra /
+      Weterynaryjna, Przysmaki, Zabawki, Spacer, Legowiska, Miski, Pielęgnacja; koty też Żwirki, Drapaki),
+      `brands`, cechy (`attributes`, `attribute_values`, `product_attribute_values`: dla kogo, wiek,
+      wielkość psa, dieta, smak / białko), `product_variants` (cena, promocja z datami, stan, EAN, SKU,
+      ilość netto + jednostka kg / l / szt do ceny za kg), `product_images` (galeria; `products.image_url`
+      zostaje jako zdjęcie główne), w `products`: `vat_rate` (karma 8%), `composition`, `analysis`,
+      `additives`, `dosage`, `brand_id`; `suppliers` + `variant_suppliers` (kod u hurtowni, cena zakupu,
+      stan w hurtowni, hurtownia główna; tylko admin), `price_history` + funkcja `lowest_price_30d`
+      + widok `variant_prices` (cena teraz, promocja, najniższa z 30 dni, cena za kg / l),
+      funkcja `effective_price` (pole w zapytaniu: `product_variants?select=*,effective_price`).
+      `create_order` liczy po wariantach (pozycja `{variant_id, quantity}` albo po staremu `{product_id}`,
+      gdy produkt ma jeden wariant), zapisuje wariant, EAN, cenę zakupu i VAT; w `orders` doszły
+      `payment_fee` (prowizja) i `shipping_real_cost`. 8 produktów dostało po jednym wariancie.
+      W kodzie: kategorie główne + podkategorie na stronie głównej (filtr obejmuje podkategorie),
+      okruszki na stronie produktu, drzewo w wyborze kategorii w panelu (`lib/categories.js`).
 - [x] Plan rozwoju i mapa myśli (`MAPA_MYSLI.md` + tablica), przebudowane 2026-11-13 po krytyce klienta.
 
 ## Do zrobienia
@@ -81,7 +99,13 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
 ## Ważne zasady w kodzie
 
 - Ceny, koszty dostawy i stany liczy baza (funkcja `create_order`, aktualna wersja w najnowszym pliku SQL,
-  teraz `01_ustawienia.sql`). Koszty dostawy są w dwóch miejscach: `lib/shop.js` i ten plik SQL - zmieniać razem.
+  teraz `02_produkty.sql`). Koszty dostawy są w dwóch miejscach: `lib/shop.js` i ten plik SQL - zmieniać razem.
+- Cena i stan są w wariantach (`product_variants`). `products.price` i `products.stock` liczy baza
+  (najniższa cena i suma sztuk aktywnych wariantów) - do list i sortowania; nie edytować ich w nowym kodzie.
+  Wyjątek przejściowy: przy produkcie z jednym wariantem zmiana `products.price` / `stock` przechodzi
+  na wariant (stary formularz panelu). Triggery pilnują tego z `pg_trigger_depth()`.
+- Ceny zakupu są tylko w `variant_suppliers` (niedostępne dla klientów). Nie dodawać ich do tabel,
+  które czyta sklep (RLS nie ukrywa pojedynczych kolumn).
 - Wymagane dane firmy są sprawdzane w dwóch miejscach: `lib/settings-fields.js` i funkcja `settings_missing`
   w `01_ustawienia.sql` - zmieniać razem.
 - Pliki SQL piszemy tak, żeby można je było uruchamiać ponownie (nie kasują danych).

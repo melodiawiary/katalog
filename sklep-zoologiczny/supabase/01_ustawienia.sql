@@ -1,6 +1,8 @@
 -- =====================================================================
 --  ETAP 1, KROK 0: dane firmy i tryb "przed startem"
 --  Uruchamiać PO schema.sql. Można uruchamiać wielokrotnie, nie kasuje danych.
+--  UWAGA: ten plik ma starą wersję create_order. Jeśli uruchomisz go ponownie,
+--  uruchom potem jeszcze raz 02_produkty.sql (i kolejne).
 --  Wklej całość w Supabase: SQL Editor -> New query -> Run
 -- =====================================================================
 
@@ -82,7 +84,7 @@ create policy "ustawienia - admin" on public.settings
 grant select on public.settings to anon, authenticated;
 grant update on public.settings to authenticated;
 
--- ---------- ZAMÓWIENIE (zastępuje wersję z schema.sql) ----------------
+-- ---------- ZAMÓWIENIE (zastępuje wersję z schema.sql; nowsza: 02_produkty.sql) ---
 -- Zmiany: przyjmuje zamówienia tylko przy włączonej sprzedaży,
 -- bez odbioru osobistego (wymagałby kasy fiskalnej).
 
