@@ -20,6 +20,7 @@ export default async function AdminLayout({ children }) {
         <Link href="/admin/kategorie">Kategorie</Link>
         <Link href="/admin/marki">Marki</Link>
         <Link href="/admin/hurtownie">Hurtownie</Link>
+        <Link href="/admin/import">Import</Link>
         <Link href="/admin/ustawienia">Ustawienia</Link>
         {!settings.sales_enabled && <Link href="/admin/ustawienia" className="status status-nowe">Sprzedaż wyłączona</Link>}
         <span className="muted">{user?.email}</span>

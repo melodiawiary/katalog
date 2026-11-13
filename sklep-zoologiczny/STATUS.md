@@ -1,16 +1,17 @@
 # STATUS - Sklep zoologiczny + katalog groomerów
 
-Ostatnia aktualizacja: 2026-11-13 (po Etapie 1, Kroku 2)
+Ostatnia aktualizacja: 2026-11-13 (po Etapie 1, Kroku 3)
 
 ## NASTĘPNY KROK
 
-**Etap 1, Krok 3: Import z hurtowni (CSV / Excel)** (szablon do pobrania, dopasowanie kolumn zapamiętane
-dla hurtowni, dopasowanie kategorii, reguła ceny, podgląd nowe / zmienione / błędy, aktualizacja po EAN,
-nowe jako szkice, zdjęcia z linków, import partiami). Szczegóły: `PLAN_BUDOWY.md`.
+Krok 3 (import z hurtowni) jest w pull requeście `krok-3-import` (do zatwierdzenia przez Mariusza).
+Przed zatwierdzeniem trzeba wkleić w Supabase `supabase/03_import.sql` (same nowe funkcje, nic nie kasuje).
+Pliki SQL w bazie: 01, 02 (03 po wklejeniu).
 
-**Mariusz musi jeszcze wkleić w Supabase, po kolei:** `supabase/01_ustawienia.sql`, potem `supabase/02_produkty.sql`.
-Kod działa przed i po wklejeniu (do tego czasu panel pokazuje komunikat o braku tabel; marki, hurtownie,
-warianty, galeria i cechy w panelu działają dopiero po `02`). Krok 2 nie dodał nowego pliku SQL.
+**Etap 1, Krok 4: Szukanie i przeglądanie** (wyszukiwarka w bazie bez polskich znaków i z literówkami,
+podpowiedzi, pusty wynik z formularzem "sprowadzimy", strony kategorii, filtry, sortowanie, stronicowanie,
+filtry w adresie, wysuwany panel filtrów na telefonie). Szczegóły: `PLAN_BUDOWY.md`.
+
 Jeśli kiedyś trzeba będzie ponownie uruchomić `01`, potem trzeba też ponownie uruchomić `02`
 (01 ma starszą wersję `create_order`).
 
@@ -32,11 +33,11 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
   Każdy push do `main` automatycznie aktualizuje sklep.
 - **Zmienne na Vercelu:** `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_SHOP_NAME`
   (ta ostatnia tylko zapasowo). Dane firmy, konto, kontakt: panel `/admin/ustawienia` (tabela `settings`).
-- **Pliki SQL:** `supabase/schema.sql`, potem po kolei `01_ustawienia.sql`, `02_produkty.sql`, `03_...`
+- **Pliki SQL:** `supabase/schema.sql`, potem po kolei `01_ustawienia.sql`, `02_produkty.sql`, `03_import.sql`, `04_...`
   (każdy można uruchomić ponownie).
 - **Adres sklepu:** https://sklep-zoologiczny.vercel.app (panel: `/admin`, ustawienia: `/admin/ustawienia`).
 - **Panel admina:** adres sklepu + `/admin` (zakładki: Zamówienia, Produkty, Kategorie, Marki, Hurtownie,
-  Ustawienia), logowanie e-mailem właściciela (użytkownik w Supabase Auth,
+  Import, Ustawienia), logowanie e-mailem właściciela (użytkownik w Supabase Auth,
   dopisany do tabeli `admins`). Hasło Mariusz ustawił 2026-11-13 poleceniem SQL; przy resecie:
   `update auth.users set encrypted_password = extensions.crypt('HASLO', extensions.gen_salt('bf')) where email = '...';`
 - **Dostęp Claude do GitHuba:** aplikacja Claude ma dostęp do wszystkich repozytoriów (All repositories),
@@ -89,6 +90,22 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
       edycja, przenoszenie, ukrywanie w menu sklepu, usuwanie tylko pustych), `/admin/marki`, `/admin/hurtownie`
       (`app/admin/katalog-actions.js`). Ukryte kategorie znikają z menu sklepu (`app/page.js`).
       Daty i liczby: `lib/admin.js`; dane formularza: `lib/admin-products.js`; `adminClient`: `lib/admin-server.js`.
+- [x] **Etap 1, Krok 3 (2026-11-13): import z hurtowni** (`supabase/03_import.sql`, przetestowany na lokalnym
+      Postgresie; panel `/admin/import`, kod: `app/admin/import/` + `lib/import.js`). Kreator na telefon w 6 krokach:
+      plik CSV (UTF-8 lub Windows-1250, separator ; , tab |) albo Excel .xlsx (biblioteka `read-excel-file`, czytane
+      w przeglądarce), szablon `/admin/import/szablon`; dopasowanie kolumn zgadywane po nagłówkach i zapamiętane
+      dla hurtowni; kategorie hurtowni -> nasze (zapamiętane) + kategoria domyślna; reguła ceny: zakup netto + VAT +
+      narzut %, końcówka ,99 / ,90 / pełne zł, opcjonalnie cena sugerowana z pliku, VAT z pliku albo automatycznie
+      (karma / przysmaki / pokarm 8%, reszta 23%); opcje: aktualizuj ceny, stan sklepu = stan hurtowni, stan 0 dla
+      pozycji spoza pliku. Podgląd (nowe / zmienione ze zmianami cena, stan, zakup / bez zmian / błędy z numerem
+      wiersza) liczy baza bez zapisu. Zapis partiami po 100 wierszy (funkcja `import_batch`, każdy wiersz osobno,
+      błąd jednego nie psuje reszty), potem zdjęcia z linków (serwer pobiera, `sharp` zmniejsza do 1600 px JPEG,
+      wysyła do bucketu `produkty/import/...`; tylko produkty bez zdjęć). Rozpoznawanie: po EAN, bez EAN po kodzie
+      hurtowni. Istniejące: cena, stan, cena zakupu, stan i kod w hurtowni (nazwy, opisy, zdjęcia, kategorie,
+      promocje bez zmian). Nowe: ukryte szkice; wiersze z tym samym "kodem grupy" = warianty jednego produktu
+      (też dopisywane do istniejącego produktu). Nowe marki zakładane same. Zmiany cen idą do historii (trigger).
+      Ustawienia i wynik ostatniego importu: `suppliers.import_settings` (columns, categories, default_category,
+      rule, last_import). Błąd EAN z Excela (5,9E+12), zgubione zero z przodu i duplikaty w pliku są wyłapywane.
 - [x] Plan rozwoju i mapa myśli (`MAPA_MYSLI.md` + tablica), przebudowane 2026-11-13 po krytyce klienta.
 
 ## Do zrobienia
@@ -97,8 +114,7 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
       wyszukiwarka (marka, opis, literówki, podpowiedzi), filtry, sortowanie, stronicowanie, karta produktu
       (galeria, skład, dawkowanie, EAN, cena za kg, Omnibus), "Powiadom o dostępności", paczkomat z mapy,
       BLIK / Przelewy24, e-mail z potwierdzeniem, regulamin.
-      Zaplecze: import z hurtowni (CSV, dopasowanie kolumn i kategorii, reguła ceny, podgląd, szkice,
-      aktualizacja po EAN, zdjęcia z linków), historia cen, raporty (zysk, VAT 8% / 23%) i eksport Excel
+      Zaplecze: raporty (zysk, VAT 8% / 23%) i eksport Excel
       dla księgowego.
 - [ ] **Formalności przed sprzedażą (Mariusz):** firma (JDG lub dopisanie do istniejącej), wpis do rejestru
       paszowego w powiatowym inspektoracie weterynarii, decyzja z księgowym o VAT (zwolnienie do 240 000 zł/rok)
@@ -133,4 +149,9 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
 - Zapis produktu w panelu to kilka zapytań po kolei (produkt, warianty, hurtownia, cechy, galeria).
   Najpierw usuwane są skasowane warianty (zwalnia EAN), potem zmiany. Daty promocji niezmienione
   w formularzu zostają co do sekundy (żeby nie robić szumu w historii cen).
+- Import (`import_batch` w `03_import.sql`) dostaje wiersze już przeliczone w `lib/import.js` (cena z reguły,
+  VAT, kategoria); baza tylko dopasowuje i zapisuje. Nowe pola produktu do importu: dodać w `FIELDS`
+  i `buildRows` (`lib/import.js`) oraz w funkcji SQL. Zdjęcia z importu tylko dla produktów bez zdjęć.
+- Opcja "stan 0 dla pozycji spoza pliku" działa tylko na wariantach, dla których ta hurtownia jest główna,
+  i tylko po pełnym, nieprzerwanym zapisie.
 - Po każdym etapie aktualizować ten plik w repo i w dokumentach projektu Claude.
