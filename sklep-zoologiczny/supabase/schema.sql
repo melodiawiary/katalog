@@ -205,6 +205,15 @@ grant execute on function public.create_order(jsonb, jsonb, text, text) to anon,
 grant execute on function public.get_order(uuid) to anon, authenticated;
 grant execute on function public.is_admin() to anon, authenticated;
 
+-- ---------- UPRAWNIENIA -----------------------------------------------
+-- Potrzebne, gdy przy tworzeniu projektu wyłączono "Automatically expose new tables".
+-- Co kto faktycznie widzi i zmienia, ograniczają zasady RLS poniżej.
+
+grant usage on schema public to anon, authenticated;
+grant select on public.categories, public.products to anon, authenticated;
+grant select, insert, update, delete on all tables in schema public to authenticated;
+grant usage, select on all sequences in schema public to authenticated;
+
 -- ---------- ZABEZPIECZENIA (RLS) --------------------------------------
 
 alter table public.categories  enable row level security;
