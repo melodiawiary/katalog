@@ -12,10 +12,12 @@ export async function placeOrder(prevState, formData) {
 
   let items;
   try {
-    items = JSON.parse(formData.get('items') || '[]').map((i) => ({
-      product_id: Number(i.id),
-      quantity: Number(i.quantity),
-    }));
+    // pozycja: { variant_id, quantity } albo (produkt z jednym wariantem) { product_id, quantity }
+    items = JSON.parse(formData.get('items') || '[]').slice(0, 50).map((i) => {
+      const quantity = Number(i.quantity);
+      if (i.variant_id) return { variant_id: Number(i.variant_id), quantity };
+      return { product_id: Number(i.product_id ?? i.id), quantity };
+    });
   } catch {
     return { error: 'Nieprawidłowa zawartość koszyka.' };
   }

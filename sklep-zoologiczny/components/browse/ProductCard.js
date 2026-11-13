@@ -38,7 +38,7 @@ export default function ProductCard({ p }) {
             <Link href={href} className="btn btn-small btn-light">Wybierz: {p.variants} {plural(p.variants, 'wariant', 'warianty', 'wariantów')}</Link>
           ) : (
             <AddToCart
-              product={{ id: p.id, name: p.name, slug: p.slug, price: p.price, image_url: p.image_url, stock: p.stock }}
+              product={{ id: p.id, variant_id: p.variant_id ?? null, name: p.name, slug: p.slug, price: p.price, image_url: p.image_url, stock: p.stock }}
               compact
             />
           )}

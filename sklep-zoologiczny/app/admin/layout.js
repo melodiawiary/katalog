@@ -15,6 +15,11 @@ export default async function AdminLayout({ children }) {
   const { count: newRequests } = isAdmin
     ? await supabase.from('product_requests').select('id', { count: 'exact', head: true }).eq('status', 'nowa')
     : { count: 0 };
+  // czekający na "Powiadom o dostępności", których wariant jest już na stanie (przed 05_karta.sql: 0)
+  const { count: alertsReady } = isAdmin
+    ? await supabase.from('stock_alerts').select('id, product_variants!inner(stock)', { count: 'exact', head: true })
+        .is('notified_at', null).gt('product_variants.stock', 0)
+    : { count: 0 };
 
   return (
     <div className="admin">
@@ -26,6 +31,7 @@ export default async function AdminLayout({ children }) {
         <Link href="/admin/hurtownie">Hurtownie</Link>
         <Link href="/admin/import">Import</Link>
         <Link href="/admin/prosby">Zgłoszenia{newRequests > 0 && <span className="badge">{newRequests}</span>}</Link>
+        <Link href="/admin/powiadomienia">Powiadomienia{alertsReady > 0 && <span className="badge">{alertsReady}</span>}</Link>
         <Link href="/admin/ustawienia">Ustawienia</Link>
         {!settings.sales_enabled && <Link href="/admin/ustawienia" className="status status-nowe">Sprzedaż wyłączona</Link>}
         <span className="muted">{user?.email}</span>

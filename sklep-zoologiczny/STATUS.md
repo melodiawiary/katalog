@@ -1,17 +1,16 @@
 # STATUS - Sklep zoologiczny + katalog groomerów
 
-Ostatnia aktualizacja: 2026-11-13 (po Etapie 1, Kroku 4)
+Ostatnia aktualizacja: 2026-11-13 (po Etapie 1, Kroku 5)
 
 ## NASTĘPNY KROK
 
-Krok 4 (szukanie i przeglądanie) jest w pull requeście `krok-4-szukanie` (do zatwierdzenia przez Mariusza).
-Przed zatwierdzeniem trzeba wkleić w Supabase `supabase/04_szukanie.sql` (nowe funkcje, kolumny i tabele, nic nie kasuje).
-Pliki SQL w bazie: 01, 02, 03 (04 po wklejeniu).
+Krok 5 (karta produktu) jest w pull requeście `krok-5-karta` (do zatwierdzenia przez Mariusza).
+Przed zatwierdzeniem trzeba wkleić w Supabase `supabase/05_karta.sql` (nowe funkcje, tabela `stock_alerts`,
+2 kolumny w `settings`; nic nie kasuje). Pliki SQL w bazie: 01, 02, 03, 04 (05 po wklejeniu).
 
-**Etap 1, Krok 5: Karta produktu** (galeria, wybór wariantu z ceną i stanem na miejscu, cena za kg,
-Omnibus przy promocji, skład / analiza / dawkowanie w zakładkach, "Wysyłka dziś / jutro",
-"Powiadom o dostępności", podobne produkty, dane dla Google). Koszyk musi zacząć dodawać warianty
-(`{variant_id, quantity}`). Szczegóły: `PLAN_BUDOWY.md`.
+**Etap 1, Krok 6: Zamówienie i płatności** (paczkomat z mapy InPost, termin dostawy przed zamówieniem,
+e-maile przez Resend: potwierdzenie, zmiana statusu i automatyczne "Produkt znów dostępny" z `stock_alerts`,
+Przelewy24 w trybie testowym). Szczegóły: `PLAN_BUDOWY.md`.
 
 Jeśli kiedyś trzeba będzie ponownie uruchomić `01`, potem trzeba też ponownie uruchomić `02`
 (01 ma starszą wersję `create_order`).
@@ -126,6 +125,26 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
       z ceną "od", przekreśloną ceną i najniższą z 30 dni, ceną za kg, "Wybierz: 3 warianty"; `RequestForm.js`);
       parsowanie adresu: `lib/browse.js`. Stare adresy `/?kategoria=` i `/?q=` przekierowują.
       Panel: `/admin/prosby` (zgłoszenia, status, notatka, odpowiedź e-mailem), licznik nowych w menu.
+- [x] **Etap 1, Krok 5 (2026-11-13): karta produktu** (`supabase/05_karta.sql`, przetestowany na lokalnym Postgresie
+      i w przeglądarce, telefon i komputer). Baza: funkcja `product_page(slug)` (wszystko jednym zapytaniem: produkt, marka,
+      warianty z ceną teraz / regularną / najniższą z 30 dni / za kg, galeria, cechy, podobne; administrator widzi też
+      ukryte produkty jako podgląd), `similar_products` (ta sama lub siostrzana kategoria, wspólne cechy, marka, podobna cena,
+      tylko dostępne; wynik w kształcie jak `search_products`, z `variant_id`), tabela `stock_alerts` + funkcja
+      `request_stock_alert` ("Powiadom o dostępności", limit 10 dziennie z adresu), w `settings`: `ship_cutoff` (godzina
+      graniczna, domyślnie 13:00) i `ship_handling_days` (dni na przygotowanie paczki).
+      Kod: `app/produkt/[slug]/page.js` + `components/product/` (`Gallery.js`: przesuwanie palcem, kropki, miniatury,
+      strzałki, powiększenie; `BuyBox.js`: wybór wariantu, cena i stan zmieniają się na miejscu, wariant w adresie `?wariant=ID`,
+      -%, Omnibus, cena za kg, "ostatnie sztuki" przy stanie <= 3, ilość, "Do koszyka" z linkiem do koszyka, brakująca kwota
+      do darmowej dostawy; `ShipTime.js` + `lib/shipping-time.js`: "Zamów w ciągu X, a wyślemy dziś" / "Wyślemy jutro",
+      polskie święta i weekendy; `NotifyForm.js`; `ProductTabs.js`: Opis / Skład / Analiza / Dawkowanie / Szczegóły z EAN),
+      podobne produkty w przewijanym rzędzie, dane dla Google (JSON-LD `Product` albo `ProductGroup` z wariantami, EAN jako
+      gtin13, okruszki `BreadcrumbList`, tytuł, opis, canonical, Open Graph; adres z `lib/site.js`: domena z ustawień,
+      inaczej adres Vercela). Koszyk na wariantach (`components/CartProvider.js`): pozycja `key` = `v:<wariant>` albo
+      `p:<produkt>` (produkt z jednym wariantem), stare koszyki przerabiane same; koszyk i zamówienie pobierają aktualne
+      ceny i stany (`app/koszyk/actions.js` -> `refreshCart`, `components/useCartRefresh.js`), niedostępne pozycje blokują
+      zamówienie; do `create_order` idzie `{variant_id, quantity}`. Panel: `/admin/powiadomienia` (czekający klienci według
+      wariantu, "Napisz do wszystkich" otwiera pocztę z adresami w UDW, "oznacz jako powiadomione"; licznik w menu =
+      warianty już na stanie), ustawienia wysyłki w `/admin/ustawienia`.
 - [x] Plan rozwoju i mapa myśli (`MAPA_MYSLI.md` + tablica), przebudowane 2026-11-13 po krytyce klienta.
 
 ## Do zrobienia
@@ -165,9 +184,10 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
 - Pliki SQL piszemy tak, żeby można je było uruchamiać ponownie (nie kasują danych).
 - Kategorie sklepu zostają wszystkie; nacisk na psy i koty.
 - Nie trzymać w repo haseł ani kluczy (repo jest publiczne).
-- Sklep (strona produktu, koszyk) wciąż dodaje do koszyka produkt, nie wariant: produkt z kilkoma
-  aktywnymi wariantami da się zamówić dopiero po kroku 5 (wybór wariantu na karcie produktu).
-  Do tego czasu sprzedaż i tak jest wyłączona.
+- Koszyk trzyma warianty (`variant_id`); pozycja tylko z `product_id` jest dozwolona, gdy produkt ma jeden wariant
+  (szybkie "Do koszyka" na liście: `search_products` nie zwraca `variant_id`, `similar_products` zwraca).
+- "Powiadom o dostępności": e-maile na razie ręcznie z `/admin/powiadomienia`; w kroku 6 automat (Resend).
+- Godzina wysyłki i święta: `lib/shipping-time.js` (liczone w przeglądarce, strefa Europe/Warsaw).
 - Zapis produktu w panelu to kilka zapytań po kolei (produkt, warianty, hurtownia, cechy, galeria).
   Najpierw usuwane są skasowane warianty (zwalnia EAN), potem zmiany. Daty promocji niezmienione
   w formularzu zostają co do sekundy (żeby nie robić szumu w historii cen).

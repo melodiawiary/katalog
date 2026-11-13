@@ -69,7 +69,9 @@ sortowanie po popularności, panel `/admin/prosby` ze zgłoszeniami "sprowadzimy
   promocje), sortowanie, stronicowanie, filtry w adresie strony (da się wysłać link).
 - [Claude] Wygodne na telefonie (filtry w wysuwanym panelu).
 
-### Krok 5. Karta produktu
+### Krok 5. Karta produktu - ZROBIONE 2026-11-13 (`supabase/05_karta.sql`)
+Dodatkowo: wariant w adresie strony, powiększanie zdjęć, "ostatnie sztuki", -% przy promocji, koszyk sprawdza aktualne
+ceny i stany, panel `/admin/powiadomienia`, ustawienia godziny wysyłki i dni na przygotowanie paczki, podgląd ukrytego produktu.
 - [Claude] Galeria, wybór wariantu (cena i stan zmieniają się na miejscu), cena za kg / litr,
   przy promocji najniższa cena z 30 dni, skład / analiza / dawkowanie w zakładkach.
 - [Claude] "Wysyłka dziś / jutro" zamiast liczby sztuk, "Powiadom o dostępności" (zapis e-maila).
