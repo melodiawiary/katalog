@@ -59,3 +59,11 @@ export function categoryPath(categories = [], id) {
   }
   return path;
 }
+
+// Kategorie widoczne w sklepie: bez ukrytych w panelu (i ich podkategorii)
+export function visibleCategories(categories = []) {
+  const hidden = new Set(
+    categories.filter((c) => c.active === false).flatMap((c) => categoryWithDescendants(categories, c.id))
+  );
+  return categories.filter((c) => !hidden.has(c.id));
+}

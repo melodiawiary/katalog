@@ -46,7 +46,7 @@ export default async function ProductPage({ params }) {
             {path.map((c, i) => (
               <span key={c.id}>
                 {i > 0 && ' › '}
-                <Link href={`/?kategoria=${c.slug}`}>{i === 0 && `${c.emoji} `}{c.name}</Link>
+                <Link href={`/kategoria/${c.slug}`}>{i === 0 && `${c.emoji} `}{c.name}</Link>
               </span>
             ))}
           </nav>

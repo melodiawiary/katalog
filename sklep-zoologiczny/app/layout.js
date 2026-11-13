@@ -1,7 +1,9 @@
 import Link from 'next/link';
+import { Suspense } from 'react';
 import './globals.css';
 import { CartProvider } from '@/components/CartProvider';
 import CartBadge from '@/components/CartBadge';
+import SearchBox from '@/components/SearchBox';
 import { getSettings } from '@/lib/settings';
 
 export async function generateMetadata() {
@@ -25,6 +27,9 @@ export default async function RootLayout({ children }) {
           <header className="site-header">
             <div className="container header-inner">
               <Link href="/" className="logo">🐾 {s.shop_name}</Link>
+              <Suspense fallback={<div className="searchbox" />}>
+                <SearchBox />
+              </Suspense>
               <CartBadge />
             </div>
           </header>

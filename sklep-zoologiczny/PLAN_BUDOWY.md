@@ -58,7 +58,9 @@ pliku", wyłapywanie EAN zepsutych przez Excel. Ustawienia hurtowni w `suppliers
   zdjęcia pobierane z linków i zmniejszane.
 - [Claude] Import partiami (limit czasu funkcji na Vercelu), zmiany cen zapisywane w historii.
 
-### Krok 4. Szukanie i przeglądanie (to, co klient robi najpierw)
+### Krok 4. Szukanie i przeglądanie (to, co klient robi najpierw) - ZROBIONE 2026-11-13 (`supabase/04_szukanie.sql`)
+Dodatkowo: synonimy i odmiana (psa -> pies), szukanie po EAN, liczniki przy każdym filtrze, filtr wagi opakowania,
+sortowanie po popularności, panel `/admin/prosby` ze zgłoszeniami "sprowadzimy".
 - [Claude] Wyszukiwarka w bazie: nazwa + marka + opis, bez polskich znaków, z tolerancją literówek
   (Postgres: wyszukiwanie pełnotekstowe + podobieństwo słów).
 - [Claude] Podpowiedzi przy wpisywaniu (produkty i marki).
