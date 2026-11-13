@@ -39,17 +39,26 @@ Ostatnia aktualizacja: 2026-11-13
 
 ## Plan rozwoju (ustalony 2026-11-13)
 
-- **Zwierzęta:** na razie tylko psy i koty (usunąć kategorie gryzonie, ptaki, akwarystyka).
-- **Etap 1:** nowa strona główna + katalog groomerów (profil, usługi i cennik, zdjęcia, mapa OpenStreetMap,
-  "znajdź najbliższego", opinie z gwiazdkami tylko od zalogowanych i zatwierdzane przez admina,
-  ranking uwzględniający średnią i liczbę opinii). Wpisy groomerów dodaje admin z panelu.
-- **Etap 2:** konta groomerów (sami edytują profil), "Dołącz za darmo".
-- **Etap 3:** Akademia - kursy pielęgnacji psów, egzaminy, certyfikaty; absolwent dostaje odznakę
-  "Certyfikowany przez serwis" w katalogu. Już teraz: zapis na listę chętnych na stronie głównej.
-- Strona główna (od góry): nagłówek (Sklep / Groomerzy / Akademia), baner z 2 przyciskami
-  + wyszukiwanie groomera po lokalizacji, pasek zaufania, kategorie, polecani groomerzy z mapką,
-  bestsellery, Akademia (zapis na listę), "Dla groomerów", stopka z danymi firmy i dokumentami.
-- Do ustalenia: nazwa serwisu.
+Mapa myśli całego serwisu (tablica): https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
+
+- **Zwierzęta:** nacisk na psy i koty. Pozostałe kategorie sklepu ZOSTAJĄ.
+- **Katalog miejsc:** jedna tabela "miejsc" z polem typ (na start: groomer). Furtka na przyszłość:
+  weterynarz, hotel, behawiorysta - na razie się tym nie zajmujemy.
+- **Mapa:** OpenStreetMap (Leaflet), "użyj mojej lokalizacji" lub miasto/kod, najbliżsi w promieniu
+  (PostGIS w Supabase), filtry pies/kot, usługa, ocena, cena.
+- **Opinie:** tylko zalogowani, 1 opinia na salon, gwiazdki (jakość, podejście do zwierzęcia, czystość,
+  cena), tekst + zdjęcie, admin zatwierdza, informacja jak weryfikujemy opinie (wymóg prawa).
+- **Ranking:** średnia ważona liczbą opinii, nowsze ważą więcej, bonus za pełny/zweryfikowany profil,
+  odznaki (Polecany, Top w mieście, później Certyfikowany przez Akademię). Płatne wyróżnienie = "Promowane".
+- **Kolejność budowy:**
+  1. Katalog salonów + mapa (wpisy dodaje admin)
+  2. Konta klientów, opinie, ranking
+  3. Nowa strona główna: sklep + salony
+  4. Konta salonów (przejęcie profilu), odpowiedzi na opinie
+  5. Płatności online, e-maile
+  6. Akademia: kursy, egzaminy, certyfikaty (zapis na listę chętnych wcześniej)
+- **Fundament:** nazwa i domena (do ustalenia), firma i regulaminy, pierwsze 20-30 salonów wpisane ręcznie
+  w jednym mieście, Vercel Pro przy sprzedaży (plan Hobby jest tylko niekomercyjny).
 
 ## Ważne zasady w kodzie
 
