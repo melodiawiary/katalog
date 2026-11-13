@@ -3,11 +3,11 @@
 // Błąd "brak tabeli / kolumny / relacji" = nie wklejono jeszcze pliku SQL w Supabase
 export function needsSql(error) {
   if (!error) return false;
-  return ['42P01', '42703', 'PGRST200', 'PGRST204', 'PGRST205'].includes(error.code)
+  return ['42P01', '42703', '42883', 'PGRST200', 'PGRST202', 'PGRST204', 'PGRST205'].includes(error.code)
     || /does not exist|schema cache|Could not find/i.test(error.message || '');
 }
 
-export const SQL_HINT = 'Baza nie ma jeszcze nowych tabel. Wklej w Supabase po kolei pliki supabase/01_ustawienia.sql i supabase/02_produkty.sql (SQL Editor -> New query -> Run).';
+export const SQL_HINT = 'Baza nie ma jeszcze nowych tabel. Wklej w Supabase po kolei pliki supabase/01_ustawienia.sql, 02_produkty.sql i 03_import.sql (SQL Editor -> New query -> Run).';
 
 // "12,50" -> 12.5; puste -> null; śmieci -> NaN
 export function parseDecimal(value) {

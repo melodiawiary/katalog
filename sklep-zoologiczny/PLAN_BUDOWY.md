@@ -48,7 +48,9 @@ zmniejszanie zdjęć w telefonie przed wysłaniem, szukanie po EAN / kodzie hurt
 - [Claude] Drzewo kategorii i marki do edycji.
 - [Claude] Lista produktów z wyszukiwaniem i filtrem (szkic / aktywny / brak w magazynie).
 
-### Krok 3. Import z hurtowni (CSV / Excel)
+### Krok 3. Import z hurtowni (CSV / Excel) - ZROBIONE 2026-11-13 (`supabase/03_import.sql`, panel `/admin/import`)
+Dodatkowo: Excel .xlsx, polskie kodowanie Windows-1250, warianty z "kodu grupy", opcja "stan 0 dla pozycji spoza
+pliku", wyłapywanie EAN zepsutych przez Excel. Ustawienia hurtowni w `suppliers.import_settings` (bez nowej tabeli).
 - [Claude] Szablon CSV do pobrania z panelu.
 - [Claude] Wgranie pliku -> dopasowanie kolumn (zapamiętane dla hurtowni) -> dopasowanie kategorii ->
   reguła ceny (np. +35%, końcówka ,99) -> podgląd (nowe / zmienione / błędy) -> zapis.

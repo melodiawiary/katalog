@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { needsSql, SQL_HINT } from '@/lib/admin';
 import ActionForm from '@/components/admin/ActionForm';
@@ -36,7 +37,7 @@ export default async function SuppliersPage() {
     <>
       <h1>Hurtownie</h1>
       <p className="muted">Widzisz je tylko Ty. Ceny zakupu wpisujesz w produkcie (sekcja „Hurtownia i cena zakupu”),
-        a w kolejnym kroku będzie import cennika z pliku.</p>
+        a cały cennik wczytasz z pliku w zakładce <Link href="/admin/import">Import</Link>.</p>
       <details className="panel">
         <summary className="btn btn-small">+ Dodaj hurtownię</summary>
         <ActionForm action={saveSupplier} submitLabel="Dodaj hurtownię" resetOnOk><Fields /></ActionForm>

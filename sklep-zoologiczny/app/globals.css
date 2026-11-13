@@ -212,3 +212,23 @@ label.pill.on { background: var(--accent); border-color: var(--accent); color: #
   .admin-row { grid-template-columns: 56px 1fr; }
   .admin-row .row-end { grid-column: 2; justify-items: start; text-align: left; display: flex; gap: 14px; align-items: center; }
 }
+
+/* Import z hurtowni */
+.steps { display: flex; gap: 6px; list-style: none; padding: 0; margin: 0 0 14px; overflow-x: auto; counter-reset: step; }
+.steps li { counter-increment: step; white-space: nowrap; font-size: 0.85rem; padding: 4px 10px; border-radius: 999px; background: #eee; color: var(--muted); }
+.steps li::before { content: counter(step) '. '; }
+.steps li.on { background: var(--accent); color: #fff; font-weight: 600; }
+.steps li.done { background: #dcfce7; color: var(--text); }
+.wizard-nav { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 6px; }
+.map-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.map-list li { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; align-items: center; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; }
+.import-progress { display: grid; gap: 6px; margin: 16px 0; max-width: 620px; }
+.import-progress .bar { height: 10px; border-radius: 999px; background: #eee; overflow: hidden; }
+.import-progress .bar span { display: block; height: 100%; background: var(--accent); transition: width 0.2s; }
+.import-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.import-tabs .chip { cursor: pointer; font: inherit; }
+.import-tabs .chip.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.import-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
+.import-list li { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; display: grid; gap: 2px; }
+.alert-text { color: var(--red); }
+@media (max-width: 600px) { .map-list li { grid-template-columns: 1fr; } }
