@@ -37,6 +37,20 @@ Ostatnia aktualizacja: 2026-11-13
 - [ ] Ewentualnie: płatności online (Przelewy24 / PayU / Stripe), e-mail z potwierdzeniem zamówienia,
       własna domena, nazwa i wygląd sklepu.
 
+## Plan rozwoju (ustalony 2026-11-13)
+
+- **Zwierzęta:** na razie tylko psy i koty (usunąć kategorie gryzonie, ptaki, akwarystyka).
+- **Etap 1:** nowa strona główna + katalog groomerów (profil, usługi i cennik, zdjęcia, mapa OpenStreetMap,
+  "znajdź najbliższego", opinie z gwiazdkami tylko od zalogowanych i zatwierdzane przez admina,
+  ranking uwzględniający średnią i liczbę opinii). Wpisy groomerów dodaje admin z panelu.
+- **Etap 2:** konta groomerów (sami edytują profil), "Dołącz za darmo".
+- **Etap 3:** Akademia - kursy pielęgnacji psów, egzaminy, certyfikaty; absolwent dostaje odznakę
+  "Certyfikowany przez serwis" w katalogu. Już teraz: zapis na listę chętnych na stronie głównej.
+- Strona główna (od góry): nagłówek (Sklep / Groomerzy / Akademia), baner z 2 przyciskami
+  + wyszukiwanie groomera po lokalizacji, pasek zaufania, kategorie, polecani groomerzy z mapką,
+  bestsellery, Akademia (zapis na listę), "Dla groomerów", stopka z danymi firmy i dokumentami.
+- Do ustalenia: nazwa serwisu.
+
 ## Ważne zasady w kodzie
 
 - Ceny, koszty dostawy i stany liczy baza (funkcja `create_order`). Koszty dostawy są w dwóch miejscach:
