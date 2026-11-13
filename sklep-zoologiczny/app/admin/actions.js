@@ -29,6 +29,13 @@ export async function saveSettings(prevState, formData) {
   for (const f of SETTINGS_FIELDS) settings[f.key] = String(formData.get(f.key) || '').trim().slice(0, 200);
   settings.vat_status = formData.get('vat_status') === 'czynny' ? 'czynny' : 'zwolniony';
   settings.sales_enabled = formData.get('sales_enabled') === 'on';
+  // wysyłka (pola są w formularzu dopiero po wklejeniu 05_karta.sql)
+  if (formData.has('ship_cutoff')) {
+    const cutoff = String(formData.get('ship_cutoff') || '').slice(0, 5);
+    if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(cutoff)) return { error: 'Podaj godzinę wysyłki, np. 13:00.', values: settings };
+    settings.ship_cutoff = cutoff;
+    settings.ship_handling_days = Math.max(0, Math.min(14, Number(formData.get('ship_handling_days')) || 0));
+  }
 
   const missing = missingSettings(settings);
   if (settings.sales_enabled && missing.length > 0) {

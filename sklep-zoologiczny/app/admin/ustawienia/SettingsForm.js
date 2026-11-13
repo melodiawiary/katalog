@@ -52,6 +52,29 @@ export default function SettingsForm({ settings }) {
         </label>
       </fieldset>
 
+      {'ship_cutoff' in s ? (
+        <fieldset>
+          <legend>Wysyłka (napis „Wyślemy dziś / jutro” na karcie produktu)</legend>
+          <label>
+            Zamówienia złożone do tej godziny wysyłam tego samego dnia
+            <input name="ship_cutoff" type="time" defaultValue={s.ship_cutoff || '13:00'} required />
+          </label>
+          <label>
+            Ile dni roboczych potrzebuję na przygotowanie paczki
+            <select name="ship_handling_days" defaultValue={String(s.ship_handling_days ?? 0)}>
+              <option value="0">0 - wysyłam tego samego dnia (do godziny powyżej)</option>
+              <option value="1">1 dzień (np. towar zamawiam w hurtowni)</option>
+              <option value="2">2 dni</option>
+              <option value="3">3 dni</option>
+              <option value="5">5 dni</option>
+            </select>
+          </label>
+          <p className="small muted">Weekendy i święta są pomijane.</p>
+        </fieldset>
+      ) : (
+        <p className="muted">Ustawienia wysyłki pojawią się po wklejeniu w Supabase pliku supabase/05_karta.sql.</p>
+      )}
+
       {state?.error && <p className="alert">{state.error}</p>}
       {state?.ok && <p className="ok">Zapisano.</p>}
       <button className="btn btn-big" disabled={pending}>{pending ? 'Zapisywanie…' : 'Zapisz ustawienia'}</button>

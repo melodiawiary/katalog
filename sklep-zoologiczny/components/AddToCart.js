@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { useCart } from './CartProvider';
+import { useCart, cartItem } from './CartProvider';
 
+// Szybki przycisk na liście produktów (produkt z jednym wariantem)
 export default function AddToCart({ product, compact = false }) {
   const { add } = useCart();
   const [added, setAdded] = useState(false);
@@ -12,7 +13,7 @@ export default function AddToCart({ product, compact = false }) {
   }
 
   function handleClick() {
-    add(product, 1);
+    add(cartItem(product, null, 1), 1);
     setAdded(true);
     setTimeout(() => setAdded(false), 1500);
   }
