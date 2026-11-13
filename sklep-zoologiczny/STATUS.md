@@ -1,16 +1,17 @@
 # STATUS - Sklep zoologiczny + katalog groomerów
 
-Ostatnia aktualizacja: 2026-11-13 (po Etapie 1, Kroku 3)
+Ostatnia aktualizacja: 2026-11-13 (po Etapie 1, Kroku 4)
 
 ## NASTĘPNY KROK
 
-Krok 3 (import z hurtowni) jest w pull requeście `krok-3-import` (do zatwierdzenia przez Mariusza).
-Przed zatwierdzeniem trzeba wkleić w Supabase `supabase/03_import.sql` (same nowe funkcje, nic nie kasuje).
-Pliki SQL w bazie: 01, 02 (03 po wklejeniu).
+Krok 4 (szukanie i przeglądanie) jest w pull requeście `krok-4-szukanie` (do zatwierdzenia przez Mariusza).
+Przed zatwierdzeniem trzeba wkleić w Supabase `supabase/04_szukanie.sql` (nowe funkcje, kolumny i tabele, nic nie kasuje).
+Pliki SQL w bazie: 01, 02, 03 (04 po wklejeniu).
 
-**Etap 1, Krok 4: Szukanie i przeglądanie** (wyszukiwarka w bazie bez polskich znaków i z literówkami,
-podpowiedzi, pusty wynik z formularzem "sprowadzimy", strony kategorii, filtry, sortowanie, stronicowanie,
-filtry w adresie, wysuwany panel filtrów na telefonie). Szczegóły: `PLAN_BUDOWY.md`.
+**Etap 1, Krok 5: Karta produktu** (galeria, wybór wariantu z ceną i stanem na miejscu, cena za kg,
+Omnibus przy promocji, skład / analiza / dawkowanie w zakładkach, "Wysyłka dziś / jutro",
+"Powiadom o dostępności", podobne produkty, dane dla Google). Koszyk musi zacząć dodawać warianty
+(`{variant_id, quantity}`). Szczegóły: `PLAN_BUDOWY.md`.
 
 Jeśli kiedyś trzeba będzie ponownie uruchomić `01`, potem trzeba też ponownie uruchomić `02`
 (01 ma starszą wersję `create_order`).
@@ -33,11 +34,12 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
   Każdy push do `main` automatycznie aktualizuje sklep.
 - **Zmienne na Vercelu:** `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_SHOP_NAME`
   (ta ostatnia tylko zapasowo). Dane firmy, konto, kontakt: panel `/admin/ustawienia` (tabela `settings`).
-- **Pliki SQL:** `supabase/schema.sql`, potem po kolei `01_ustawienia.sql`, `02_produkty.sql`, `03_import.sql`, `04_...`
+- **Pliki SQL:** `supabase/schema.sql`, potem po kolei `01_ustawienia.sql`, `02_produkty.sql`, `03_import.sql`, `04_szukanie.sql`, `05_...`
   (każdy można uruchomić ponownie).
 - **Adres sklepu:** https://sklep-zoologiczny.vercel.app (panel: `/admin`, ustawienia: `/admin/ustawienia`).
+  Strony: `/kategoria/<slug>`, `/szukaj?q=...`, filtry w adresie (np. `?marka=brit,josera&wiek=senior&waga=1-3-kg&cena_od=20&dostepne=1&sort=cena-rosnaco&strona=2`).
 - **Panel admina:** adres sklepu + `/admin` (zakładki: Zamówienia, Produkty, Kategorie, Marki, Hurtownie,
-  Import, Ustawienia), logowanie e-mailem właściciela (użytkownik w Supabase Auth,
+  Import, Zgłoszenia, Ustawienia), logowanie e-mailem właściciela (użytkownik w Supabase Auth,
   dopisany do tabeli `admins`). Hasło Mariusz ustawił 2026-11-13 poleceniem SQL; przy resecie:
   `update auth.users set encrypted_password = extensions.crypt('HASLO', extensions.gen_salt('bf')) where email = '...';`
 - **Dostęp Claude do GitHuba:** aplikacja Claude ma dostęp do wszystkich repozytoriów (All repositories),
@@ -106,6 +108,24 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
       (też dopisywane do istniejącego produktu). Nowe marki zakładane same. Zmiany cen idą do historii (trigger).
       Ustawienia i wynik ostatniego importu: `suppliers.import_settings` (columns, categories, default_category,
       rule, last_import). Błąd EAN z Excela (5,9E+12), zgubione zero z przodu i duplikaty w pliku są wyłapywane.
+- [x] **Etap 1, Krok 4 (2026-11-13): szukanie i przeglądanie** (`supabase/04_szukanie.sql`, przetestowany na lokalnym
+      Postgresie i w przeglądarce na 5000 produktów, ok. 150 ms na zapytanie). Baza: rozszerzenia `unaccent` + `pg_trgm`,
+      w `products` kolumny `search_name` (nazwa, marka, ścieżka kategorii, cechy), `search_doc` (+ warianty, EAN, opis),
+      `search_tsv`, liczone triggerem `products_zz_search` (odświeżają je też zmiany marek, kategorii, cech, wariantów);
+      tabela `search_synonyms` (psa -> pies, kotów -> kot, szczeniak -> szczenię...); funkcja `search_products`
+      (szukanie: każde słowo musi pasować początkiem albo z literówką, bez polskich znaków, bez "dla / z / do", EAN / SKU;
+      filtry: kategoria z podkategoriami, marka, cechy, cena, waga opakowania, dostępne, promocje; liczniki przy filtrach
+      liczone bez własnego filtra; sortowanie: trafność, popularne (sprzedaż z 90 dni), nowości, cena, nazwa;
+      niedostępne zawsze na końcu; stronicowanie po 24; "może chodziło o..." przy pustym wyniku), `search_suggest`
+      (podpowiedzi: kategorie, marki, 6 produktów), tabela `product_requests` + funkcja `request_product`
+      ("Nie mamy? Napisz, sprowadzimy", limit 5 zgłoszeń dziennie z jednego e-maila).
+      Kod: wyszukiwarka z podpowiedziami w nagłówku (`components/SearchBox.js`, strzałki / Enter / Esc),
+      `/kategoria/[slug]` (okruszki, podkategorie, opis), `/szukaj`, strona główna = wszystkie produkty z filtrami;
+      wspólna lista `components/browse/Listing.js` (filtry `FilterPanel.js`: na telefonie wysuwany od dołu panel
+      z "Pokaż wyniki", na komputerze kolumna z lewej działająca od razu; `SortSelect.js`, `ProductCard.js`
+      z ceną "od", przekreśloną ceną i najniższą z 30 dni, ceną za kg, "Wybierz: 3 warianty"; `RequestForm.js`);
+      parsowanie adresu: `lib/browse.js`. Stare adresy `/?kategoria=` i `/?q=` przekierowują.
+      Panel: `/admin/prosby` (zgłoszenia, status, notatka, odpowiedź e-mailem), licznik nowych w menu.
 - [x] Plan rozwoju i mapa myśli (`MAPA_MYSLI.md` + tablica), przebudowane 2026-11-13 po krytyce klienta.
 
 ## Do zrobienia
@@ -126,6 +146,8 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
 - [ ] Etap 4: opinie o salonach, ranking i odznaki, nowa strona główna (sklep + salony, zapis do Akademii).
 - [ ] Etap 5: konta salonów, odpowiedzi na opinie.
 - [ ] Etap 6: Akademia.
+- [ ] Później (gdy produktów będzie > 20 tys.): przyspieszyć `search_products` (np. cechy produktu zapisane w kolumnie
+      zamiast liczenia przy każdym zapytaniu). Synonimy można dopisywać w tabeli `search_synonyms` (na razie bez panelu).
 - [ ] Drobne: wyłączyć w Supabase "Allow new users to sign up" (do czasu etapu 2); Vercel Pro przed sprzedażą.
 
 ## Ważne zasady w kodzie
@@ -154,4 +176,9 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
   i `buildRows` (`lib/import.js`) oraz w funkcji SQL. Zdjęcia z importu tylko dla produktów bez zdjęć.
 - Opcja "stan 0 dla pozycji spoza pliku" działa tylko na wariantach, dla których ta hurtownia jest główna,
   i tylko po pełnym, nieprzerwanym zapisie.
+- Szukanie i filtry liczy baza (`search_products` w `04_szukanie.sql`), kod tylko czyta adres (`lib/browse.js`)
+  i rysuje wynik. Nowy filtr: dodać w funkcji SQL (`base` / `scored` / `facets`), w `parseBrowse` / `rpcFilters`
+  i w `FilterPanel.js`. Cechy z tabeli `attributes` (filterable) pokazują się w filtrach same, kod cechy = nazwa w adresie.
+  Funkcje szukania mają `set jit = off` (z JIT zapytanie trwało 2 s zamiast 0,15 s).
+- Przedziały wagi są w dwóch miejscach: `weight_bucket` w `04_szukanie.sql` i `WEIGHTS` w `lib/browse.js`.
 - Po każdym etapie aktualizować ten plik w repo i w dokumentach projektu Claude.

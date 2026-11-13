@@ -11,6 +11,10 @@ export default async function AdminLayout({ children }) {
   const { data: { user } } = await supabase.auth.getUser();
   const { data: isAdmin } = await supabase.rpc('is_admin');
   const settings = await getSettings();
+  // nowe zgłoszenia "sprowadzimy" (przed wklejeniem 04_szukanie.sql tabeli nie ma - wtedy 0)
+  const { count: newRequests } = isAdmin
+    ? await supabase.from('product_requests').select('id', { count: 'exact', head: true }).eq('status', 'nowa')
+    : { count: 0 };
 
   return (
     <div className="admin">
@@ -21,6 +25,7 @@ export default async function AdminLayout({ children }) {
         <Link href="/admin/marki">Marki</Link>
         <Link href="/admin/hurtownie">Hurtownie</Link>
         <Link href="/admin/import">Import</Link>
+        <Link href="/admin/prosby">Zgłoszenia{newRequests > 0 && <span className="badge">{newRequests}</span>}</Link>
         <Link href="/admin/ustawienia">Ustawienia</Link>
         {!settings.sales_enabled && <Link href="/admin/ustawienia" className="status status-nowe">Sprzedaż wyłączona</Link>}
         <span className="muted">{user?.email}</span>
