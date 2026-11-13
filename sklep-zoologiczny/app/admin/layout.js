@@ -17,6 +17,9 @@ export default async function AdminLayout({ children }) {
       <nav className="admin-nav">
         <Link href="/admin">Zamówienia</Link>
         <Link href="/admin/produkty">Produkty</Link>
+        <Link href="/admin/kategorie">Kategorie</Link>
+        <Link href="/admin/marki">Marki</Link>
+        <Link href="/admin/hurtownie">Hurtownie</Link>
         <Link href="/admin/ustawienia">Ustawienia</Link>
         {!settings.sales_enabled && <Link href="/admin/ustawienia" className="status status-nowe">Sprzedaż wyłączona</Link>}
         <span className="muted">{user?.email}</span>
