@@ -4,8 +4,14 @@ Ostatnia aktualizacja: 2026-11-13
 
 ## NASTĘPNY KROK
 
-**Etap 1: katalog salonów (groomerów) + mapa i szukanie w okolicy.** Plan jest zatwierdzony.
-Teraz budujemy infrastrukturę: liczba groomerów i treść na start nie są priorytetem.
+**Etap 1, Krok 0: furtka na dane firmy (tryb "przed startem").** Szczegóły kroków: `PLAN_BUDOWY.md`.
+Sklep będzie działał na firmie brata Mariusza; dane firmy wpisze się w panelu na końcu, wtedy włącza się sprzedaż.
+
+**Etap 1: sklep, który sprzedaje.** Kolejność zmieniona 2026-11-13 po krytyce oczami klienta
+(`KRYTYKA_KLIENTA.md` w dokumentach projektu Claude): najpierw sklep, potem salony.
+Zacząć od bazy: marka, cechy produktu, warianty, hurtownie, cena zakupu, EAN, historia cen, stawka VAT
+(nowy plik SQL, np. `supabase/02_produkty_cechy.sql`), potem import CSV z hurtowni, wyszukiwarka, filtry,
+sortowanie, karta produktu, paczkomat z mapy, BLIK / Przelewy24, e-maile, raporty dla księgowego.
 Pełny plan: `MAPA_MYSLI.md` (w tym folderze i w dokumentach projektu Claude).
 Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
 
@@ -35,21 +41,29 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
       i `get_order`, bucket `produkty` na zdjęcia, 5 kategorii, 8 przykładowych produktów).
 - [x] Konto administratora utworzone i dodane do `admins`.
 - [x] Wdrożenie na Vercel działa (produkty wczytują się z Supabase).
-- [x] Plan rozwoju i mapa myśli (`MAPA_MYSLI.md` + tablica).
+- [x] Plan rozwoju i mapa myśli (`MAPA_MYSLI.md` + tablica), przebudowane 2026-11-13 po krytyce klienta.
 
 ## Do zrobienia
 
-- [ ] **Etap 1:** katalog miejsc (typ: groomer, furtka na weterynarza itd.), profile, usługi i cennik,
-      mapa OpenStreetMap, "użyj mojej lokalizacji", najbliżsi w promieniu (PostGIS), filtry, panel admina
-      do dodawania salonów. SQL w nowym pliku, np. `supabase/02_miejsca.sql`.
-- [ ] Etap 2: konta klientów, opinie, ranking i odznaki.
-- [ ] Etap 3: nowa strona główna (sklep + salony, zapis do Akademii).
-- [ ] Etap 4: konta salonów, odpowiedzi na opinie.
-- [ ] Etap 5: płatności online, e-maile.
+- [ ] **Etap 1: sklep, który sprzedaje:** marka, cechy, warianty (2 / 7 / 12 kg), kategorie drzewem,
+      wyszukiwarka (marka, opis, literówki, podpowiedzi), filtry, sortowanie, stronicowanie, karta produktu
+      (galeria, skład, dawkowanie, EAN, cena za kg, Omnibus), "Powiadom o dostępności", paczkomat z mapy,
+      BLIK / Przelewy24, e-mail z potwierdzeniem, regulamin, dane firmy, nazwa i domena.
+      Zaplecze: import z hurtowni (CSV, dopasowanie kolumn i kategorii, reguła ceny, podgląd, szkice,
+      aktualizacja po EAN, zdjęcia z linków), historia cen, raporty (zysk, VAT 8% / 23%) i eksport Excel
+      dla księgowego. Usunąć opcję "odbiór osobisty" (kasa fiskalna).
+- [ ] **Formalności przed sprzedażą (Mariusz):** firma (JDG lub dopisanie do istniejącej), wpis do rejestru
+      paszowego w powiatowym inspektoracie weterynarii, decyzja z księgowym o VAT (zwolnienie do 240 000 zł/rok)
+      i formie podatku, umowa z hurtownią (zgoda na zdjęcia i opisy, częstotliwość aktualizacji stanów).
+- [ ] Etap 2: konto klienta do zakupów: historia, "Zamów ponownie", moje zwierzęta, przypomnienie o karmie,
+      opinie o produktach.
+- [ ] Etap 3: katalog groomerów + mapa (PostGIS, OpenStreetMap), panel admina do salonów;
+      publicznie dopiero z 20-30 salonami z Trójmiasta. SQL np. `supabase/03_miejsca.sql`.
+- [ ] Etap 4: opinie o salonach, ranking i odznaki, nowa strona główna (sklep + salony, zapis do Akademii).
+- [ ] Etap 5: konta salonów, odpowiedzi na opinie.
 - [ ] Etap 6: Akademia.
 - [ ] Drobne: wyłączyć w Supabase "Allow new users to sign up" (do czasu etapu 2); dodać na Vercelu
-      `NEXT_PUBLIC_BANK_ACCOUNT`, `NEXT_PUBLIC_BANK_RECIPIENT`, `NEXT_PUBLIC_CONTACT_EMAIL`; regulamin
-      i polityka prywatności; nazwa serwisu i domena; Vercel Pro przed sprzedażą.
+      `NEXT_PUBLIC_BANK_ACCOUNT`, `NEXT_PUBLIC_BANK_RECIPIENT`, `NEXT_PUBLIC_CONTACT_EMAIL`; Vercel Pro przed sprzedażą.
 
 ## Ważne zasady w kodzie
 
