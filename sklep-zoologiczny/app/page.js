@@ -19,7 +19,9 @@ export default async function HomePage({ searchParams }) {
     .eq('active', true)
     .order('created_at', { ascending: false });
 
-  const all = categories || [];
+  // ukryte w panelu kategorie (i ich podkategorie) nie pokazują się w menu sklepu
+  const hidden = new Set((categories || []).filter((c) => c.active === false).flatMap((c) => categoryWithDescendants(categories, c.id)));
+  const all = (categories || []).filter((c) => !hidden.has(c.id));
   const current = all.find((c) => c.slug === kategoria);
   if (current) query = query.in('category_id', categoryWithDescendants(all, current.id));
 

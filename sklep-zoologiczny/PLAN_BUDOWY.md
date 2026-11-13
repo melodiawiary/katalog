@@ -41,7 +41,9 @@ a cena zakupu w tabeli `variant_suppliers` (wariant + hurtownia), żeby klienci 
 - [Claude] Funkcja `create_order` liczy po wariantach.
 - [Mariusz] Wkleić SQL w Supabase.
 
-### Krok 2. Panel admina 2.0
+### Krok 2. Panel admina 2.0 - ZROBIONE 2026-11-13 (bez nowego SQL)
+Dodatkowo: kopia produktu, hurtownia i cena zakupu z wyliczeniem zysku w wariancie, zdjęcia z linku,
+zmniejszanie zdjęć w telefonie przed wysłaniem, szukanie po EAN / kodzie hurtowni, ukrywanie kategorii.
 - [Claude] Edycja produktu: marka, cechy, warianty w tabelce, galeria, skład / dawkowanie, promocja.
 - [Claude] Drzewo kategorii i marki do edycji.
 - [Claude] Lista produktów z wyszukiwaniem i filtrem (szkic / aktywny / brak w magazynie).

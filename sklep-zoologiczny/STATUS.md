@@ -1,21 +1,22 @@
 # STATUS - Sklep zoologiczny + katalog groomerów
 
-Ostatnia aktualizacja: 2026-11-13 (po Etapie 1, Kroku 1)
+Ostatnia aktualizacja: 2026-11-13 (po Etapie 1, Kroku 2)
 
 ## NASTĘPNY KROK
 
-**Etap 1, Krok 2: Panel admina 2.0** (edycja produktu: marka, cechy, warianty w tabelce, galeria,
-skład / dawkowanie, promocja z datami, VAT; drzewo kategorii i marki do edycji; hurtownie i ceny zakupu;
-lista produktów z wyszukiwaniem i filtrem). Szczegóły: `PLAN_BUDOWY.md`.
+**Etap 1, Krok 3: Import z hurtowni (CSV / Excel)** (szablon do pobrania, dopasowanie kolumn zapamiętane
+dla hurtowni, dopasowanie kategorii, reguła ceny, podgląd nowe / zmienione / błędy, aktualizacja po EAN,
+nowe jako szkice, zdjęcia z linków, import partiami). Szczegóły: `PLAN_BUDOWY.md`.
 
 **Mariusz musi jeszcze wkleić w Supabase, po kolei:** `supabase/01_ustawienia.sql`, potem `supabase/02_produkty.sql`.
-Kod działa przed i po wklejeniu (do tego czasu panel ustawień pokaże komunikat o braku tabeli).
+Kod działa przed i po wklejeniu (do tego czasu panel pokazuje komunikat o braku tabel; marki, hurtownie,
+warianty, galeria i cechy w panelu działają dopiero po `02`). Krok 2 nie dodał nowego pliku SQL.
 Jeśli kiedyś trzeba będzie ponownie uruchomić `01`, potem trzeba też ponownie uruchomić `02`
 (01 ma starszą wersję `create_order`).
 
 **Etap 1: sklep, który sprzedaje.** Kolejność zmieniona 2026-11-13 po krytyce oczami klienta
 (`KRYTYKA_KLIENTA.md` w dokumentach projektu Claude): najpierw sklep, potem salony.
-Dalej: panel admina 2.0, import CSV z hurtowni, wyszukiwarka, filtry, sortowanie, karta produktu,
+Dalej: import CSV z hurtowni, wyszukiwarka, filtry, sortowanie, karta produktu,
 paczkomat z mapy, BLIK / Przelewy24, e-maile, raporty dla księgowego.
 Pełny plan: `MAPA_MYSLI.md` (w tym folderze i w dokumentach projektu Claude).
 Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
@@ -34,7 +35,8 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
 - **Pliki SQL:** `supabase/schema.sql`, potem po kolei `01_ustawienia.sql`, `02_produkty.sql`, `03_...`
   (każdy można uruchomić ponownie).
 - **Adres sklepu:** https://sklep-zoologiczny.vercel.app (panel: `/admin`, ustawienia: `/admin/ustawienia`).
-- **Panel admina:** adres sklepu + `/admin`, logowanie e-mailem właściciela (użytkownik w Supabase Auth,
+- **Panel admina:** adres sklepu + `/admin` (zakładki: Zamówienia, Produkty, Kategorie, Marki, Hurtownie,
+  Ustawienia), logowanie e-mailem właściciela (użytkownik w Supabase Auth,
   dopisany do tabeli `admins`). Hasło Mariusz ustawił 2026-11-13 poleceniem SQL; przy resecie:
   `update auth.users set encrypted_password = extensions.crypt('HASLO', extensions.gen_salt('bf')) where email = '...';`
 - **Dostęp Claude do GitHuba:** aplikacja Claude ma dostęp do wszystkich repozytoriów (All repositories),
@@ -73,6 +75,20 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
       `payment_fee` (prowizja) i `shipping_real_cost`. 8 produktów dostało po jednym wariancie.
       W kodzie: kategorie główne + podkategorie na stronie głównej (filtr obejmuje podkategorie),
       okruszki na stronie produktu, drzewo w wyborze kategorii w panelu (`lib/categories.js`).
+- [x] **Etap 1, Krok 2 (2026-11-13): panel admina 2.0** (bez nowego SQL):
+      formularz produktu (`app/admin/ProductForm.js`, zapis: `app/admin/produkty/actions.js`): marka z listy
+      albo nowa z ręki, VAT, warianty jako zwijane karty (nazwa, cena, stan, ilość netto + jednostka z ceną za kg,
+      EAN z ostrzeżeniem o złej cyfrze kontrolnej, SKU, promocja z datami w polskiej strefie czasu, hurtownia
+      główna + kod + cena zakupu netto z wyliczonym zyskiem zależnie od statusu VAT), galeria (wiele zdjęć,
+      zmniejszanie w przeglądarce do 1600 px i wysyłka prosto do Supabase Storage, zdjęcie z linku, kolejność
+      strzałkami, pierwsze = główne -> `products.image_url`), cechy jako przyciski, skład / analiza / dodatki /
+      dawkowanie; kopia produktu (ukryty szkic bez EAN), usuwanie z potwierdzeniem i sprzątaniem plików.
+      Lista produktów: szukanie po nazwie, marce, EAN, SKU, nazwie wariantu i kodzie hurtowni; filtry (widoczne,
+      ukryte / szkice, brak na stanie, kończą się, promocje, bez zdjęcia), kategoria z podkategoriami, marka,
+      sortowanie, 30 na stronę, szybkie Ukryj / Pokaż. Nowe strony: `/admin/kategorie` (drzewo, dodawanie,
+      edycja, przenoszenie, ukrywanie w menu sklepu, usuwanie tylko pustych), `/admin/marki`, `/admin/hurtownie`
+      (`app/admin/katalog-actions.js`). Ukryte kategorie znikają z menu sklepu (`app/page.js`).
+      Daty i liczby: `lib/admin.js`; dane formularza: `lib/admin-products.js`; `adminClient`: `lib/admin-server.js`.
 - [x] Plan rozwoju i mapa myśli (`MAPA_MYSLI.md` + tablica), przebudowane 2026-11-13 po krytyce klienta.
 
 ## Do zrobienia
@@ -111,4 +127,10 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
 - Pliki SQL piszemy tak, żeby można je było uruchamiać ponownie (nie kasują danych).
 - Kategorie sklepu zostają wszystkie; nacisk na psy i koty.
 - Nie trzymać w repo haseł ani kluczy (repo jest publiczne).
+- Sklep (strona produktu, koszyk) wciąż dodaje do koszyka produkt, nie wariant: produkt z kilkoma
+  aktywnymi wariantami da się zamówić dopiero po kroku 5 (wybór wariantu na karcie produktu).
+  Do tego czasu sprzedaż i tak jest wyłączona.
+- Zapis produktu w panelu to kilka zapytań po kolei (produkt, warianty, hurtownia, cechy, galeria).
+  Najpierw usuwane są skasowane warianty (zwalnia EAN), potem zmiany. Daty promocji niezmienione
+  w formularzu zostają co do sekundy (żeby nie robić szumu w historii cen).
 - Po każdym etapie aktualizować ten plik w repo i w dokumentach projektu Claude.
