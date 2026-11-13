@@ -1,6 +1,8 @@
 -- =====================================================================
 --  SKLEP ZOOLOGICZNY - schemat bazy danych dla Supabase
 --  Wklej całość w Supabase: SQL Editor -> New query -> Run
+--  Potem uruchom kolejne pliki po kolei: 01_ustawienia.sql, ...
+--  (nowsze pliki podmieniają niektóre funkcje, np. create_order).
 -- =====================================================================
 
 create extension if not exists pgcrypto;
@@ -73,6 +75,7 @@ as $$
   select exists (select 1 from public.admins where user_id = auth.uid());
 $$;
 
+-- UWAGA: aktualna wersja create_order jest w 01_ustawienia.sql (ta jest pierwotna).
 -- Złożenie zamówienia: sprawdza dane, liczy ceny po stronie bazy,
 -- zdejmuje towar ze stanu. Wszystko albo nic (jedna transakcja).
 create or replace function public.create_order(
@@ -154,7 +157,7 @@ begin
     v_subtotal := v_subtotal + v_product.price * v_qty;
   end loop;
 
-  -- Koszty dostawy (te same wartości są w lib/shop.js)
+  -- Koszty dostawy (aktualne wartości: lib/shop.js i 01_ustawienia.sql)
   v_shipping := case p_shipping
                   when 'kurier'    then 15.99
                   when 'paczkomat' then 12.99

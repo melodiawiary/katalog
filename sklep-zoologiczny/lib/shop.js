@@ -1,12 +1,10 @@
-// Ustawienia sklepu. Koszty dostawy muszą się zgadzać z funkcją create_order w supabase/schema.sql.
-
-export const SHOP_NAME = process.env.NEXT_PUBLIC_SHOP_NAME || 'Sklep Zoologiczny';
+// Koszty dostawy muszą się zgadzać z funkcją create_order (najnowszy plik w supabase/, teraz 01_ustawienia.sql).
+// Dane firmy i nazwa sklepu są w bazie (tabela settings, panel: /admin/ustawienia), patrz lib/settings.js.
 export const FREE_SHIPPING_FROM = 200;
 
 export const SHIPPING = {
   kurier: { label: 'Kurier', price: 15.99 },
   paczkomat: { label: 'Paczkomat', price: 12.99 },
-  odbior: { label: 'Odbiór osobisty', price: 0 },
 };
 
 export const PAYMENT = {
@@ -21,6 +19,11 @@ export const STATUS = {
   zrealizowane: 'Zrealizowane',
   anulowane: 'Anulowane',
 };
+
+// Nazwa dostawy, także dla starych zamówień z odbiorem osobistym
+export function shippingLabel(method) {
+  return SHIPPING[method]?.label || (method === 'odbior' ? 'Odbiór osobisty' : method);
+}
 
 export function shippingCost(method, subtotal) {
   if (subtotal >= FREE_SHIPPING_FROM) return 0;

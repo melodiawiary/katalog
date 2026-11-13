@@ -11,7 +11,7 @@ Legenda: [Claude] robię ja · [Mariusz] potrzebne działanie z telefonu (wkleje
 
 ## ETAP 1: sklep, który sprzedaje
 
-### Krok 0. Furtka na dane firmy (tryb "przed startem")
+### Krok 0. Furtka na dane firmy (tryb "przed startem") - ZROBIONE 2026-11-13 (`supabase/01_ustawienia.sql`)
 - [Claude] Tabela `ustawienia` (jeden wiersz) edytowana w panelu: nazwa firmy, imię i nazwisko właściciela,
   NIP, REGON, adres, e-mail, telefon, numer konta, status VAT (zwolniony / czynny), numer wpisu
   do rejestru paszowego, nazwa sklepu, domena.

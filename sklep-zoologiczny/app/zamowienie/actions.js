@@ -2,8 +2,14 @@
 
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+import { getSettings } from '@/lib/settings';
 
 export async function placeOrder(prevState, formData) {
+  const settings = await getSettings();
+  if (!settings.sales_enabled) {
+    return { error: 'Sklep jeszcze nie przyjmuje zamówień. Zapraszamy wkrótce!' };
+  }
+
   let items;
   try {
     items = JSON.parse(formData.get('items') || '[]').map((i) => ({

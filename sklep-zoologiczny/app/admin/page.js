@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { updateOrderStatus } from './actions';
-import { price, STATUS, SHIPPING, PAYMENT } from '@/lib/shop';
+import { price, STATUS, shippingLabel, PAYMENT } from '@/lib/shop';
 
 export default async function OrdersPage({ searchParams }) {
   const { status } = await searchParams;
@@ -37,7 +37,7 @@ export default async function OrdersPage({ searchParams }) {
               {o.address}, {o.postal_code} {o.city}<br />
               <a href={`mailto:${o.email}`}>{o.email}</a> · <a href={`tel:${o.phone}`}>{o.phone}</a>
             </p>
-            <p>Dostawa: {SHIPPING[o.shipping_method]?.label} ({price(o.shipping_cost)}) · Płatność: {PAYMENT[o.payment_method]?.label}</p>
+            <p>Dostawa: {shippingLabel(o.shipping_method)} ({price(o.shipping_cost)}) · Płatność: {PAYMENT[o.payment_method]?.label}</p>
             {o.notes && <p><em>Uwagi: {o.notes}</em></p>}
             <ul>
               {o.order_items.map((i) => (

@@ -2,7 +2,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import ClearCart from '@/components/ClearCart';
-import { price, SHIPPING, PAYMENT } from '@/lib/shop';
+import { price, shippingLabel, PAYMENT } from '@/lib/shop';
+import { getSettings, formatAccount } from '@/lib/settings';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Dziękujemy za zamówienie' };
@@ -14,6 +15,7 @@ export default async function OrderPage({ params }) {
   const supabase = await createClient();
   const { data: order } = await supabase.rpc('get_order', { p_id: id });
   if (!order) notFound();
+  const s = await getSettings();
 
   return (
     <div className="order-done">
@@ -27,7 +29,7 @@ export default async function OrderPage({ params }) {
             {i.name} × {i.quantity} <span>{price(i.price * i.quantity)}</span>
           </li>
         ))}
-        <li>Dostawa ({SHIPPING[order.shipping_method]?.label}) <span>{price(order.shipping_cost)}</span></li>
+        <li>Dostawa ({shippingLabel(order.shipping_method)}) <span>{price(order.shipping_cost)}</span></li>
         <li className="total">Razem <span>{price(order.total)}</span></li>
       </ul>
 
@@ -36,8 +38,10 @@ export default async function OrderPage({ params }) {
           <h2>Dane do przelewu</h2>
           <p>Kwota: <strong>{price(order.total)}</strong></p>
           <p>Tytuł: <strong>Zamówienie nr {order.number}</strong></p>
-          <p>Numer konta: <strong>{process.env.NEXT_PUBLIC_BANK_ACCOUNT || '(uzupełnij w ustawieniach)'}</strong></p>
-          {process.env.NEXT_PUBLIC_BANK_RECIPIENT && <p>Odbiorca: {process.env.NEXT_PUBLIC_BANK_RECIPIENT}</p>}
+          <p>Numer konta: <strong>{s.bank_account ? formatAccount(s.bank_account) : '(brak - uzupełnij w panelu)'}</strong></p>
+          {s.company_name && (
+            <p>Odbiorca: {s.company_name}, {s.address}, {s.postal_code} {s.city}</p>
+          )}
           <p className="muted">Wyślemy paczkę po zaksięgowaniu wpłaty.</p>
         </div>
       ) : (

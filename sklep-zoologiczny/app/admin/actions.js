@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { slugify, STATUS } from '@/lib/shop';
+import { SETTINGS_FIELDS, missingSettings } from '@/lib/settings-fields';
 
 async function adminClient() {
   const supabase = await createClient();
@@ -76,4 +77,24 @@ export async function deleteProduct(formData) {
   await supabase.from('products').delete().eq('id', formData.get('id'));
   revalidatePath('/', 'layout');
   redirect('/admin/produkty');
+}
+
+export async function saveSettings(prevState, formData) {
+  const supabase = await adminClient();
+
+  const settings = {};
+  for (const f of SETTINGS_FIELDS) settings[f.key] = String(formData.get(f.key) || '').trim().slice(0, 200);
+  settings.vat_status = formData.get('vat_status') === 'czynny' ? 'czynny' : 'zwolniony';
+  settings.sales_enabled = formData.get('sales_enabled') === 'on';
+
+  const missing = missingSettings(settings);
+  if (settings.sales_enabled && missing.length > 0) {
+    return { error: `Nie można włączyć sprzedaży. Uzupełnij: ${missing.join(', ')}.`, values: settings };
+  }
+
+  const { error } = await supabase.from('settings').update(settings).eq('id', 1);
+  if (error) return { error: error.message, values: settings };
+
+  revalidatePath('/', 'layout');
+  return { ok: true, values: settings };
 }
