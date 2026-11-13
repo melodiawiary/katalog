@@ -4,12 +4,12 @@ import { needsSql } from '@/lib/admin';
 import { getSettings } from '@/lib/settings';
 import { siteUrl } from '@/lib/site';
 import ActionForm from '@/components/admin/ActionForm';
-import { markNotified, deleteAlert } from './actions';
+import { markNotified, deleteAlert, sendAlertsNow } from './actions';
 
 export const metadata = { title: 'Powiadomienia o dostępności' };
 
 // Klienci zapisani na "Powiadom o dostępności", pogrupowani po wariantach.
-// Na razie e-mail wysyła się ręcznie (przycisk otwiera pocztę z adresami w UDW); automat w kroku 6.
+// Automat (Resend) wysyła sam; ręcznie: przycisk otwiera pocztę z adresami w UDW.
 export default async function AlertsPage() {
   const supabase = await createClient();
   const { data: rows, error } = await supabase
@@ -39,8 +39,10 @@ export default async function AlertsPage() {
     <>
       <h1>Powiadomienia o dostępności</h1>
       <p className="muted">
-        Klienci, którzy chcą wiedzieć, kiedy produkt wróci. Gdy uzupełnisz stan, napisz do nich i oznacz jako powiadomione.
+        Klienci, którzy chcą wiedzieć, kiedy produkt wróci. Sklep pisze do nich sam: po zapisaniu produktu, po imporcie
+        z hurtowni i codziennie rano (gdy w Integracjach jest klucz Resend). Możesz też wysłać od razu albo napisać ręcznie.
       </p>
+      <ActionForm action={sendAlertsNow} submitLabel="Wyślij teraz do czekających (produkty na stanie)" />
       {list.length === 0 && <p className="muted">Nikt nie czeka na powiadomienie.</p>}
 
       {list.map(({ variant: v, alerts }) => {
@@ -65,7 +67,7 @@ export default async function AlertsPage() {
                 {p && <> · <Link href={`/produkt/${p.slug}?wariant=${v.id}`} target="_blank">Zobacz w sklepie</Link></>}
               </p>
               {v?.stock > 0 && (
-                <p><a className="btn btn-small" href={mail}>Napisz do wszystkich ({alerts.length})</a></p>
+                <p><a className="btn btn-small btn-light" href={mail}>Napisz ręcznie ze swojej poczty ({alerts.length})</a></p>
               )}
               <ul className="import-list">
                 {alerts.map((a) => (

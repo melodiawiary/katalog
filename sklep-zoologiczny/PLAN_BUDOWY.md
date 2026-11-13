@@ -77,7 +77,10 @@ ceny i stany, panel `/admin/powiadomienia`, ustawienia godziny wysyłki i dni na
 - [Claude] "Wysyłka dziś / jutro" zamiast liczby sztuk, "Powiadom o dostępności" (zapis e-maila).
 - [Claude] Podobne produkty, dane do Google (tytuł, opis, cena, dostępność).
 
-### Krok 6. Zamówienie i płatności
+### Krok 6. Zamówienie i płatności - ZROBIONE 2026-11-13 (`supabase/06_zamowienie.sql`)
+Dodatkowo: własna mapa paczkomatów (bez konta InPost; z tokenem Geowidget oficjalna), zamówienia testowe administratora
+przy wyłączonej sprzedaży, anulowanie oddaje towar, numer przesyłki z linkiem śledzenia, dziennik e-maili, panel `/admin/integracje`,
+codzienny automat (cron), zapasowe sprawdzanie płatności bez powiadomienia.
 - [Claude] Paczkomat wybierany z mapy InPost (przy paczkomacie bez pełnego adresu),
   termin dostawy przed złożeniem zamówienia.
 - [Claude] E-mail z potwierdzeniem zamówienia i zmiany statusu (np. przez Resend).

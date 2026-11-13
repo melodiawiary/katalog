@@ -462,3 +462,43 @@ label.check span:nth-child(2) { flex: 1; }
 .checkout-items { list-style: none; padding: 0; margin: 0 0 6px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); }
 .checkout-items li { display: flex; justify-content: space-between; gap: 10px; padding: 9px 14px; border-bottom: 1px solid var(--line); font-size: 0.95rem; }
 .checkout-items li:last-child { border-bottom: 0; }
+
+/* ---------- Krok 6: zamówienie, paczkomat z mapy ---------- */
+.ship-option span { display: inline; }
+.ship-when { display: block !important; margin-top: 1px; }
+.ship-summary { margin: 6px 0 10px; }
+.center-text { text-align: center; margin-top: 8px; }
+.locker-picker { margin-top: 10px; display: grid; gap: 8px; }
+.locker-search { display: flex; gap: 8px; }
+.locker-search input { flex: 1; min-width: 0; }
+.locker-map-wrap { position: relative; }
+.locker-map { height: 320px; border-radius: 12px; border: 1px solid var(--line); overflow: hidden; z-index: 0; background: #e9e4dc; }
+.locker-map-busy, .locker-map-hint {
+  position: absolute; left: 50%; top: 12px; transform: translateX(-50%); z-index: 500;
+  background: rgba(255, 255, 255, 0.95); padding: 6px 12px; border-radius: 999px; font-size: 0.85rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15); pointer-events: none; white-space: nowrap;
+}
+.locker-card, .locker-chosen {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  background: #fffbe6; border: 1px solid #f5d76e; border-radius: 12px; padding: 10px 12px;
+}
+.locker-chosen { margin-top: 10px; }
+.locker-247 { margin-left: 6px; font-size: 0.75rem; background: #ffcd00; border-radius: 6px; padding: 1px 6px; font-weight: 700; }
+.locker-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.locker-list li { display: flex; gap: 8px; align-items: center; }
+.locker-row {
+  flex: 1; min-width: 0; display: flex; justify-content: space-between; gap: 8px; align-items: center; text-align: left;
+  background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; cursor: pointer; font: inherit; color: inherit;
+}
+.locker-row.active { border-color: var(--accent); background: #fff7ee; }
+.geowidget-box { height: 460px; border-radius: 12px; overflow: hidden; border: 1px solid var(--line); }
+.geowidget-box inpost-geowidget { display: block; height: 100%; }
+.badge-test { background: #fde2e2; color: var(--red); font-weight: 700; font-size: 0.75rem; padding: 2px 8px; border-radius: 999px; }
+.pay-nieoplacone { background: #fff1d6; }
+.pay-oplacone { background: #dcfce7; }
+.pay-przy_odbiorze { background: #eee; }
+.mail-log { list-style: none; padding: 0; margin: 6px 0; font-size: 0.85rem; }
+.mail-log li { padding: 2px 0; }
+.order-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 10px; }
+.secret-note { font-size: 0.8rem; color: var(--muted); }
+.locker-row > span:last-child { white-space: nowrap; }

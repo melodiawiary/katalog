@@ -33,6 +33,7 @@ export default async function AdminLayout({ children }) {
         <Link href="/admin/prosby">Zgłoszenia{newRequests > 0 && <span className="badge">{newRequests}</span>}</Link>
         <Link href="/admin/powiadomienia">Powiadomienia{alertsReady > 0 && <span className="badge">{alertsReady}</span>}</Link>
         <Link href="/admin/ustawienia">Ustawienia</Link>
+        <Link href="/admin/integracje">Integracje</Link>
         {!settings.sales_enabled && <Link href="/admin/ustawienia" className="status status-nowe">Sprzedaż wyłączona</Link>}
         <span className="muted">{user?.email}</span>
         <form action={signOut}><button className="link-btn">Wyloguj</button></form>

@@ -1,15 +1,22 @@
-// Koszty dostawy muszą się zgadzać z funkcją create_order (najnowszy plik w supabase/, teraz 02_produkty.sql).
+// Koszty dostawy muszą się zgadzać z funkcją create_order (najnowszy plik w supabase/, teraz 06_zamowienie.sql).
 // Dane firmy i nazwa sklepu są w bazie (tabela settings, panel: /admin/ustawienia), patrz lib/settings.js.
 export const FREE_SHIPPING_FROM = 200;
 
 export const SHIPPING = {
+  paczkomat: { label: 'Paczkomat InPost', price: 12.99 },
   kurier: { label: 'Kurier', price: 15.99 },
-  paczkomat: { label: 'Paczkomat', price: 12.99 },
 };
 
 export const PAYMENT = {
-  przelew: { label: 'Przelew tradycyjny' },
-  pobranie: { label: 'Płatność przy odbiorze' },
+  p24: { label: 'Płatność online: BLIK, szybki przelew, karta', short: 'Przelewy24' },
+  przelew: { label: 'Przelew tradycyjny (wysyłka po zaksięgowaniu)', short: 'Przelew tradycyjny' },
+  pobranie: { label: 'Płatność przy odbiorze', short: 'Pobranie' },
+};
+
+export const PAYMENT_STATUS = {
+  nieoplacone: 'Nieopłacone',
+  oplacone: 'Opłacone',
+  przy_odbiorze: 'Płatne przy odbiorze',
 };
 
 export const STATUS = {

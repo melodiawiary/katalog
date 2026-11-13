@@ -1,16 +1,18 @@
 # STATUS - Sklep zoologiczny + katalog groomerów
 
-Ostatnia aktualizacja: 2026-11-13 (po Etapie 1, Kroku 5)
+Ostatnia aktualizacja: 2026-11-13 (po Etapie 1, Kroku 6)
 
 ## NASTĘPNY KROK
 
-Krok 5 (karta produktu) jest w pull requeście `krok-5-karta` (do zatwierdzenia przez Mariusza).
-Przed zatwierdzeniem trzeba wkleić w Supabase `supabase/05_karta.sql` (nowe funkcje, tabela `stock_alerts`,
-2 kolumny w `settings`; nic nie kasuje). Pliki SQL w bazie: 01, 02, 03, 04 (05 po wklejeniu).
+Krok 6 (zamówienie i płatności) jest w pull requeście `krok-6-zamowienie` (do zatwierdzenia przez Mariusza).
+Przed zatwierdzeniem: wkleić w Supabase `supabase/06_zamowienie.sql` (nic nie kasuje). Pliki SQL w bazie: 01-05 (06 po wklejeniu).
+Potem (Mariusz): zmienna `SUPABASE_SERVICE_ROLE_KEY` na Vercelu (klucz secret z Supabase -> API Keys) + Redeploy,
+konto Resend i klucz w `/admin/integracje`, konto testowe Przelewy24 (sandbox) i klucze w `/admin/integracje`.
+Test: zalogowany administrator może składać zamówienia testowe przy wyłączonej sprzedaży (oznaczone TEST, do usunięcia).
 
-**Etap 1, Krok 6: Zamówienie i płatności** (paczkomat z mapy InPost, termin dostawy przed zamówieniem,
-e-maile przez Resend: potwierdzenie, zmiana statusu i automatyczne "Produkt znów dostępny" z `stock_alerts`,
-Przelewy24 w trybie testowym). Szczegóły: `PLAN_BUDOWY.md`.
+**Etap 1, Krok 7: Raporty dla księgowego** (zakładka Raporty: sprzedaż, zakup, zysk na zamówieniu / produkcie / miesiącu,
+prowizje, dopłaty do dostawy; eksport Excel za miesiąc z podziałem VAT 8% / 23% przy czynnym VAT). Szczegóły: `PLAN_BUDOWY.md`.
+Do rozważenia przy kroku 7/8: prowizja Przelewy24 w `orders.payment_fee` (dziś 0), zwroty pieniędzy, koszt pobrania.
 
 Jeśli kiedyś trzeba będzie ponownie uruchomić `01`, potem trzeba też ponownie uruchomić `02`
 (01 ma starszą wersję `create_order`).
@@ -31,14 +33,14 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
   Zmiany w bazie: wklejać SQL w https://supabase.com/dashboard/project/jetdtaijauawrsyobycl/sql/new
 - **Hosting:** Vercel, zespół Dzialkowo, projekt `sklep-zoologiczny`, Root Directory = `sklep-zoologiczny`.
   Każdy push do `main` automatycznie aktualizuje sklep.
-- **Zmienne na Vercelu:** `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_SHOP_NAME`
+- **Zmienne na Vercelu:** `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` (od kroku 6, tajna), `NEXT_PUBLIC_SHOP_NAME`
   (ta ostatnia tylko zapasowo). Dane firmy, konto, kontakt: panel `/admin/ustawienia` (tabela `settings`).
-- **Pliki SQL:** `supabase/schema.sql`, potem po kolei `01_ustawienia.sql`, `02_produkty.sql`, `03_import.sql`, `04_szukanie.sql`, `05_...`
+- **Pliki SQL:** `supabase/schema.sql`, potem po kolei `01_ustawienia.sql`, `02_produkty.sql`, `03_import.sql`, `04_szukanie.sql`, `05_karta.sql`, `06_zamowienie.sql`
   (każdy można uruchomić ponownie).
 - **Adres sklepu:** https://sklep-zoologiczny.vercel.app (panel: `/admin`, ustawienia: `/admin/ustawienia`).
   Strony: `/kategoria/<slug>`, `/szukaj?q=...`, filtry w adresie (np. `?marka=brit,josera&wiek=senior&waga=1-3-kg&cena_od=20&dostepne=1&sort=cena-rosnaco&strona=2`).
 - **Panel admina:** adres sklepu + `/admin` (zakładki: Zamówienia, Produkty, Kategorie, Marki, Hurtownie,
-  Import, Zgłoszenia, Ustawienia), logowanie e-mailem właściciela (użytkownik w Supabase Auth,
+  Import, Zgłoszenia, Powiadomienia, Ustawienia, Integracje), logowanie e-mailem właściciela (użytkownik w Supabase Auth,
   dopisany do tabeli `admins`). Hasło Mariusz ustawił 2026-11-13 poleceniem SQL; przy resecie:
   `update auth.users set encrypted_password = extensions.crypt('HASLO', extensions.gen_salt('bf')) where email = '...';`
 - **Dostęp Claude do GitHuba:** aplikacja Claude ma dostęp do wszystkich repozytoriów (All repositories),
@@ -145,6 +147,27 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
       zamówienie; do `create_order` idzie `{variant_id, quantity}`. Panel: `/admin/powiadomienia` (czekający klienci według
       wariantu, "Napisz do wszystkich" otwiera pocztę z adresami w UDW, "oznacz jako powiadomione"; licznik w menu =
       warianty już na stanie), ustawienia wysyłki w `/admin/ustawienia`.
+- [x] **Etap 1, Krok 6 (2026-11-13): zamówienie i płatności** (`supabase/06_zamowienie.sql`, przetestowany na lokalnym
+      Postgresie: dwukrotne uruchomienie, zamówienia, anulowanie, uprawnienia; zamówienie przetestowane w przeglądarce na telefonie
+      z zastępczym API). Baza: w `orders` kolumny `locker_id`, `locker_desc`, `payment_status` (nieoplacone / oplacone / przy_odbiorze),
+      `paid_at`, `is_test`, `tracking_number`, `status_changed_at`; tabele `payments` (każda próba zapłaty Przelewy24),
+      `email_log` (dziennik e-maili), `integrations` (klucze Resend / Przelewy24 / token InPost, jeden wiersz, tylko admin);
+      funkcje `shop_features()` (czy jest P24, token mapy - bez kluczy), `payment_paid()` (tylko service_role);
+      triggery: status "Opłacone" ustawia płatność, anulowanie oddaje towar na stan (cofnięcie zdejmuje), usunąć można tylko
+      zamówienie testowe (towar wraca). `create_order`: płatność `p24`, paczkomat bez adresu (wymagany kod), telefon 9 cyfr,
+      administrator przy wyłączonej sprzedaży składa zamówienie testowe. `get_order` z płatnością, paczkomatem, numerem przesyłki.
+      Kod: zamówienie (`app/zamowienie/CheckoutForm.js`): paczkomat (domyślnie) / kurier z terminem dostawy przy każdej opcji
+      i w podsumowaniu, mapa paczkomatów `components/checkout/LockerPicker.js` (Leaflet + OpenStreetMap, punkty z publicznego API
+      InPost przez `/api/paczkomaty` - szukanie po adresie (Nominatim), kodzie pocztowym, kodzie paczkomatu, "blisko mnie";
+      z tokenem Geowidget oficjalna mapa InPost), zapamiętany ostatni paczkomat i dane klienta, przycisk "Zamawiam z obowiązkiem zapłaty".
+      Przelewy24 (`lib/p24.js`, `lib/payments.js`): rejestracja -> przekierowanie, powiadomienie `/api/p24/status` (podpis, kwota,
+      weryfikacja), zapasowe sprawdzanie po powrocie klienta i w cronie, "Zapłać teraz / ponownie" na stronie zamówienia
+      (`components/checkout/PaymentWatcher.js`). E-maile przez Resend (`lib/mail.js`, `lib/mail-templates.js`, `lib/order-mail.js`):
+      potwierdzenie + kopia dla sklepu, płatność przyjęta, wysłane (z numerem i linkiem śledzenia InPost), zrealizowane, anulowane,
+      "Produkt znów dostępny" automatycznie po zapisie produktu, po imporcie, przyciskiem w `/admin/powiadomienia` i codziennie
+      (`/api/cron`, `vercel.json`, 7:00 UTC). Panel: zamówienia z paczkomatem, płatnością, numerem przesyłki, dziennikiem e-maili,
+      "Wyślij ponownie potwierdzenie", filtry Nieopłacone / Testowe, usuwanie testowych; nowa strona `/admin/integracje`
+      (klucze zamaskowane, e-mail testowy, test połączenia z P24). Klient serwisowy: `lib/supabase/service.js`.
 - [x] Plan rozwoju i mapa myśli (`MAPA_MYSLI.md` + tablica), przebudowane 2026-11-13 po krytyce klienta.
 
 ## Do zrobienia
@@ -172,7 +195,7 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
 ## Ważne zasady w kodzie
 
 - Ceny, koszty dostawy i stany liczy baza (funkcja `create_order`, aktualna wersja w najnowszym pliku SQL,
-  teraz `02_produkty.sql`). Koszty dostawy są w dwóch miejscach: `lib/shop.js` i ten plik SQL - zmieniać razem.
+  teraz `06_zamowienie.sql`). Koszty dostawy są w dwóch miejscach: `lib/shop.js` i ten plik SQL - zmieniać razem.
 - Cena i stan są w wariantach (`product_variants`). `products.price` i `products.stock` liczy baza
   (najniższa cena i suma sztuk aktywnych wariantów) - do list i sortowania; nie edytować ich w nowym kodzie.
   Wyjątek przejściowy: przy produkcie z jednym wariantem zmiana `products.price` / `stock` przechodzi
@@ -186,7 +209,15 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
 - Nie trzymać w repo haseł ani kluczy (repo jest publiczne).
 - Koszyk trzyma warianty (`variant_id`); pozycja tylko z `product_id` jest dozwolona, gdy produkt ma jeden wariant
   (szybkie "Do koszyka" na liście: `search_products` nie zwraca `variant_id`, `similar_products` zwraca).
-- "Powiadom o dostępności": e-maile na razie ręcznie z `/admin/powiadomienia`; w kroku 6 automat (Resend).
+- "Powiadom o dostępności": automat `runStockAlerts` (`lib/order-mail.js`) - po zapisie produktu, po imporcie, w cronie
+  i przyciskiem; ręczne pisanie z `/admin/powiadomienia` zostaje.
+- Klucze usług są w tabeli `integrations` (panel `/admin/integracje`), nie w zmiennych Vercela. Jedyna tajna zmienna na Vercelu:
+  `SUPABASE_SERVICE_ROLE_KEY` (używana tylko w `lib/supabase/service.js`, nigdy w kodzie przeglądarki). Bez niej sklep działa,
+  ale nie wychodzą e-maile do klientów i nie ma płatności online.
+- Kwoty dla Przelewy24 w groszach; podpisy sha384 z JSON-a w stałej kolejności pól (`lib/p24.js`). Każda próba zapłaty
+  ma nowy `session_id` (`payments`); księguje tylko `payment_paid()` po weryfikacji w P24.
+- Prawdziwych zamówień nie da się usunąć (księgowość) - tylko anulować; anulowanie oddaje towar na stan.
+- Paczkomat: kod w `orders.locker_id`, adres paczkomatu w `locker_desc`; pola adresu klienta zostają puste.
 - Godzina wysyłki i święta: `lib/shipping-time.js` (liczone w przeglądarce, strefa Europe/Warsaw).
 - Zapis produktu w panelu to kilka zapytań po kolei (produkt, warianty, hurtownia, cechy, galeria).
   Najpierw usuwane są skasowane warianty (zwalnia EAN), potem zmiany. Daty promocji niezmienione

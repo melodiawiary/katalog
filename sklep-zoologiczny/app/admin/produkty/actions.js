@@ -2,6 +2,10 @@
 
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { after } from 'next/server';
+import { getSettings } from '@/lib/settings';
+import { siteUrl } from '@/lib/site';
+import { runStockAlerts } from '@/lib/order-mail';
 import { adminClient } from '@/lib/admin-server';
 import { slugify } from '@/lib/shop';
 import {
@@ -235,6 +239,11 @@ export async function saveProduct(prevState, formData) {
   }
 
   revalidatePath('/', 'layout');
+  // "Produkt znów dostępny": jeśli stan wrócił, e-maile wyjdą same (po odesłaniu odpowiedzi)
+  if (data.variants.some((v) => v.row.stock > 0)) {
+    const site = await siteUrl(await getSettings());
+    after(() => runStockAlerts(site, supabase).catch(() => {}));
+  }
   redirect(`/admin/produkty/${productId}?zapisano=1`);
 }
 
