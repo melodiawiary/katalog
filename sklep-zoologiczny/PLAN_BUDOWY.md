@@ -96,7 +96,7 @@ Dodatkowo: pola "Prowizja płatności" i "Rzeczywisty koszt dostawy" w zamówien
 - [Claude] "Pobierz dla księgowego": Excel ze sprzedażą za miesiąc; przy czynnym VAT podział 8% / 23%
   (zależnie od statusu VAT w ustawieniach).
 
-### Krok 8. Start sprzedaży (gdy firma jest gotowa)
+### Krok 8. Start sprzedaży (gdy firma jest gotowa) - część Claude ZROBIONA 2026-11-14 (`supabase/07_zgody.sql`)
 - [Claude] Regulamin sklepu, polityka prywatności, cookies, zwroty: szablony uzupełniane danymi
   z ustawień (do sprawdzenia przez prawnika / księgowego).
 - [Claude] Baner zgody na cookies, test pełnego zakupu na koncie testowym.

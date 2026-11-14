@@ -8,6 +8,8 @@ import { siteUrl } from '@/lib/site';
 import { shippingInfo } from '@/lib/shipping-time';
 import { sendOrderEmails } from '@/lib/order-mail';
 import { startPayment } from '@/lib/payments';
+import { serviceClient } from '@/lib/supabase/service';
+import { LEGAL_VERSION } from '@/lib/legal';
 
 const FIELDS = ['name', 'email', 'phone', 'address', 'postal_code', 'city', 'notes'];
 
@@ -58,6 +60,13 @@ export async function placeOrder(prevState, formData) {
   });
 
   if (error) return fail(error.message || 'Nie udało się złożyć zamówienia.');
+
+  // dowód akceptacji regulaminu (kiedy i która wersja); błąd nie przerywa zamówienia
+  try {
+    await serviceClient()?.from('orders')
+      .update({ terms_accepted_at: new Date().toISOString(), terms_version: LEGAL_VERSION })
+      .eq('id', orderId);
+  } catch { /* zamówienie i tak przechodzi */ }
 
   const site = await siteUrl(settings);
   const delivery = shippingInfo(new Date(), settings.ship_cutoff, settings.ship_handling_days);

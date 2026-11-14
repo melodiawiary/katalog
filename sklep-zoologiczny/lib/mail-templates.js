@@ -55,6 +55,11 @@ export function deliveryText(order) {
   return `${order.customer_name}, ${order.address}, ${order.postal_code} ${order.city}`;
 }
 
+// Linki do regulaminu i zwrotów (informacje dla konsumenta w potwierdzeniu zamówienia); baza z adresu zamówienia
+function legalBase(extra) {
+  try { return extra?.orderUrl ? new URL(extra.orderUrl).origin : ''; } catch { return ''; }
+}
+
 const testPrefix = (order) => (order.is_test ? '[TEST] ' : '');
 
 // Potwierdzenie zamówienia dla klienta
@@ -97,7 +102,8 @@ ${itemsTable(order)}
 ${payHtml}
 <p><strong>Dostawa:</strong> ${esc(deliveryText(order))}${when ? `<br>${esc(when)}` : ''}</p>
 ${extra.orderUrl ? button(extra.orderUrl, 'Zobacz zamówienie') : ''}
-<p style="color:#7a746b;font-size:13px;">Masz pytanie? Odpowiedz na tego e-maila${s.phone ? ` albo zadzwoń: ${esc(s.phone)}` : ''}.</p>`);
+<p style="color:#7a746b;font-size:13px;">Masz pytanie? Odpowiedz na tego e-maila${s.phone ? ` albo zadzwoń: ${esc(s.phone)}` : ''}.</p>
+${legalBase(extra) ? `<p style="color:#7a746b;font-size:13px;">Masz 14 dni na odstąpienie od umowy. Informacje i wzór formularza: <a href="${esc(legalBase(extra))}/zwroty" style="color:#c4631c;">zwroty i reklamacje</a>. Zaakceptowany <a href="${esc(legalBase(extra))}/regulamin" style="color:#c4631c;">regulamin</a> i <a href="${esc(legalBase(extra))}/polityka-prywatnosci" style="color:#c4631c;">politykę prywatności</a> znajdziesz w sklepie.</p>` : ''}`);
 
   const text = [
     order.is_test ? 'TO ZAMÓWIENIE TESTOWE.\n' : '',
@@ -110,6 +116,9 @@ ${extra.orderUrl ? button(extra.orderUrl, 'Zobacz zamówienie') : ''}
     '',
     `Dostawa: ${deliveryText(order)}${when ? `\n${when}` : ''}`,
     extra.orderUrl ? `\nZamówienie: ${extra.orderUrl}` : '',
+    legalBase(extra)
+      ? `\nMasz 14 dni na odstąpienie od umowy: ${legalBase(extra)}/zwroty\nRegulamin: ${legalBase(extra)}/regulamin\nPolityka prywatności: ${legalBase(extra)}/polityka-prywatnosci`
+      : '',
     '',
     `Pozdrawiamy\n${s.shop_name || ''}`,
   ].join('\n');

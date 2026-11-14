@@ -151,7 +151,10 @@ export default function CheckoutForm({ salesEnabled, testMode, features, ship })
           {payment === 'przelew' && ' (po zaksięgowaniu przelewu)'}
         </p>
         <label className="radio">
-          <input type="checkbox" name="regulamin" required /> Akceptuję regulamin sklepu i politykę prywatności
+          <input type="checkbox" name="regulamin" required />
+          <span>
+            Zapoznałem się z <Link href="/regulamin" target="_blank">regulaminem</Link> i <Link href="/polityka-prywatnosci" target="_blank">polityką prywatności</Link> i akceptuję regulamin
+          </span>
         </label>
         {(localError || state?.error) && <p className="alert">{localError || state.error}</p>}
         {blocked.length > 0 && (
@@ -163,6 +166,7 @@ export default function CheckoutForm({ salesEnabled, testMode, features, ship })
         <button className="btn btn-big" disabled={pending || !canOrder || !checked || blocked.length > 0}>
           {!canOrder ? 'Zamówienia wkrótce' : pending ? 'Wysyłanie…' : 'Zamawiam z obowiązkiem zapłaty'}
         </button>
+        <p className="small muted center-text">Masz 14 dni na odstąpienie od umowy. <Link href="/zwroty" target="_blank">Zwroty i reklamacje</Link></p>
         {payment === 'p24' && canOrder && <p className="small muted center-text">Po kliknięciu przejdziesz do bezpiecznej płatności Przelewy24.</p>}
       </div>
     </form>

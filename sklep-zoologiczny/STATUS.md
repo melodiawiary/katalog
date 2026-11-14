@@ -1,8 +1,19 @@
 # STATUS - Sklep zoologiczny + katalog groomerów
 
-Ostatnia aktualizacja: 2026-11-14 (po Etapie 1, Kroku 7)
+Ostatnia aktualizacja: 2026-11-14 (po Etapie 1, Kroku 8 - część Claude)
 
 ## NASTĘPNY KROK
+
+**Krok 8, część Claude: ZROBIONE 2026-11-14** (`supabase/07_zgody.sql` wykonany w bazie). Strony `/regulamin`, `/polityka-prywatnosci`,
+`/polityka-cookies`, `/zwroty` (odstąpienie 14 dni + wzór formularza z przyciskiem e-mail + reklamacje) biorą dane z `settings`
+(brak danych = czerwony znacznik "uzupełnij w ustawieniach"; przy wyłączonej sprzedaży baner "wersja robocza"). Teksty: `app/*/page.js`,
+wspólne: `lib/legal.js` (`LEGAL_VERSION` zmieniać przy każdej zmianie treści), `components/legal/Doc.js`. Stopka z linkami, baner cookies
+(`components/CookieBanner.js`, `lib/consent.js`; dziś tylko cookies niezbędne, nowe kategorie dopisać w `OPTIONAL_CATEGORIES`),
+akceptacja regulaminu zapisywana w `orders.terms_accepted_at` i `terms_version`, linki do zwrotów i regulaminu w e-mailu z potwierdzeniem.
+Zostaje po stronie Mariusza (lista w `PLAN_BUDOWY.md`, Krok 8): prawnik/księgowy sprawdza teksty, firma, rejestr paszowy PIW, VAT,
+hurtownia, domena, Vercel Pro, konta Przelewy24 i InPost produkcyjne, wpisanie danych w `/admin/ustawienia` i włączenie sprzedaży.
+Do decyzji z prawnikiem: czy otwarta karma jest wyłączona ze zwrotu (art. 38 pkt 5), termin 7 dni na przelew, brak formalnego trwałego nośnika
+(regulamin jest linkiem w e-mailu, nie załącznikiem PDF).
 
 Krok 6 (zamówienie i płatności) jest wdrożony (PR #6 zatwierdzony, `06_zamowienie.sql` w bazie).
 2026-11-14: na Vercelu ustawione `SUPABASE_SERVICE_ROLE_KEY` (klucz secret "default") i `CRON_SECRET`, Redeploy zrobiony;

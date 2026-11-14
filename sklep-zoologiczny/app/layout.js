@@ -4,6 +4,9 @@ import './globals.css';
 import { CartProvider } from '@/components/CartProvider';
 import CartBadge from '@/components/CartBadge';
 import SearchBox from '@/components/SearchBox';
+import CookieBanner from '@/components/CookieBanner';
+import CookieSettingsLink from '@/components/CookieSettingsLink';
+import { LEGAL_LINKS } from '@/lib/legal';
 import { getSettings } from '@/lib/settings';
 
 export async function generateMetadata() {
@@ -58,9 +61,14 @@ export default async function RootLayout({ children }) {
                   </p>
                 </div>
               )}
+              <div className="footer-links">
+                {LEGAL_LINKS.map((l) => <Link key={l.href} href={l.href}>{l.label}</Link>)}
+                <CookieSettingsLink />
+              </div>
               <div className="footer-copy">© {new Date().getFullYear()} {s.shop_name}</div>
             </div>
           </footer>
+          <CookieBanner />
         </CartProvider>
       </body>
     </html>
