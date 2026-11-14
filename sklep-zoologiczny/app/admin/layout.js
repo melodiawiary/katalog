@@ -21,6 +21,11 @@ export default async function AdminLayout({ children }) {
         .is('notified_at', null).gt('product_variants.stock', 0)
     : { count: 0 };
 
+  // nowe zgłoszenia katalogu groomerów (przed 09_miejsca.sql tabeli nie ma - wtedy 0)
+  const { count: placeRequests } = isAdmin
+    ? await supabase.from('place_requests').select('id', { count: 'exact', head: true }).eq('status', 'nowe')
+    : { count: 0 };
+
   return (
     <div className="admin">
       <nav className="admin-nav">
@@ -33,6 +38,7 @@ export default async function AdminLayout({ children }) {
         <Link href="/admin/import">Import</Link>
         <Link href="/admin/prosby">Zgłoszenia{newRequests > 0 && <span className="badge">{newRequests}</span>}</Link>
         <Link href="/admin/opinie">Opinie</Link>
+        <Link href="/admin/miejsca">Salony{placeRequests > 0 && <span className="badge">{placeRequests}</span>}</Link>
         <Link href="/admin/powiadomienia">Powiadomienia{alertsReady > 0 && <span className="badge">{alertsReady}</span>}</Link>
         <Link href="/admin/ustawienia">Ustawienia</Link>
         <Link href="/admin/integracje">Integracje</Link>

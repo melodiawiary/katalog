@@ -593,3 +593,30 @@ label.check span:nth-child(2) { flex: 1; }
 .star-btn.on { color: #f0a020; }
 .review-form { display: grid; gap: 10px; }
 .review-form label { display: grid; gap: 4px; }
+
+/* ---------- Etap 3: panel katalogu groomerów ---------- */
+.place-form { max-width: 720px; }
+.place-form fieldset { border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); display: grid; gap: 10px; padding: 14px; margin: 0; }
+.place-form legend { font-weight: 700; padding: 0 6px; }
+.pin-map { height: 340px; }
+.pin-icon span {
+  display: block; width: 28px; height: 28px; background: var(--accent); border: 3px solid #fff; border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg); box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
+}
+.hours-edit { display: grid; gap: 8px; }
+.hours-day { display: grid; grid-template-columns: 110px 1fr; gap: 8px; align-items: start; padding: 6px 0; border-bottom: 1px dashed var(--line); }
+.hours-ranges { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
+.hours-range { display: inline-flex; gap: 6px; align-items: center; }
+.hours-range input[type='time'] { width: auto; }
+.price-row { padding: 12px; display: grid; gap: 8px; }
+.grid-3p { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.catalog-switch { margin: 8px 0 14px; }
+.place-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 14px; flex-wrap: wrap; }
+.place-row-main { display: grid; gap: 2px; min-width: 0; flex: 1 1 260px; }
+.place-row-end { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.place-row-end .inline-form { display: inline-flex; padding: 0; max-width: none; }
+.place-row-end .inline-form .btn { padding: 4px 10px; font-size: 0.85rem; }
+@media (max-width: 600px) {
+  .hours-day { grid-template-columns: 1fr; }
+  .grid-3p { grid-template-columns: 1fr 1fr; }
+}
