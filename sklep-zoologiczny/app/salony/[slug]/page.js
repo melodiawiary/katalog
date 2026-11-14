@@ -182,9 +182,7 @@ export default async function PlacePage({ params }) {
             <li key={r.id} className="review">
               <div className="review-head"><Stars value={r.rating} /><strong>{Number(r.rating).toFixed(1).replace('.', ',')}</strong></div>
               {r.body && <p>{r.body}</p>}
-              {r.paid_amount != null && (
-                <p className="review-paid">Klient zapłacił: {Number(r.paid_amount).toLocaleString('pl-PL')} zł{r.service && <> ({r.service}{r.size_class && <>, {SIZE_CLASS[r.size_class]}</>})</>}</p>
-              )}
+              {r.service && <p className="review-paid">Usługa: {r.service}{r.size_class && <>, {SIZE_CLASS[r.size_class]}</>}</p>}
               <p className="small muted">{r.author} · {date(r.created_at)}</p>
               <ReportReview reviewId={r.id} />
             </li>

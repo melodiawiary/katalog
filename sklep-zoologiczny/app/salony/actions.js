@@ -41,9 +41,6 @@ export async function submitPlaceReview(prev, fd) {
   const quality = stars(fd, 'r_quality');
   if (!Number.isInteger(place) || place < 1) return { error: 'Nie znaleziono salonu.' };
   if (!quality) return { error: 'Oceń jakość usługi (1-5 gwiazdek).' };
-  const paidRaw = text(fd, 'paid_amount', 12).replace(',', '.');
-  const paid = paidRaw === '' ? null : Number(paidRaw);
-  if (paid != null && !Number.isFinite(paid)) return { error: 'Zapłacona kwota: wpisz liczbę albo zostaw puste.' };
 
   const supabase = await createClient();
   const { data, error } = await supabase.rpc('submit_place_review', {
@@ -55,7 +52,7 @@ export async function submitPlaceReview(prev, fd) {
     p_body: text(fd, 'body', 2000),
     p_service: text(fd, 'service', 40) || null,
     p_size: text(fd, 'size_class', 20) || null,
-    p_paid: paid,
+    p_paid: null,
   });
   if (error) return { error: error.code === 'P0001' ? error.message : 'Nie udało się zapisać opinii. Spróbuj ponownie.' };
   return {

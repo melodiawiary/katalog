@@ -23,7 +23,7 @@ export default async function PlaceReviewsAdmin({ searchParams }) {
   }
 
   let q = supabase.from('place_reviews')
-    .select('id, rating, r_quality, r_care, r_clean, r_price, body, author, status, hidden_note, reports_count, paid_amount, created_at, updated_at, places(name, slug, city)')
+    .select('id, rating, r_quality, r_care, r_clean, r_price, body, author, status, hidden_note, reports_count, created_at, updated_at, places(name, slug, city)')
     .order('created_at', { ascending: false }).limit(100);
   if (tab === 'zgloszone') q = q.gt('reports_count', 0).neq('status', 'ukryta');
   else q = q.eq('status', tab);
@@ -62,7 +62,6 @@ export default async function PlaceReviewsAdmin({ searchParams }) {
               <span className="small muted">jakość {r.r_quality}{r.r_care ? `, podejście ${r.r_care}` : ''}{r.r_clean ? `, czystość ${r.r_clean}` : ''}{r.r_price ? `, cena ${r.r_price}` : ''}</span>
               <span className="status"> {REVIEW_STATUS[r.status]}</span></p>
             {r.body && <p>{r.body}</p>}
-            {r.paid_amount != null && <p className="small muted">Zapłacono: {r.paid_amount} zł</p>}
             <p className="small muted">{r.author} · {new Date(r.created_at).toLocaleDateString('pl-PL', { timeZone: 'Europe/Warsaw' })} ·{' '}
               {r.places?.slug ? <Link href={`/salony/${r.places.slug}#opinie`}>{r.places.name}, {r.places.city}</Link> : 'salon usunięty'}
               {r.hidden_note && <> · powód ukrycia: {r.hidden_note}</>}</p>

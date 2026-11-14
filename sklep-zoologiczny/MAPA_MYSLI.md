@@ -133,7 +133,7 @@ Fundament (prawo, nazwa, płatności, hosting) leży pod wszystkim.
 ## 5. Opinie
 - [ETAP 4] Tylko zalogowani, 1 opinia na salon (można poprawić); oceniać można także salon niezweryfikowany; limit 5 nowych opinii o salonach na dobę z jednego konta
 - [ETAP 4] Gwiazdki: jakość (wymagana), podejście do zwierzęcia, czystość, cena (nieobowiązkowe); ocena ogólna = średnia z podanych
-- [ETAP 4] Tekst opinii (do 2000 znaków); nieobowiązkowo: usługa, wielkość psa i zapłacona kwota (pokazywane przy opinii jako "klient zapłacił"; pomaga uzupełnić cenniki, ale nie zmienia cennika salonu)
+- [ETAP 4] Tekst opinii (do 2000 znaków); nieobowiązkowo: usługa i wielkość psa (kwoty NIE pytamy - decyzja Mariusza 2026-11-14, ze względów podatkowych; kolumna paid_amount zostaje pusta) (ale nie zmienia cennika salonu)
 - [ETAP 4] Moderacja: przełącznik w panelu "Opinie o salonach: najpierw sprawdzam / publikuj od razu" (domyślnie najpierw sprawdzam, bo salony to małe firmy, a fałszywe opinie psują ranking); "Zgłoś nadużycie" pod każdą opinią (e-mail + powód, limit zgłoszeń); ukrywamy tylko wpisy łamiące zasady (wulgaryzmy, dane osobowe, spam, treści niedotyczące usług salonu), nie dlatego, że są negatywne
 - [ETAP 4] Strona "Zasady opinii" (jak sprawdzamy opinie: nie weryfikujemy faktu wizyty, wymagamy konta, moderujemy, nie bierzemy płatności za opinie) z linkiem pod opiniami; do sprawdzenia z prawnikiem razem z regulaminem
 - [ETAP 5] Odpowiedź właściciela salonu; zdjęcie efektu (wymaga bucketu na zdjęcia i moderacji zdjęć)

@@ -97,7 +97,6 @@ export default function PlaceReviewForm({ placeId, services = [] }) {
               </select>
             </label>
           </div>
-          <label>Zapłacona kwota (zł)<input name="paid_amount" inputMode="decimal" defaultValue={mine?.paid_amount ?? ''} placeholder="np. 120" /></label>
         </details>
         <p className="small muted">Nie sprawdzamy, czy byłeś w tym salonie, dlatego pisz tylko o własnych doświadczeniach. <Link href="/salony/zasady-opinii">Zasady opinii</Link></p>
         {state?.error && <p className="alert">{state.error}</p>}
