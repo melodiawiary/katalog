@@ -31,8 +31,7 @@ Test: zalogowany administrator może składać zamówienia testowe przy wyłącz
 
 **Połączenia Claude (od 2026-11-14):** Supabase (SQL Claude wykonuje sam - Mariusz nie musi już wklejać plików SQL)
 i Vercel (zespół Dzialkowo, id `team_vifCDnAnRz7OdlGcn10I1NY1`: zmienne, wdrożenia, logi). Tajnych kluczy Supabase
-połączenie nie pokazuje - te Mariusz kopiuje sam. Funkcje Vercela działają w regionie `iad1` (USA), baza w Europie:
-do rozważenia przeniesienie funkcji do `fra1` (szybsze strony).
+połączenie nie pokazuje - te Mariusz kopiuje sam. Funkcje Vercela przeniesione do `fra1` (Frankfurt, 2026-11-14, `vercel.json` -> `regions`), baza też w Europie.
 
 **Etap 1, Krok 7: Raporty dla księgowego - ZROBIONE 2026-11-14 (bez nowego SQL).** Następny: Krok 8 (start sprzedaży, regulamin,
 cookies, test pełnego zakupu), szczegóły w `PLAN_BUDOWY.md`. Do ustalenia z księgowym: stawka VAT dla dostawy pobieranej od klienta
