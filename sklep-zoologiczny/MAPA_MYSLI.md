@@ -86,8 +86,11 @@ Fundament (prawo, nazwa, płatności, hosting) leży pod wszystkim.
 - [ETAP 3] Status: zgłoszony -> zweryfikowany
 - [GOTOWE] Import z OpenStreetMap (Trójmiasto, 29 salonów jako szkice, 2026-11-14); licencja ODbL, wymagane "© OpenStreetMap" na stronach katalogu
 - [ETAP 3] [ZMIANA] Dwa poziomy wpisu: "niezweryfikowany" (z otwartych danych: bez odznak, z napisem) i "zweryfikowany" (sprawdzony przez nas albo przejęty przez właściciela)
+- [ETAP 3] Zgłoszenie salonu przez właściciela: formularz "Dodaj swój salon" (nazwa, adres, telefon, pole "jestem właścicielem"); trafia do kolejki zgłoszeń w panelu, Mariusz zatwierdza (admin zakłada wpis jednym kliknięciem ze zgłoszenia)
+- [ETAP 3] Przegląd po 60 dniach: lista salonów bez ani jednej opinii i bez przejętego profilu; Mariusz decyduje o każdym (zostaw / ukryj / usuń); nic nie znika automatycznie; domyślnie ukrywamy, nie kasujemy (zostaje źródło z OSM, więc kolejny import nie doda go drugi raz)
+- [ETAP 3] Start miasta: 20 przejrzanych salonów to próg otwarcia, nie limit; kolejne wpisy dochodzą po przeglądzie i ranking ustawia ich kolejność
 - [ETAP 3] Kolejne miasta: ten sam import (zapytanie Overpass dla miasta -> plik -> wgranie jako szkice -> przegląd adresów w panelu)
-- [DO POTWIERDZENIA] Miasto otwieramy publicznie, gdy ma co najmniej 10 przejrzanych wpisów (dziś w bazie jest jeden próg: 20 opublikowanych w całości)
+- [DO POTWIERDZENIA] Miasto otwieramy publicznie, gdy ma 20 przejrzanych wpisów (propozycja Mariusza z 2026-11-14; dziś w bazie jest jeden próg 20 dla całego katalogu, trzeba go zmienić na próg miasta)
 - [PÓŹNIEJ] Inne źródła: rejestr CEIDG / REGON (kod PKD) po przeglądzie RODO (to dane osób prowadzących działalność, często z adresem domowym)
 - [ZASADA] Nie kopiujemy danych z Map Google i nie scrapujemy serwisów typu Panorama Firm (łamie ich regulaminy). Salony spoza OSM dodajemy ręcznie, z poleceń klientów i ze zgłoszeń właścicieli
 - [ETAP 5] Właściciel przejmuje profil ("To mój salon")
