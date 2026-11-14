@@ -1,6 +1,6 @@
 # STATUS - Sklep zoologiczny + katalog groomerów
 
-Ostatnia aktualizacja: 2026-11-13 (po Etapie 1, Kroku 6)
+Ostatnia aktualizacja: 2026-11-14 (po Etapie 1, Kroku 6)
 
 ## NASTĘPNY KROK
 
@@ -8,7 +8,13 @@ Krok 6 (zamówienie i płatności) jest wdrożony (PR #6 zatwierdzony, `06_zamow
 2026-11-14: na Vercelu ustawione `SUPABASE_SERVICE_ROLE_KEY` (klucz secret "default") i `CRON_SECRET`, Redeploy zrobiony;
 mapa paczkomatów sprawdzona na produkcji (prawdziwe punkty InPost). Klucz secret był wklejony w czacie - przy okazji
 wymienić go w Supabase (New secret key, stary usunąć) i wpisać nowy na Vercelu (Claude zrobi to przez połączenie z Vercelem).
-Zostało (Mariusz): konto Resend + klucz w `/admin/integracje`, konto testowe Przelewy24 (sandbox) + klucze w `/admin/integracje`.
+Resend: konto na mormecs@gmail.com (logowanie Google), klucz zapisany w `integrations` (2026-11-14), kopie nowych zamówień
+na mormecs@gmail.com (`integrations.notify_email`). Bez domeny Resend dostarcza TYLKO na mormecs@gmail.com - do testów
+używać tego adresu jako e-maila klienta. W `settings` brak jeszcze e-maila sklepu.
+Przelewy24: czeka na firmę (rejestracja i sandbox wymagają danych firmy; przy JDG może być konto prywatne).
+Domena: Mariusz chce kupić domenę .pl - Vercel nie sprzedaje .pl, więc u polskiego sprzedawcy (OVH / home.pl / nazwa.pl),
+potem serwery DNS `ns1.vercel-dns.com`, `ns2.vercel-dns.com`; Claude przez Vercel podłącza domenę, rekordy Resend
+i MX skrzynki, potem ustawia `mail_from` (np. sklep@domena) i domenę w `/admin/ustawienia`.
 Test: zalogowany administrator może składać zamówienia testowe przy wyłączonej sprzedaży (oznaczone TEST, do usunięcia).
 
 **Połączenia Claude (od 2026-11-14):** Supabase (SQL Claude wykonuje sam - Mariusz nie musi już wklejać plików SQL)
