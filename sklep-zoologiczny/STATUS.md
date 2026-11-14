@@ -1,8 +1,18 @@
 # STATUS - Sklep zoologiczny + katalog groomerów
 
-Ostatnia aktualizacja: 2026-11-14 (Etap 2 przetestowany na żywo)
+Ostatnia aktualizacja: 2026-11-14 (Etap 3: baza katalogu groomerów gotowa, `09_miejsca.sql`)
 
 ## NASTĘPNY KROK
+
+**Etap 3 (katalog groomerów i mapa), część 1 - BAZA: ZROBIONE 2026-11-14** (`supabase/09_miejsca.sql` wykonany w bazie przez Claude, przetestowany na danych próbnych z cofnięciem:
+slug automatyczny, szukanie w pobliżu z promieniem i zasięgiem groomera mobilnego, cena "od" dla usługi i wielkości psa, otwarte teraz, ukryte i szkice niewidoczne dla klienta,
+blokada włączenia katalogu przed 20 opublikowanymi miejscami, `place_private` zablokowane dla klientów). Baza jest pusta (0 miejsc), katalog WYŁĄCZONY (`places_config.public_enabled = false`).
+**Zostaje w Etapie 3 (kod, jeszcze nic nie napisane):** (1) panel `/admin/miejsca`: lista, formularz (adres -> współrzędne z Nominatim jak przy paczkomatach, albo przeciągnięcie pinezki na mapie),
+godziny, cennik, udogodnienia, notatki prywatne, zgłoszenia (`place_requests`: poleć / popraw / usuń), przełącznik katalogu; (2) strony publiczne `/salony` (mapa Leaflet + lista, filtry, "blisko mnie",
+adres -> pozycja), `/salony/[slug]` (profil: `place_page`), formularz "Poleć salon" i "Zgłoś zmianę / usuń"; (3) link "Salony dla: Burek" z Moich zwierząt (`dog_size_class` z wagi);
+(4) zebranie 20-30 salonów z Trójmiasta (ręcznie w panelu; ewentualnie import CSV później); (5) dopiero wtedy włączyć katalog.
+
+### Poprzedni krok
 
 **Etap 2 (konto klienta): KOD WDROŻONY 2026-11-14** (commit `ee9cec1`, `supabase/08_konto.sql` wykonany w bazie, build przeszedł, Vercel READY, w logach brak błędów).
 **Sprawdzone na żywo 2026-11-14:** Mariusz przetestował logowanie e-mailem na produkcji (mormecs@gmail.com) - działa; "Allow new users to sign up" jest WŁĄCZONE (sprawdzone na zrzucie ekranu).
@@ -68,7 +78,7 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
   Każdy push do `main` automatycznie aktualizuje sklep.
 - **Zmienne na Vercelu:** `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` (od kroku 6, tajna), `NEXT_PUBLIC_SHOP_NAME`
   (ta ostatnia tylko zapasowo). Dane firmy, konto, kontakt: panel `/admin/ustawienia` (tabela `settings`).
-- **Pliki SQL:** `supabase/schema.sql`, potem po kolei `01_ustawienia.sql`, `02_produkty.sql`, `03_import.sql`, `04_szukanie.sql`, `05_karta.sql`, `06_zamowienie.sql`, `07_zgody.sql`, `08_konto.sql`
+- **Pliki SQL:** `supabase/schema.sql`, potem po kolei `01_ustawienia.sql`, `02_produkty.sql`, `03_import.sql`, `04_szukanie.sql`, `05_karta.sql`, `06_zamowienie.sql`, `07_zgody.sql`, `08_konto.sql`, `09_miejsca.sql`
   (każdy można uruchomić ponownie).
 - **Adres sklepu:** https://sklep-zoologiczny.vercel.app (panel: `/admin`, ustawienia: `/admin/ustawienia`).
   Strony: `/kategoria/<slug>`, `/szukaj?q=...`, filtry w adresie (np. `?marka=brit,josera&wiek=senior&waga=1-3-kg&cena_od=20&dostepne=1&sort=cena-rosnaco&strona=2`).
@@ -244,7 +254,7 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
       i formie podatku, umowa z hurtownią (zgoda na zdjęcia i opisy, częstotliwość aktualizacji stanów).
 - [x] Etap 2: konto klienta (zrobione 2026-11-14, opis niżej w "Co jest zrobione"; do sprawdzenia na żywo, patrz NASTĘPNY KROK).
 - [ ] Etap 3: katalog groomerów + mapa (PostGIS, OpenStreetMap), panel admina do salonów;
-      publicznie dopiero z 20-30 salonami z Trójmiasta. SQL np. `supabase/03_miejsca.sql`.
+      publicznie dopiero z 20-30 salonami z Trójmiasta. Baza zrobiona (`supabase/09_miejsca.sql`, 2026-11-14), zostaje kod (panel i strony publiczne), patrz NASTĘPNY KROK.
 - [ ] Etap 4: opinie o salonach, ranking i odznaki, nowa strona główna (sklep + salony, zapis do Akademii).
 - [ ] Etap 5: konta salonów, odpowiedzi na opinie.
 - [ ] Etap 6: Akademia.
@@ -297,4 +307,9 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
 - Maile logowania i przypomnień idą tylko przez serwer (klucz serwisowy + Resend). Bez własnej domeny Resend dostarcza tylko na mormecs@gmail.com - dopiero po domenie
   logować i dostawać przypomnienia będą wszyscy.
 - Przypomnienia: `reminders_due()` i `reminders_mark_sent()` tylko dla `service_role`. Po wysłaniu licznik przesuwa się o kolejny okres.
+- Katalog groomerów (`09_miejsca.sql`): miejsca w `places` (PostGIS, `geog` liczone z `lat`/`lng`, nie zapisywać ręcznie), status szkic / opublikowany / ukryty; klient widzi tylko opublikowane
+  i tylko gdy `places_config.public_enabled`; administrator widzi wszystko (podgląd). Dane tylko dla admina (notatki, kontakt do właściciela) są w `place_private`, nie w `places`.
+  Szukanie i profil liczy baza (`search_places`, `place_page`, `places_cities`), kod tylko czyta adres i rysuje. Mapa = ta sama lista (`p_per_page` do 200), bez osobnej funkcji.
+  Groomer mobilny pasuje do "w pobliżu", gdy klient jest w jego `service_radius_km`. Publikacja wymaga miasta (i adresu poza groomerem mobilnym). Wielkość psa: `dog_size_class(kg)`.
+  Etykiety usług i udogodnień: tabele `service_defs`, `feature_defs` (na razie bez panelu). Opinie i ranking dopiero w Etapie 4 (nie ma jeszcze tabeli opinii o salonach).
 - Po każdym etapie aktualizować ten plik w repo i w dokumentach projektu Claude.

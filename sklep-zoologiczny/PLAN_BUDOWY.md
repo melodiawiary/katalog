@@ -114,8 +114,9 @@ opinie tylko po zakupie z moderacją w panelu (`/admin/opinie`), "kupowane razem
 - [Mariusz] Opcjonalnie Google: OAuth Client w Google Cloud + dane w Supabase (Providers -> Google) + Redirect URL `/auth/callback`.
 - [Mariusz] Przetestować logowanie na mormecs@gmail.com (Resend bez domeny dostarcza tylko tam).
 
-## ETAP 3: katalog groomerów i mapa
-Plik `supabase/03_miejsca.sql`, profile, cennik wg rasy i wielkości, mapa OpenStreetMap, "w pobliżu",
+## ETAP 3: katalog groomerów i mapa - baza ZROBIONA 2026-11-14 (`supabase/09_miejsca.sql`, bo 03 jest zajęty); zostaje panel i strony publiczne
+Baza: miejsca z PostGIS, godziny, cennik, zgłoszenia "poleć / popraw / usuń", przełącznik katalogu (min. 20 opublikowanych), szukanie w pobliżu.
+Plik `supabase/09_miejsca.sql`, profile, cennik wg rasy i wielkości, mapa OpenStreetMap, "w pobliżu",
 filtry, panel admina do salonów. Publicznie dopiero z 20-30 salonami z Trójmiasta.
 
 ## ETAP 4: opinie o salonach, ranking, nowa strona główna (+ zapis do Akademii)
