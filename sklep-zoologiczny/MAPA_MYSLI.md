@@ -88,9 +88,11 @@ Fundament (prawo, nazwa, płatności, hosting) leży pod wszystkim.
 - [ETAP 3] [ZMIANA] Dwa poziomy wpisu: "niezweryfikowany" (z otwartych danych: bez odznak, z napisem) i "zweryfikowany" (sprawdzony przez nas albo przejęty przez właściciela)
 - [ETAP 3] Zgłoszenie salonu przez właściciela: formularz "Dodaj swój salon" (nazwa, adres, telefon, pole "jestem właścicielem"); trafia do kolejki zgłoszeń w panelu, Mariusz zatwierdza (admin zakłada wpis jednym kliknięciem ze zgłoszenia)
 - [ETAP 3] Przegląd po 60 dniach: lista salonów bez ani jednej opinii i bez przejętego profilu; Mariusz decyduje o każdym (zostaw / ukryj / usuń); nic nie znika automatycznie; domyślnie ukrywamy, nie kasujemy (zostaje źródło z OSM, więc kolejny import nie doda go drugi raz)
-- [ETAP 3] Start miasta: 20 przejrzanych salonów to próg otwarcia, nie limit; kolejne wpisy dochodzą po przeglądzie i ranking ustawia ich kolejność
+- [ETAP 3] [ZASADA SPRAWIEDLIWOŚCI MAŁE / DUŻE MIASTO] Próg otwarcia miasta jest niski i taki sam dla wszystkich: 5 przejrzanych salonów, a jeśli w mieście znamy mniej niż 5 (np. Przemyśl), otwieramy je z wszystkimi, które są. Górnego limitu nie ma: Warszawa pokazuje wszystkie przejrzane salony, lista po 20 na stronę, kolejność ustala ranking
+- [ETAP 3] Małe miasto bez salonu w pobliżu: wyniki "najbliżsi w promieniu 30 km" (PostGIS), więc klient z małego miasta widzi salony z sąsiednich miejscowości
+- [ETAP 3] Przegląd po 60 dniach nigdy nie podpowiada ukrycia ostatniego salonu w mieście
 - [ETAP 3] Kolejne miasta: ten sam import (zapytanie Overpass dla miasta -> plik -> wgranie jako szkice -> przegląd adresów w panelu)
-- [DO POTWIERDZENIA] Miasto otwieramy publicznie, gdy ma 20 przejrzanych wpisów (propozycja Mariusza z 2026-11-14; dziś w bazie jest jeden próg 20 dla całego katalogu, trzeba go zmienić na próg miasta)
+- [DO POTWIERDZENIA] Miasto otwieramy publicznie od 5 przejrzanych wpisów albo ze wszystkimi znanymi, gdy jest ich mniej niż 5 (dziś w bazie jest jeden próg 20 dla całego katalogu; trzeba go zmienić na próg per miasto)
 - [PÓŹNIEJ] Inne źródła: rejestr CEIDG / REGON (kod PKD) po przeglądzie RODO (to dane osób prowadzących działalność, często z adresem domowym)
 - [ZASADA] Nie kopiujemy danych z Map Google i nie scrapujemy serwisów typu Panorama Firm (łamie ich regulaminy). Salony spoza OSM dodajemy ręcznie, z poleceń klientów i ze zgłoszeń właścicieli
 - [ETAP 5] Właściciel przejmuje profil ("To mój salon")
@@ -125,10 +127,10 @@ Fundament (prawo, nazwa, płatności, hosting) leży pod wszystkim.
 - [ETAP 4] Strona "Ranking w mieście" (top 10 miasta)
 - [ETAP 4] Średnia, liczba opinii i punkty rankingu zapisane w tabeli salonu i przeliczane po każdej opinii (nie liczone przy każdym wejściu klienta)
 - [ETAP 4] Salon bez opinii pokazujemy z napisem "Brak opinii" i bez miejsca w rankingu
-- [ETAP 4] Średnia ocen ważona liczbą opinii (jedna ocena 5/5 nie wygrywa z 50 ocenami 4,8)
+- [ETAP 4] Średnia ocen ważona liczbą opinii, z średnią miasta jako punktem startu (jedna ocena 5/5 nie wygrywa z 50 ocenami 4,8; w małym mieście kilka opinii wystarcza)
 - [ETAP 4] Nowsze opinie ważą więcej
 - [ETAP 4] Bonus za pełny i zweryfikowany profil
-- [ETAP 4] Odznaki: Polecany, Top w mieście (tylko dla salonów zweryfikowanych)
+- [ETAP 4] Odznaki (tylko salony zweryfikowane, min. 3 opinie): "Polecany"; "Top w mieście" = 3 najlepsze w małym mieście, 10% najlepszych w dużym
 - [ETAP 5] [ZMIANA] "Sprawdź swój ranking": właściciel przejmuje profil ("To mój salon": zgłoszenie, potwierdzenie telefonem lub e-mailem, zatwierdza admin), potem widzi miejsce w mieście, opinie, odpowiada i uzupełnia cennik
 - [PÓŹNIEJ] Certyfikowany przez Akademię
 - [PÓŹNIEJ] Płatne wyróżnienie, zawsze oznaczone "Promowane" (pierwsze źródło przychodu z katalogu: oferta pokazuje się salonom, które przejęły profil; nie wpływa na ocenę ani miejsce w rankingu)
