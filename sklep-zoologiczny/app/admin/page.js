@@ -98,6 +98,18 @@ export default async function OrdersPage({ searchParams }) {
                     <input name="tracking_number" defaultValue={o.tracking_number || ''} inputMode="numeric" placeholder="np. 520000011234567890123456" />
                   </label>
                 )}
+                {!oldDb && (
+                  <>
+                    <label>
+                      Prowizja płatności, zł (do raportów)
+                      <input name="payment_fee" defaultValue={o.payment_fee ? String(o.payment_fee).replace('.', ',') : ''} inputMode="decimal" placeholder="np. 1,85" />
+                    </label>
+                    <label>
+                      Rzeczywisty koszt dostawy, zł (do raportów)
+                      <input name="shipping_real_cost" defaultValue={o.shipping_real_cost != null ? String(o.shipping_real_cost).replace('.', ',') : ''} inputMode="decimal" placeholder="np. 11,50" />
+                    </label>
+                  </>
+                )}
                 {track && <p className="small"><a href={track} target="_blank" rel="noopener noreferrer">Śledź przesyłkę</a></p>}
                 <label className="radio"><input type="checkbox" name="notify" defaultChecked /> Wyślij klientowi e-mail o zmianie</label>
               </ActionForm>

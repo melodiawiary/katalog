@@ -502,3 +502,16 @@ label.check span:nth-child(2) { flex: 1; }
 .order-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 10px; }
 .secret-note { font-size: 0.8rem; color: var(--muted); }
 .locker-row > span:last-child { white-space: nowrap; }
+
+/* Raporty */
+.report-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 12px 0; }
+.report-tiles > div { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 10px 12px; display: grid; gap: 2px; }
+.report-tiles span { color: var(--muted); font-size: 0.85rem; }
+.report-tiles strong { font-size: 1.2rem; }
+.report-tiles small { color: var(--muted); font-size: 0.78rem; }
+.report-tiles .tile-main { border-color: var(--accent); }
+.table-wrap { overflow-x: auto; margin-bottom: 8px; }
+.report-table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--line); font-size: 0.92rem; }
+.report-table th, .report-table td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: right; white-space: nowrap; }
+.report-table th:first-child, .report-table td:first-child { text-align: left; }
+.report-table tr.sum td { font-weight: 700; background: #faf5ec; }
