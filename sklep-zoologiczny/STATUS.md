@@ -1,6 +1,6 @@
 # STATUS - Sklep zoologiczny + katalog groomerów
 
-Ostatnia aktualizacja: 2026-11-14 (Etap 3: baza, panel i strony publiczne `/salony` gotowe; zostaje zebranie salonów i włączenie katalogu)
+Ostatnia aktualizacja: 2026-11-14 (Etap 3: baza, panel, strony publiczne, link z Moich zwierząt i próg miasta gotowe; zostaje przegląd 30 szkiców i włączenie katalogu; mapa myśli rozszerzona o cała Polskę, opinie, ranking i przejmowanie salonów)
 
 ## NASTĘPNY KROK
 
@@ -19,7 +19,10 @@ Link "Salony" w nagłówku pojawia się dopiero po włączeniu katalogu. Przed w
 **Import z OpenStreetMap: ZROBIONE 2026-11-14.** Plik GeoJSON pobrał Mariusz z overpass-turbo.eu (publiczny Overpass odrzucał zapytania Claude'a, a powłoka nie ma do niego dostępu), zapytanie: `shop=pet_grooming` i `shop=pet` + `service:pet_grooming=yes` w ramce 54.28,18.40,54.62,18.95. Wgrane 29 salonów jako **Szkice** (3 bez nazwy pominięte),
 z telefonem, linkami, godzinami (przeliczone z `opening_hours`), notatką prywatną i `place_private.source_url` = link do obiektu w OSM (po nim import pomija duplikaty). Większość nie ma adresu, a miasto (Gdańsk / Gdynia) ustawiono z przybliżenia po współrzędnych: **przed publikacją każdy salon wymaga przejrzenia** (adres przez "Znajdź na mapie", miasto, usunięcie nieczynnych), ceny dopisać ręcznie.
 Do sprawdzenia: dwa wpisy "Mary Puppins" (stary i nowy adres), "Ambernova" i "Grooming Academy Ambernova", dwa salony "Pasja". Przy `/salony` jest stopka "© OpenStreetMap (ODbL)" - zostawić.
-**Zostaje w Etapie 3:** (3) link "Salony dla: Burek" z Moich zwierząt (`dog_size_class` z wagi -> `/salony?gatunek=pies&wielkosc=...`); (4) zebranie 20-30 salonów z Trójmiasta (ręcznie w panelu; ewentualnie import CSV później); (5) dopiero wtedy włączyć katalog w `/admin/miejsca`.
+**Decyzje Mariusza z 2026-11-14 (wpisane do `MAPA_MYSLI.md`, sekcje Katalog, Opinie, Ranking, Przejęcie salonu, Koszty):** katalog obejmuje całą Polskę (import z OSM miasto po mieście, wpisy "niezweryfikowane"); klienci oceniają salony, ranking po ocenach (sortowanie "najlepsze" / "najwięcej opinii", etap 4); salon bez opinii: "Brak opinii"; salon może zgłosić właściciel (kolejka zgłoszeń, zatwierdza Mariusz); po 60 dniach bez opinii i bez właściciela lista do decyzji Mariusza (nic nie znika samo); przejęcie salonu: weryfikacja kodem e-mail albo ręcznie (SMS później), dane weryfikacji kasowane po 30 dniach; płatna "Wizytówka Plus" tylko jako furtka (zakładka "wkrótce" i pole planu), zawsze "Promowane", bez wpływu na ranking.
+**Zrobione 2026-11-14 po decyzjach:** (3) link "Salony dla: <imię>" z Moich zwierząt (`placesLink` w `lib/pets.js`, klasy wielkości 10 / 25 / 40 kg jak `dog_size_class`); próg włączenia katalogu to teraz **5 opublikowanych salonów w jednym mieście** (`supabase/10_prog_miasta.sql` wykonany, `min_published` = 5; panel `/admin/miejsca` pokazuje miasto z największą liczbą).
+**Przegląd 30 szkiców (2026-11-14):** adres ma tylko 5 wpisów (Favorit Studiu Groomingu, Mary Puppins, Mary Puppins Grooming, Salon Pasja i testowy Tipo), więc dziś żadne miasto nie ma 5 gotowych (Gdańsk 3, Gdynia 2). Brakuje adresów (przycisk "Znajdź na mapie" w formularzu), cen (żaden salon nie ma cennika), 11 wpisów bez telefonu i 14 bez godzin. Do sprawdzenia: telefon `73322078` przy "Mary Puppins" ma 8 cyfr (to prawdopodobnie ten sam numer co `+48 733 202 078` przy "Mary Puppins Grooming"), "Pasja" (id 33 i 35) i "Salon Pasja" to trzy różne punkty, "Pasja" id 35 (54.4308, 18.4742) leży na granicy Gdańska i Gdyni (miasto z przybliżenia), "WashDog Express" i obie "Academy" to prawdopodobnie nie salony strzyżenia, "Tipo" to wpis testowy Mariusza (usunąć przed startem).
+**Zostaje w Etapie 3:** (4) uzupełnić adresy i ceny w szkicach i opublikować co najmniej 5 w jednym mieście (`/admin/miejsca?status=szkic`); (5) dopiero wtedy włączyć katalog w `/admin/miejsca`; potem kolejne miasta tym samym importem. Etap 4 (opinie, ranking, strony miast) i Etap 5 (przejmowanie salonu, "Wizytówka Plus" jako furtka) są rozpisane w `MAPA_MYSLI.md`.
 
 ### Poprzedni krok
 
@@ -263,7 +266,7 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
       i formie podatku, umowa z hurtownią (zgoda na zdjęcia i opisy, częstotliwość aktualizacji stanów).
 - [x] Etap 2: konto klienta (zrobione 2026-11-14, opis niżej w "Co jest zrobione"; do sprawdzenia na żywo, patrz NASTĘPNY KROK).
 - [ ] Etap 3: katalog groomerów + mapa (PostGIS, OpenStreetMap), panel admina do salonów;
-      publicznie dopiero z 20-30 salonami z Trójmiasta. Baza, panel i strony publiczne zrobione (2026-11-14), zostaje link z Moich zwierząt, zebranie salonów i włączenie katalogu, patrz NASTĘPNY KROK.
+      publicznie dopiero z 5 przejrzanymi salonami w jednym mieście (potem miasto po mieście, cała Polska z OSM). Baza, panel, strony publiczne, link z Moich zwierząt i próg miasta zrobione (2026-11-14), zostaje przegląd szkiców i włączenie katalogu, patrz NASTĘPNY KROK.
 - [ ] Etap 4: opinie o salonach, ranking i odznaki, nowa strona główna (sklep + salony, zapis do Akademii).
 - [ ] Etap 5: konta salonów, odpowiedzi na opinie.
 - [ ] Etap 6: Akademia.

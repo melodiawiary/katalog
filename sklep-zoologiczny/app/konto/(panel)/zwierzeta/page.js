@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { requireUser } from '@/lib/account';
-import { ageText, shopLink, lifeStage, dogSize, SPECIES, SPECIES_ICON } from '@/lib/pets';
+import { ageText, shopLink, placesLink, lifeStage, dogSize, SPECIES, SPECIES_ICON } from '@/lib/pets';
 import PetForm from '@/components/account/PetForm';
 import { deletePet } from '../../actions';
 import ConfirmButton from '@/components/admin/ConfirmButton';
@@ -20,6 +20,7 @@ export default async function PetsPage() {
 
       {(pets || []).map((p) => {
         const link = shopLink(p);
+        const salonLink = placesLink(p);
         const stage = lifeStage(p);
         return (
           <section key={p.id} className="box pet-card">
@@ -30,7 +31,12 @@ export default async function PetsPage() {
               {stage && <> · etap: {STAGE[stage]}</>}
               {p.species === 'pies' && dogSize(p.weight_kg) && <> · wielkość: {dogSize(p.weight_kg)}</>}
             </p>
-            {link && <p><Link href={link} className="btn btn-small">Karma dla: {p.name}</Link></p>}
+            {(link || salonLink) && (
+              <p style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                {link && <Link href={link} className="btn btn-small">Karma dla: {p.name}</Link>}
+                {salonLink && <Link href={salonLink} className="btn btn-small btn-light">Salony dla: {p.name}</Link>}
+              </p>
+            )}
             <details>
               <summary>Edytuj</summary>
               <PetForm pet={p} />

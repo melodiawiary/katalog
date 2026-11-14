@@ -21,7 +21,7 @@ export default async function PlacesAdminPage({ searchParams }) {
   if (needsSql(cfgRes.error)) {
     return (<><h1>Salony i groomerzy</h1><p className="alert">Baza nie ma tabel katalogu. Uruchom supabase/09_miejsca.sql.</p></>);
   }
-  const cfg = cfgRes.data || { public_enabled: false, min_published: 20 };
+  const cfg = cfgRes.data || { public_enabled: false, min_published: 5 };
 
   let query = supabase.from('places')
     .select('id, slug, name, kind, status, city, district, address, species, updated_at', { count: 'exact' })
@@ -31,18 +31,25 @@ export default async function PlacesAdminPage({ searchParams }) {
   if (kind) query = query.eq('kind', kind);
   if (q) query = query.or(`name.ilike.%${q}%,city.ilike.%${q}%,district.ilike.%${q}%,address.ilike.%${q}%`);
 
-  const [list, pub, drafts, hidden, news] = await Promise.all([
+  const [list, pub, drafts, hidden, news, pubCities] = await Promise.all([
     query,
     supabase.from('places').select('id', { count: 'exact', head: true }).eq('status', 'opublikowany'),
     supabase.from('places').select('id', { count: 'exact', head: true }).eq('status', 'szkic'),
     supabase.from('places').select('id', { count: 'exact', head: true }).eq('status', 'ukryty'),
     supabase.from('place_requests').select('id', { count: 'exact', head: true }).eq('status', 'nowe'),
+    supabase.from('places').select('city').eq('status', 'opublikowany').not('city', 'is', null).limit(5000),
   ]);
   const rows = list.data || [];
   const total = list.count || 0;
   const pages = Math.max(Math.ceil(total / PER_PAGE), 1);
   const published = pub.count || 0;
-  const enough = published >= cfg.min_published;
+  const perCity = {};
+  for (const r of pubCities.data || []) {
+    const c = String(r.city || '').trim();
+    if (c) perCity[c] = (perCity[c] || 0) + 1;
+  }
+  const best = Object.entries(perCity).sort((a, b) => b[1] - a[1])[0] || ['', 0];
+  const enough = best[1] >= cfg.min_published;
 
   const link = (patch) => {
     const p = new URLSearchParams();
@@ -62,8 +69,9 @@ export default async function PlacesAdminPage({ searchParams }) {
       <div className="box catalog-switch">
         <strong>Katalog dla klientów: {cfg.public_enabled ? 'WŁĄCZONY' : 'wyłączony'}</strong>
         <p className="small">
-          Opublikowane miejsca: <strong>{published}</strong> z wymaganych {cfg.min_published}.
-          {!cfg.public_enabled && !enough && <> Katalog da się włączyć dopiero po opublikowaniu {cfg.min_published - published} kolejnych.</>}
+          Opublikowane miejsca: <strong>{published}</strong>. Próg włączenia: {cfg.min_published} w jednym mieście
+          {best[1] > 0 && <> (najwięcej: {best[0]}, {best[1]})</>}.
+          {!cfg.public_enabled && !enough && <> Katalog da się włączyć po opublikowaniu jeszcze {cfg.min_published - best[1]} w jednym mieście.</>}
           {' '}Dopóki jest wyłączony, strony /salony widzisz tylko Ty (jako podgląd).
         </p>
         <ActionForm action={setCatalogPublic} submitLabel="Zapisz">

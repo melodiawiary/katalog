@@ -4,7 +4,8 @@ Wersja graficzna (tablica): https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
 Ten plik jest wersją tekstową tej samej mapy. Przy zmianach planu aktualizować oba.
 Uzasadnienie zmian z 2026-11-13: `KRYTYKA_KLIENTA.md` (dokumenty projektu Claude).
 
-Legenda: [GOTOWE] zrobione · [ETAP 1-5] budujemy · [PÓŹNIEJ] plan na przyszłość · [DO POTWIERDZENIA] propozycja z 2026-11-14, czeka na decyzję Mariusza
+Legenda: [GOTOWE] zrobione · [ETAP 1-5] budujemy · [PÓŹNIEJ] plan na przyszłość
+(Decyzje z 2026-11-14 potwierdzone przez Mariusza: próg miasta, "Brak opinii", weryfikacja właściciela.)
 
 **Zasada od 2026-11-13: najpierw sklep, który sprzedaje, potem salony.**
 Klient przychodzi po konkretny produkt (np. "Brit Care Adult Large Lamb 12 kg"). Jeśli go nie znajdzie
@@ -92,12 +93,12 @@ Fundament (prawo, nazwa, płatności, hosting) leży pod wszystkim.
 - [ETAP 3] Małe miasto bez salonu w pobliżu: wyniki "najbliżsi w promieniu 30 km" (PostGIS), więc klient z małego miasta widzi salony z sąsiednich miejscowości
 - [ETAP 3] Przegląd po 60 dniach nigdy nie podpowiada ukrycia ostatniego salonu w mieście
 - [ETAP 3] Kolejne miasta: ten sam import (zapytanie Overpass dla miasta -> plik -> wgranie jako szkice -> przegląd adresów w panelu)
-- [DO POTWIERDZENIA] Miasto otwieramy publicznie od 5 przejrzanych wpisów albo ze wszystkimi znanymi, gdy jest ich mniej niż 5 (dziś w bazie jest jeden próg 20 dla całego katalogu; trzeba go zmienić na próg per miasto)
+- [GOTOWE] Włączenie katalogu wymaga 5 opublikowanych salonów w jednym mieście (migracja 10_prog_miasta.sql). [ETAP 3] Otwieranie kolejnych miast osobno (małe miasta ze wszystkimi znanymi salonami) dochodzi razem z drugim miastem
 - [PÓŹNIEJ] Inne źródła: rejestr CEIDG / REGON (kod PKD) po przeglądzie RODO (to dane osób prowadzących działalność, często z adresem domowym)
 - [ZASADA] Nie kopiujemy danych z Map Google i nie scrapujemy serwisów typu Panorama Firm (łamie ich regulaminy). Salony spoza OSM dodajemy ręcznie, z poleceń klientów i ze zgłoszeń właścicieli
 - [ETAP 5] Właściciel przejmuje profil ("To mój salon"): zasady poniżej
   - Wymaga konta (e-mail lub Google). Formularz: imię, rola (właściciel / zarządzający), kontakt, zgoda na weryfikację
-  - Weryfikacja, trzy drogi od najłatwiejszej: (1) kod SMS na telefon salonu z jego publicznej wizytówki; (2) kod e-mailem na adres ze strony internetowej salonu; (3) gdy te nie działają: zdjęcie szyldu lub drzwi salonu albo zgodność z wpisem w CEIDG (nazwa + adres), a Mariusz zatwierdza w panelu
+  - Weryfikacja, trzy drogi od najłatwiejszej: (1) kod e-mailem na adres ze strony internetowej salonu; (2) kod SMS na telefon salonu z jego publicznej wizytówki (SMS dodajemy później, płatna bramka); (3) gdy te nie działają: zdjęcie szyldu lub drzwi salonu albo zgodność z wpisem w CEIDG (nazwa + adres), a Mariusz zatwierdza w panelu
   - Nie prosimy o dowód osobisty ani skan dokumentów tożsamości
   - Dwie osoby chcą ten sam salon: decyduje Mariusz; dotychczasowy właściciel profilu ma 14 dni na sprzeciw
   - Dane z weryfikacji: kod ważny 15 minut; zdjęcia i dokumenty z drogi (3) kasowane po 30 dniach od decyzji; zostaje tylko wpis: kto, kiedy, którą drogą, wynik

@@ -50,6 +50,17 @@ export function shopLink(pet) {
   return `/?${q.toString()}`;
 }
 
+// Link do katalogu salonów dla zwierzaka (klasy wielkości jak w places.dog_size_class: 10 / 25 / 40 kg)
+export function placesLink(pet) {
+  if (pet.species !== 'pies' && pet.species !== 'kot') return null;
+  const q = new URLSearchParams({ gatunek: pet.species });
+  const w = Number(pet.weight_kg);
+  if (pet.species === 'pies' && w) {
+    q.set('wielkosc', w < 10 ? 'maly' : w < 25 ? 'sredni' : w < 40 ? 'duzy' : 'olbrzymi');
+  }
+  return `/salony?${q.toString()}`;
+}
+
 // Orientacyjnie, na ile dni starcza opakowanie karmy SUCHEJ (netto w kg) dla zwierzaka o danej wadze.
 // Dzienna dawka z zapotrzebowania energetycznego: pies ~31 g * waga^0,75, kot ~21,5 g * waga^0,75.
 // To tylko podpowiedź - klient ustawia własną liczbę dni, a dawkowanie podaje opakowanie.
