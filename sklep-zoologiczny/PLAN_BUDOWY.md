@@ -88,7 +88,9 @@ codzienny automat (cron), zapasowe sprawdzanie płatności bez powiadomienia.
 - [Mariusz] Konto Resend (darmowe), później konta firmowe: Przelewy24 i InPost (wymagają danych firmy,
   więc do kroku 8 działają testowo).
 
-### Krok 7. Raporty dla księgowego
+### Krok 7. Raporty dla księgowego - ZROBIONE 2026-11-14 (bez nowego SQL, panel `/admin/raporty`)
+Dodatkowo: pola "Prowizja płatności" i "Rzeczywisty koszt dostawy" w zamówieniu, tabela VAT, ostatnie 12 miesięcy, Excel z 3 arkuszami
+(Zamówienia, Pozycje, Podsumowanie z uwagami). Zamówienia testowe i anulowane są pomijane.
 - [Claude] Zakładka Raporty: sprzedaż, koszty zakupu, zysk na zamówieniu / produkcie / miesiącu,
   najlepsze produkty, prowizje i dopłaty do dostawy.
 - [Claude] "Pobierz dla księgowego": Excel ze sprzedażą za miesiąc; przy czynnym VAT podział 8% / 23%

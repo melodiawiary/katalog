@@ -25,6 +25,7 @@ export default async function AdminLayout({ children }) {
     <div className="admin">
       <nav className="admin-nav">
         <Link href="/admin">Zamówienia</Link>
+        <Link href="/admin/raporty">Raporty</Link>
         <Link href="/admin/produkty">Produkty</Link>
         <Link href="/admin/kategorie">Kategorie</Link>
         <Link href="/admin/marki">Marki</Link>

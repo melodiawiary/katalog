@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/server';
 import { STATUS } from '@/lib/shop';
 import { SETTINGS_FIELDS, missingSettings } from '@/lib/settings-fields';
 import { adminClient } from '@/lib/admin-server';
+import { parseDecimal } from '@/lib/admin';
 import { getSettings } from '@/lib/settings';
 import { siteUrl } from '@/lib/site';
 import { sendStatusEmail, sendOrderEmails } from '@/lib/order-mail';
@@ -32,6 +33,17 @@ export async function updateOrder(prevState, formData) {
 
   const patch = { status };
   if ('tracking_number' in old) patch.tracking_number = tracking;
+  // prowizja płatności i rzeczywisty koszt dostawy (raporty); puste pole w formularzu = bez zmian tylko gdy pola nie ma
+  if (formData.has('payment_fee')) {
+    const fee = parseDecimal(formData.get('payment_fee'));
+    if (Number.isNaN(fee)) return { error: 'Prowizja: wpisz kwotę, np. 1,85.' };
+    patch.payment_fee = fee ?? 0;
+  }
+  if (formData.has('shipping_real_cost')) {
+    const real = parseDecimal(formData.get('shipping_real_cost'));
+    if (Number.isNaN(real)) return { error: 'Koszt dostawy: wpisz kwotę, np. 11,50.' };
+    patch.shipping_real_cost = real;
+  }
   const { error } = await supabase.from('orders').update(patch).eq('id', id);
   if (error) return { error: error.message };
 

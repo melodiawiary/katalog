@@ -1,6 +1,6 @@
 # STATUS - Sklep zoologiczny + katalog groomerów
 
-Ostatnia aktualizacja: 2026-11-14 (po Etapie 1, Kroku 6)
+Ostatnia aktualizacja: 2026-11-14 (po Etapie 1, Kroku 7)
 
 ## NASTĘPNY KROK
 
@@ -22,9 +22,10 @@ i Vercel (zespół Dzialkowo, id `team_vifCDnAnRz7OdlGcn10I1NY1`: zmienne, wdro�
 połączenie nie pokazuje - te Mariusz kopiuje sam. Funkcje Vercela działają w regionie `iad1` (USA), baza w Europie:
 do rozważenia przeniesienie funkcji do `fra1` (szybsze strony).
 
-**Etap 1, Krok 7: Raporty dla księgowego** (zakładka Raporty: sprzedaż, zakup, zysk na zamówieniu / produkcie / miesiącu,
-prowizje, dopłaty do dostawy; eksport Excel za miesiąc z podziałem VAT 8% / 23% przy czynnym VAT). Szczegóły: `PLAN_BUDOWY.md`.
-Do rozważenia przy kroku 7/8: prowizja Przelewy24 w `orders.payment_fee` (dziś 0), zwroty pieniędzy, koszt pobrania.
+**Etap 1, Krok 7: Raporty dla księgowego - ZROBIONE 2026-11-14 (bez nowego SQL).** Następny: Krok 8 (start sprzedaży, regulamin,
+cookies, test pełnego zakupu), szczegóły w `PLAN_BUDOWY.md`. Do ustalenia z księgowym: stawka VAT dla dostawy pobieranej od klienta
+(w raporcie 23%), czy sprzedaż liczyć wg daty zamówienia (tak jest teraz) czy wpłaty, zwroty pieniędzy (jeszcze bez obsługi).
+Prowizję Przelewy24 i rzeczywisty koszt dostawy wpisuje się ręcznie w zamówieniu (`/admin`, pola pod statusem).
 
 Jeśli kiedyś trzeba będzie ponownie uruchomić `01`, potem trzeba też ponownie uruchomić `02`
 (01 ma starszą wersję `create_order`).
@@ -51,7 +52,7 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
   (każdy można uruchomić ponownie).
 - **Adres sklepu:** https://sklep-zoologiczny.vercel.app (panel: `/admin`, ustawienia: `/admin/ustawienia`).
   Strony: `/kategoria/<slug>`, `/szukaj?q=...`, filtry w adresie (np. `?marka=brit,josera&wiek=senior&waga=1-3-kg&cena_od=20&dostepne=1&sort=cena-rosnaco&strona=2`).
-- **Panel admina:** adres sklepu + `/admin` (zakładki: Zamówienia, Produkty, Kategorie, Marki, Hurtownie,
+- **Panel admina:** adres sklepu + `/admin` (zakładki: Zamówienia, Raporty, Produkty, Kategorie, Marki, Hurtownie,
   Import, Zgłoszenia, Powiadomienia, Ustawienia, Integracje), logowanie e-mailem właściciela (użytkownik w Supabase Auth,
   dopisany do tabeli `admins`). Hasło Mariusz ustawił 2026-11-13 poleceniem SQL; przy resecie:
   `update auth.users set encrypted_password = extensions.crypt('HASLO', extensions.gen_salt('bf')) where email = '...';`
@@ -180,6 +181,18 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
       (`/api/cron`, `vercel.json`, 7:00 UTC). Panel: zamówienia z paczkomatem, płatnością, numerem przesyłki, dziennikiem e-maili,
       "Wyślij ponownie potwierdzenie", filtry Nieopłacone / Testowe, usuwanie testowych; nowa strona `/admin/integracje`
       (klucze zamaskowane, e-mail testowy, test połączenia z P24). Klient serwisowy: `lib/supabase/service.js`.
+- [x] **Etap 1, Krok 7 (2026-11-14): raporty dla księgowego** (bez nowego SQL; nowa zależność `write-excel-file`). Zakładka `/admin/raporty`
+      (`app/admin/raporty/page.js`): wybór miesiąca (strzałki), kafelki (zamówienia, zapłata brutto, przychód, koszt zakupu, prowizje,
+      dopłata do dostawy, zysk i marża), tabela VAT należnego 8% / 23% (tylko przy czynnym VAT), najlepsze produkty (szt., przychód, zysk),
+      lista zamówień z zyskiem, tabela ostatnich 12 miesięcy; ostrzeżenia: pozycje bez ceny zakupu (zysk zawyżony), zamówienia bez kosztu
+      dostawy, nieopłacone. Eksport: `/admin/raporty/excel?miesiac=RRRR-MM` (`lib/reports-xlsx.js`, 3 arkusze: Zamówienia, Pozycje,
+      Podsumowanie z uwagami dla księgowego). Liczenie: `lib/reports.js` (`calcOrder`, `summarize`, `topProducts`, `monthlyTable`):
+      tylko zamówienia prawdziwe (bez `is_test`) i nieanulowane, miesiąc wg daty złożenia w strefie Europe/Warsaw; czynny VAT = kwoty netto
+      (VAT liczony od sumy brutto danej stawki w zamówieniu), zwolniony = brutto, a VAT z zakupu zwiększa koszt (tak jak w formularzu produktu);
+      dostawa od klienta 23% przy czynnym VAT. W zamówieniu (`/admin`) doszły pola "Prowizja płatności" (`orders.payment_fee`) i "Rzeczywisty
+      koszt dostawy" (`orders.shipping_real_cost`), zapisywane w `updateOrder`. Przetestowane na danych próbnych (oba statusy VAT, plik
+      otwarty w openpyxl, build produkcyjny); prawdziwych zamówień w bazie jeszcze nie ma. Uwaga:
+      zamówienia testowe (`is_test`) są celowo pominięte w raportach, więc dane zobaczysz dopiero po pierwszym prawdziwym zamówieniu.
 - [x] Plan rozwoju i mapa myśli (`MAPA_MYSLI.md` + tablica), przebudowane 2026-11-13 po krytyce klienta.
 
 ## Do zrobienia
@@ -187,9 +200,7 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
 - [ ] **Etap 1: sklep, który sprzedaje:** marka, cechy, warianty (2 / 7 / 12 kg), kategorie drzewem,
       wyszukiwarka (marka, opis, literówki, podpowiedzi), filtry, sortowanie, stronicowanie, karta produktu
       (galeria, skład, dawkowanie, EAN, cena za kg, Omnibus), "Powiadom o dostępności", paczkomat z mapy,
-      BLIK / Przelewy24, e-mail z potwierdzeniem, regulamin.
-      Zaplecze: raporty (zysk, VAT 8% / 23%) i eksport Excel
-      dla księgowego.
+      BLIK / Przelewy24, e-mail z potwierdzeniem, regulamin (kroki 0-7 zrobione; zostaje krok 8: start sprzedaży).
 - [ ] **Formalności przed sprzedażą (Mariusz):** firma (JDG lub dopisanie do istniejącej), wpis do rejestru
       paszowego w powiatowym inspektoracie weterynarii, decyzja z księgowym o VAT (zwolnienie do 240 000 zł/rok)
       i formie podatku, umowa z hurtownią (zgoda na zdjęcia i opisy, częstotliwość aktualizacji stanów).
