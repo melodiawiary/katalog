@@ -4,12 +4,17 @@ Wersja graficzna (tablica): https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
 Ten plik jest wersją tekstową tej samej mapy. Przy zmianach planu aktualizować oba.
 Uzasadnienie zmian z 2026-11-13: `KRYTYKA_KLIENTA.md` (dokumenty projektu Claude).
 
-Legenda: [GOTOWE] zrobione · [ETAP 1-5] budujemy · [PÓŹNIEJ] plan na przyszłość
+Legenda: [GOTOWE] zrobione · [ETAP 1-5] budujemy · [PÓŹNIEJ] plan na przyszłość · [DO POTWIERDZENIA] propozycja z 2026-11-14, czeka na decyzję Mariusza
 
 **Zasada od 2026-11-13: najpierw sklep, który sprzedaje, potem salony.**
 Klient przychodzi po konkretny produkt (np. "Brit Care Adult Large Lamb 12 kg"). Jeśli go nie znajdzie
 w kilka sekund, idzie do zooplus, Zooartu, Kakadu albo na Allegro. Katalog groomerów pokazujemy publicznie
 dopiero z gotową listą salonów, bo pusta mapa odstrasza.
+
+**Uzupełnienie 2026-11-14: katalog obejmuje wszystkich groomerów w Polsce, nie tylko Trójmiasto.**
+Salony wgrywamy hurtem z otwartych baz (na start OpenStreetMap), miasto po mieście. Wpisy są na początku "niezweryfikowane".
+Klienci oceniają salony, ranking powstaje z ocen. Właściciele sami zgłaszają się po przejęcie profilu, bo chcą mieć wysoki ranking
+i wyróżnienie. To zmienia kilka punktów wcześniejszej mapy (zaznaczone niżej jako [ZMIANA]).
 
 ---
 
@@ -79,14 +84,21 @@ Fundament (prawo, nazwa, płatności, hosting) leży pod wszystkim.
 - [ETAP 3] Przewaga nad Booksy i Google: cennik wg rasy, czy strzyże koty, duże i lękliwe psy, zdjęcia przed / po
 - [ETAP 3] Adres zamieniony na punkt na mapie (współrzędne)
 - [ETAP 3] Status: zgłoszony -> zweryfikowany
+- [GOTOWE] Import z OpenStreetMap (Trójmiasto, 29 salonów jako szkice, 2026-11-14); licencja ODbL, wymagane "© OpenStreetMap" na stronach katalogu
+- [ETAP 3] [ZMIANA] Dwa poziomy wpisu: "niezweryfikowany" (z otwartych danych: bez odznak, z napisem) i "zweryfikowany" (sprawdzony przez nas albo przejęty przez właściciela)
+- [ETAP 3] Kolejne miasta: ten sam import (zapytanie Overpass dla miasta -> plik -> wgranie jako szkice -> przegląd adresów w panelu)
+- [DO POTWIERDZENIA] Miasto otwieramy publicznie, gdy ma co najmniej 10 przejrzanych wpisów (dziś w bazie jest jeden próg: 20 opublikowanych w całości)
+- [PÓŹNIEJ] Inne źródła: rejestr CEIDG / REGON (kod PKD) po przeglądzie RODO (to dane osób prowadzących działalność, często z adresem domowym)
+- [ZASADA] Nie kopiujemy danych z Map Google i nie scrapujemy serwisów typu Panorama Firm (łamie ich regulaminy). Salony spoza OSM dodajemy ręcznie, z poleceń klientów i ze zgłoszeń właścicieli
 - [ETAP 5] Właściciel przejmuje profil ("To mój salon")
 
 ## 3. Mapa i szukanie w okolicy
 - [ETAP 3] "Użyj mojej lokalizacji" albo miasto / kod pocztowy
 - [ETAP 3] Najbliżsi w promieniu X km (PostGIS w Supabase)
 - [ETAP 3] Filtry: pies / kot, usługa, ocena, cena
+- [ETAP 3] [ZMIANA] Przy bazie całej Polski mapa i lista nie ładują wszystkiego: lista po 20 z numerowaniem stron, mapa tylko z widocznego obszaru (do 100 punktów, przy oddaleniu grupowanie), domyślnie szukanie po mieście albo pozycji
 - [ETAP 3] Mapa OpenStreetMap (Leaflet, darmowa)
-- [PÓŹNIEJ] Strony miast, np. "Groomer Gdynia" (ruch z Google)
+- [ETAP 4] [ZMIANA] Strony miast, np. "Groomer Gdynia", z pamięcią podręczną (ruch z Google i mniej zapytań do bazy); wcześniej było PÓŹNIEJ
 - [PÓŹNIEJ] "Otwarte teraz", rezerwacja online
 
 ## 4. Konta i role
@@ -98,7 +110,7 @@ Fundament (prawo, nazwa, płatności, hosting) leży pod wszystkim.
 - [PÓŹNIEJ] Kolejne role: kursant, instruktor, weterynarz
 
 ## 5. Opinie
-- [ETAP 4] Tylko zalogowani, 1 opinia na salon (można edytować)
+- [ETAP 4] Tylko zalogowani, 1 opinia na salon (można edytować); oceniać można także salon niezweryfikowany
 - [ETAP 4] Gwiazdki: jakość, podejście do zwierzęcia, czystość, cena
 - [ETAP 4] Tekst i zdjęcie efektu
 - [ETAP 4] Admin zatwierdza, zgłaszanie nadużyć
@@ -106,12 +118,17 @@ Fundament (prawo, nazwa, płatności, hosting) leży pod wszystkim.
 - [ETAP 5] Odpowiedź właściciela salonu
 
 ## 6. Ranking i odznaki
+- [ETAP 4] Sortowanie listy: najlepiej oceniane, najwięcej opinii, najbliżej, najtańsze
+- [ETAP 4] Strona "Ranking w mieście" (top 10 miasta)
+- [ETAP 4] Średnia, liczba opinii i punkty rankingu zapisane w tabeli salonu i przeliczane po każdej opinii (nie liczone przy każdym wejściu klienta)
+- [ETAP 4] Salon bez opinii pokazujemy z napisem "Brak opinii" i bez miejsca w rankingu
 - [ETAP 4] Średnia ocen ważona liczbą opinii (jedna ocena 5/5 nie wygrywa z 50 ocenami 4,8)
 - [ETAP 4] Nowsze opinie ważą więcej
 - [ETAP 4] Bonus za pełny i zweryfikowany profil
-- [ETAP 4] Odznaki: Polecany, Top w mieście
+- [ETAP 4] Odznaki: Polecany, Top w mieście (tylko dla salonów zweryfikowanych)
+- [ETAP 5] [ZMIANA] "Sprawdź swój ranking": właściciel przejmuje profil ("To mój salon": zgłoszenie, potwierdzenie telefonem lub e-mailem, zatwierdza admin), potem widzi miejsce w mieście, opinie, odpowiada i uzupełnia cennik
 - [PÓŹNIEJ] Certyfikowany przez Akademię
-- [PÓŹNIEJ] Płatne wyróżnienie, zawsze oznaczone "Promowane"
+- [PÓŹNIEJ] Płatne wyróżnienie, zawsze oznaczone "Promowane" (pierwsze źródło przychodu z katalogu: oferta pokazuje się salonom, które przejęły profil; nie wpływa na ocenę ani miejsce w rankingu)
 
 ## 7. Akademia (później)
 - [ETAP 4] Zapis na listę chętnych (na nowej stronie głównej)
@@ -128,8 +145,23 @@ Fundament (prawo, nazwa, płatności, hosting) leży pod wszystkim.
 - [ETAP 1] Regulaminy (sklep, katalog, opinie), polityka prywatności (RODO), cookies, zwroty
 - [ETAP 1] Płatności online: BLIK / Przelewy24 (lub PayU), e-mail z potwierdzeniem zamówienia
 - [ETAP 1] Vercel: plan Hobby tylko niekomercyjnie, przy sprzedaży plan Pro
-- [ETAP 3] Przed publikacją mapy: 20-30 salonów z Trójmiasta wpisanych ręcznie
+- [ETAP 3] [ZMIANA] Przed publikacją mapy: 20-30 salonów z Trójmiasta (import z OSM + ręczny przegląd adresów i cen); wcześniej zakładaliśmy wpisywanie ręczne
+- [ETAP 3] Koszty i obciążenie przy bazie całej Polski (pomiar z 2026-11-14, patrz sekcja "Koszty i obciążenie" niżej)
 - [PÓŹNIEJ] Zarabianie: marża sklepu, wyróżnienia salonów, kursy
+
+---
+
+## Koszty i obciążenie przy bazie całej Polski (pomiar 2026-11-14)
+
+Test na bazie Supabase z 10 000 sztucznych salonów (z godzinami, cennikiem i notatkami; po teście wszystko cofnięte):
+- **Miejsce w bazie:** 10 000 salonów to ok. 25 MB (z indeksami). Cała baza ma dziś 22 MB, limit Free 500 MB, Pro 8 GB. Opinie to ok. 1 KB na sztukę, więc 100 000 opinii to ok. 100 MB.
+- **Szybkość:** szukanie 20 salonów w mieście lub okolicy 20-65 ms, 200 salonów 110-190 ms.
+- **Ruch z bazy do Vercela (egress Supabase):** 20 salonów na stronę to ok. 8 KB, 200 salonów ok. 80 KB. Limit Free 5 GB, Pro 250 GB. Dlatego lista po 20, a nie po 200.
+- **Zdjęcia salonów** (gdy dojdą) to największy zjadacz miejsca: Free 1 GB, Pro 100 GB. Zmniejszamy je w przeglądarce, tak jak zdjęcia produktów.
+- **Vercel:** katalog to zwykłe wywołania funkcji (kilka tysięcy dziennie przy sporym ruchu to nadal mało). Plan Hobby zabrania użytku komercyjnego, więc Pro (20 USD/miesiąc) i tak jest potrzebne przy sprzedaży.
+- **Supabase Free usypia projekt po tygodniu bez ruchu i nie robi kopii zapasowych:** przed startem publicznym plan Pro (25 USD/miesiąc).
+- **Poza naszymi serwerami:** kafelki mapy z OpenStreetMap i wyszukiwanie adresu (Nominatim) to bezpłatne usługi wolontariuszy z limitami użycia. Przy większym ruchu przechodzimy na płatnego dostawcę map i adresów (rząd kilkudziesięciu USD/miesiąc na początek). Wyszukiwania adresów mamy w pamięci podręcznej na dobę.
+- **Wniosek:** sama liczba salonów nie obciąża serwerów. Obciążają je ruch, zdjęcia i opinie. Do pierwszych kilkudziesięciu tysięcy odwiedzin miesięcznie wystarczy Supabase Pro + Vercel Pro (ok. 45 USD/miesiąc).
 
 ---
 
@@ -141,9 +173,10 @@ Fundament (prawo, nazwa, płatności, hosting) leży pod wszystkim.
    Równolegle formalności: firma, rejestr paszowy, decyzja o VAT, regulamin, nazwa i domena.
 2. **Etap 2: konto klienta do zakupów.** Historia, "Zamów ponownie", moje zwierzęta, przypomnienie o karmie,
    opinie o produktach.
-3. **Etap 3: katalog groomerów i mapa** (wpisy dodaje admin; publicznie dopiero z salonami z Trójmiasta).
-4. **Etap 4: opinie o salonach, ranking i odznaki, nowa strona główna** (sklep + salony, zapis do Akademii).
-5. **Etap 5:** konta salonów (przejęcie profilu), odpowiedzi na opinie.
+3. **Etap 3: katalog groomerów i mapa** (wpisy z importu i od admina; publicznie dopiero z przejrzonymi salonami z Trójmiasta).
+   Potem miasto po miasto: import z OSM, przegląd, otwarcie miasta.
+4. **Etap 4: opinie o salonach, ranking (sortowanie: najlepsze / najwięcej opinii), strony miast, odznaki, nowa strona główna** (sklep + salony, zapis do Akademii).
+5. **Etap 5:** przejmowanie profilu przez właściciela ("Sprawdź swój ranking"), odpowiedzi na opinie, oferta "Promowane".
 6. **Etap 6:** Akademia: kursy, egzaminy, certyfikaty.
 
 ## Strona główna (etap 4), od góry
