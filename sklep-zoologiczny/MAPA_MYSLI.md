@@ -13,7 +13,7 @@ w kilka sekund, idzie do zooplus, Zooartu, Kakadu albo na Allegro. Katalog groom
 dopiero z gotową listą salonów, bo pusta mapa odstrasza.
 
 **Uzupełnienie 2026-11-14: katalog obejmuje wszystkich groomerów w Polsce, nie tylko Trójmiasto.**
-Salony wgrywamy hurtem z otwartych baz (na start OpenStreetMap), miasto po mieście. Wpisy są na początku "niezweryfikowane".
+Dane salonów zbieramy z otwartych baz (na start OpenStreetMap) do prywatnej listy zaproszeń, miasto po mieście; publicznie pokazujemy tylko to, co wskazano niżej (model zasilania katalogu).
 Klienci oceniają salony, ranking powstaje z ocen. Właściciele sami zgłaszają się po przejęcie profilu, bo chcą mieć wysoki ranking
 i wyróżnienie. To zmienia kilka punktów wcześniejszej mapy (zaznaczone niżej jako [ZMIANA]).
 
@@ -95,6 +95,10 @@ Fundament (prawo, nazwa, płatności, hosting) leży pod wszystkim.
 - [ETAP 3] Kolejne miasta: ten sam import (zapytanie Overpass dla miasta -> plik -> wgranie jako szkice -> przegląd adresów w panelu)
 - [GOTOWE] Włączenie katalogu wymaga 5 opublikowanych salonów w jednym mieście (migracja 10_prog_miasta.sql). [ETAP 3] Otwieranie kolejnych miast osobno (małe miasta ze wszystkimi znanymi salonami) dochodzi razem z drugim miastem
 - [PÓŹNIEJ] Inne źródła: rejestr CEIDG / REGON (kod PKD) po przeglądzie RODO (to dane osób prowadzących działalność, często z adresem domowym)
+- [ETAP 3] [ZMIANA 2026-11-14] Model zasilania katalogu: katalog buduje się z ZGŁOSZEŃ SALONÓW, a nie z naszej listy. Admin wpisuje na start tylko 5 salonów na miasto (te najbardziej znane lub najlepiej opisane), żeby nie prowadzić tysięcy rekordów; to wystarcza też na otwarcie miasta. Reszta salonów z OSM zostaje szkicami, niewidocznymi dla klientów (prywatna lista zaproszeń). Salon pojawia się publicznie, gdy sam się zgłosi (formularz "Dodaj swój salon") albo gdy jest jednym z naszych 5 na miasto
+- [ETAP 3] Wybór "5 na miasto": nie mamy legalnego źródła danych o tym, które salony są najczęściej wyszukiwane (Map Google nie kopiujemy), więc na start wybiera Mariusz (znane mu salony lub najlepiej opisane w OSM: adres, telefon, godziny); później kolejność ustalają opinie i kliknięcia w naszym serwisie
+- [ETAP 3] Zaproszenia dla salonów: NIE wysyłamy masowo e-maili reklamowych do wszystkich salonów z listy (Prawo komunikacji elektronicznej wymaga zgody także od firm). Zaproszenie idzie innymi drogami: strona "Prowadzisz salon? Dołącz za darmo", list pocztowy na adres salonu, social media salonu przez formularz kontaktowy po konsultacji z prawnikiem, reklama lokalna; a zgody na kontakt zbieramy w formularzu zgłoszenia
+- [ETAP 3] Salony, które publikujemy sami (5 na miasto), a prowadzone jako jednoosobowa firma: wysyłamy im krótką, neutralną informację o przetwarzaniu danych (RODO art. 14: skąd mamy dane, cel, prawa, jak poprawić lub usunąć, jak przejąć profil) najpóźniej w miesiąc od publikacji; pocztą lub e-mailem, treść do sprawdzenia przez prawnika
 - [ZASADA] Nie kopiujemy danych z Map Google i nie scrapujemy serwisów typu Panorama Firm (łamie ich regulaminy). Salony spoza OSM dodajemy ręcznie, z poleceń klientów i ze zgłoszeń właścicieli
 - [ETAP 5] Właściciel przejmuje profil ("To mój salon"): zasady poniżej
   - Wymaga konta (e-mail lub Google). Formularz: imię, rola (właściciel / zarządzający), kontakt, zgoda na weryfikację
