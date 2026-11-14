@@ -1,15 +1,12 @@
 # STATUS - Sklep zoologiczny + katalog groomerów
 
-Ostatnia aktualizacja: 2026-11-14 (po Etapie 2: konto klienta)
+Ostatnia aktualizacja: 2026-11-14 (Etap 2 przetestowany na żywo)
 
 ## NASTĘPNY KROK
 
 **Etap 2 (konto klienta): KOD WDROŻONY 2026-11-14** (commit `ee9cec1`, `supabase/08_konto.sql` wykonany w bazie, build przeszedł, Vercel READY, w logach brak błędów).
-NIE sprawdzone na żywo: strony w przeglądarce i pełne logowanie e-mailem (z powłoki nie ma dostępu do Supabase ani klucza serwisowego) -
-**pierwsza rzecz na nowe okno: Mariusz testuje na produkcji**: `/konto/logowanie` -> wpisać mormecs@gmail.com (Resend dostarcza tylko na ten adres,
-dopóki nie ma domeny) -> kliknąć link albo wpisać kod z maila -> `/konto`. Jeśli mail nie przychodzi: `/admin/integracje` (klucz Resend) i tabela `email_log`
-(rodzaj `logowanie`); jeśli wchodzi błąd przy kliknięciu: sprawdzić w Supabase -> Authentication -> Sign In / Providers, czy "Allow new users to sign up" jest WŁĄCZONE
-(wcześniej zalecano wyłączyć do etapu 2 - teraz trzeba mieć włączone, inaczej nowy klient nie założy konta).
+**Sprawdzone na żywo 2026-11-14:** Mariusz przetestował logowanie e-mailem na produkcji (mormecs@gmail.com) - działa; "Allow new users to sign up" jest WŁĄCZONE (sprawdzone na zrzucie ekranu).
+Jeśli kiedyś mail nie przychodzi: `/admin/integracje` (klucz Resend) i tabela `email_log` (rodzaj `logowanie`). Nie sprawdzone jeszcze: Google, ręcznie strony opinii i przypomnienia na żywo.
 **Do zrobienia przez Mariusza (tylko jeśli chce Google):** w Google Cloud utworzyć OAuth Client (Web), w Supabase -> Authentication -> Sign In / Providers -> Google
 wkleić Client ID i Secret, w Authentication -> URL Configuration ustawić Site URL na adres sklepu i dodać Redirect URL
 `https://sklep-zoologiczny.vercel.app/auth/callback` (później także adres własnej domeny). Przycisk "Zaloguj przez Google" pojawia się sam, gdy Google jest włączone w Supabase.
