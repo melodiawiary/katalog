@@ -95,7 +95,17 @@ Fundament (prawo, nazwa, płatności, hosting) leży pod wszystkim.
 - [DO POTWIERDZENIA] Miasto otwieramy publicznie od 5 przejrzanych wpisów albo ze wszystkimi znanymi, gdy jest ich mniej niż 5 (dziś w bazie jest jeden próg 20 dla całego katalogu; trzeba go zmienić na próg per miasto)
 - [PÓŹNIEJ] Inne źródła: rejestr CEIDG / REGON (kod PKD) po przeglądzie RODO (to dane osób prowadzących działalność, często z adresem domowym)
 - [ZASADA] Nie kopiujemy danych z Map Google i nie scrapujemy serwisów typu Panorama Firm (łamie ich regulaminy). Salony spoza OSM dodajemy ręcznie, z poleceń klientów i ze zgłoszeń właścicieli
-- [ETAP 5] Właściciel przejmuje profil ("To mój salon")
+- [ETAP 5] Właściciel przejmuje profil ("To mój salon"): zasady poniżej
+  - Wymaga konta (e-mail lub Google). Formularz: imię, rola (właściciel / zarządzający), kontakt, zgoda na weryfikację
+  - Weryfikacja, trzy drogi od najłatwiejszej: (1) kod SMS na telefon salonu z jego publicznej wizytówki; (2) kod e-mailem na adres ze strony internetowej salonu; (3) gdy te nie działają: zdjęcie szyldu lub drzwi salonu albo zgodność z wpisem w CEIDG (nazwa + adres), a Mariusz zatwierdza w panelu
+  - Nie prosimy o dowód osobisty ani skan dokumentów tożsamości
+  - Dwie osoby chcą ten sam salon: decyduje Mariusz; dotychczasowy właściciel profilu ma 14 dni na sprzeciw
+  - Dane z weryfikacji: kod ważny 15 minut; zdjęcia i dokumenty z drogi (3) kasowane po 30 dniach od decyzji; zostaje tylko wpis: kto, kiedy, którą drogą, wynik
+  - Przycisk "Zwolnij salon i usuń moje dane": profil wraca do "niezweryfikowany", teksty i zdjęcia właściciela kasujemy (na życzenie najpierw wysyłamy mu kopię), opinie klientów zostają (to nie jego dane)
+  - Po przejęciu salon dostaje odznakę "Profil właściciela"; zasady rankingu i opinii bez zmian
+  - Za darmo dla właściciela: godziny, telefon, opis, cennik, kilka zdjęć, odpowiedzi na opinie, podgląd miejsca w rankingu swojego miasta
+- [PÓŹNIEJ] Wizytówka Plus (płatna): rozszerzona podstrona salonu, którą właściciel sam układa i upiększa. Dziś budujemy tylko furtkę: w panelu właściciela zakładka "Wizytówka Plus (wkrótce)" z zapisem chętnych (pokazuje nam zainteresowanie) oraz w bazie pole planu salonu (darmowy / plus, ważny do daty). Co dokładnie w niej będzie i ile kosztuje: ustalimy po sprawdzeniu zainteresowania
+- [ZASADA] Wizytówka Plus zawsze oznaczona "Promowane", nie zmienia miejsca w rankingu, nie ukrywa ani nie edytuje opinii klientów
 
 ## 3. Mapa i szukanie w okolicy
 - [ETAP 3] "Użyj mojej lokalizacji" albo miasto / kod pocztowy
