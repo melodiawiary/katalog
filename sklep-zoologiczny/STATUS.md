@@ -4,11 +4,17 @@ Ostatnia aktualizacja: 2026-11-13 (po Etapie 1, Kroku 6)
 
 ## NASTĘPNY KROK
 
-Krok 6 (zamówienie i płatności) jest w pull requeście `krok-6-zamowienie` (do zatwierdzenia przez Mariusza).
-Przed zatwierdzeniem: wkleić w Supabase `supabase/06_zamowienie.sql` (nic nie kasuje). Pliki SQL w bazie: 01-05 (06 po wklejeniu).
-Potem (Mariusz): zmienna `SUPABASE_SERVICE_ROLE_KEY` na Vercelu (klucz secret z Supabase -> API Keys) + Redeploy,
-konto Resend i klucz w `/admin/integracje`, konto testowe Przelewy24 (sandbox) i klucze w `/admin/integracje`.
+Krok 6 (zamówienie i płatności) jest wdrożony (PR #6 zatwierdzony, `06_zamowienie.sql` w bazie).
+2026-11-14: na Vercelu ustawione `SUPABASE_SERVICE_ROLE_KEY` (klucz secret "default") i `CRON_SECRET`, Redeploy zrobiony;
+mapa paczkomatów sprawdzona na produkcji (prawdziwe punkty InPost). Klucz secret był wklejony w czacie - przy okazji
+wymienić go w Supabase (New secret key, stary usunąć) i wpisać nowy na Vercelu (Claude zrobi to przez połączenie z Vercelem).
+Zostało (Mariusz): konto Resend + klucz w `/admin/integracje`, konto testowe Przelewy24 (sandbox) + klucze w `/admin/integracje`.
 Test: zalogowany administrator może składać zamówienia testowe przy wyłączonej sprzedaży (oznaczone TEST, do usunięcia).
+
+**Połączenia Claude (od 2026-11-14):** Supabase (SQL Claude wykonuje sam - Mariusz nie musi już wklejać plików SQL)
+i Vercel (zespół Dzialkowo, id `team_vifCDnAnRz7OdlGcn10I1NY1`: zmienne, wdrożenia, logi). Tajnych kluczy Supabase
+połączenie nie pokazuje - te Mariusz kopiuje sam. Funkcje Vercela działają w regionie `iad1` (USA), baza w Europie:
+do rozważenia przeniesienie funkcji do `fra1` (szybsze strony).
 
 **Etap 1, Krok 7: Raporty dla księgowego** (zakładka Raporty: sprzedaż, zakup, zysk na zamówieniu / produkcie / miesiącu,
 prowizje, dopłaty do dostawy; eksport Excel za miesiąc z podziałem VAT 8% / 23% przy czynnym VAT). Szczegóły: `PLAN_BUDOWY.md`.
