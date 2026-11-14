@@ -52,7 +52,7 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
   (każdy można uruchomić ponownie).
 - **Adres sklepu:** https://sklep-zoologiczny.vercel.app (panel: `/admin`, ustawienia: `/admin/ustawienia`).
   Strony: `/kategoria/<slug>`, `/szukaj?q=...`, filtry w adresie (np. `?marka=brit,josera&wiek=senior&waga=1-3-kg&cena_od=20&dostepne=1&sort=cena-rosnaco&strona=2`).
-- **Panel admina:** adres sklepu + `/admin` (zakładki: Zamówienia, Produkty, Kategorie, Marki, Hurtownie,
+- **Panel admina:** adres sklepu + `/admin` (zakładki: Zamówienia, Raporty, Produkty, Kategorie, Marki, Hurtownie,
   Import, Zgłoszenia, Powiadomienia, Ustawienia, Integracje), logowanie e-mailem właściciela (użytkownik w Supabase Auth,
   dopisany do tabeli `admins`). Hasło Mariusz ustawił 2026-11-13 poleceniem SQL; przy resecie:
   `update auth.users set encrypted_password = extensions.crypt('HASLO', extensions.gen_salt('bf')) where email = '...';`
@@ -200,9 +200,7 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
 - [ ] **Etap 1: sklep, który sprzedaje:** marka, cechy, warianty (2 / 7 / 12 kg), kategorie drzewem,
       wyszukiwarka (marka, opis, literówki, podpowiedzi), filtry, sortowanie, stronicowanie, karta produktu
       (galeria, skład, dawkowanie, EAN, cena za kg, Omnibus), "Powiadom o dostępności", paczkomat z mapy,
-      BLIK / Przelewy24, e-mail z potwierdzeniem, regulamin.
-      Zaplecze: raporty (zysk, VAT 8% / 23%) i eksport Excel
-      dla księgowego.
+      BLIK / Przelewy24, e-mail z potwierdzeniem, regulamin (kroki 0-7 zrobione; zostaje krok 8: start sprzedaży).
 - [ ] **Formalności przed sprzedażą (Mariusz):** firma (JDG lub dopisanie do istniejącej), wpis do rejestru
       paszowego w powiatowym inspektoracie weterynarii, decyzja z księgowym o VAT (zwolnienie do 240 000 zł/rok)
       i formie podatku, umowa z hurtownią (zgoda na zdjęcia i opisy, częstotliwość aktualizacji stanów).
