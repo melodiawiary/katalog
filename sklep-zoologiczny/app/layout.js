@@ -9,6 +9,7 @@ import CookieBanner from '@/components/CookieBanner';
 import CookieSettingsLink from '@/components/CookieSettingsLink';
 import { LEGAL_LINKS } from '@/lib/legal';
 import { getSettings } from '@/lib/settings';
+import { createClient } from '@/lib/supabase/server';
 
 export async function generateMetadata() {
   const s = await getSettings();
@@ -20,6 +21,13 @@ export async function generateMetadata() {
 
 export default async function RootLayout({ children }) {
   const s = await getSettings();
+  // link "Salony" tylko, gdy katalog jest włączony (przed 09_miejsca.sql: brak linku)
+  let showSalons = false;
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase.rpc('places_public');
+    showSalons = data === true;
+  } catch { /* bez linku */ }
 
   return (
     <html lang="pl">
@@ -35,6 +43,7 @@ export default async function RootLayout({ children }) {
                 <SearchBox />
               </Suspense>
               <div className="header-actions">
+                {showSalons && <Link href="/salony">Salony</Link>}
                 <AccountLink />
                 <CartBadge />
               </div>

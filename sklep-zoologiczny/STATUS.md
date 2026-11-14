@@ -1,6 +1,6 @@
 # STATUS - Sklep zoologiczny + katalog groomerów
 
-Ostatnia aktualizacja: 2026-11-14 (Etap 3: baza + panel `/admin/miejsca` gotowe; zostają strony publiczne)
+Ostatnia aktualizacja: 2026-11-14 (Etap 3: baza, panel i strony publiczne `/salony` gotowe; zostaje zebranie salonów i włączenie katalogu)
 
 ## NASTĘPNY KROK
 
@@ -11,9 +11,12 @@ blokada włączenia katalogu przed 20 opublikowanymi miejscami, `place_private` 
 Kod: `app/admin/miejsca/` (`page.js` lista z filtrami, szybkie Publikuj / Ukryj, przełącznik katalogu z licznikiem opublikowanych; `nowe/`, `[id]/`; `PlaceForm.js` formularz: adres -> pinezka przez Nominatim (`geocodeAddress`), przeciąganie pinezki / klik na mapie uzupełnia puste pola adresu (`reverseGeocode`), godziny (do kilku przedziałów dziennie, kopiowanie pon -> wt-pt), cennik, udogodnienia, notatki prywatne (`place_private`);
 `zgloszenia/` zgłoszenia `place_requests` ze statusem, notatką i przyciskiem "Utwórz szkic z tego zgłoszenia"; `actions.js`, `loader.js`), `lib/places.js` (stałe: rodzaje, statusy, wielkości, dni tygodnia), link "Salony" z licznikiem nowych zgłoszeń w menu. Slug nie jest edytowalny (liczy go baza).
 Groomer mobilny wymaga zasięgu dojazdu w km. Słowniki usług i udogodnień nadal bez panelu (tabele `service_defs`, `feature_defs`).
-**Zostaje w Etapie 3 (kod):** (2) strony publiczne `/salony` (mapa Leaflet + lista, filtry, "blisko mnie",
-adres -> pozycja), `/salony/[slug]` (profil: `place_page`), formularz "Poleć salon" i "Zgłoś zmianę / usuń"; (3) link "Salony dla: Burek" z Moich zwierząt (`dog_size_class` z wagi);
-(4) zebranie 20-30 salonów z Trójmiasta (ręcznie w panelu; ewentualnie import CSV później); (5) dopiero wtedy włączyć katalog.
+**Etap 3, część 2b - STRONY PUBLICZNE: ZROBIONE 2026-11-14** (bez nowego SQL, build przeszedł, strony sprawdzone lokalnie bez danych; z danymi jeszcze nie klikane).
+Kod: `app/salony/page.js` (mapa Leaflet + lista obok siebie, na telefonie jedno pod drugim; liczy baza `search_places`, do 200 wyników), `components/places/PlacesFilters.js` (adres -> pozycja przez `/api/geokoduj` (Nominatim, cache), "Salony blisko mnie", filtry w adresie: `q, miasto, rodzaj, gatunek, usluga, wielkosc, cena_max, otwarte, udogodnienia, lat, lng, gdzie, promien, sort`),
+`components/places/PlacesMap.js`, `app/salony/[slug]/page.js` (profil z `place_page`: opis, cennik wg usług, godziny z oznaczonym dniem dzisiejszym, kontakt, mapa, trasa Google, najbliższe salony, dane `PetGroomer` dla Google),
+`app/salony/polec/page.js` + `components/places/PlaceRequestForm.js` + `app/salony/actions.js` (zgłoszenia: poleć / popraw / usuń przez `submit_place_request`, z pułapką na roboty), `lib/places-browse.js`.
+Link "Salony" w nagłówku pojawia się dopiero po włączeniu katalogu. Przed włączeniem klient widzi na `/salony` "Katalog wkrótce" i link "Poleć salon"; administrator widzi podgląd (też szkice) z żółtą ramką.
+**Zostaje w Etapie 3:** (3) link "Salony dla: Burek" z Moich zwierząt (`dog_size_class` z wagi -> `/salony?gatunek=pies&wielkosc=...`); (4) zebranie 20-30 salonów z Trójmiasta (ręcznie w panelu; ewentualnie import CSV później); (5) dopiero wtedy włączyć katalog w `/admin/miejsca`.
 
 ### Poprzedni krok
 
@@ -257,7 +260,7 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
       i formie podatku, umowa z hurtownią (zgoda na zdjęcia i opisy, częstotliwość aktualizacji stanów).
 - [x] Etap 2: konto klienta (zrobione 2026-11-14, opis niżej w "Co jest zrobione"; do sprawdzenia na żywo, patrz NASTĘPNY KROK).
 - [ ] Etap 3: katalog groomerów + mapa (PostGIS, OpenStreetMap), panel admina do salonów;
-      publicznie dopiero z 20-30 salonami z Trójmiasta. Baza zrobiona (`supabase/09_miejsca.sql`, 2026-11-14), zostaje kod (panel i strony publiczne), patrz NASTĘPNY KROK.
+      publicznie dopiero z 20-30 salonami z Trójmiasta. Baza, panel i strony publiczne zrobione (2026-11-14), zostaje link z Moich zwierząt, zebranie salonów i włączenie katalogu, patrz NASTĘPNY KROK.
 - [ ] Etap 4: opinie o salonach, ranking i odznaki, nowa strona główna (sklep + salony, zapis do Akademii).
 - [ ] Etap 5: konta salonów, odpowiedzi na opinie.
 - [ ] Etap 6: Akademia.

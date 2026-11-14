@@ -620,3 +620,30 @@ label.check span:nth-child(2) { flex: 1; }
   .hours-day { grid-template-columns: 1fr; }
   .grid-3p { grid-template-columns: 1fr 1fr; }
 }
+
+/* ---------- Etap 3: strony publiczne salonów ---------- */
+.places-filters { display: grid; gap: 6px; }
+.places-filter-line { display: flex; gap: 16px; flex-wrap: wrap; }
+.places-filter-form { max-width: none; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; }
+.places-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+.places-map-col { position: sticky; top: 76px; }
+.places-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.place-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; display: grid; gap: 4px; }
+.place-card p { margin: 2px 0 0; }
+.place-card-top { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.place-card-name { font-weight: 700; font-size: 1.05rem; text-decoration: none; }
+.place-card-name:hover { color: var(--accent-dark); }
+.place-card-meta { display: flex; gap: 12px; flex-wrap: wrap; }
+.place-profile { display: grid; grid-template-columns: 1.6fr 1fr; gap: 20px; align-items: start; margin-bottom: 16px; }
+.place-side { display: grid; gap: 12px; }
+.price-group { margin-bottom: 10px; }
+.price-table, .hours-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+.price-table td, .hours-table td { padding: 5px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+.price-cell { text-align: right; white-space: nowrap; font-weight: 600; }
+.hours-table tr.today td { font-weight: 700; color: var(--accent-dark); }
+.place-reports { margin-top: 24px; display: grid; gap: 4px; }
+.places-map { z-index: 0; }
+@media (max-width: 800px) {
+  .places-layout, .place-profile { grid-template-columns: 1fr; }
+  .places-map-col { position: static; }
+}
