@@ -16,6 +16,9 @@ Kod: `app/salony/page.js` (mapa Leaflet + lista obok siebie, na telefonie jedno 
 `components/places/PlacesMap.js`, `app/salony/[slug]/page.js` (profil z `place_page`: opis, cennik wg usług, godziny z oznaczonym dniem dzisiejszym, kontakt, mapa, trasa Google, najbliższe salony, dane `PetGroomer` dla Google),
 `app/salony/polec/page.js` + `components/places/PlaceRequestForm.js` + `app/salony/actions.js` (zgłoszenia: poleć / popraw / usuń przez `submit_place_request`, z pułapką na roboty), `lib/places-browse.js`.
 Link "Salony" w nagłówku pojawia się dopiero po włączeniu katalogu. Przed włączeniem klient widzi na `/salony` "Katalog wkrótce" i link "Poleć salon"; administrator widzi podgląd (też szkice) z żółtą ramką.
+**Import z OpenStreetMap: ZROBIONE 2026-11-14.** Plik GeoJSON pobrał Mariusz z overpass-turbo.eu (publiczny Overpass odrzucał zapytania Claude'a, a powłoka nie ma do niego dostępu), zapytanie: `shop=pet_grooming` i `shop=pet` + `service:pet_grooming=yes` w ramce 54.28,18.40,54.62,18.95. Wgrane 29 salonów jako **Szkice** (3 bez nazwy pominięte),
+z telefonem, linkami, godzinami (przeliczone z `opening_hours`), notatką prywatną i `place_private.source_url` = link do obiektu w OSM (po nim import pomija duplikaty). Większość nie ma adresu, a miasto (Gdańsk / Gdynia) ustawiono z przybliżenia po współrzędnych: **przed publikacją każdy salon wymaga przejrzenia** (adres przez "Znajdź na mapie", miasto, usunięcie nieczynnych), ceny dopisać ręcznie.
+Do sprawdzenia: dwa wpisy "Mary Puppins" (stary i nowy adres), "Ambernova" i "Grooming Academy Ambernova", dwa salony "Pasja". Przy `/salony` jest stopka "© OpenStreetMap (ODbL)" - zostawić.
 **Zostaje w Etapie 3:** (3) link "Salony dla: Burek" z Moich zwierząt (`dog_size_class` z wagi -> `/salony?gatunek=pies&wielkosc=...`); (4) zebranie 20-30 salonów z Trójmiasta (ręcznie w panelu; ewentualnie import CSV później); (5) dopiero wtedy włączyć katalog w `/admin/miejsca`.
 
 ### Poprzedni krok

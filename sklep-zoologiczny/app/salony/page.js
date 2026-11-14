@@ -85,6 +85,9 @@ export default async function SalonyPage({ searchParams }) {
       </div>
 
       <p className="center-text small muted">
+        Mapa i część danych o salonach: © autorzy <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> (licencja ODbL).
+      </p>
+      <p className="center-text small muted">
         Brakuje Twojego salonu albo znasz dobrego groomera? <Link href="/salony/polec">Poleć salon</Link>
       </p>
     </>
