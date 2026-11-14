@@ -17,8 +17,9 @@ Do decyzji z prawnikiem: czy otwarta karma jest wyłączona ze zwrotu (art. 38 p
 
 Krok 6 (zamówienie i płatności) jest wdrożony (PR #6 zatwierdzony, `06_zamowienie.sql` w bazie).
 2026-11-14: na Vercelu ustawione `SUPABASE_SERVICE_ROLE_KEY` (klucz secret "default") i `CRON_SECRET`, Redeploy zrobiony;
-mapa paczkomatów sprawdzona na produkcji (prawdziwe punkty InPost). Klucz secret był wklejony w czacie - przy okazji
-wymienić go w Supabase (New secret key, stary usunąć) i wpisać nowy na Vercelu (Claude zrobi to przez połączenie z Vercelem).
+mapa paczkomatów sprawdzona na produkcji (prawdziwe punkty InPost). Klucz secret był wklejony w czacie, więc 2026-11-14 został WYMIENIONY: nowy klucz `sklep2` wpisany na Vercelu przez Mariusza,
+Redeploy zrobiony, stary `default` usunięty w Supabase; e-mail testowy z `/admin/integracje` na mormecs@gmail.com doszedł (klucz działa).
+Kluczy nie wklejać już w czacie, tylko prosto na Vercelu.
 Resend: konto na mormecs@gmail.com (logowanie Google), klucz zapisany w `integrations` (2026-11-14), kopie nowych zamówień
 na mormecs@gmail.com (`integrations.notify_email`). Bez domeny Resend dostarcza TYLKO na mormecs@gmail.com - do testów
 używać tego adresu jako e-maila klienta. W `settings` brak jeszcze e-maila sklepu.
