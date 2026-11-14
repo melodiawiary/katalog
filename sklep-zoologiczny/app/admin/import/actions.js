@@ -2,6 +2,10 @@
 
 // Import z hurtowni: zapis ustawień, partie wierszy (podgląd i zapis), zdjęcia z linków
 import { revalidatePath } from 'next/cache';
+import { after } from 'next/server';
+import { getSettings } from '@/lib/settings';
+import { siteUrl } from '@/lib/site';
+import { runStockAlerts } from '@/lib/order-mail';
 import sharp from 'sharp';
 import { adminClient } from '@/lib/admin-server';
 import { needsSql } from '@/lib/admin';
@@ -53,8 +57,11 @@ export async function importZeroMissing(supplierId, seenVariantIds, updateStock,
 }
 
 export async function importFinished() {
-  await adminClient();
+  const supabase = await adminClient();
   revalidatePath('/', 'layout');
+  // po imporcie stany mogły wrócić: "Produkt znów dostępny" wychodzi sam
+  const site = await siteUrl(await getSettings());
+  after(() => runStockAlerts(site, supabase).catch(() => {}));
 }
 
 // ---------- ZDJĘCIA Z LINKÓW ----------
