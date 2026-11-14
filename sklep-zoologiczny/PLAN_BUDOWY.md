@@ -106,9 +106,13 @@ Dodatkowo: pola "Prowizja płatności" i "Rzeczywisty koszt dostawy" w zamówien
 
 ---
 
-## ETAP 2: konto klienta do zakupów
-Logowanie e-mailem i Google, zakup też bez konta, historia, "Zamów ponownie", moje zwierzęta,
-przypomnienie o karmie, opinie o produktach, "kupowane razem".
+## ETAP 2: konto klienta do zakupów - ZROBIONE 2026-11-14 (`supabase/08_konto.sql`; do sprawdzenia na żywo)
+Logowanie bez hasła: link + kod w mailu (przez nasz Resend) i Google (po włączeniu w Supabase), zakup nadal możliwy bez konta,
+historia zamówień z dopinaniem starych zamówień po e-mailu, "Zamów ponownie", dane i paczkomat z konta w zamówieniu, moje zwierzęta
+(wiek, etap życia, link z filtrami do karmy), przypomnienie o karmie (cron, wypisanie jednym kliknięciem, licznik zerowany ponownym zakupem),
+opinie tylko po zakupie z moderacją w panelu (`/admin/opinie`), "kupowane razem" od 2 wspólnych zamówień, usunięcie konta, uzupełnione teksty prawne.
+- [Mariusz] Opcjonalnie Google: OAuth Client w Google Cloud + dane w Supabase (Providers -> Google) + Redirect URL `/auth/callback`.
+- [Mariusz] Przetestować logowanie na mormecs@gmail.com (Resend bez domeny dostarcza tylko tam).
 
 ## ETAP 3: katalog groomerów i mapa
 Plik `supabase/03_miejsca.sql`, profile, cennik wg rasy i wielkości, mapa OpenStreetMap, "w pobliżu",

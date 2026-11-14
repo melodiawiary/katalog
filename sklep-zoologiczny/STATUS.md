@@ -1,8 +1,20 @@
 # STATUS - Sklep zoologiczny + katalog groomerów
 
-Ostatnia aktualizacja: 2026-11-14 (po Etapie 1, Kroku 8 - część Claude)
+Ostatnia aktualizacja: 2026-11-14 (po Etapie 2: konto klienta)
 
 ## NASTĘPNY KROK
+
+**Etap 2 (konto klienta): KOD WDROŻONY 2026-11-14** (commit `ee9cec1`, `supabase/08_konto.sql` wykonany w bazie, build przeszedł, Vercel READY, w logach brak błędów).
+NIE sprawdzone na żywo: strony w przeglądarce i pełne logowanie e-mailem (z powłoki nie ma dostępu do Supabase ani klucza serwisowego) -
+**pierwsza rzecz na nowe okno: Mariusz testuje na produkcji**: `/konto/logowanie` -> wpisać mormecs@gmail.com (Resend dostarcza tylko na ten adres,
+dopóki nie ma domeny) -> kliknąć link albo wpisać kod z maila -> `/konto`. Jeśli mail nie przychodzi: `/admin/integracje` (klucz Resend) i tabela `email_log`
+(rodzaj `logowanie`); jeśli wchodzi błąd przy kliknięciu: sprawdzić w Supabase -> Authentication -> Sign In / Providers, czy "Allow new users to sign up" jest WŁĄCZONE
+(wcześniej zalecano wyłączyć do etapu 2 - teraz trzeba mieć włączone, inaczej nowy klient nie założy konta).
+**Do zrobienia przez Mariusza (tylko jeśli chce Google):** w Google Cloud utworzyć OAuth Client (Web), w Supabase -> Authentication -> Sign In / Providers -> Google
+wkleić Client ID i Secret, w Authentication -> URL Configuration ustawić Site URL na adres sklepu i dodać Redirect URL
+`https://sklep-zoologiczny.vercel.app/auth/callback` (później także adres własnej domeny). Przycisk "Zaloguj przez Google" pojawia się sam, gdy Google jest włączone w Supabase.
+Przypomnienia o karmie idą z codziennego crona (7:00 UTC) razem z "Produkt znów dostępny"; "Kupowane razem" pokaże się dopiero po min. 2 wspólnych prawdziwych zamówieniach
+(zamówienia testowe i anulowane nie liczą się). Następny w kolejce: **Krok 8 (część Mariusza) i start sprzedaży**, potem Etap 3 (katalog groomerów).
 
 **Krok 8, część Claude: ZROBIONE 2026-11-14** (`supabase/07_zgody.sql` wykonany w bazie). Strony `/regulamin`, `/polityka-prywatnosci`,
 `/polityka-cookies`, `/zwroty` (odstąpienie 14 dni + wzór formularza z przyciskiem e-mail + reklamacje) biorą dane z `settings`
@@ -59,12 +71,12 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
   Każdy push do `main` automatycznie aktualizuje sklep.
 - **Zmienne na Vercelu:** `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` (od kroku 6, tajna), `NEXT_PUBLIC_SHOP_NAME`
   (ta ostatnia tylko zapasowo). Dane firmy, konto, kontakt: panel `/admin/ustawienia` (tabela `settings`).
-- **Pliki SQL:** `supabase/schema.sql`, potem po kolei `01_ustawienia.sql`, `02_produkty.sql`, `03_import.sql`, `04_szukanie.sql`, `05_karta.sql`, `06_zamowienie.sql`
+- **Pliki SQL:** `supabase/schema.sql`, potem po kolei `01_ustawienia.sql`, `02_produkty.sql`, `03_import.sql`, `04_szukanie.sql`, `05_karta.sql`, `06_zamowienie.sql`, `07_zgody.sql`, `08_konto.sql`
   (każdy można uruchomić ponownie).
 - **Adres sklepu:** https://sklep-zoologiczny.vercel.app (panel: `/admin`, ustawienia: `/admin/ustawienia`).
   Strony: `/kategoria/<slug>`, `/szukaj?q=...`, filtry w adresie (np. `?marka=brit,josera&wiek=senior&waga=1-3-kg&cena_od=20&dostepne=1&sort=cena-rosnaco&strona=2`).
 - **Panel admina:** adres sklepu + `/admin` (zakładki: Zamówienia, Raporty, Produkty, Kategorie, Marki, Hurtownie,
-  Import, Zgłoszenia, Powiadomienia, Ustawienia, Integracje), logowanie e-mailem właściciela (użytkownik w Supabase Auth,
+  Import, Zgłoszenia, Opinie, Powiadomienia, Ustawienia, Integracje), logowanie e-mailem właściciela (użytkownik w Supabase Auth,
   dopisany do tabeli `admins`). Hasło Mariusz ustawił 2026-11-13 poleceniem SQL; przy resecie:
   `update auth.users set encrypted_password = extensions.crypt('HASLO', extensions.gen_salt('bf')) where email = '...';`
 - **Dostęp Claude do GitHuba:** aplikacja Claude ma dostęp do wszystkich repozytoriów (All repositories),
@@ -204,6 +216,24 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
       koszt dostawy" (`orders.shipping_real_cost`), zapisywane w `updateOrder`. Przetestowane na danych próbnych (oba statusy VAT, plik
       otwarty w openpyxl, build produkcyjny); prawdziwych zamówień w bazie jeszcze nie ma. Uwaga:
       zamówienia testowe (`is_test`) są celowo pominięte w raportach, więc dane zobaczysz dopiero po pierwszym prawdziwym zamówieniu.
+- [x] **Etap 2 (2026-11-14): konto klienta** (`supabase/08_konto.sql`; przetestowane na prawdziwej bazie w transakcji z cofnięciem: dopinanie zamówień po e-mailu, RLS,
+      opinie tylko po zakupie, kupowane razem, przypomnienia). Zakup bez konta działa jak dotąd; konto jest dobrowolne.
+      Logowanie (`app/konto/logowanie`, `app/konto/actions.js`, `app/auth/*`): link + 6-cyfrowy kod w jednym mailu, bez hasła. Link generuje serwer
+      (`auth.admin.generateLink` kluczem serwisowym) i wysyła przez nasz Resend (`sendLoginEmail` w `lib/order-mail.js`, szablon `loginMail`), bez własnego SMTP w Supabase;
+      limit 5 maili na godzinę na adres (liczone z `email_log`, rodzaj `logowanie`). Link prowadzi na `/auth/potwierdz` (przycisk, bo programy pocztowe zużywają linki
+      przy podglądzie), kod wpisuje się na stronie logowania. Awaryjnie (brak klucza serwisowego / Resend) idzie zwykły mail Supabase i `/auth/callback`. Google: przycisk
+      pojawia się sam, gdy `auth/v1/settings` mówi, że Google jest włączone (`googleEnabled` w `lib/account.js`); powrót przez `/auth/callback`.
+      Po zalogowaniu `claim_orders()` dopina wcześniejsze zamówienia z tym samym potwierdzonym e-mailem. Nagłówek: `components/account/AccountLink.js` (stan sesji w przeglądarce).
+      Panel klienta `app/konto/(panel)/`: Konto, Zamówienia (historia, "Zamów ponownie" = `reorderItems` + `ReorderButton`, linki "Przypomnij o karmie" i "Oceń produkt"),
+      Moje zwierzęta (`lib/pets.js`: wiek, etap życia, link "Karma dla: Burek" z filtrami gatunek / wiek / wielkość), Przypomnienia o karmie, Moje dane (profil, wyłącznik przypomnień,
+      usunięcie konta kluczem serwisowym; zamówienia zostają bez `user_id`). Zamówienie: dane i paczkomat z konta, pole "zapamiętaj dane na koncie", `create_order` zapisuje `orders.user_id`;
+      strona zamówienia proponuje założenie konta. Przypomnienia (`reminders`): wariant + na ile dni starcza opakowanie + od kiedy; mail 5 dni przed końcem (`runFoodReminders`, cron),
+      ponowny zakup tego wariantu zeruje licznik (w `create_order`), wypisanie jednym kliknięciem `/konto/wypisz?t=...` (token w `customer_profiles.unsub_token`);
+      podpowiedź liczby dni z wagi zwierzaka tylko orientacyjnie (`foodDaysEstimate`, karma sucha, min. 1 kg netto). Opinie (`product_reviews`): tylko zalogowany klient po zakupie
+      (zamówienie wysłane / zrealizowane), jedna na produkt z możliwością poprawy, autor "Anna K.", publikacja od razu, moderacja w `/admin/opinie` (ukryj / przywróć / usuń),
+      gwiazdki i średnia przy tytule, `aggregateRating` w danych dla Google. Kupowane razem: `bought_together` (min. 2 wspólne zamówienia) w sekcji na karcie produktu.
+      Teksty prawne uzupełnione o konto, zwierzęta, przypomnienia, opinie (`LEGAL_VERSION` = 2026-11-14-2). Middleware odświeża sesję na `/konto`, `/zamowienie`, `/admin`.
+      Rejestracja klientów jest otwarta; sprawdzone, że wszystkie tabele mają RLS tylko dla administratora, a funkcje importu działają z uprawnieniami wywołującego.
 - [x] Plan rozwoju i mapa myśli (`MAPA_MYSLI.md` + tablica), przebudowane 2026-11-13 po krytyce klienta.
 
 ## Do zrobienia
@@ -215,8 +245,7 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
 - [ ] **Formalności przed sprzedażą (Mariusz):** firma (JDG lub dopisanie do istniejącej), wpis do rejestru
       paszowego w powiatowym inspektoracie weterynarii, decyzja z księgowym o VAT (zwolnienie do 240 000 zł/rok)
       i formie podatku, umowa z hurtownią (zgoda na zdjęcia i opisy, częstotliwość aktualizacji stanów).
-- [ ] Etap 2: konto klienta do zakupów: historia, "Zamów ponownie", moje zwierzęta, przypomnienie o karmie,
-      opinie o produktach.
+- [x] Etap 2: konto klienta (zrobione 2026-11-14, opis niżej w "Co jest zrobione"; do sprawdzenia na żywo, patrz NASTĘPNY KROK).
 - [ ] Etap 3: katalog groomerów + mapa (PostGIS, OpenStreetMap), panel admina do salonów;
       publicznie dopiero z 20-30 salonami z Trójmiasta. SQL np. `supabase/03_miejsca.sql`.
 - [ ] Etap 4: opinie o salonach, ranking i odznaki, nowa strona główna (sklep + salony, zapis do Akademii).
@@ -224,7 +253,7 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
 - [ ] Etap 6: Akademia.
 - [ ] Później (gdy produktów będzie > 20 tys.): przyspieszyć `search_products` (np. cechy produktu zapisane w kolumnie
       zamiast liczenia przy każdym zapytaniu). Synonimy można dopisywać w tabeli `search_synonyms` (na razie bez panelu).
-- [ ] Drobne: wyłączyć w Supabase "Allow new users to sign up" (do czasu etapu 2); Vercel Pro przed sprzedażą.
+- [ ] Drobne: Vercel Pro przed sprzedażą. Opcjonalnie włączyć w Supabase "Leaked password protection" (dziś bez znaczenia - logowanie bez hasła).
 
 ## Ważne zasady w kodzie
 
@@ -266,4 +295,9 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
   i w `FilterPanel.js`. Cechy z tabeli `attributes` (filterable) pokazują się w filtrach same, kod cechy = nazwa w adresie.
   Funkcje szukania mają `set jit = off` (z JIT zapytanie trwało 2 s zamiast 0,15 s).
 - Przedziały wagi są w dwóch miejscach: `weight_bucket` w `04_szukanie.sql` i `WEIGHTS` w `lib/browse.js`.
+- Konto klienta: dane konta (profil, zwierzęta, przypomnienia, opinie) ma RLS "tylko właściciel"; zamówienia klient widzi po `orders.user_id`. Nowe tabele klienta zawsze z RLS
+  i bez uprawnień dla `anon`. Funkcje `security definer` dla klienta (`can_review`, `submit_review`, `product_extras`, `bought_together`) sprawdzają `auth.uid()` same.
+- Maile logowania i przypomnień idą tylko przez serwer (klucz serwisowy + Resend). Bez własnej domeny Resend dostarcza tylko na mormecs@gmail.com - dopiero po domenie
+  logować i dostawać przypomnienia będą wszyscy.
+- Przypomnienia: `reminders_due()` i `reminders_mark_sent()` tylko dla `service_role`. Po wysłaniu licznik przesuwa się o kolejny okres.
 - Po każdym etapie aktualizować ten plik w repo i w dokumentach projektu Claude.
