@@ -32,6 +32,7 @@ export default async function AdminLayout({ children }) {
         <Link href="/admin/hurtownie">Hurtownie</Link>
         <Link href="/admin/import">Import</Link>
         <Link href="/admin/prosby">Zgłoszenia{newRequests > 0 && <span className="badge">{newRequests}</span>}</Link>
+        <Link href="/admin/opinie">Opinie</Link>
         <Link href="/admin/powiadomienia">Powiadomienia{alertsReady > 0 && <span className="badge">{alertsReady}</span>}</Link>
         <Link href="/admin/ustawienia">Ustawienia</Link>
         <Link href="/admin/integracje">Integracje</Link>

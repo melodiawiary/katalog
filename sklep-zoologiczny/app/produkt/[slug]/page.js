@@ -10,6 +10,8 @@ import Gallery from '@/components/product/Gallery';
 import BuyBox from '@/components/product/BuyBox';
 import ProductTabs from '@/components/product/ProductTabs';
 import ProductCard from '@/components/browse/ProductCard';
+import Reviews from '@/components/product/Reviews';
+import Stars from '@/components/product/Stars';
 
 export const dynamic = 'force-dynamic';
 
@@ -75,7 +77,7 @@ export async function generateMetadata({ params, searchParams }) {
 }
 
 // Dane dla Google (schema.org): produkt albo grupa wariantów, z ceną, dostępnością i EAN
-function structuredData(p, path, base, shopName) {
+function structuredData(p, path, base, shopName, extras) {
   const url = `${base}/produkt/${p.slug}`;
   const pics = images(p).map((i) => i.url);
   const brand = p.brand ? { '@type': 'Brand', name: p.brand.name } : undefined;
@@ -134,6 +136,16 @@ function structuredData(p, path, base, shopName) {
         offers: offer(p.variants[0]),
       };
 
+  if (extras?.rating_count > 0 && extras?.rating_avg) {
+    product.aggregateRating = {
+      '@type': 'AggregateRating',
+      ratingValue: String(extras.rating_avg),
+      reviewCount: String(extras.rating_count),
+      bestRating: '5',
+      worstRating: '1',
+    };
+  }
+
   const crumbs = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -183,12 +195,18 @@ export default async function ProductPage({ params, searchParams }) {
   }
   if (!p) notFound();
 
-  const [s, categories] = await Promise.all([getSettings(), getCategories()]);
+  const [s, categories, extrasRes] = await Promise.all([
+    getSettings(),
+    getCategories(),
+    // oceny, opinie i "kupowane razem"; przed wklejeniem 08_konto.sql funkcji nie ma - wtedy bez nich
+    (await createClient()).rpc('product_extras', { p_product: p.id }),
+  ]);
+  const extras = extrasRes?.data || null;
   const base = await siteUrl(s);
   const path = p.category_id ? categoryPath(categories, p.category_id) : [];
   const gallery = images(p);
   const tabs = tabsFor(p);
-  const json = JSON.stringify(p.variants.length ? structuredData(p, path, base, s.shop_name) : []).replace(/</g, '\\u003c');
+  const json = JSON.stringify(p.variants.length ? structuredData(p, path, base, s.shop_name, extras) : []).replace(/</g, '\\u003c');
 
   return (
     <>
@@ -211,6 +229,11 @@ export default async function ProductPage({ params, searchParams }) {
             <Link href={`/?marka=${p.brand.slug}`} className="card-brand product-brand">{p.brand.name}</Link>
           )}
           <h1>{p.name}</h1>
+          {extras?.rating_count > 0 && (
+            <p className="rating-line">
+              <a href="#opinie"><Stars value={extras.rating_avg} /> <span className="muted">{String(extras.rating_avg).replace('.', ',')} ({extras.rating_count})</span></a>
+            </p>
+          )}
           {p.attributes?.length > 0 && (
             <ul className="product-attrs">
               {p.attributes.flatMap((a) => a.values.map((x) => (
@@ -233,6 +256,16 @@ export default async function ProductPage({ params, searchParams }) {
 
       <ProductTabs tabs={tabs} />
 
+      {extras?.together?.length > 0 && (
+        <section className="similar">
+          <h2>Kupowane razem</h2>
+          <p className="small muted">Klienci, którzy kupili ten produkt, często zamawiali też:</p>
+          <div className="similar-row">
+            {extras.together.map((x) => <ProductCard key={x.id} p={x} />)}
+          </div>
+        </section>
+      )}
+
       {p.similar?.length > 0 && (
         <section className="similar">
           <h2>Podobne produkty</h2>
@@ -241,6 +274,8 @@ export default async function ProductPage({ params, searchParams }) {
           </div>
         </section>
       )}
+
+      <Reviews productId={p.id} extras={extras} />
 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: json }} />
     </>

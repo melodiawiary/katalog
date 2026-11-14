@@ -46,11 +46,22 @@ export default async function RegulaminPage() {
           Do korzystania ze Sklepu potrzebne są: urządzenie z dostępem do internetu, aktualna przeglądarka z włączoną obsługą JavaScript
           oraz zapisu danych w przeglądarce (koszyk jest zapamiętywany w przeglądarce) i adres e-mail.
         </li>
-        <li>Zakupy nie wymagają zakładania konta. Zamówienie składa się, podając dane potrzebne do realizacji.</li>
+        <li>Zakupy nie wymagają zakładania konta. Zamówienie składa się, podając dane potrzebne do realizacji. Klient może założyć nieodpłatne konto (zasady w ust. 4).</li>
         <li>
           Przez Sklep świadczone są nieodpłatne usługi elektroniczne: przeglądanie oferty, koszyk, składanie zamówień,
           formularz „Powiadom o dostępności” oraz formularz „Nie masz produktu? Napisz, sprowadzimy”. Usługi można zakończyć w każdej chwili,
           przestając z nich korzystać. Powiadomienie o dostępności można anulować, pisząc na adres e-mail Sprzedawcy.
+        </li>
+        <li>
+          Konto klienta (usługa elektroniczna, nieodpłatna) zakłada się, podając adres e-mail; logowanie odbywa się linkiem i kodem wysłanym na ten adres
+          albo przez konto Google, o ile ta opcja jest dostępna. Konto pozwala przeglądać historię zamówień, zamawiać ponownie, zapisać dane do zamówień,
+          dodać zwierzęta i ustawić przypomnienia o karmie. Klient może w każdej chwili usunąć konto w zakładce „Moje dane”; zamówienia zostają w Sklepie
+          zgodnie z przepisami podatkowymi. Przypomnienia o karmie wysyłamy tylko do Klienta, który sam je ustawił, i może je wyłączyć jednym kliknięciem.
+        </li>
+        <li>
+          Opinie o produktach mogą dodawać zalogowani Klienci, którzy kupili dany produkt w Sklepie (po wysłaniu zamówienia); Sklep sprawdza to w swoich
+          zamówieniach. Sklep nie wynagradza za opinie i nie usuwa opinii negatywnych; ukrywa wyłącznie treści bezprawne lub naruszające zasady (np. wulgarne, spam,
+          dane osobowe osób trzecich).
         </li>
         <li>Klient nie może przesyłać przez Sklep treści bezprawnych.</li>
       </ol>

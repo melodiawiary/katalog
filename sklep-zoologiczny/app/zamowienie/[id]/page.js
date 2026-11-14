@@ -9,6 +9,7 @@ import { siteUrl } from '@/lib/site';
 import { checkPendingPayments } from '@/lib/payments';
 import { trackingUrl, deliveryText } from '@/lib/mail-templates';
 import { payAgain } from '../actions';
+import { currentUser } from '@/lib/account';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Twoje zamówienie', robots: { index: false } };
@@ -19,6 +20,7 @@ export default async function OrderPage({ params, searchParams }) {
   if (!/^[0-9a-f-]{36}$/i.test(id)) notFound();
 
   const supabase = await createClient();
+  const { user } = await currentUser();
   const s = await getSettings();
   let { data: order } = await supabase.rpc('get_order', { p_id: id });
   if (!order) notFound();
@@ -101,6 +103,16 @@ export default async function OrderPage({ params, searchParams }) {
           <p>{PAYMENT.pobranie.label}: zapłacisz {price(order.total)} przy odbiorze paczki.</p>
         </div>
       )}
+
+      {justOrdered && !user && (
+        <div className="box">
+          <h2>Załóż konto jednym kliknięciem</h2>
+          <p>Zobaczysz tu historię zamówień, zamówisz ponownie jednym przyciskiem i ustawisz przypomnienie o karmie.
+            Bez hasła: wyślemy link na {order.email}.</p>
+          <Link href={`/konto/logowanie?email=${encodeURIComponent(order.email)}&next=/konto/zamowienia`} className="btn btn-small">Załóż konto</Link>
+        </div>
+      )}
+      {user && <p><Link href="/konto/zamowienia">Wszystkie moje zamówienia</Link></p>}
 
       <Link href="/" className="btn">Wróć do sklepu</Link>
     </div>

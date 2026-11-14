@@ -54,6 +54,7 @@ export async function sendMail(db, integ, settings, mail) {
     html: mail.html,
     text: mail.text,
     ...(mail.replyTo ? { reply_to: mail.replyTo } : {}),
+    ...(mail.headers ? { headers: mail.headers } : {}),
   });
   await log(db, [{ ...mail, ok: r.ok, error: r.error }]);
   return r;
@@ -74,6 +75,7 @@ export async function sendBatch(db, integ, settings, mails) {
       html: m.html,
       text: m.text,
       ...(m.replyTo ? { reply_to: m.replyTo } : {}),
+      ...(m.headers ? { headers: m.headers } : {}),
     })));
     await log(db, part.map((m) => ({ ...m, ok: r.ok, error: r.error })));
     part.forEach((m) => { m.ok = r.ok; });

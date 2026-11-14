@@ -68,6 +68,32 @@ export async function placeOrder(prevState, formData) {
       .eq('id', orderId);
   } catch { /* zamówienie i tak przechodzi */ }
 
+  // zalogowany klient zaznaczył "zapamiętaj dane": zapisujemy profil (błąd nie przerywa zamówienia)
+  if (formData.get('save_profile')) {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const row = {
+          user_id: user.id,
+          full_name: customer.name.slice(0, 120),
+          phone: customer.phone.slice(0, 30),
+          shipping_method: shipping,
+          updated_at: new Date().toISOString(),
+        };
+        // paczkomat i adres kuriera zapisujemy osobno, żeby jedno nie kasowało drugiego
+        if (shipping === 'paczkomat') {
+          row.locker_id = customer.locker_id.slice(0, 20);
+          row.locker_desc = customer.locker_desc.slice(0, 300);
+        } else {
+          row.address = customer.address.slice(0, 200);
+          row.postal_code = customer.postal_code.slice(0, 10);
+          row.city = customer.city.slice(0, 80);
+        }
+        await supabase.from('customer_profiles').upsert(row, { onConflict: 'user_id' });
+      }
+    } catch { /* zamówienie i tak przechodzi */ }
+  }
+
   const site = await siteUrl(settings);
   const delivery = shippingInfo(new Date(), settings.ship_cutoff, settings.ship_handling_days);
 

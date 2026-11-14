@@ -12,9 +12,14 @@ export default async function CheckoutPage() {
   const supabase = await createClient();
   // przed wklejeniem 06_zamowienie.sql funkcji nie ma - wtedy bez płatności online
   const { data: features } = await supabase.rpc('shop_features');
+  const { data: { user } } = await supabase.auth.getUser();
+  let profile = null;
+  if (user) {
+    const { data } = await supabase.from('customer_profiles').select('*').eq('user_id', user.id).maybeSingle();
+    profile = data;
+  }
   let testMode = false;
   if (!s.sales_enabled) {
-    const { data: { user } } = await supabase.auth.getUser();
     if (user) {
       const { data: isAdmin } = await supabase.rpc('is_admin');
       testMode = Boolean(isAdmin) && Boolean(features); // zamówienia testowe działają od 06_zamowienie.sql
@@ -24,6 +29,8 @@ export default async function CheckoutPage() {
     <CheckoutForm
       salesEnabled={s.sales_enabled}
       testMode={testMode}
+      account={user ? { email: user.email } : null}
+      profile={profile}
       features={{ ...NO_FEATURES, ...(features || {}) }}
       ship={{ cutoff: s.ship_cutoff || '13:00', handlingDays: s.ship_handling_days || 0 }}
     />

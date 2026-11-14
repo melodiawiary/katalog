@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import { useCart } from '@/components/CartProvider';
 import { useCartRefresh, UNAVAILABLE, itemHref } from '@/components/useCartRefresh';
 import ProductImage from '@/components/ProductImage';
@@ -9,6 +10,13 @@ import { price, FREE_SHIPPING_FROM } from '@/lib/shop';
 export default function CartPage() {
   const { items, loaded, subtotal, setQuantity, remove } = useCart();
   useCartRefresh();
+  const [skipped, setSkipped] = useState([]);
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem('reorder-skipped');
+      if (raw) { setSkipped(JSON.parse(raw)); sessionStorage.removeItem('reorder-skipped'); }
+    } catch {}
+  }, []);
 
   if (!loaded) return null;
 
@@ -27,6 +35,9 @@ export default function CartPage() {
   return (
     <>
       <h1>Koszyk</h1>
+      {skipped.length > 0 && (
+        <p className="box">Nie dodaliśmy w całości (brak na stanie): {skipped.join(', ')}.</p>
+      )}
       <ul className="cart-list">
         {items.map((i) => (
           <li key={i.key} className={`cart-row${i.unavailable ? ' cart-off' : ''}`}>

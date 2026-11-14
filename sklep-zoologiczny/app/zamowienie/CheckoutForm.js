@@ -16,13 +16,30 @@ function storedCustomer() {
   try { return JSON.parse(localStorage.getItem(DATA_KEY) || '{}') || {}; } catch { return {}; }
 }
 
-export default function CheckoutForm({ salesEnabled, testMode, features, ship }) {
+// Dane z konta mają pierwszeństwo przed tym, co zapamiętała przeglądarka
+function initialCustomer(account, profile) {
+  const base = storedCustomer();
+  if (!account) return base;
+  const p = profile || {};
+  const pick = (v) => (v ? { v } : null);
+  const out = { ...base };
+  if (account.email) out.email = account.email;
+  for (const [k, from] of [['name', p.full_name], ['phone', p.phone], ['address', p.address], ['postal_code', p.postal_code], ['city', p.city]]) {
+    if (pick(from)) out[k] = from;
+  }
+  if (p.shipping_method) out.shipping = p.shipping_method;
+  return out;
+}
+
+export default function CheckoutForm({ salesEnabled, testMode, features, ship, account = null, profile = null }) {
   const { items, loaded, subtotal } = useCart();
   const [state, formAction, pending] = useActionState(placeOrder, null);
-  const [saved] = useState(storedCustomer);
+  const [saved] = useState(() => initialCustomer(account, profile));
   const [shipping, setShipping] = useState(saved.shipping === 'kurier' ? 'kurier' : 'paczkomat');
   const [payment, setPayment] = useState(features.p24 ? 'p24' : 'przelew');
-  const [locker, setLocker] = useState(null);
+  const [locker, setLocker] = useState(() => (
+    profile?.locker_id ? { id: profile.locker_id, line1: profile.locker_desc || '', line2: '', desc: '' } : null
+  ));
   const [localError, setLocalError] = useState('');
   const checked = useCartRefresh();
 
@@ -77,6 +94,14 @@ export default function CheckoutForm({ salesEnabled, testMode, features, ship })
         </p>
       )}
 
+      {!account && (
+        <p className="box small">
+          Masz konto? <Link href="/konto/logowanie?next=/zamowienie">Zaloguj się</Link> - uzupełnimy Twoje dane i zapiszemy zamówienie w historii.
+          Możesz też kupić bez konta.
+        </p>
+      )}
+      {account && <p className="small muted">Zalogowany jako {account.email}. <Link href="/konto/dane">Moje dane</Link></p>}
+
       <ul className="checkout-items">
         {items.map((i) => (
           <li key={i.key} className={i.unavailable ? 'cart-off' : ''}>
@@ -125,6 +150,12 @@ export default function CheckoutForm({ salesEnabled, testMode, features, ship })
           </>
         )}
         <label>Uwagi do zamówienia (nieobowiązkowe)<textarea name="notes" rows={2} defaultValue={state?.values?.notes || ''} /></label>
+        {account && (
+          <label className="radio">
+            <input type="checkbox" name="save_profile" defaultChecked />
+            <span>Zapamiętaj te dane i paczkomat na koncie (do następnych zamówień)</span>
+          </label>
+        )}
       </fieldset>
 
       <fieldset>

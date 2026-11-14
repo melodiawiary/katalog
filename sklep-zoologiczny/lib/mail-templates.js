@@ -208,3 +208,42 @@ export function testMail(settings) {
     text: 'Działa! Tak będą wyglądać e-maile ze sklepu.',
   };
 }
+
+// Logowanie do konta: link i kod (kod do wpisania, gdy link otwiera się w innej przeglądarce niż strona sklepu)
+export function loginMail(url, code, settings) {
+  const subject = `Logowanie do konta - ${settings?.shop_name || 'sklep'}`;
+  const html = layout(settings, subject, `
+<p>Dzień dobry,</p>
+<p>kliknij przycisk, żeby zalogować się do konta w sklepie:</p>
+${button(url, 'Zaloguj mnie')}
+${code ? `<p>Jeśli link otworzył się w innej przeglądarce, wpisz na stronie logowania kod:</p>
+<p style="font-size:26px;letter-spacing:6px;font-weight:bold;margin:8px 0;">${esc(code)}</p>` : ''}
+<p style="color:#7a746b;font-size:13px;">Link i kod działają krótko i tylko raz. Jeśli to nie Ty prosiłeś o logowanie, zignoruj tę wiadomość - nikt nie wejdzie na konto bez dostępu do Twojej poczty.</p>`);
+  const text = `Dzień dobry,\n\nzaloguj się do konta w sklepie: ${url}\n${code ? `\nKod logowania: ${code}\n` : ''}\nLink i kod działają krótko i tylko raz. Jeśli to nie Ty prosiłeś o logowanie, zignoruj tę wiadomość.\n\nPozdrawiamy\n${settings?.shop_name || ''}`;
+  return { subject, html, text };
+}
+
+// Przypomnienie o karmie. items: [{ title, pet, url, endsOn }]
+export function foodReminderMail(name, items, accountUrl, unsubUrl, settings) {
+  const subject = items.length === 1 ? `Czas na nową karmę: ${items[0].title}` : 'Czas na nową karmę dla Twoich zwierzaków';
+  const date = (d) => new Date(`${d}T12:00:00`).toLocaleDateString('pl-PL', { day: 'numeric', month: 'long' });
+  const rows = items.map((i) => `<tr><td style="padding:8px 0;border-bottom:1px solid #ece5da;">
+<strong>${esc(i.title)}</strong>${i.pet ? `<br><span style="color:#7a746b;font-size:13px;">dla: ${esc(i.pet)}</span>` : ''}
+<br><span style="color:#7a746b;font-size:13px;">opakowanie powinno starczyć mniej więcej do ${esc(date(i.endsOn))}</span></td>
+<td style="padding:8px 0;border-bottom:1px solid #ece5da;text-align:right;white-space:nowrap;"><a href="${esc(i.url)}" style="color:#c4631c;font-weight:bold;">Zamów ponownie</a></td></tr>`).join('');
+  const html = layout(settings, subject, `
+<p>${name ? `Dzień dobry, ${esc(name)}!` : 'Dzień dobry!'}</p>
+<p>Ustawiłeś u nas przypomnienie o karmie. Wygląda na to, że niedługo zacznie się kończyć:</p>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;margin:10px 0;">${rows}</table>
+${button(accountUrl, 'Moje przypomnienia')}
+<p style="color:#7a746b;font-size:13px;">Dni liczymy od ostatniego zakupu. Możesz je zmienić albo wyłączyć przypomnienie w koncie. <a href="${esc(unsubUrl)}" style="color:#7a746b;">Wyłącz wszystkie przypomnienia o karmie</a>.</p>`);
+  const text = [
+    name ? `Dzień dobry, ${name}!` : 'Dzień dobry!',
+    'Ustawiłeś u nas przypomnienie o karmie. Wygląda na to, że niedługo zacznie się kończyć:',
+    ...items.map((i) => `- ${i.title}${i.pet ? ` (dla: ${i.pet})` : ''}, do ok. ${date(i.endsOn)}: ${i.url}`),
+    `Moje przypomnienia: ${accountUrl}`,
+    `Wyłącz wszystkie przypomnienia o karmie: ${unsubUrl}`,
+    `Pozdrawiamy\n${settings?.shop_name || ''}`,
+  ].join('\n\n');
+  return { subject, html, text };
+}

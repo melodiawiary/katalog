@@ -3,6 +3,7 @@ import { Suspense } from 'react';
 import './globals.css';
 import { CartProvider } from '@/components/CartProvider';
 import CartBadge from '@/components/CartBadge';
+import AccountLink from '@/components/account/AccountLink';
 import SearchBox from '@/components/SearchBox';
 import CookieBanner from '@/components/CookieBanner';
 import CookieSettingsLink from '@/components/CookieSettingsLink';
@@ -33,7 +34,10 @@ export default async function RootLayout({ children }) {
               <Suspense fallback={<div className="searchbox" />}>
                 <SearchBox />
               </Suspense>
-              <CartBadge />
+              <div className="header-actions">
+                <AccountLink />
+                <CartBadge />
+              </div>
             </div>
           </header>
           <main className="container main">{children}</main>

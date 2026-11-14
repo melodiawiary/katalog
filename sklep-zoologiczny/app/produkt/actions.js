@@ -18,3 +18,20 @@ export async function requestStockAlert(prev, fd) {
   }
   return { ok: true, already: data === 'juz', email };
 }
+
+// Dodanie / zmiana opinii (funkcja submit_review w 08_konto.sql sprawdza zakup)
+export async function submitReview(prev, fd) {
+  const product = Number(fd.get('product_id'));
+  const rating = Number(fd.get('rating'));
+  if (!Number.isInteger(product) || product < 1) return { error: 'Nie znaleziono produktu.' };
+  if (!(rating >= 1 && rating <= 5)) return { error: 'Wybierz ocenę od 1 do 5 gwiazdek.' };
+  const supabase = await createClient();
+  const { error } = await supabase.rpc('submit_review', {
+    p_product: product,
+    p_rating: rating,
+    p_title: String(fd.get('title') || '').slice(0, 100),
+    p_body: String(fd.get('body') || '').slice(0, 2000),
+  });
+  if (error) return { error: error.code === 'P0001' ? error.message : 'Nie udało się zapisać opinii. Spróbuj ponownie.' };
+  return { ok: 'Dziękujemy za opinię!', at: Date.now() };
+}

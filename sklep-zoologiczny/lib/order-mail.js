@@ -3,7 +3,7 @@ import { serviceClient } from '@/lib/supabase/service';
 import { getIntegrations } from '@/lib/integrations';
 import { sendMail, sendBatch } from '@/lib/mail';
 import {
-  orderConfirmation, adminNewOrder, orderStatusMail, hasStatusMail, backInStockMail,
+  orderConfirmation, adminNewOrder, orderStatusMail, hasStatusMail, backInStockMail, loginMail, foodReminderMail,
 } from '@/lib/mail-templates';
 
 async function loadSettings(db) {
@@ -103,4 +103,56 @@ export async function runStockAlerts(site, fallbackDb) {
     variants: new Set(rows.map((r) => r.variant_id)).size,
     error: result.ok ? undefined : result.error,
   };
+}
+
+// Link logowania (konto klienta). db: klient serwisowy z kluczem service_role.
+// Zwraca { ok } albo { error }. Kod 6-cyfrowy idzie w tym samym mailu.
+export async function sendLoginEmail(email, { site, next = '/konto' }) {
+  const ctx = await context(null);
+  if (ctx.error) return { ok: false, unavailable: true, error: ctx.error };
+  const { db, integ, settings } = ctx;
+  const { data, error } = await db.auth.admin.generateLink({ type: 'magiclink', email });
+  const props = data?.properties;
+  if (error || !props?.hashed_token) return { ok: false, error: error?.message || 'Nie udało się przygotować linku.' };
+  const url = `${site}/auth/potwierdz?token_hash=${encodeURIComponent(props.hashed_token)}&next=${encodeURIComponent(next)}`;
+  const mail = loginMail(url, props.email_otp, settings);
+  const r = await sendMail(db, integ, settings, { ...mail, to: email, kind: 'logowanie', replyTo: settings.email || undefined });
+  return r.ok ? { ok: true } : { ok: false, error: r.error };
+}
+
+// Przypomnienia o karmie (codziennie z crona): jeden mail na klienta
+export async function runFoodReminders(site, fallbackDb) {
+  const ctx = await context(fallbackDb);
+  if (ctx.error) return { error: ctx.error, sent: 0 };
+  const { db, integ, settings } = ctx;
+  const { data: rows, error } = await db.rpc('reminders_due');
+  if (error) return { error: error.message, sent: 0 };
+  if (!rows?.length) return { sent: 0 };
+
+  const byUser = new Map();
+  for (const r of rows) byUser.set(r.user_id, [...(byUser.get(r.user_id) || []), r]);
+
+  const mails = [...byUser.values()].map((list) => {
+    const first = list[0];
+    const items = list.map((r) => ({
+      title: `${r.product_name}${r.multi && r.variant_name ? ` (${r.variant_name})` : ''}`,
+      pet: r.pet_name,
+      url: `${site}/produkt/${r.slug}?wariant=${r.variant_id}`,
+      endsOn: r.ends_on,
+    }));
+    const unsubUrl = `${site}/konto/wypisz?t=${first.unsub_token}`;
+    return {
+      ...foodReminderMail(String(first.full_name || '').split(' ')[0], items, `${site}/konto/przypomnienia`, unsubUrl, settings),
+      to: first.email,
+      kind: 'przypomnienie',
+      ids: list.map((r) => r.reminder_id),
+      replyTo: settings.email || undefined,
+      headers: { 'List-Unsubscribe': `<${unsubUrl}>` },
+    };
+  });
+
+  const result = await sendBatch(db, integ, settings, mails);
+  const sentIds = mails.filter((m) => m.ok).flatMap((m) => m.ids);
+  if (sentIds.length) await db.rpc('reminders_mark_sent', { p_ids: sentIds });
+  return { sent: mails.filter((m) => m.ok).length, error: result.ok ? undefined : result.error };
 }

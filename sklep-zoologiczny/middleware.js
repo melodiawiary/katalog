@@ -29,9 +29,19 @@ export async function middleware(request) {
     return NextResponse.redirect(url);
   }
 
+  // panel klienta: bez logowania odsyłamy do logowania i wracamy dokładnie tam, gdzie klient chciał wejść
+  const path = request.nextUrl.pathname;
+  if (!user && path.startsWith('/konto') && !path.startsWith('/konto/logowanie') && !path.startsWith('/konto/wypisz')) {
+    const url = request.nextUrl.clone();
+    url.pathname = '/konto/logowanie';
+    url.search = `?next=${encodeURIComponent(path + request.nextUrl.search)}`;
+    return NextResponse.redirect(url);
+  }
+
   return response;
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/logowanie'],
+  // sesję klienta odświeżamy tam, gdzie serwer sprawdza, kto jest zalogowany
+  matcher: ['/admin/:path*', '/logowanie', '/konto/:path*', '/zamowienie/:path*'],
 };

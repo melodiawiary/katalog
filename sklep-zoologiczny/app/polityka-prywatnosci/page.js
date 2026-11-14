@@ -52,6 +52,30 @@ export default async function PrivacyPage() {
             <td>do czasu odpowiedzi i krótko po niej, nie dłużej niż 12 miesięcy</td>
           </tr>
           <tr>
+            <td>Konto klienta (nieobowiązkowe): logowanie, historia zamówień, zapamiętane dane do zamówień</td>
+            <td>adres e-mail, imię i nazwisko, telefon, domyślna dostawa (adres lub paczkomat), historia zamówień</td>
+            <td>wykonanie umowy o świadczenie usługi konta (art. 6 ust. 1 lit. b RODO)</td>
+            <td>do usunięcia konta; dane zamówień zostają zgodnie z wierszem o księgowości</td>
+          </tr>
+          <tr>
+            <td>„Moje zwierzęta” i dopasowanie karmy (nieobowiązkowe)</td>
+            <td>imię, gatunek, rasa, data urodzenia, waga i uwagi o zwierzaku (np. alergie pokarmowe)</td>
+            <td>wykonanie umowy o świadczenie usługi konta (art. 6 ust. 1 lit. b RODO)</td>
+            <td>do usunięcia zwierzaka lub konta</td>
+          </tr>
+          <tr>
+            <td>Przypomnienia o karmie (nieobowiązkowe, ustawiasz je sam)</td>
+            <td>adres e-mail, wybrany produkt, liczba dni, zwierzak</td>
+            <td>wykonanie umowy o świadczenie usługi przypomnień na Twoje żądanie (art. 6 ust. 1 lit. b RODO)</td>
+            <td>do usunięcia przypomnienia, wyłączenia przypomnień lub usunięcia konta</td>
+          </tr>
+          <tr>
+            <td>Opinie o produktach (tylko po zakupie)</td>
+            <td>treść opinii, ocena, imię i pierwsza litera nazwiska, data</td>
+            <td>wykonanie umowy o świadczenie usługi (art. 6 ust. 1 lit. b RODO) i prawnie uzasadniony interes: rzetelna informacja dla innych klientów (lit. f)</td>
+            <td>do usunięcia opinii lub konta</td>
+          </tr>
+          <tr>
             <td>Korespondencja e-mailowa i telefoniczna</td>
             <td>dane podane w wiadomości</td>
             <td>prawnie uzasadniony interes (art. 6 ust. 1 lit. f RODO) albo wykonanie umowy</td>
@@ -63,14 +87,15 @@ export default async function PrivacyPage() {
         Podanie danych potrzebnych do zamówienia jest dobrowolne, ale bez nich nie da się zrealizować zamówienia. Dane z formularzy
         „Powiadom o dostępności” i „Sprowadzimy” są dobrowolne.
       </p>
-      <p>Nie podejmujemy decyzji w sposób zautomatyzowany i nie profilujemy Klientów. Sklep nie wymaga zakładania konta.</p>
+      <p>Nie podejmujemy decyzji w sposób zautomatyzowany i nie profilujemy Klientów. Sklep nie wymaga zakładania konta: zakupy można zrobić bez niego. Logowanie do konta odbywa się linkiem i kodem wysłanym e-mailem albo, jeśli jest włączone, przez konto Google (Google przekazuje nam wtedy adres e-mail i imię). Usunięcie konta w zakładce „Moje dane” kasuje dane konta, zwierzęta, przypomnienia i opinie; zamówienia zostają bez powiązania z kontem.</p>
 
       <h2>3. Komu przekazujemy dane</h2>
       <p>Dane trafiają tylko do podmiotów potrzebnych do działania sklepu, które przetwarzają je na nasze zlecenie albo we własnym zakresie:</p>
       <ul>
         <li>operatorzy płatności: PayPro S.A. (Przelewy24), przy płatności online;</li>
         <li>przewoźnicy: InPost lub inny przewoźnik wybrany przy zamówieniu (imię i nazwisko, telefon, e-mail, adres lub paczkomat);</li>
-        <li>dostawca bazy danych sklepu: Supabase (serwery w Europie);</li>
+        <li>dostawca bazy danych i logowania sklepu: Supabase (serwery w Europie);</li>
+        <li>Google Ireland Ltd. / Google LLC, tylko jeśli logujesz się przez konto Google;</li>
         <li>dostawca hostingu sklepu: Vercel Inc. (USA);</li>
         <li>dostawca wysyłki e-maili: Resend (USA);</li>
         <li>biuro rachunkowe i doradcy prawni, w zakresie potrzebnym do obsługi księgowej i prawnej;</li>

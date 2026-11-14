@@ -2,7 +2,7 @@
 // Dane firmy biorą się z tabeli settings (panel /admin/ustawienia), nic nie jest wpisane na stałe.
 
 // Zmieniać przy każdej zmianie treści dokumentów (zapisuje się przy zamówieniu jako wersja zaakceptowanego regulaminu).
-export const LEGAL_VERSION = '2026-11-14';
+export const LEGAL_VERSION = '2026-11-14-2';
 export const LEGAL_DATE_PL = '14 listopada 2026 r.';
 
 export const LEGAL_LINKS = [

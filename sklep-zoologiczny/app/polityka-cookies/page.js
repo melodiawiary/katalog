@@ -20,7 +20,7 @@ export default async function CookiesPage() {
           <tr><td>dane-klienta</td><td>Ostatnio wpisane dane do zamówienia, żeby kolejne zamówienie było szybsze. Zostają tylko w Twojej przeglądarce.</td><td>do usunięcia przez Ciebie</td></tr>
           <tr><td>paczkomat</td><td>Ostatnio wybrany paczkomat.</td><td>do usunięcia przez Ciebie</td></tr>
           <tr><td>zgoda-cookies</td><td>Zapamiętanie Twojej decyzji z banera o cookies.</td><td>do usunięcia przez Ciebie</td></tr>
-          <tr><td>sb-… (cookies logowania)</td><td>Tylko dla osób logujących się do panelu sklepu (administrator). Klienci ich nie dostają.</td><td>sesja logowania</td></tr>
+          <tr><td>sb-… (cookies logowania)</td><td>Zapamiętanie, że jesteś zalogowany do konta klienta (albo do panelu sklepu). Dostajesz je tylko po zalogowaniu; kupując bez konta, nie dostajesz ich.</td><td>do wylogowania (sesja odnawia się automatycznie)</td></tr>
         </tbody>
       </table>
       <p>Zapis tych danych jest niezbędny do świadczenia usługi, o którą prosisz (zakupy w sklepie), dlatego nie wymaga odrębnej zgody.</p>

@@ -1,9 +1,9 @@
-// Codzienny automat (Vercel Cron, plik vercel.json): "Produkt znów dostępny" + sprawdzenie nieopłaconych płatności.
+// Codzienny automat (Vercel Cron, plik vercel.json): "Produkt znów dostępny", sprawdzenie nieopłaconych płatności, przypomnienia o karmie.
 // Jeśli na Vercelu jest zmienna CRON_SECRET, wywołanie musi mieć nagłówek "Authorization: Bearer <CRON_SECRET>"
 // (Vercel dodaje go sam). Bez CRON_SECRET adres działa dla każdego - to bezpieczne, bo każda wiadomość idzie tylko raz.
 import { NextResponse } from 'next/server';
 import { serviceClient } from '@/lib/supabase/service';
-import { runStockAlerts } from '@/lib/order-mail';
+import { runStockAlerts, runFoodReminders } from '@/lib/order-mail';
 import { checkRecentUnpaid } from '@/lib/payments';
 import { siteUrl } from '@/lib/site';
 
@@ -21,5 +21,6 @@ export async function GET(request) {
   const site = await siteUrl(settings);
   const alerts = await runStockAlerts(site);
   const payments = await checkRecentUnpaid(site);
-  return NextResponse.json({ alerts, payments });
+  const reminders = await runFoodReminders(site);
+  return NextResponse.json({ alerts, payments, reminders });
 }
