@@ -1,8 +1,22 @@
 # STATUS - Sklep zoologiczny + katalog groomerów
 
-Ostatnia aktualizacja: 2026-11-14 (Etap 3 prawie domknięty: w Gdańsku 5 opublikowanych salonów, katalog gotowy do włączenia; następny: Etap 4 - opinie o salonach i ceny)
+Ostatnia aktualizacja: 2026-11-14 (Etap 4 zrobiony: opinie o salonach, ranking, strona miasta, nowa strona główna, Akademia; następny: Etap 5 - konta salonów i odpowiedzi na opinie)
 
 ## NASTĘPNY KROK
+
+**Etap 4 (opinie o salonach, ranking, nowa strona główna, zapis do Akademii): ZROBIONE 2026-11-14** (`supabase/11_opinie_salonow.sql` wykonany w bazie przez Claude; przetestowany na prawdziwej bazie w transakcji z cofnięciem: ranking, sortowanie, profil, strona miasta; build przeszedł).
+Przed zmianami zaktualizowano `MAPA_MYSLI.md` (sekcje Opinie, Ranking, Konta, Akademia, Strona główna).
+**Baza:** `places` ma nowe kolumny `verified`, `rating_count`, `rating_avg`, `rank_score`, `city_rank`, `badges` (liczy baza, nie edytować ręcznie; `verified` ustawia admin w formularzu salonu). `places_config.reviews_premoderation` (domyślnie TRUE: nowa opinia czeka na zatwierdzenie).
+Tabele: `place_reviews` (jakość wymagana + podejście / czystość / cena, tekst, usługa, wielkość psa, zapłacona kwota, status oczekuje / opublikowana / ukryta, `reports_count`), `place_review_reports`, `place_favorites`, `academy_waitlist`.
+Funkcje: `submit_place_review` (limit 5 nowych opinii dziennie z konta; edycja opublikowanej wraca do zatwierdzenia przy włączonej moderacji; ukrytej nie da się odkryć edycją), `place_user_state`, `report_place_review` (bez konta, e-mail + powód, limit 5 dziennie), `toggle_favorite_place`, `place_reviews_json`, `join_academy` (wymaga zgody), `city_page`, `place_city_slug`; `_refresh_place_ranking` (triggery po zmianie opinii i salonu) i `refresh_place_ranking` (admin / klucz serwisowy; wołane z crona codziennie i po zapisie salonu); zmienione `search_places` (sortowanie `najlepsze` / `opinie`, domyślnie `najlepsze` bez pozycji, oceny w wyniku), `place_page`, `places_cities` (slug).
+Ranking: wynik = (suma wag x ocena + 3 x średnia miasta) / (suma wag + 3) + bonus (do 0,10 za pełny profil, 0,05 za "sprawdzony"); waga opinii maleje o połowę co ok. 18 miesięcy (min. 0,25). Odznaki tylko dla "sprawdzonych" z min. 3 opiniami: Polecany (średnia >= 4,3), Top w mieście (3 najlepsze, w mieście z > 30 ocenianymi salonami 10%). Klient widzi zwykłą średnią i liczbę opinii. Wynik może przekroczyć 5,0 (bonus) - to wartość wewnętrzna.
+**Kod:** `components/places/` (`Rating.js`, `PlaceReviewForm.js` z serduszkiem, `ReportReview.js`), `app/salony/[slug]/page.js` (oceny, opinie, formularz, brak cennika = komunikat), `app/salony/page.js` (oceny na liście, linki do miast, sortowanie w `PlacesFilters.js`), `app/salony/miasto/[slug]/page.js` (top 10 + pozostałe), `app/salony/zasady-opinii/page.js` (do sprawdzenia przez prawnika), `app/salony/actions.js` (opinie, zgłoszenia, ulubione, Akademia), `app/admin/opinie-salonow/` (zatwierdzanie, ukrywanie, zgłoszenia, przełącznik moderacji; licznik w menu), `app/admin/akademia/`, `app/akademia/`, `components/AcademyForm.js`, `app/konto/(panel)/ulubione/`.
+**Nowa strona główna** `app/page.js`: baner, pasek zaufania, kategorie, najpopularniejsze, 3 najlepsze salony (gdy katalog publiczny), Akademia, "Dodaj swój salon". **Lista produktów z filtrami jest teraz pod `/sklep`**; stare adresy `/?kategoria=`, `/?q=`, `/?marka=...` przekierowują.
+**Czego NIE ma (świadomie):** zdjęcie efektu w opinii (Etap 5, wymaga bucketu i moderacji zdjęć), mapka na stronie głównej, filtr "ocena" na liście, pamięć podręczna stron miast (kod gotowy, ale główny layout czyta sesję, więc strony są dynamiczne), powiadomienie mailem o nowej opinii, cenniki salonów (żaden salon nie ma danych; zapłacone kwoty z opinii tylko się wyświetlają).
+**Do zrobienia przez Mariusza:** (1) w `/admin/miejsca/<id>` zaznaczyć "Sprawdzony przez nas" przy salonach, które przejrzał; (2) włączyć katalog w `/admin/miejsca` (nadal wyłączony), potem zalogować się i dodać próbną opinię, zatwierdzić ją w `/admin/opinie-salonow` i obejrzeć profil i `/salony/miasto/gdansk`, a próbną opinię usunąć; (3) przejrzeć `/salony/zasady-opinii` z prawnikiem razem z regulaminem; (4) uzupełnić adresy / ceny szkiców (Etap 3, pkt 4).
+**Następny: Etap 5** (konta salonów: przejmowanie profilu, odpowiedzi na opinie, zdjęcia, "Wizytówka Plus" jako furtka), szczegóły w `MAPA_MYSLI.md`.
+
+### Poprzednio zaplanowane (Etap 4, zrealizowane powyżej)
 
 **NAJPIERW (2026-11-14, koniec sesji): Etap 4 - opinie o salonach, ranking, ceny.** Katalog jest wypełniony i gotowy, Mariusz włącza go w `/admin/miejsca` (pole "Katalog publiczny" + przycisk Zapisz; w chwili zapisu tego pliku jeszcze wyłączony). Klienci na razie nie zobaczą opinii ani cen, bo tego jeszcze nie zbudowano. Mariusz zgodził się, żeby Claude sam zaplanował Etap 4 "tak, żeby było dobrze". Zasada: najpierw zmienić `MAPA_MYSLI.md` i tablicę, potem budować (sekcje Opinie i Ranking w mapie już istnieją, sprawdzić czy kompletne). Zakres: formularz oceny (zalogowany klient), średnia i liczba opinii na liście i profilu, sortowanie "najlepsze" / "najwięcej opinii", "Brak opinii" bez miejsca w rankingu, ranking miasta; ceny: tabela `place_prices` jest, wyświetlanie na profilu już jest, ale dane puste.
 **Decyzja z 2026-11-14: model zasilania katalogu.** Admin wpisuje po 5 najlepiej znanych salonów na miasto (to wystarcza, by otworzyć miasto), reszta z OSM zostaje prywatnymi szkicami (lista zaproszeń); salony zgłaszają się same ("Dodaj swój salon"), zatwierdza Mariusz; żadnych masowych zimnych maili do salonów (PKE wymaga zgody także w B2B); zaproszenia przez stronę dołączenia, listy, reklamy, pole zgody w formularzu; neutralna informacja z art. 14 RODO dla salonów publikowanych przez nas (przed startem sprawdzić z prawnikiem razem z regulaminem i zasadami opinii).
@@ -94,7 +108,7 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
   Każdy push do `main` automatycznie aktualizuje sklep.
 - **Zmienne na Vercelu:** `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` (od kroku 6, tajna), `NEXT_PUBLIC_SHOP_NAME`
   (ta ostatnia tylko zapasowo). Dane firmy, konto, kontakt: panel `/admin/ustawienia` (tabela `settings`).
-- **Pliki SQL:** `supabase/schema.sql`, potem po kolei `01_ustawienia.sql`, `02_produkty.sql`, `03_import.sql`, `04_szukanie.sql`, `05_karta.sql`, `06_zamowienie.sql`, `07_zgody.sql`, `08_konto.sql`, `09_miejsca.sql`
+- **Pliki SQL:** `supabase/schema.sql`, potem po kolei `01_ustawienia.sql`, `02_produkty.sql`, `03_import.sql`, `04_szukanie.sql`, `05_karta.sql`, `06_zamowienie.sql`, `07_zgody.sql`, `08_konto.sql`, `09_miejsca.sql`, `10_prog_miasta.sql`, `11_opinie_salonow.sql`
   (każdy można uruchomić ponownie).
 - **Adres sklepu:** https://sklep-zoologiczny.vercel.app (panel: `/admin`, ustawienia: `/admin/ustawienia`).
   Strony: `/kategoria/<slug>`, `/szukaj?q=...`, filtry w adresie (np. `?marka=brit,josera&wiek=senior&waga=1-3-kg&cena_od=20&dostepne=1&sort=cena-rosnaco&strona=2`).
@@ -271,7 +285,7 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
 - [x] Etap 2: konto klienta (zrobione 2026-11-14, opis niżej w "Co jest zrobione"; do sprawdzenia na żywo, patrz NASTĘPNY KROK).
 - [ ] Etap 3: katalog groomerów + mapa (PostGIS, OpenStreetMap), panel admina do salonów;
       publicznie dopiero z 5 przejrzanymi salonami w jednym mieście (potem miasto po mieście, cała Polska z OSM). Baza, panel, strony publiczne, link z Moich zwierząt i próg miasta zrobione (2026-11-14), zostaje przegląd szkiców i włączenie katalogu, patrz NASTĘPNY KROK.
-- [ ] Etap 4: opinie o salonach, ranking i odznaki, nowa strona główna (sklep + salony, zapis do Akademii).
+- [x] Etap 4: opinie o salonach, ranking i odznaki, nowa strona główna (sklep + salony, zapis do Akademii) - zrobione 2026-11-14, patrz NASTĘPNY KROK.
 - [ ] Etap 5: konta salonów, odpowiedzi na opinie.
 - [ ] Etap 6: Akademia.
 - [ ] Później (gdy produktów będzie > 20 tys.): przyspieszyć `search_products` (np. cechy produktu zapisane w kolumnie
@@ -327,5 +341,6 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
   i tylko gdy `places_config.public_enabled`; administrator widzi wszystko (podgląd). Dane tylko dla admina (notatki, kontakt do właściciela) są w `place_private`, nie w `places`.
   Szukanie i profil liczy baza (`search_places`, `place_page`, `places_cities`), kod tylko czyta adres i rysuje. Mapa = ta sama lista (`p_per_page` do 200), bez osobnej funkcji.
   Groomer mobilny pasuje do "w pobliżu", gdy klient jest w jego `service_radius_km`. Publikacja wymaga miasta (i adresu poza groomerem mobilnym). Wielkość psa: `dog_size_class(kg)`.
-  Etykiety usług i udogodnień: tabele `service_defs`, `feature_defs` (na razie bez panelu). Opinie i ranking dopiero w Etapie 4 (nie ma jeszcze tabeli opinii o salonach).
+  Etykiety usług i udogodnień: tabele `service_defs`, `feature_defs` (na razie bez panelu). Opinie o salonach i ranking: `11_opinie_salonow.sql` (kolumn `rating_*`, `rank_score`, `city_rank`, `badges` nie zapisywać ręcznie; liczy je `_refresh_place_ranking`). Opinie salonów czyta klient tylko przez `place_reviews_json` (bez identyfikatora konta autora).
+- Strona `/` to nowa strona główna; lista produktów z filtrami jest pod `/sklep` (`Listing path="/sklep"`). Nowe linki do "wszystkich produktów" kierować na `/sklep`.
 - Po każdym etapie aktualizować ten plik w repo i w dokumentach projektu Claude.

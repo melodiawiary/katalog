@@ -5,6 +5,10 @@ import { PLACE_KIND, SIZE_CLASS, WEEKDAYS } from '@/lib/places';
 import { hoursByDay, priceText } from '@/lib/places-browse';
 import PlacesMap from '@/components/places/PlacesMap';
 import PlaceRequestForm from '@/components/places/PlaceRequestForm';
+import PlaceReviewForm from '@/components/places/PlaceReviewForm';
+import ReportReview from '@/components/places/ReportReview';
+import { PlaceRating, PlaceBadges } from '@/components/places/Rating';
+import Stars from '@/components/product/Stars';
 
 export const dynamic = 'force-dynamic';
 
@@ -58,7 +62,14 @@ export default async function PlacePage({ params }) {
     geo: { '@type': 'GeoCoordinates', latitude: p.lat, longitude: p.lng },
     ...(p.phone && { telephone: p.phone }),
     ...(p.website && { url: p.website }),
+    ...(p.rating_count > 0 && p.rating_avg != null && {
+      aggregateRating: { '@type': 'AggregateRating', ratingValue: Number(p.rating_avg), reviewCount: p.rating_count, bestRating: 5, worstRating: 1 },
+    }),
   };
+  const { data: serviceDefs } = await supabase.from('service_defs').select('code, label').order('sort');
+  const date = (d) => new Date(d).toLocaleDateString('pl-PL', { timeZone: 'Europe/Warsaw', day: 'numeric', month: 'long', year: 'numeric' });
+  const bd = data.breakdown || {};
+  const parts = [['Jakość', bd.quality], ['Podejście do zwierzęcia', bd.care], ['Czystość', bd.clean], ['Cena do jakości', bd.price]].filter(([, v]) => v != null);
 
   return (
     <>
@@ -72,6 +83,11 @@ export default async function PlacePage({ params }) {
         {p.species.map((s) => <span key={s} className="status">{s === 'kot' ? 'Koty' : 'Psy'}</span>)}
         {data.open_now && <span className="status status-zrealizowane">Otwarte teraz</span>}
       </div>
+      <div className="rating-line" style={{ marginBottom: 8 }}>
+        <PlaceRating avg={p.rating_avg} count={p.rating_count} size="1.2em" />
+        <PlaceBadges badges={p.badges || []} verified={p.verified} rank={p.city_rank} ranked={data.city_ranked} />
+        {data.city_slug && <Link className="small" href={`/salony/miasto/${data.city_slug}`}>Ranking: {p.city}</Link>}
+      </div>
 
       <div className="place-profile">
         <div>
@@ -83,6 +99,12 @@ export default async function PlacePage({ params }) {
             </ul>
           )}
 
+          {groups.length === 0 && (
+            <>
+              <h2>Cennik</h2>
+              <p className="muted">Salon nie podał jeszcze cennika. Zapytaj o cenę telefonicznie; jeśli już u nich byłeś, możesz dodać, ile zapłaciłeś, w swojej opinii.</p>
+            </>
+          )}
           {groups.length > 0 && (
             <>
               <h2>Cennik</h2>
@@ -142,6 +164,35 @@ export default async function PlacePage({ params }) {
         <p className="small"><a href={`https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}`} target="_blank" rel="noopener noreferrer">Wyznacz trasę ↗</a></p>
       )}
 
+      <section id="opinie" className="reviews">
+        <h2>Opinie o salonie</h2>
+        {p.rating_count > 0 ? (
+          <>
+            <p className="reviews-sum"><PlaceRating avg={p.rating_avg} count={p.rating_count} size="1.3em" /></p>
+            {parts.length > 0 && (
+              <div className="rating-breakdown small">
+                {parts.map(([l, v]) => <div key={l}>{l}: <strong>{Number(v).toFixed(1).replace('.', ',')}</strong></div>)}
+              </div>
+            )}
+          </>
+        ) : <p className="muted">Brak opinii. Bądź pierwszy i oceń ten salon.</p>}
+        <p className="small muted">Opinie dodają zalogowani użytkownicy; nie sprawdzamy, czy byli w salonie. <Link href="/salony/zasady-opinii">Jak sprawdzamy opinie</Link></p>
+        <ul className="plain review-list">
+          {(data.reviews || []).map((r) => (
+            <li key={r.id} className="review">
+              <div className="review-head"><Stars value={r.rating} /><strong>{Number(r.rating).toFixed(1).replace('.', ',')}</strong></div>
+              {r.body && <p>{r.body}</p>}
+              {r.paid_amount != null && (
+                <p className="review-paid">Klient zapłacił: {Number(r.paid_amount).toLocaleString('pl-PL')} zł{r.service && <> ({r.service}{r.size_class && <>, {SIZE_CLASS[r.size_class]}</>})</>}</p>
+              )}
+              <p className="small muted">{r.author} · {date(r.created_at)}</p>
+              <ReportReview reviewId={r.id} />
+            </li>
+          ))}
+        </ul>
+        <PlaceReviewForm placeId={p.id} services={serviceDefs || []} />
+      </section>
+
       {data.nearby.length > 0 && (
         <>
           <h2>Inne salony w pobliżu</h2>
@@ -150,6 +201,7 @@ export default async function PlacePage({ params }) {
               <li key={n.slug} className="place-card">
                 <Link href={`/salony/${n.slug}`} className="place-card-name">{n.name}</Link>
                 <div className="small muted">{PLACE_KIND[n.kind]} · {[n.district, n.city].filter(Boolean).join(', ')} · {String(n.distance_km).replace('.', ',')} km stąd</div>
+                <PlaceRating avg={n.rating_avg} count={n.rating_count} />
               </li>
             ))}
           </ul>

@@ -49,7 +49,7 @@ export default function CheckoutForm({ salesEnabled, testMode, features, ship, a
     return (
       <div className="center">
         <h1>Koszyk jest pusty</h1>
-        <Link href="/" className="btn">Przejdź do zakupów</Link>
+        <Link href="/sklep" className="btn">Przejdź do zakupów</Link>
       </div>
     );
   }

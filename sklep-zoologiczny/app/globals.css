@@ -647,3 +647,31 @@ label.check span:nth-child(2) { flex: 1; }
   .places-layout, .place-profile { grid-template-columns: 1fr; }
   .places-map-col { position: static; }
 }
+
+/* ---- Etap 4: opinie o salonach, ranking, strona główna ---- */
+.rating-line { display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.rating-line .rating-num { font-weight: 700; }
+.badge-pill { display: inline-block; background: #e6f4ea; color: #1e6b3a; font-weight: 700; font-size: 0.75rem; padding: 2px 8px; border-radius: 999px; }
+.badge-pill.top { background: #fff1c9; color: #7a5500; }
+.badge-pill.verified { background: #e3eefc; color: #1f4f99; }
+.places-sort { display: block; margin: 8px 0; }
+.rating-pick-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.rating-breakdown { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 6px 14px; margin: 8px 0; }
+.review-paid { color: var(--muted); font-size: 0.85rem; }
+.rank-list { list-style: none; padding: 0; display: grid; gap: 10px; counter-reset: rank; }
+.rank-list .place-card { grid-template-columns: auto 1fr; align-items: start; gap: 4px 12px; }
+.rank-no { grid-row: span 3; font-size: 1.6rem; font-weight: 800; color: var(--accent-dark); min-width: 2ch; text-align: center; }
+.fav-btn { font-size: 1.1rem; }
+.home-hero { background: linear-gradient(135deg, #fff3e3, #ffe2c2); border-radius: var(--radius); padding: 28px 20px; text-align: center; margin-bottom: 16px; }
+.home-hero h1 { margin: 0 0 8px; }
+.home-hero .hero-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 14px; }
+.trust-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; margin: 0 0 20px; padding: 0; list-style: none; text-align: center; font-size: 0.9rem; }
+.trust-bar li { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 10px 8px; }
+.tile-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 24px; }
+.tile { display: block; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 12px; text-align: center; font-weight: 700; text-decoration: none; }
+.tile:hover { border-color: var(--accent); }
+.tile .tile-emoji { display: block; font-size: 2rem; }
+.home-section { margin: 28px 0; }
+.home-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; list-style: none; padding: 0; }
+.academy-box { background: #eef6ff; border: 1px solid #cfe0f7; border-radius: var(--radius); padding: 18px; }
+.academy-box form { display: grid; gap: 8px; max-width: 460px; }

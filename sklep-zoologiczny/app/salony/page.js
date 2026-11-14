@@ -4,6 +4,7 @@ import { parsePlaces, rpcArgs, priceText } from '@/lib/places-browse';
 import { PLACE_KIND } from '@/lib/places';
 import PlacesMap from '@/components/places/PlacesMap';
 import PlacesFilters from '@/components/places/PlacesFilters';
+import { PlaceRating, PlaceBadges } from '@/components/places/Rating';
 
 export const dynamic = 'force-dynamic';
 
@@ -69,6 +70,7 @@ export default async function SalonyPage({ searchParams }) {
                 {p.status && p.status !== 'opublikowany' && <span className="badge-test">{p.status}</span>}
                 {p.open_now && <span className="status status-zrealizowane">Otwarte teraz</span>}
               </div>
+              <div className="rating-line"><PlaceRating avg={p.rating_avg} count={p.rating_count} /> <PlaceBadges badges={p.badges || []} verified={p.verified} /></div>
               <div className="small muted">
                 {PLACE_KIND[p.kind]} · {[p.district, p.city].filter(Boolean).join(', ')}
                 {p.address && <> · {p.address}</>}
@@ -87,6 +89,11 @@ export default async function SalonyPage({ searchParams }) {
       <p className="center-text small muted">
         Mapa i część danych o salonach: © autorzy <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> (licencja ODbL).
       </p>
+      {(cities.data || []).length > 0 && (
+        <p className="center-text small">Ranking miast: {(cities.data || []).map((c, i) => (
+          <span key={c.slug}>{i > 0 && ' · '}<Link href={`/salony/miasto/${c.slug}`}>{c.city}</Link></span>
+        ))}</p>
+      )}
       <p className="center-text small muted">
         Brakuje Twojego salonu albo znasz dobrego groomera? <Link href="/salony/polec">Poleć salon</Link>
       </p>

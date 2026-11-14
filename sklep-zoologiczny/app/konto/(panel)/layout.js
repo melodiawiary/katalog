@@ -9,6 +9,7 @@ const LINKS = [
   { href: '/konto', label: 'Konto' },
   { href: '/konto/zamowienia', label: 'Zamówienia' },
   { href: '/konto/zwierzeta', label: 'Moje zwierzęta' },
+  { href: '/konto/ulubione', label: 'Ulubione salony' },
   { href: '/konto/przypomnienia', label: 'Przypomnienia o karmie' },
   { href: '/konto/dane', label: 'Moje dane' },
 ];

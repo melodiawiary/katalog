@@ -68,3 +68,25 @@ export function money(value) {
   if (s === '') return null;
   return /^\d+(\.\d{1,2})?$/.test(s) ? Number(s) : NaN;
 }
+
+export const PLACE_SORT = {
+  najlepsze: 'Najlepiej oceniane',
+  opinie: 'Najwięcej opinii',
+  odleglosc: 'Najbliżej',
+  cena: 'Najtańsze',
+  nazwa: 'Nazwa A-Z',
+};
+
+export const PLACE_BADGES = {
+  polecany: 'Polecany',
+  top_miasta: 'Top w mieście',
+};
+
+export const REVIEW_STATUS = {
+  oczekuje: 'Czeka na zatwierdzenie',
+  opublikowana: 'Opublikowana',
+  ukryta: 'Ukryta',
+};
+
+// Liczba mnoga: 1 opinia, 2-4 opinie, 5+ opinii
+export const opinionsWord = (n) => (n === 1 ? 'opinia' : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 'opinie' : 'opinii');

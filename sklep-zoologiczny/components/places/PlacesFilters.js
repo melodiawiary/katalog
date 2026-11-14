@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { PLACE_KIND, SPECIES, SIZE_CLASS } from '@/lib/places';
+import { PLACE_KIND, SPECIES, SIZE_CLASS, PLACE_SORT } from '@/lib/places';
 
 // Filtry salonów: zapisują się w adresie strony (da się wysłać link)
 export default function PlacesFilters({ f, cities, services, featureDefs }) {
@@ -74,6 +74,11 @@ export default function PlacesFilters({ f, cities, services, featureDefs }) {
         <button type="button" className="link-btn" onClick={nearMe} disabled={busy}>📍 Salony blisko mnie</button>
         {f.lat != null && <button type="button" className="link-btn" onClick={() => go({ lat: '', lng: '', gdzie: '', promien: '', sort: f.sort === 'odleglosc' ? '' : f.sort })}>Wyczyść pozycję</button>}
       </div>
+      <label className="places-sort small">Sortuj:{' '}
+        <select value={f.sort || (f.lat != null ? 'odleglosc' : 'najlepsze')} onChange={(e) => go({ sort: e.target.value })}>
+          {Object.entries(PLACE_SORT).filter(([k]) => k !== 'odleglosc' || f.lat != null).map(([k, l]) => <option key={k} value={k}>{l}</option>)}
+        </select>
+      </label>
       {msg && <p className="alert small">{msg}</p>}
 
       <details className="panel" open={open} onToggle={(e) => setOpen(e.currentTarget.open)}>

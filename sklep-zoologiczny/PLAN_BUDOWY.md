@@ -119,6 +119,11 @@ Baza: miejsca z PostGIS, godziny, cennik, zgłoszenia "poleć / popraw / usuń",
 Plik `supabase/09_miejsca.sql`, profile, cennik wg rasy i wielkości, mapa OpenStreetMap, "w pobliżu",
 filtry, panel admina do salonów. Publicznie dopiero z 20-30 salonami z Trójmiasta.
 
-## ETAP 4: opinie o salonach, ranking, nowa strona główna (+ zapis do Akademii)
+## ETAP 4: opinie o salonach, ranking, nowa strona główna (+ zapis do Akademii) - ZROBIONE 2026-11-14 (`supabase/11_opinie_salonow.sql`)
+Opinie o salonach (zalogowani, 1 na salon, jakość + 3 oceny nieobowiązkowe, tekst, opcjonalnie usługa / wielkość psa / zapłacona kwota), przełącznik moderacji
+(domyślnie najpierw zatwierdza Mariusz), zgłaszanie nadużyć, ranking liczony przez bazę (wynik ważony liczbą i wiekiem opinii, średnia miasta jako punkt startu, bonus za pełny
+profil i "sprawdzony"), odznaki Polecany / Top w mieście, sortowanie listy salonów, strona miasta `/salony/miasto/<miasto>`, zasady opinii `/salony/zasady-opinii`, ulubione salony,
+nowa strona główna (lista produktów jest teraz pod `/sklep`), zapis na Akademię (`/akademia`, `/admin/akademia`), panel `/admin/opinie-salonow`.
+NIE zrobione z mapy: zdjęcie efektu w opinii (Etap 5), mapka na stronie głównej, działająca pamięć podręczna stron miast, filtr "ocena" na liście, ceny salonów (dane do wpisania ręcznie).
 ## ETAP 5: konta salonów, odpowiedzi na opinie
 ## ETAP 6: Akademia

@@ -22,5 +22,7 @@ export async function GET(request) {
   const alerts = await runStockAlerts(site);
   const payments = await checkRecentUnpaid(site);
   const reminders = await runFoodReminders(site);
-  return NextResponse.json({ alerts, payments, reminders });
+  // ranking salonów: starsze opinie liczą się mniej, więc przeliczamy raz dziennie (przed 11_opinie_salonow.sql: błąd, pomijamy)
+  const { error: rankError } = await db.rpc('refresh_place_ranking', { p_city: null });
+  return NextResponse.json({ alerts, payments, reminders, ranking: rankError ? 'błąd' : 'ok' });
 }

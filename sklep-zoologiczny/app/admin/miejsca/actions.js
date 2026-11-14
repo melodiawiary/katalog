@@ -136,6 +136,7 @@ export async function savePlace(prev, fd) {
 
   const row = {
     name, kind, status, species, features, lat, lng,
+    verified: fd.get('verified') === 'on',
     description: str(fd, 'description', 3000),
     address: str(fd, 'address', 200),
     postal_code: str(fd, 'postal_code', 10),
@@ -187,6 +188,9 @@ export async function savePlace(prev, fd) {
   };
   const { error: privError } = await supabase.from('place_private').upsert(priv, { onConflict: 'place_id' });
   if (privError) return { error: `Miejsce zapisane, ale notatki prywatne nie: ${friendly(privError)}` };
+
+  // godziny i cennik wpływają na bonus za pełny profil: przeliczamy ranking miasta (przed 11_opinie_salonow.sql funkcji nie ma)
+  await supabase.rpc('refresh_place_ranking', { p_city: row.city || null });
 
   // zamknięcie zgłoszenia, z którego powstał ten szkic
   const fromRequest = Number(fd.get('request_id')) || null;

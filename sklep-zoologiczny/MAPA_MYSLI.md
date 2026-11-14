@@ -126,32 +126,33 @@ Fundament (prawo, nazwa, płatności, hosting) leży pod wszystkim.
 - [ETAP 2] Historia zamówień i "Zamów ponownie"
 - [ETAP 2] Moje zwierzęta (imię, rasa, wiek, waga) -> dopasowane produkty
 - [ETAP 2] Przypomnienie "kończy się karma?" (e-mail po wyliczonym czasie)
-- [ETAP 4] Role: klient, właściciel salonu, admin; ulubione salony
+- [ETAP 4] Ulubione salony (serduszko na profilu, lista w koncie)
+- [ETAP 5] Rola "właściciel salonu" (razem z przejmowaniem profilu); dziś role: klient i admin
 - [PÓŹNIEJ] Kolejne role: kursant, instruktor, weterynarz
 
 ## 5. Opinie
-- [ETAP 4] Tylko zalogowani, 1 opinia na salon (można edytować); oceniać można także salon niezweryfikowany
-- [ETAP 4] Gwiazdki: jakość, podejście do zwierzęcia, czystość, cena
-- [ETAP 4] Tekst i zdjęcie efektu
-- [ETAP 4] Admin zatwierdza, zgłaszanie nadużyć
-- [ETAP 4] Informacja, jak sprawdzamy opinie (wymóg prawa)
-- [ETAP 5] Odpowiedź właściciela salonu
+- [ETAP 4] Tylko zalogowani, 1 opinia na salon (można poprawić); oceniać można także salon niezweryfikowany; limit 5 nowych opinii o salonach na dobę z jednego konta
+- [ETAP 4] Gwiazdki: jakość (wymagana), podejście do zwierzęcia, czystość, cena (nieobowiązkowe); ocena ogólna = średnia z podanych
+- [ETAP 4] Tekst opinii (do 2000 znaków); nieobowiązkowo: usługa, wielkość psa i zapłacona kwota (pokazywane przy opinii jako "klient zapłacił"; pomaga uzupełnić cenniki, ale nie zmienia cennika salonu)
+- [ETAP 4] Moderacja: przełącznik w panelu "Opinie o salonach: najpierw sprawdzam / publikuj od razu" (domyślnie najpierw sprawdzam, bo salony to małe firmy, a fałszywe opinie psują ranking); "Zgłoś nadużycie" pod każdą opinią (e-mail + powód, limit zgłoszeń); ukrywamy tylko wpisy łamiące zasady (wulgaryzmy, dane osobowe, spam, treści niedotyczące usług salonu), nie dlatego, że są negatywne
+- [ETAP 4] Strona "Zasady opinii" (jak sprawdzamy opinie: nie weryfikujemy faktu wizyty, wymagamy konta, moderujemy, nie bierzemy płatności za opinie) z linkiem pod opiniami; do sprawdzenia z prawnikiem razem z regulaminem
+- [ETAP 5] Odpowiedź właściciela salonu; zdjęcie efektu (wymaga bucketu na zdjęcia i moderacji zdjęć)
 
 ## 6. Ranking i odznaki
-- [ETAP 4] Sortowanie listy: najlepiej oceniane, najwięcej opinii, najbliżej, najtańsze
-- [ETAP 4] Strona "Ranking w mieście" (top 10 miasta)
-- [ETAP 4] Średnia, liczba opinii i punkty rankingu zapisane w tabeli salonu i przeliczane po każdej opinii (nie liczone przy każdym wejściu klienta)
+- [ETAP 4] Sortowanie listy: najlepiej oceniane, najwięcej opinii, najbliżej, najtańsze (bez pozycji: domyślnie najlepiej oceniane)
+- [ETAP 4] Strona miasta, np. "Groomer Gdańsk" (`/salony/miasto/gdansk`): top 10 rankingu miasta, pozostałe salony (pamięć podręczna 5 minut jest przygotowana w kodzie, ale nie działa, dopóki główny layout czyta sesję użytkownika; do zrobienia osobno)
+- [ETAP 4] Średnia, liczba opinii, wynik rankingu, miejsce w mieście i odznaki zapisane w tabeli salonu i przeliczane po każdej zmianie opinii (nie liczone przy każdym wejściu klienta)
 - [ETAP 4] Salon bez opinii pokazujemy z napisem "Brak opinii" i bez miejsca w rankingu
-- [ETAP 4] Średnia ocen ważona liczbą opinii, z średnią miasta jako punktem startu (jedna ocena 5/5 nie wygrywa z 50 ocenami 4,8; w małym mieście kilka opinii wystarcza)
-- [ETAP 4] Nowsze opinie ważą więcej
-- [ETAP 4] Bonus za pełny i zweryfikowany profil
-- [ETAP 4] Odznaki (tylko salony zweryfikowane, min. 3 opinie): "Polecany"; "Top w mieście" = 3 najlepsze w małym mieście, 10% najlepszych w dużym
+- [ETAP 4] Wynik rankingu = (n x R + 3 x C) / (n + 3) + bonus. R: średnia opinii salonu ważona wiekiem opinii (waga maleje o połowę co ok. 18 miesięcy, nie mniej niż 25%), n: suma wag, C: średnia miasta (gdy w mieście nie ma opinii: średnia całego serwisu, gdy nie ma żadnej: 4,0). Jedna ocena 5/5 nie wygrywa z 50 ocenami 4,8; w małym mieście kilka opinii wystarcza
+- [ETAP 4] Bonus (tylko dla salonu z opinią, żeby nie przebił ocen klientów): do +0,10 za pełny profil (opis, telefon, godziny, cennik, po 0,025) i +0,05 za "zweryfikowany" (pole w panelu: sprawdzony przez nas)
+- [ETAP 4] Klientowi pokazujemy zwykłą średnią i liczbę opinii (nie wynik rankingu)
+- [ETAP 4] Odznaki (tylko salony zweryfikowane, min. 3 opinie): "Polecany" = średnia co najmniej 4,3; "Top w mieście" = 3 najlepsze w mieście do 30 salonów w rankingu, w większym 10% najlepszych (min. 3)
 - [ETAP 5] [ZMIANA] "Sprawdź swój ranking": właściciel przejmuje profil ("To mój salon": zgłoszenie, potwierdzenie telefonem lub e-mailem, zatwierdza admin), potem widzi miejsce w mieście, opinie, odpowiada i uzupełnia cennik
 - [PÓŹNIEJ] Certyfikowany przez Akademię
 - [PÓŹNIEJ] Płatne wyróżnienie, zawsze oznaczone "Promowane" (pierwsze źródło przychodu z katalogu: oferta pokazuje się salonom, które przejęły profil; nie wpływa na ocenę ani miejsce w rankingu)
 
 ## 7. Akademia (później)
-- [ETAP 4] Zapis na listę chętnych (na nowej stronie głównej)
+- [ETAP 4] Zapis na listę chętnych (nowa strona główna i `/akademia`): e-mail, zainteresowanie (pies / kot / zawodowo), osobna zgoda na kontakt; lista w panelu `/admin/akademia`
 - [PÓŹNIEJ] Kursy pielęgnacji psów i kotów
 - [PÓŹNIEJ] Egzaminy i certyfikaty
 - [PÓŹNIEJ] Zestawy startowe w sklepie
@@ -200,6 +201,8 @@ Test na bazie Supabase z 10 000 sztucznych salonów (z godzinami, cennikiem i no
 6. **Etap 6:** Akademia: kursy, egzaminy, certyfikaty.
 
 ## Strona główna (etap 4), od góry
+Uwaga: dotychczasowa lista wszystkich produktów z filtrami przenosi się na `/sklep` (kategorie, szukanie i stare adresy działają jak dotąd).
+Mapka w sekcji "Polecani groomerzy" wchodzi później; na start 3 karty z oceną.
 1. Nagłówek: logo, duża wyszukiwarka z podpowiedziami, koszyk, menu Sklep / Groomerzy / Akademia
 2. Baner: czym jest serwis + przyciski "Zakupy dla pupila" i "Znajdź groomera w pobliżu"
 3. Pasek zaufania: darmowa dostawa od 200 zł, wysyłka dziś, zwroty 14 dni, BLIK

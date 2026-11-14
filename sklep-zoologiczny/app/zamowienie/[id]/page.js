@@ -114,7 +114,7 @@ export default async function OrderPage({ params, searchParams }) {
       )}
       {user && <p><Link href="/konto/zamowienia">Wszystkie moje zamówienia</Link></p>}
 
-      <Link href="/" className="btn">Wróć do sklepu</Link>
+      <Link href="/sklep" className="btn">Wróć do sklepu</Link>
     </div>
   );
 }

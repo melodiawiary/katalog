@@ -43,7 +43,9 @@ export default async function RootLayout({ children }) {
                 <SearchBox />
               </Suspense>
               <div className="header-actions">
+                <Link href="/sklep">Sklep</Link>
                 {showSalons && <Link href="/salony">Salony</Link>}
+                <Link href="/akademia">Akademia</Link>
                 <AccountLink />
                 <CartBadge />
               </div>

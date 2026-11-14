@@ -195,6 +195,7 @@ export default function PlaceForm({ place, hours: hoursIn = [], prices: pricesIn
             </select>
           </label>
         </div>
+        <label className="radio"><input type="checkbox" name="verified" defaultChecked={Boolean(place?.verified)} /> Sprawdzony przez nas (odznaka „Sprawdzony”, mały bonus w rankingu, wymagany do odznak „Polecany” i „Top w mieście”)</label>
         <div className="attr-group">
           <span className="attr-name">Przyjmuje *</span>
           <div className="attr-values">

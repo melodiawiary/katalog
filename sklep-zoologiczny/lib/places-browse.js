@@ -13,7 +13,7 @@ export function parsePlaces(sp = {}) {
   const hasPos = lat != null && lng != null && lat >= 48 && lat <= 56 && lng >= 13 && lng <= 25;
   const radius = num(one(sp.promien));
   const maxPrice = num(one(sp.cena_max));
-  const sort = ['odleglosc', 'cena', 'nazwa'].includes(one(sp.sort)) ? one(sp.sort) : '';
+  const sort = ['najlepsze', 'opinie', 'odleglosc', 'cena', 'nazwa'].includes(one(sp.sort)) ? one(sp.sort) : '';
   return {
     q: String(one(sp.q) || '').trim().slice(0, 80),
     city: String(one(sp.miasto) || '').trim().slice(0, 80),
