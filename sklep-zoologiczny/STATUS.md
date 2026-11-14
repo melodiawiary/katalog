@@ -1,14 +1,17 @@
 # STATUS - Sklep zoologiczny + katalog groomerów
 
-Ostatnia aktualizacja: 2026-11-14 (Etap 3: baza katalogu groomerów gotowa, `09_miejsca.sql`)
+Ostatnia aktualizacja: 2026-11-14 (Etap 3: baza + panel `/admin/miejsca` gotowe; zostają strony publiczne)
 
 ## NASTĘPNY KROK
 
 **Etap 3 (katalog groomerów i mapa), część 1 - BAZA: ZROBIONE 2026-11-14** (`supabase/09_miejsca.sql` wykonany w bazie przez Claude, przetestowany na danych próbnych z cofnięciem:
 slug automatyczny, szukanie w pobliżu z promieniem i zasięgiem groomera mobilnego, cena "od" dla usługi i wielkości psa, otwarte teraz, ukryte i szkice niewidoczne dla klienta,
 blokada włączenia katalogu przed 20 opublikowanymi miejscami, `place_private` zablokowane dla klientów). Baza jest pusta (0 miejsc), katalog WYŁĄCZONY (`places_config.public_enabled = false`).
-**Zostaje w Etapie 3 (kod, jeszcze nic nie napisane):** (1) panel `/admin/miejsca`: lista, formularz (adres -> współrzędne z Nominatim jak przy paczkomatach, albo przeciągnięcie pinezki na mapie),
-godziny, cennik, udogodnienia, notatki prywatne, zgłoszenia (`place_requests`: poleć / popraw / usuń), przełącznik katalogu; (2) strony publiczne `/salony` (mapa Leaflet + lista, filtry, "blisko mnie",
+**Etap 3, część 2a - PANEL ADMINA: ZROBIONE 2026-11-14** (commit `311d0ed`, bez nowego SQL, build przeszedł; zapis miejsca z godzinami, cennikiem i danymi prywatnymi sprawdzony na bazie w transakcji z cofnięciem; formularza w przeglądarce jeszcze nie klikano).
+Kod: `app/admin/miejsca/` (`page.js` lista z filtrami, szybkie Publikuj / Ukryj, przełącznik katalogu z licznikiem opublikowanych; `nowe/`, `[id]/`; `PlaceForm.js` formularz: adres -> pinezka przez Nominatim (`geocodeAddress`), przeciąganie pinezki / klik na mapie uzupełnia puste pola adresu (`reverseGeocode`), godziny (do kilku przedziałów dziennie, kopiowanie pon -> wt-pt), cennik, udogodnienia, notatki prywatne (`place_private`);
+`zgloszenia/` zgłoszenia `place_requests` ze statusem, notatką i przyciskiem "Utwórz szkic z tego zgłoszenia"; `actions.js`, `loader.js`), `lib/places.js` (stałe: rodzaje, statusy, wielkości, dni tygodnia), link "Salony" z licznikiem nowych zgłoszeń w menu. Slug nie jest edytowalny (liczy go baza).
+Groomer mobilny wymaga zasięgu dojazdu w km. Słowniki usług i udogodnień nadal bez panelu (tabele `service_defs`, `feature_defs`).
+**Zostaje w Etapie 3 (kod):** (2) strony publiczne `/salony` (mapa Leaflet + lista, filtry, "blisko mnie",
 adres -> pozycja), `/salony/[slug]` (profil: `place_page`), formularz "Poleć salon" i "Zgłoś zmianę / usuń"; (3) link "Salony dla: Burek" z Moich zwierząt (`dog_size_class` z wagi);
 (4) zebranie 20-30 salonów z Trójmiasta (ręcznie w panelu; ewentualnie import CSV później); (5) dopiero wtedy włączyć katalog.
 
