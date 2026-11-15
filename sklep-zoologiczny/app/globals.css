@@ -830,3 +830,39 @@ a.home-strip-item:hover .home-strip-label { color: var(--accent-dark); }
   .btn-cart-icon { width: 44px; height: 36px; }
   .product-grid.is-list .card-img .product-img { aspect-ratio: auto; }
 }
+
+/* Korekta proporcji 2: zwarte elementy jak na makiecie */
+@media (max-width: 640px) {
+  .wish-link, .searchbox-toggle { width: 38px; height: 38px; }
+  .wish-link svg, .searchbox-toggle svg { width: 20px; height: 20px; }
+  .wish-count { top: -4px; right: -4px; min-width: 18px; height: 18px; line-height: 18px; font-size: 0.68rem; }
+  .logo { font-size: 5.2vw; }
+  .header-inner { min-height: 0; padding-top: 6px; padding-bottom: 6px; }
+  .cat-tiles { gap: 6px; }
+  .cat-tile { min-width: 54px; min-height: 52px; padding: 4px 6px; gap: 1px; border-radius: 12px; font-size: 0.66rem; white-space: nowrap; }
+  .cat-tile svg { width: 22px; height: 22px; }
+  .cat-tile-img { width: 28px; height: 28px; }
+  .cat-tile-icon { font-size: 1.3rem; }
+  .filters-bar { gap: 6px; }
+  .filters-btn { min-height: 36px; padding: 2px 10px; gap: 5px; font-size: 0.78rem; border-width: 1.5px; }
+  .filters-btn svg { width: 17px; height: 17px; }
+  .filters-badge { min-width: 18px; height: 18px; line-height: 18px; font-size: 0.68rem; top: -7px; right: -3px; }
+  .filters-sort { gap: 6px; }
+  .filters-sort .sort-form select { min-height: 36px; font-size: 0.74rem; padding: 2px 2px 2px 10px; }
+  .view-toggle button { width: 34px; min-height: 36px; }
+  .view-toggle svg { width: 16px; height: 16px; }
+  .results-head { min-height: 22px; margin-bottom: 6px; font-size: 0.78rem; }
+  .product-grid { gap: 8px; }
+  .product-grid .card-img .product-img { aspect-ratio: 5 / 3; }
+  .product-grid .card-body { padding: 6px 8px 8px; gap: 6px; }
+  .product-grid .card-title { font-size: 0.74rem; }
+  .product-grid .card-brand { font-size: 0.62rem; }
+  .product-grid .card-price .price { font-size: 0.92rem; }
+  .product-grid .unit-price { font-size: 0.62rem; }
+  .product-grid .wish-heart { width: 28px; height: 28px; top: 5px; right: 5px; }
+  .product-grid .wish-heart svg { width: 17px; height: 17px; }
+  .product-grid .btn-cart-icon { width: 40px; height: 30px; }
+  .product-grid .btn-cart-icon svg { width: 18px; height: 18px; }
+  .product-grid .btn-small { font-size: 0.72rem; padding: 4px 8px; }
+  .product-grid.is-list .wish-heart { width: 28px; height: 28px; }
+}
