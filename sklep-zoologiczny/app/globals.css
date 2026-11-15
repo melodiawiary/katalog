@@ -980,42 +980,33 @@ a.home-strip-item:hover .home-strip-label { color: var(--accent-dark); }
 .place-tag.price { background: #fdf3e8; border-color: #f3d9bd; }
 .rank-list .place-card { grid-template-columns: auto 1fr; }
 
-/* Telefon: proporcje z projektu liczone od szerokości ekranu (1 px projektu 720 px = 0,139vw) */
+/* Telefon: układ z projektu, ale z większymi napisami jak na pozostałych stronach sklepu */
 @media (max-width: 800px) {
-  .mb { display: inline; }
   .salon-top { width: 100vw; margin: -16px 0 0 calc(50% - 50vw); padding: 0 3vw; box-sizing: border-box; }
-  .salon-banner { margin: 0 -3vw; padding: 2.4vw 3vw 0 4.4vw; height: 29.6vw; border-radius: 0; align-items: flex-start; background: radial-gradient(ellipse 34vw 20vw at 78% 60%, #fdf0e2 0%, rgba(253, 240, 226, 0) 100%), linear-gradient(180deg, #fff6ec, #fdf1e4); }
-  .salon-banner h1 { font-size: 6vw; margin: 0 0 1.2vw; line-height: 1.2; font-weight: 800; white-space: nowrap; }
-  .salon-banner p { font-size: max(11px, 3.3vw); line-height: 1.45; }
-  .salon-banner-art { position: absolute; right: 2.8vw; bottom: 0; height: 26.8vw; width: auto; }
+  .salon-banner { margin: 0 -3vw; padding: 3.2vw 3vw 3.2vw 4.4vw; min-height: 30vw; border-radius: 0; align-items: center; background: radial-gradient(ellipse 34vw 20vw at 78% 60%, #fdf0e2 0%, rgba(253, 240, 226, 0) 100%), linear-gradient(180deg, #fff6ec, #fdf1e4); }
+  .salon-banner-text { max-width: 62vw; }
+  .salon-banner h1 { font-size: 1.6rem; margin: 0 0 1.2vw; line-height: 1.15; font-weight: 800; }
+  .salon-banner p { font-size: 0.92rem; line-height: 1.4; }
+  .salon-banner-art { position: absolute; right: 2.4vw; bottom: 0; height: 25vw; width: auto; }
   .places-filters { grid-template-columns: minmax(0, 1fr); gap: 0; }
-  .places-search { gap: 2.4vw; margin-top: 2.2vw; }
-  .places-search-box { height: 11.1vw; border-radius: 3vw; padding: 0 3vw; gap: 2.4vw; }
-  .places-search-box svg { width: 4.6vw; height: 4.6vw; }
-  .places-search-box input { font-size: max(12px, 3.8vw); padding: 0; }
-  .places-search-btn { width: 30vw; height: 10.8vw; padding: 0; border-radius: 3vw; gap: 1.8vw; font-size: max(12px, 3.8vw); flex: 0 0 auto; }
-  .places-search-btn svg { width: 4.6vw; height: 4.6vw; }
-  .places-chips { margin-top: 3vw; gap: 2.1vw; padding: 0; overflow-x: auto; flex-wrap: nowrap; }
-  .pchip { flex: 0 0 auto; height: 8.75vw; padding: 0 2.2vw; gap: 1.2vw; font-size: max(10px, 3vw); }
-  .pchip svg, .pchip img { width: 4.6vw; height: 4.6vw; }
-  .pchip-menu .pchip svg:last-child { width: 3.2vw; height: 3.2vw; color: var(--text, #2b2a28); }
-  .places-toolbar { margin: 2.1vw 0 0; gap: 2.1vw; }
-  .pchip-menu { flex: 0 0 29vw; }
-  .pchip-menu .pchip { width: 100%; justify-content: center; border-radius: 4vw; font-size: max(11px, 3.3vw); }
-  .places-sort { height: 8.75vw; border-radius: 4vw; padding: 0 2.6vw; font-size: max(10.5px, 3.1vw); }
-  .places-sort select { font-size: max(11px, 3.3vw); }
-  .places-sort svg { right: 2.6vw; width: 3.2vw; height: 3.2vw; }
-  .places-filters-btn { flex: 0 0 22vw; height: 8.75vw; padding: 0; border-radius: 2vw; gap: 1.2vw; font-size: max(11px, 3.3vw); }
-  .places-filters-btn svg { width: 4.3vw; height: 4.3vw; }
-  .places-count { font-size: max(10.5px, 3.4vw); margin: 2.4vw 0 3vw !important; }
-  .place-card { grid-template-columns: 15.4vw 1fr; gap: 3vw; padding: 2.4vw 3vw 2.4vw 3.2vw; border-radius: 3.2vw; }
-  .place-tile { width: 15.4vw; height: 15.4vw; border-radius: 3vw; }
-  .place-card-name { font-size: max(13px, 3.4vw); }
-  .place-card-addr, .place-card .rating-line { font-size: max(11px, 2.9vw); }
-  .place-tag { font-size: max(10px, 2.4vw); padding: 0.4vw 2.6vw; }
+  .places-search { gap: 2.4vw; margin-top: 3vw; }
+  .places-search-box { height: 13vw; border-radius: 3.4vw; padding: 0 3.4vw; gap: 2.4vw; }
+  .places-search-box svg { width: 6vw; height: 6vw; }
+  .places-search-box input { font-size: 1rem; padding: 0; }
+  .places-search-btn { width: 31vw; height: 12.6vw; padding: 0; border-radius: 3.4vw; gap: 1.8vw; font-size: 1.05rem; flex: 0 0 auto; }
+  .places-search-btn svg { width: 5.4vw; height: 5.4vw; }
+  .places-chips { margin-top: 3vw; gap: 2.4vw; padding: 0; overflow: visible; flex-wrap: wrap; }
+  .pchip { flex: 1 1 40%; justify-content: center; height: 12vw; padding: 0 3vw; gap: 2vw; font-size: 1rem; }
+  .pchip:first-child { flex-basis: 100%; }
+  .pchip svg, .pchip img { width: 6vw; height: 6vw; }
+  .places-toolbar { margin: 2.4vw 0 0; }
+  .places-sort { height: 12vw; border-radius: 999px; padding: 0 4vw; font-size: 1rem; gap: 2vw; }
+  .places-sort select { font-size: 1rem; }
+  .places-sort svg { right: 4vw; width: 4.4vw; height: 4.4vw; }
+  .places-count { font-size: 0.95rem; margin: 3vw 0 3vw !important; }
+  .place-card { grid-template-columns: 17vw 1fr; gap: 3vw; padding: 3vw; border-radius: 3.4vw; }
+  .place-tile { width: 17vw; height: 17vw; border-radius: 3vw; }
+  .place-card-name { font-size: 1.05rem; }
+  .place-card-addr, .place-card .rating-line { font-size: 0.88rem; }
+  .place-tag { font-size: 0.78rem; padding: 1px 3vw; }
 }
-.places-close { left: auto; right: 10px; }
-.places-here { white-space: nowrap; }
-.place-card .rating-line { margin: 0; }
-.place-card-body { align-content: start; }
-.place-card-top { gap: 6px; }

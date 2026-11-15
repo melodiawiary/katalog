@@ -50,7 +50,7 @@ export default async function SalonyPage({ searchParams }) {
         <section className="salon-banner">
           <div className="salon-banner-text">
             <h1>Salony groomerskie</h1>
-            <p>Polecani groomerzy dla<br className="mb" /> psów i kotów.<br />Wybierz salon z mapy lub z listy.</p>
+            <p>Polecani groomerzy dla psów i kotów. Wybierz salon z mapy lub z listy.</p>
           </div>
           <img className="salon-banner-art" src="/ilustracje/pies-kot-kapiel.png" alt="" width="640" height="505" />
         </section>
