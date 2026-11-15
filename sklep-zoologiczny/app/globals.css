@@ -957,3 +957,28 @@ a.home-strip-item:hover .home-strip-label { color: var(--accent-dark); }
 .places-filters-btn { display: inline-flex; align-items: center; gap: 6px; background: var(--card); border: 1.5px solid var(--accent); color: var(--accent-dark); border-radius: 12px; padding: 8px 14px; font: inherit; font-weight: 700; cursor: pointer; }
 .places-filters-btn.on { background: #fde8d2; }
 .places-count { margin: 8px 0 !important; }
+
+/* ---- Salony (telefon): proporcje z projektu, liczone od szerokości ekranu (1 px projektu = 0,139vw) ---- */
+@media (max-width: 800px) {
+  .salon-top { width: 100vw; margin: -16px 0 0 calc(50% - 50vw); padding: 0 3vw; box-sizing: border-box; }
+  .salon-banner { margin: 0 -3vw; padding: 0 3vw 0 4.3vw; min-height: 21.5vw; border-radius: 0; align-items: flex-end; position: relative; background: radial-gradient(ellipse 30vw 15vw at 75% 55%, #fdf0e2 0%, rgba(253, 240, 226, 0) 100%), linear-gradient(180deg, #fff6ec, #fdf1e4); }
+  .salon-banner-text { align-self: center; flex: 1 1 auto; min-width: 0; }
+  .salon-banner h1 { font-size: 5.1vw; margin: 0 0 1vw; line-height: 1.15; font-weight: 800; white-space: nowrap; }
+  .salon-banner p { font-size: max(10.5px, 2.75vw); line-height: 1.45; margin: 0; max-width: none; }
+  .salon-banner-art { display: block; flex: 0 0 auto; width: 38vw; height: auto; align-self: flex-end; background: none; border: 0; padding: 0; border-radius: 0; margin: 0; }
+  .places-search { margin-top: 1.4vw; height: 10vw; border-radius: 2.2vw; padding: 0 1.2vw 0 3.3vw; gap: 2.2vw; }
+  .places-search svg { width: 3.4vw; height: 3.4vw; flex: 0 0 auto; }
+  .places-search input { font-size: max(11px, 3vw); padding: 0; }
+  .places-search-btn { height: 7.4vw; padding: 0 3.6vw; border-radius: 1.8vw; font-size: max(11px, 3.1vw); }
+  .places-filters { gap: 0; grid-template-columns: minmax(0, 1fr); }
+  .places-chips { margin-top: 3vw; gap: 1.2vw; overflow-x: auto; padding: 0; flex-wrap: nowrap; }
+  .pchip { flex: 0 0 auto; height: 6.8vw; padding: 0 1.3vw; gap: 0.8vw; font-size: max(9.5px, 2.35vw); }
+  .pchip svg, .pchip img { width: 3.2vw; height: 3.2vw; flex: 0 0 auto; }
+  .pchip-menu { flex: 0 0 auto; }
+  .places-toolbar { margin: 3vw 0 0; }
+  .places-toolbar .places-sort { font-size: max(11px, 2.5vw); gap: 1.8vw; color: var(--muted); }
+  .places-toolbar select { height: 7vw; width: 40vw; border-radius: 2vw; padding: 0 2vw; font-size: max(11px, 2.7vw); }
+  .places-filters-btn { height: 7vw; padding: 0 2.6vw; gap: 1.2vw; border-radius: 2vw; font-size: max(11px, 2.7vw); }
+  .places-filters-btn svg { width: 3.3vw; height: 3.3vw; }
+  .places-count { font-size: max(10.5px, 2.5vw); margin: 2.4vw 0 !important; }
+}

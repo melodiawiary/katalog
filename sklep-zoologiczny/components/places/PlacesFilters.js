@@ -78,7 +78,7 @@ export default function PlacesFilters({ f, cities, services, featureDefs }) {
       <div className="places-chips">
         <button type="button" className={`pchip${f.lat != null && f.where === 'Twoja lokalizacja' ? ' on' : ''}`} onClick={nearMe} disabled={busy}>
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true"><circle cx="12" cy="12" r="3.5" /><circle cx="12" cy="12" r="8" /><path d="M12 2v3M12 19v3M2 12h3M19 12h3" /></svg>
-          Blisko mnie
+          Salony blisko mnie
         </button>
         <button type="button" className={`pchip${f.species === 'pies' ? ' on' : ''}`} onClick={() => go({ gatunek: f.species === 'pies' ? '' : 'pies' })}>
           <img src="/ikony/pies.svg" alt="" width="20" height="20" /> Dla psów
@@ -87,7 +87,10 @@ export default function PlacesFilters({ f, cities, services, featureDefs }) {
           <img src="/ikony/kot.svg" alt="" width="20" height="20" /> Dla kotów
         </button>
         <details className="pchip-menu">
-          <summary className={`pchip${f.service ? ' on' : ''}`}>{svcLabel || 'Usługi'} <span aria-hidden="true">▾</span></summary>
+          <summary className={`pchip${f.service ? ' on' : ''}`}>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true" style={{ color: '#e07a2f' }}><path d="M9 3l1.6 4.4L15 9l-4.4 1.6L9 15l-1.600-4.400L3 9l4.400-1.600zM17 11l1 2.600 2.600 1-2.600 1-1 2.600-1-2.600-2.600-1 2.600-1zM17 3l.7 1.800L19.500 5.500l-1.800.7L17 8l-.7-1.800L14.500 5.500l1.800-.7z" /></svg>
+            {svcLabel || 'Usługi'} <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+          </summary>
           <div className="pchip-pop">
             <button type="button" className={!f.service ? 'on' : ''} onClick={() => go({ usluga: '' })}>Dowolna usługa</button>
             {services.map((x) => (
