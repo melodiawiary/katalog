@@ -6,6 +6,7 @@ import CartBadge from '@/components/CartBadge';
 import AccountLink from '@/components/account/AccountLink';
 import SearchBox from '@/components/SearchBox';
 import MobileTabs from '@/components/MobileTabs';
+import WishLink from '@/components/WishLink';
 import RememberBrowse from '@/components/RememberBrowse';
 import CookieBanner from '@/components/CookieBanner';
 import CookieSettingsLink from '@/components/CookieSettingsLink';
@@ -41,6 +42,7 @@ export default async function RootLayout({ children }) {
               <Suspense fallback={<div className="searchbox" />}>
                 <SearchBox />
               </Suspense>
+              <WishLink />
               <div className="header-actions">
                 <Link href="/sklep">Sklep</Link>
                 {showSalons && <Link href="/salony">Salony</Link>}

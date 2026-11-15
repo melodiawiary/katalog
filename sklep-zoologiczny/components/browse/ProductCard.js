@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import AddToCart from '@/components/AddToCart';
 import ProductImage from '@/components/ProductImage';
+import WishHeart from '@/components/WishHeart';
 import { price } from '@/lib/shop';
-import { plural } from '@/lib/browse';
 
 const UNIT = { kg: 'kg', l: 'l' };
 
@@ -20,9 +20,11 @@ export default function ProductCard({ p }) {
         {p.promo && <span className="tag tag-promo">Promocja</span>}
         {soldOut && <span className="tag tag-out">Chwilowo brak</span>}
       </Link>
+      <WishHeart id={p.id} name={p.name} />
       <div className="card-body">
         {p.brand && <span className="card-brand">{p.brand}</span>}
         <Link href={href} className="card-title">{p.name}</Link>
+        <div className="card-buy">
         <div className="card-price">
           {reduced && <s className="muted">{price(p.regular_price)}</s>}
           <strong className="price">{many && !reduced ? 'od ' : ''}{price(p.price)}</strong>
@@ -35,13 +37,15 @@ export default function ProductCard({ p }) {
         </div>
         <div className="card-footer">
           {many ? (
-            <Link href={href} className="btn btn-small btn-light">Wybierz: {p.variants} {plural(p.variants, 'wariant', 'warianty', 'wariantów')}</Link>
+            <Link href={href} className="btn btn-small btn-light">Wybierz ({p.variants})</Link>
           ) : (
             <AddToCart
               product={{ id: p.id, variant_id: p.variant_id ?? null, name: p.name, slug: p.slug, price: p.price, image_url: p.image_url, stock: p.stock }}
               compact
+              icon
             />
           )}
+        </div>
         </div>
       </div>
     </article>

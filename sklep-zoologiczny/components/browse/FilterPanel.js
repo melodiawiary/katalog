@@ -77,8 +77,10 @@ export default function FilterPanel({ path, params, state, facets, categoryLinks
   return (
     <div className="filters-wrap">
       <div className="filters-bar">
-        <button type="button" className="btn btn-light btn-small" onClick={() => setOpen(true)}>
-          Filtry{state.active > 0 ? ` (${state.active})` : ''}
+        <button type="button" className="filters-btn" onClick={() => setOpen(true)}>
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9" /><circle cx="15" cy="7" r="2.200" /><circle cx="9" cy="17" r="2.200" /></svg>
+          Filtry
+          {state.active > 0 && <span className="filters-badge" aria-label={`wybrane: ${state.active}`}>{state.active}</span>}
         </button>
         {sortSlot}
       </div>

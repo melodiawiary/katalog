@@ -6,7 +6,7 @@ import {
 } from '@/lib/browse';
 import { price } from '@/lib/shop';
 import ProductCard from './ProductCard';
-import ProductGrid from './ProductGrid';
+import ProductGrid, { ViewToggle } from './ProductGrid';
 import FilterPanel from './FilterPanel';
 import SortSelect from './SortSelect';
 import RequestForm from './RequestForm';
@@ -112,13 +112,13 @@ export default async function Listing({ path, searchParams, categorySlug = null,
         facets={facets}
         categoryLinks={categoryLinks}
         total={total}
-        sortSlot={<div className="mobile-only">{sortEl}</div>}
+        sortSlot={<div className="mobile-only filters-sort">{sortEl}<ViewToggle /></div>}
       />
 
       <section className="results">
         <div className="results-head">
           <span className="muted">{productsCount(total)}</span>
-          <div className="desktop-only">{sortEl}</div>
+          <div className="desktop-only results-tools">{sortEl}<ViewToggle /></div>
         </div>
 
         {chips.length > 0 && (
