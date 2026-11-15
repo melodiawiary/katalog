@@ -244,8 +244,16 @@ body.no-scroll { overflow: hidden; }
 .searchbox { position: relative; flex: 1 1 320px; max-width: 560px; }
 .searchbox form { display: flex; gap: 6px; }
 .searchbox input { padding: 9px 12px; }
+.searchbox-body { position: relative; }
+.searchbox-toggle { display: none; }
 @media (max-width: 640px) {
-  .searchbox { order: 3; flex-basis: 100%; max-width: none; }
+  /* telefon: w nagłówku tylko lupa obok logo, pole rozwija się pod spodem */
+  .searchbox { display: contents; }
+  .searchbox-toggle { display: flex; align-items: center; justify-content: center; order: 2; margin-left: auto; width: 44px; height: 44px;
+    background: none; border: 0; border-radius: 12px; color: var(--text); cursor: pointer; }
+  .searchbox.is-expanded .searchbox-toggle { background: #fff1e3; color: var(--accent-dark); }
+  .searchbox-body { order: 3; flex-basis: 100%; display: none; }
+  .searchbox.is-expanded .searchbox-body { display: block; }
 }
 .suggest {
   position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 30; background: var(--card);
@@ -670,7 +678,7 @@ label.check span:nth-child(2) { flex: 1; }
 .home-strip { margin: 0 0 18px; }
 .home-strip-track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; gap: 0; border: 1px solid var(--line); border-radius: 20px; background: #fdfbf6; }
 .home-strip-track::-webkit-scrollbar { display: none; }
-.home-strip-slide { flex: 0 0 100%; min-width: 0; scroll-snap-align: start; display: flex; justify-content: space-around; align-items: stretch; list-style: none; margin: 0; padding: 14px 2px; box-sizing: border-box; }
+.home-strip-slide { flex: 0 0 100%; min-width: 0; scroll-snap-align: start; display: flex; justify-content: space-around; align-items: center; list-style: none; margin: 0; padding: 14px 2px; box-sizing: border-box; }
 .home-strip-slide li { flex: 1 1 0; min-width: 0; display: flex; border-left: 1px solid var(--line); }
 .home-strip-slide li:first-child { border-left: 0; }
 .home-strip-item { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 6px; padding: 4px 2px; text-align: center; hyphens: auto; -webkit-hyphens: auto; color: inherit; text-decoration: none; }

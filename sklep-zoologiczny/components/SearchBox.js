@@ -17,6 +17,8 @@ export default function SearchBox() {
   const [data, setData] = useState(null);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(-1);
+  const [expanded, setExpanded] = useState(false); // telefon: pole rozwija się po dotknięciu lupy
+  const inputRef = useRef(null);
   const boxRef = useRef(null);
   const reqId = useRef(0);
   const supabase = useRef(null);
@@ -25,7 +27,12 @@ export default function SearchBox() {
   useEffect(() => {
     setQ(urlQ);
     setOpen(false);
+    setExpanded(false);
   }, [urlQ, pathname]);
+
+  useEffect(() => {
+    if (expanded) inputRef.current?.focus();
+  }, [expanded]);
 
   useEffect(() => {
     const term = q.trim();
@@ -78,6 +85,7 @@ export default function SearchBox() {
   }
 
   function onKeyDown(e) {
+    if (e.key === 'Escape' && !showList) setExpanded(false);
     if (!showList) return;
     if (e.key === 'ArrowDown') {
       e.preventDefault();
@@ -94,7 +102,19 @@ export default function SearchBox() {
   }
 
   return (
-    <div className="searchbox" ref={boxRef}>
+    <div className={expanded ? 'searchbox is-expanded' : 'searchbox'} ref={boxRef}>
+      <button
+        type="button"
+        className="searchbox-toggle"
+        aria-label={expanded ? 'Zamknij wyszukiwarkę' : 'Szukaj produktów'}
+        aria-expanded={expanded}
+        onClick={() => setExpanded((v) => !v)}
+      >
+        <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" aria-hidden="true">
+          {expanded ? <path d="M6 6l12 12M18 6L6 18" /> : <><circle cx="10.5" cy="10.5" r="6.5" /><path d="M15.5 15.5L21 21" /></>}
+        </svg>
+      </button>
+      <div className="searchbox-body">
       <form
         action="/szukaj"
         method="get"
@@ -120,6 +140,7 @@ export default function SearchBox() {
           }}
           onFocus={() => setOpen(true)}
           onKeyDown={onKeyDown}
+          ref={inputRef}
           maxLength={100}
         />
         <button className="btn btn-small" aria-label="Szukaj">Szukaj</button>
@@ -175,6 +196,7 @@ export default function SearchBox() {
           </Link>
         </div>
       )}
+      </div>
     </div>
   );
 }
