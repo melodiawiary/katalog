@@ -1,16 +1,21 @@
 'use client';
 
-import { useActionState } from 'react';
+import { useActionState, useState } from 'react';
 import ActionForm from '@/components/admin/ActionForm';
 import { saveIntegrations, sendTestEmail, testP24 } from './actions';
 
 function Secret({ name, label, masked, hint }) {
+  const [show, setShow] = useState(false);
   return (
     <div>
       <label>
         {label}
-        <input name={name} type="password" autoComplete="off" placeholder={masked ? `zapisany: ${masked} (wpisz nowy, żeby zmienić)` : 'wklej klucz'} />
+        <input name={name} type={show ? 'text' : 'password'} autoComplete="off" autoCapitalize="off" autoCorrect="off" spellCheck={false}
+          placeholder={masked ? `zapisany: ${masked} (wpisz nowy, żeby zmienić)` : 'wklej klucz'} />
       </label>
+      <button type="button" className="btn btn-small" onClick={() => setShow((v) => !v)} aria-pressed={show}>
+        {show ? '🙈 Ukryj to, co wpisałeś' : '👁 Pokaż to, co wpisałeś'}
+      </button>
       {hint && <p className="secret-note">{hint}</p>}
       {masked && <label className="radio small"><input type="checkbox" name={`clear_${name}`} /> usuń zapisany klucz</label>}
     </div>
