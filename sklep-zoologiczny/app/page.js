@@ -7,6 +7,7 @@ import { FREE_SHIPPING_FROM } from '@/lib/shop';
 import { getSettings } from '@/lib/settings';
 import ProductCard from '@/components/browse/ProductCard';
 import AcademyForm from '@/components/AcademyForm';
+import HomeStrip from '@/components/HomeStrip';
 import { PlaceRating, PlaceBadges } from '@/components/places/Rating';
 import { PLACE_KIND } from '@/lib/places';
 
@@ -41,8 +42,6 @@ export default async function HomePage({ searchParams }) {
     getSettings(),
   ]);
   const categories = topCategories(visibleCategories(cats || []));
-  const mainCategories = categories.filter((c) => c.slug === 'psy' || c.slug === 'koty');
-  const otherCategories = categories.filter((c) => c.slug !== 'psy' && c.slug !== 'koty');
   const products = (popular?.items || []).filter((p) => p.stock > 0).slice(0, 8);
 
   let places = [];
@@ -53,6 +52,8 @@ export default async function HomePage({ searchParams }) {
 
   return (
     <>
+      <HomeStrip freeFrom={FREE_SHIPPING_FROM} categories={categories} showSalons={Boolean(isPublic)} />
+
       <section className="home-hero">
         <h1>Wszystko dla psa i kota w jednym miejscu</h1>
         <p className="muted">Sklep z karmą i akcesoriami oraz ranking sprawdzonych groomerów z opiniami klientów.</p>
@@ -61,28 +62,6 @@ export default async function HomePage({ searchParams }) {
           {isPublic ? <Link href="/salony" className="btn btn-light">Znajdź groomera w pobliżu</Link> : <Link href="/akademia" className="btn btn-light">Akademia: zapisz się</Link>}
         </div>
       </section>
-
-      <ul className="trust-bar">
-        <li>Darmowa dostawa od {FREE_SHIPPING_FROM} zł</li>
-        <li>14 dni na zwrot</li>
-        <li>BLIK i szybkie przelewy</li>
-      </ul>
-
-      {mainCategories.length > 0 && (
-        <section className="home-main-tiles" aria-label="Kategorie">
-          {mainCategories.map((c) => (
-            <Link key={c.id} href={`/kategoria/${c.slug}`} className="home-main-tile">
-              <img src={`/ikony/${c.slug === 'koty' ? 'kot' : 'pies'}.svg`} alt="" width="72" height="72" />
-              {c.name}
-            </Link>
-          ))}
-        </section>
-      )}
-      {otherCategories.length > 0 && (
-        <nav className="home-chip-row" aria-label="Pozostałe kategorie">
-          {otherCategories.map((c) => <Link key={c.id} href={`/kategoria/${c.slug}`} className="home-chip">{c.name}</Link>)}
-        </nav>
-      )}
 
       {user && (
         <p className="box">Kupowałeś już u nas? <Link href="/konto/zamowienia">Zamów ponownie</Link> jednym kliknięciem z historii zamówień.</p>
