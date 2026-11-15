@@ -19,6 +19,7 @@ export default function SearchBox() {
   const [active, setActive] = useState(-1);
   const [expanded, setExpanded] = useState(false); // telefon: pole rozwija się po dotknięciu lupy
   const inputRef = useRef(null);
+  const userToggled = useRef(false);
   const boxRef = useRef(null);
   const reqId = useRef(0);
   const supabase = useRef(null);
@@ -27,11 +28,12 @@ export default function SearchBox() {
   useEffect(() => {
     setQ(urlQ);
     setOpen(false);
-    setExpanded(false);
+    // w sklepie i kategoriach pole jest od razu widoczne (telefon), na innych stronach zwinięte
+    setExpanded(pathname === '/sklep' || pathname.startsWith('/kategoria/'));
   }, [urlQ, pathname]);
 
   useEffect(() => {
-    if (expanded) inputRef.current?.focus();
+    if (expanded && userToggled.current) inputRef.current?.focus();
   }, [expanded]);
 
   useEffect(() => {
@@ -108,7 +110,7 @@ export default function SearchBox() {
         className="searchbox-toggle"
         aria-label={expanded ? 'Zamknij wyszukiwarkę' : 'Szukaj produktów'}
         aria-expanded={expanded}
-        onClick={() => setExpanded((v) => !v)}
+        onClick={() => { userToggled.current = true; setExpanded((v) => !v); }}
       >
         <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" aria-hidden="true">
           {expanded ? <path d="M6 6l12 12M18 6L6 18" /> : <><circle cx="10.5" cy="10.5" r="6.5" /><path d="M15.5 15.5L21 21" /></>}
