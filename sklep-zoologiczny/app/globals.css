@@ -1180,3 +1180,19 @@ a.home-strip-item:hover .home-strip-label { color: var(--accent-dark); }
   .svcpage-text { font-size: 0.7rem; }
   .svcpage-card svg { position: absolute; top: 6px; right: 5px; width: 13px; height: 13px; margin: 0; }
 }
+
+/* ===== Skala czcionek telefonu: /uslugi = strona główna (decyzja Mariusza 2026-11-15) =====
+   tytuł 1.15rem, podtytuł 0.8rem, pole szukania 0.85rem, podpis kafelka 0.74rem; zmieniać razem ze stroną główną */
+@media (max-width: 899px) {
+  .svcpage-title { font-size: 1.15rem; margin: 4px 0 0; }
+  .svcpage-sub { font-size: 0.8rem; margin: 0 0 6px; }
+  .svcpage-search input { font-size: 0.85rem; }
+  .svcpage-chip { font-size: 0.85rem; padding: 5px 12px; }
+  .svcpage-card { display: block; min-height: 0; padding: 7px 18px 7px 7px; overflow: hidden; }
+  .svcpage-card img { float: left; width: 46px; height: 46px; margin: 0 6px 2px 0; }
+  .svcpage-text { display: block; font-size: 0.74rem; line-height: 1.2; }
+  .svcpage-text strong { display: block; font-size: 0.74rem; line-height: 1.2; padding: 0; }
+  .svcpage-text span { display: block; font-size: 0.74rem; }
+  .svcpage-card svg { top: 7px; right: 5px; }
+  .svcpage-help div { font-size: 0.74rem; }
+}
