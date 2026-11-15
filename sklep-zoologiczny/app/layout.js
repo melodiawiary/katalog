@@ -6,6 +6,7 @@ import CartBadge from '@/components/CartBadge';
 import AccountLink from '@/components/account/AccountLink';
 import SearchBox from '@/components/SearchBox';
 import MobileTabs from '@/components/MobileTabs';
+import RememberBrowse from '@/components/RememberBrowse';
 import CookieBanner from '@/components/CookieBanner';
 import CookieSettingsLink from '@/components/CookieSettingsLink';
 import { LEGAL_LINKS } from '@/lib/legal';
@@ -49,6 +50,7 @@ export default async function RootLayout({ children }) {
               </div>
             </div>
           </header>
+          <Suspense fallback={null}><RememberBrowse /></Suspense>
           <main className="container main">{children}</main>
           <footer className="site-footer">
             <div className="container footer-inner">
