@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { parsePlaces, rpcArgs, priceText } from '@/lib/places-browse';
-import { PLACE_KIND } from '@/lib/places';
+import { PLACE_KIND, SPECIES } from '@/lib/places';
+import PlaceTile from '@/components/places/PlaceTile';
 import PlacesBrowser from '@/components/places/PlacesBrowser';
 import PlacesFilters from '@/components/places/PlacesFilters';
 import { PlaceRating, PlaceBadges } from '@/components/places/Rating';
@@ -49,7 +50,7 @@ export default async function SalonyPage({ searchParams }) {
         <section className="salon-banner">
           <div className="salon-banner-text">
             <h1>Salony groomerskie</h1>
-            <p>Polecani groomerzy dla psów i kotów.<br />Wybierz salon z mapy lub z listy.</p>
+            <p>Polecani groomerzy dla<br className="mb" /> psów i kotów.<br />Wybierz salon z mapy lub z listy.</p>
           </div>
           <img className="salon-banner-art" src="/ilustracje/pies-kot-kapiel.png" alt="" width="640" height="505" />
         </section>
@@ -61,29 +62,32 @@ export default async function SalonyPage({ searchParams }) {
 
       <p className="muted small places-count">
         {data.total === 0 ? 'Brak salonów dla tych filtrów.' : `Znaleziono: ${data.total}`}
-        {f.where && f.lat != null && <> · blisko: {f.where}</>}
+        {f.where && f.lat != null && <> • blisko: {f.where}</>}
       </p>
 
       <PlacesBrowser items={items} me={me} total={data.total}>
         <ul className="places-list">
           {items.map((p) => (
             <li key={p.id} className="place-card" data-slug={p.slug}>
-              <div className="place-card-top">
-                <Link href={`/salony/${p.slug}`} className="place-card-name">{p.name}</Link>
-                {p.status && p.status !== 'opublikowany' && <span className="badge-test">{p.status}</span>}
-                {p.open_now && <span className="status status-zrealizowane">Otwarte teraz</span>}
+              <PlaceTile kind={p.kind} />
+              <div className="place-card-body">
+                <div className="place-card-top">
+                  <Link href={`/salony/${p.slug}`} className="place-card-name">{p.name}</Link>
+                  {p.status && p.status !== 'opublikowany' && <span className="badge-test">{p.status}</span>}
+                  {p.open_now && <span className="status status-zrealizowane">Otwarte teraz</span>}
+                </div>
+                <div className="place-card-addr small">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="#e07a2f" aria-hidden="true"><path d="M12 22s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12zm0-9.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" /></svg>
+                  <span>{[p.city, p.address].filter(Boolean).join(', ')}{p.distance_km != null && <> ({String(p.distance_km).replace('.', ',')} km)</>}</span>
+                </div>
+                <div className="rating-line"><PlaceRating avg={p.rating_avg} count={p.rating_count} /> <PlaceBadges badges={p.badges || []} verified={p.verified} /></div>
+                <div className="place-tags">
+                  {(p.species || []).map((x) => <span key={x} className="place-tag">{SPECIES[x]}</span>)}
+                  {p.kind !== 'salon' && <span className="place-tag">{PLACE_KIND[p.kind]}</span>}
+                  {p.price_from != null && <span className="place-tag price">{f.service ? svcLabel[f.service] : 'Usługi'} od {priceText({ price_from: p.price_from })}</span>}
+                  {p.kind === 'mobilny' && p.service_radius_km && <span className="place-tag">dojazd do {p.service_radius_km} km</span>}
+                </div>
               </div>
-              <div className="rating-line"><PlaceRating avg={p.rating_avg} count={p.rating_count} /> <PlaceBadges badges={p.badges || []} verified={p.verified} /></div>
-              <div className="small muted">
-                {PLACE_KIND[p.kind]} · {[p.district, p.city].filter(Boolean).join(', ')}
-                {p.address && <> · {p.address}</>}
-              </div>
-              <div className="place-card-meta small">
-                {p.distance_km != null && <strong>{String(p.distance_km).replace('.', ',')} km</strong>}
-                {p.price_from != null && <span>{f.service ? svcLabel[f.service] : 'Usługi'} od {priceText({ price_from: p.price_from })}</span>}
-                {p.kind === 'mobilny' && p.service_radius_km && <span>dojazd do {p.service_radius_km} km</span>}
-              </div>
-              {p.short && <p className="small">{p.short}{p.short.length >= 160 ? '…' : ''}</p>}
             </li>
           ))}
         </ul>

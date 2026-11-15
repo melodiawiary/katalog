@@ -6,10 +6,15 @@
 import 'leaflet/dist/leaflet.css';
 import { useEffect, useRef } from 'react';
 
-const STYLE = { color: '#c4631c', weight: 2, fillColor: '#e07a2f', fillOpacity: 0.95 };
-const STYLE_ON = { color: '#7a3a0c', weight: 3, fillColor: '#ffb066', fillOpacity: 1 };
+// Pinezka z łapką (jak w projekcie): zwykła i zaznaczona (większa, ciemniejsza)
+function pawSvg(w, h, fill) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 34 42"><path d="M17 41C17 41 3 26 3 15a14 14 0 0 1 28 0c0 11-14 26-14 26z" fill="${fill}" stroke="#fff" stroke-width="2"/><ellipse cx="17" cy="21.5" rx="5.6" ry="4.4" fill="#fff"/><circle cx="10.4" cy="15.6" r="2.4" fill="#fff"/><circle cx="14.4" cy="11.4" r="2.5" fill="#fff"/><circle cx="19.6" cy="11.4" r="2.5" fill="#fff"/><circle cx="23.6" cy="15.6" r="2.4" fill="#fff"/></svg>`;
+}
+const pawIcon = (L, on) => (on
+  ? L.divIcon({ className: 'paw-pin', html: pawSvg(42, 52, '#b4500f'), iconSize: [42, 52], iconAnchor: [21, 51] })
+  : L.divIcon({ className: 'paw-pin', html: pawSvg(34, 42, '#e07a2f'), iconSize: [34, 42], iconAnchor: [17, 41] }));
 
-export default function PlacesMap({ items, me = null, height = 360, single = false, fill = false, selected = null, onSelect = null, onMove = null, bottomInset = 0 }) {
+export default function PlacesMap({ items, me = null, height = 360, single = false, fill = false, selected = null, onSelect = null, onMove = null, bottomInset = 0, refit = 0, interactive = true }) {
   const el = useRef(null);
   const map = useRef(null);
   const layer = useRef(null);
@@ -62,7 +67,7 @@ export default function PlacesMap({ items, me = null, height = 360, single = fal
     markers.current = new Map();
     const pts = [];
     for (const p of items) {
-      const mk = L.circleMarker([p.lat, p.lng], { radius: single ? 11 : 10, ...STYLE }).addTo(layer.current);
+      const mk = L.marker([p.lat, p.lng], { icon: pawIcon(L, false), title: p.name, keyboard: false }).addTo(layer.current);
       markers.current.set(p.slug, mk);
       if (cb.current.onSelect) {
         mk.on('click', () => cb.current.onSelect(p.slug));
@@ -96,14 +101,31 @@ export default function PlacesMap({ items, me = null, height = 360, single = fal
 
   useEffect(draw, [items, me, single]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // zmiana rozmiaru mapy (podgląd -> pełny ekran): przeliczenie i ponowne dopasowanie widoku
+  useEffect(() => {
+    if (!refit && !map.current) return undefined;
+    const t = setTimeout(() => { map.current?.invalidateSize(); draw(); }, 80);
+    return () => clearTimeout(t);
+  }, [refit]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // podgląd na stronie: mapa nie przechwytuje przewijania strony, przybliżanie tylko przyciskami +/-
+  useEffect(() => {
+    const t = setInterval(() => {
+      const m = map.current;
+      if (!m) return;
+      clearInterval(t);
+      for (const h of ['dragging', 'touchZoom', 'doubleClickZoom', 'boxZoom']) interactive ? m[h].enable() : m[h].disable();
+    }, 50);
+    return () => clearInterval(t);
+  }, [interactive]);
+
   // zaznaczony salon: większa pinezka i wycentrowanie nad panelem z listą
   useEffect(() => {
     const m = map.current;
     for (const [slug, mk] of markers.current) {
       const on = slug === selected;
-      mk.setStyle(on ? STYLE_ON : STYLE);
-      mk.setRadius(on ? 14 : single ? 11 : 10);
-      if (on) mk.bringToFront();
+      if (Lf.current) mk.setIcon(pawIcon(Lf.current, on));
+      mk.setZIndexOffset(on ? 1000 : 0);
     }
     const mk = selected && markers.current.get(selected);
     if (m && mk) {

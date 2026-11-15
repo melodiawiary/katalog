@@ -7,7 +7,7 @@ import PlacesMap from './PlacesMap';
 const TOP = 56; // rozwinięty panel zostawia u góry pasek mapy
 const PEEK = 76; // zwinięty panel: widać tylko uchwyt i liczbę salonów
 
-// Telefon: mapa na cały obszar i przeciągany panel z listą (zwinięty, w połowie, rozwinięty).
+// Telefon: mapa w karcie nad listą z przyciskiem "Pokaż mapę"; po dotknięciu mapa na cały ekran i przeciągany panel z listą.
 // Komputer: mapa po prawej, lista obok (układ z CSS).
 export default function PlacesBrowser({ items, me, total, children }) {
   const router = useRouter();
@@ -20,6 +20,8 @@ export default function PlacesBrowser({ items, me, total, children }) {
   const [dragTop, setDragTop] = useState(null);
   const [selected, setSelected] = useState(null);
   const [moved, setMoved] = useState(null);
+  const [mapOpen, setMapOpen] = useState(false);
+  const open = mobile && mapOpen;
 
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 800px)');
@@ -38,6 +40,19 @@ export default function PlacesBrowser({ items, me, total, children }) {
     return () => ro.disconnect();
   }, []);
 
+  // pełny ekran mapy: blokada przewijania strony pod spodem i zamknięcie klawiszem Esc
+  useEffect(() => {
+    if (!open) return undefined;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const esc = (e) => { if (e.key === 'Escape') closeMap(); };
+    window.addEventListener('keydown', esc);
+    return () => { document.body.style.overflow = prev; window.removeEventListener('keydown', esc); };
+  }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  function openMap() { setSnap('half'); setSelected(null); setMoved(null); setMapOpen(true); }
+  function closeMap() { setMapOpen(false); setMoved(null); setSelected(null); }
+
   const tops = { peek: Math.max(TOP + 40, h - PEEK), half: Math.round(h * 0.5), full: TOP };
   const top = dragTop ?? tops[snap];
 
@@ -55,12 +70,13 @@ export default function PlacesBrowser({ items, me, total, children }) {
   }, [selected]);
 
   function pick(slug) {
+    if (mobile && !mapOpen) { setSnap('half'); setMoved(null); setMapOpen(true); }
     setSelected(slug);
-    if (mobile && snap !== 'half') setSnap('half');
+    if (open && snap !== 'half') setSnap('half');
   }
 
   function onDown(e) {
-    if (!mobile) return;
+    if (!open) return;
     e.currentTarget.setPointerCapture(e.pointerId);
     drag.current = { y: e.clientY, top: tops[snap], t: Date.now(), moved: false };
   }
@@ -100,11 +116,11 @@ export default function PlacesBrowser({ items, me, total, children }) {
     router.push(`/salony?${p.toString()}`);
   }
 
-  const sheetStyle = mobile ? { transform: `translateY(${top}px)`, transition: dragTop == null ? 'transform 0.25s ease' : 'none' } : undefined;
-  const listStyle = mobile ? { height: Math.max(0, h - top - 52), overflowY: snap === 'full' && dragTop == null ? 'auto' : 'hidden' } : undefined;
+  const sheetStyle = open ? { transform: `translateY(${top}px)`, transition: dragTop == null ? 'transform 0.25s ease' : 'none' } : undefined;
+  const listStyle = open ? { height: Math.max(0, h - top - 52), overflowY: snap === 'full' && dragTop == null ? 'auto' : 'hidden' } : undefined;
 
   return (
-    <div className="places-stage" ref={stageRef}>
+    <div className={`places-stage${open ? ' is-open' : ''}`} ref={stageRef}>
       <div className="places-map-col">
         <PlacesMap
           items={items}
@@ -113,10 +129,23 @@ export default function PlacesBrowser({ items, me, total, children }) {
           fill={mobile}
           selected={selected}
           onSelect={pick}
-          onMove={mobile ? setMoved : null}
-          bottomInset={mobile ? Math.max(0, h - top) : 0}
+          onMove={open ? setMoved : null}
+          bottomInset={open ? Math.max(0, h - top) : 0}
+          refit={mapOpen ? 1 : 0}
+          interactive={!mobile || open}
         />
-        {mobile && moved && (
+        {mobile && !open && (
+          <button type="button" className="places-show-map" onClick={openMap}>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2zM9 4v14M15 6v14" /></svg>
+            Pokaż mapę
+          </button>
+        )}
+        {open && (
+          <button type="button" className="places-close" onClick={closeMap} aria-label="Zamknij mapę i wróć do listy">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
+          </button>
+        )}
+        {open && moved && (
           <button type="button" className="places-here" onClick={searchHere}>Szukaj w tym obszarze</button>
         )}
       </div>
@@ -140,9 +169,9 @@ export default function PlacesBrowser({ items, me, total, children }) {
           ref={listRef}
           style={listStyle}
           onClick={(e) => {
-            if (mobile && snap === 'peek') { setSnap('half'); return; }
+            if (open && snap === 'peek') { setSnap('half'); return; }
             const li = e.target.closest('li[data-slug]');
-            if (li && !e.target.closest('a')) setSelected(li.dataset.slug);
+            if (open && li && !e.target.closest('a, button')) setSelected(li.dataset.slug);
           }}
         >
           {children}
