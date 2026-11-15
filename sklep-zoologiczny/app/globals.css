@@ -801,3 +801,32 @@ a.home-strip-item:hover .home-strip-label { color: var(--accent-dark); }
 .method-tab.on { color: var(--accent-dark); background: #fdf3ea; border-color: var(--accent); }
 .filters-sort .sort-form select { font-size: 0.85rem; padding: 6px 4px 6px 12px; }
 .product-grid.is-list .wish-heart { right: auto; left: 6px; top: 6px; width: 34px; height: 34px; }
+
+/* Proporcje jak na makiecie sklepu (telefon) */
+@media (max-width: 640px) {
+  .header-inner { flex-wrap: wrap; gap: 6px 8px; }
+  .logo { flex: 1 1 0; min-width: 0; font-size: 5.3vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .wish-link, .searchbox-toggle { width: 46px; height: 46px; border-radius: 50%; border: 1px solid var(--line); background: var(--card); box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08); flex: none; }
+  .wish-link { margin-left: 0; order: 1; }
+  .searchbox-toggle { order: 2; margin-left: 0 !important; }
+  .searchbox.is-expanded .searchbox-toggle { background: #fff1e3; }
+  .cat-tiles { gap: 7px; padding: 2px 2px 8px; scrollbar-width: none; margin-bottom: 8px; }
+  .cat-tiles::-webkit-scrollbar { display: none; }
+  .cat-tile { min-width: 66px; min-height: 66px; padding: 6px 8px; gap: 2px; border-radius: 16px; font-size: 0.74rem; }
+  .cat-tile svg { width: 26px; height: 26px; }
+  .cat-tile-img { width: 34px; height: 34px; }
+  .cat-tile-icon { font-size: 1.5rem; }
+  .filters-bar { gap: 8px; margin-bottom: 8px; }
+  .filters-btn { min-height: 42px; padding: 4px 12px; gap: 6px; font-size: 0.85rem; }
+  .filters-btn svg { width: 20px; height: 20px; }
+  .filters-sort { gap: 8px; }
+  .filters-sort .sort-form select { min-height: 42px; font-size: 0.8rem; padding: 4px 2px 4px 10px; }
+  .view-toggle button { width: 40px; min-height: 42px; }
+  .view-toggle svg { width: 18px; height: 18px; }
+  .results-head { min-height: 28px; margin-bottom: 8px; font-size: 0.9rem; }
+  .product-grid .card-img .product-img { aspect-ratio: 4 / 3; }
+  .product-grid .card-img { border-radius: 12px 12px 0 0; overflow: hidden; }
+  .product-grid .wish-heart { width: 36px; height: 36px; top: 6px; right: 6px; }
+  .btn-cart-icon { width: 44px; height: 36px; }
+  .product-grid.is-list .card-img .product-img { aspect-ratio: auto; }
+}
