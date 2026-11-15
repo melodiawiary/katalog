@@ -46,6 +46,8 @@ export const PLACE_CATEGORIES = {
     lead: 'Sprawdzeni specjaliści, którzy dbają o zdrowie Twojego pupila.',
     art: '/ilustracje/pies-kot-weterynarz.png',
     artSize: [640, 460],
+    // Pozycja ilustracji w banerze, w jednostkach makiety (1 = 1/999 szerokości ekranu): wysokość, odstęp od prawej i od dołu
+    artBox: { h: 300, right: 42, bottom: 18 },
     placeholder: 'Szukaj gabinetu, miasta...',
     near: 'Gabinety blisko mnie (30 km)',
     nounOne: 'gabinet', nounFew: 'gabinety', nounMany: 'gabinetów', nounGen: 'gabinetu', nounAcc: 'gabinet',
@@ -79,6 +81,7 @@ export const PLACE_CATEGORIES = {
     lead: 'Bezpieczny i komfortowy pobyt Twojego pupila pod dobrą opieką.',
     art: '/ilustracje/pies-kot-hotel.png',
     artSize: [640, 431],
+    artBox: { h: 338, right: 36, bottom: 0 },
     placeholder: 'Szukaj hotelu, miasta...',
     near: 'Hotele blisko mnie (30 km)',
     nounOne: 'hotel', nounFew: 'hotele', nounMany: 'hoteli', nounGen: 'hotelu', nounAcc: 'hotel',

@@ -51,22 +51,22 @@ export default async function PlacesIndexPage({ category, searchParams }) {
   return (
     <div className={`place-theme ${cfg.theme}`}>
       <div className="salon-top">
-        <section className="salon-banner">
+        <section className={`salon-banner${cfg.artBox ? ' pcat-banner' : ''}`} style={cfg.artBox ? { '--ah': cfg.artBox.h, '--ar': cfg.artBox.right, '--ab': cfg.artBox.bottom } : undefined}>
           <div className="salon-banner-text">
             {cfg.key !== 'groomer' && <span className="pcat-chip">{cfg.chip}</span>}
-            <h1>{cfg.h1}</h1>
+            <h1>{cfg.artBox ? <>{cfg.h1.split(' ')[0]}<br />{cfg.h1.split(' ').slice(1).join(' ')}</> : cfg.h1}</h1>
             <p>{cfg.lead}</p>
           </div>
           <img className="salon-banner-art" src={cfg.art} alt="" width={cfg.artSize[0]} height={cfg.artSize[1]} />
         </section>
         <PlacesFilters f={f} cities={cityList} services={services.data || []} featureDefs={features.data || []} category={category} />
-        {cfg.ranking && <PlacesTabs showRanking={top.length > 0} />}
+        {cfg.ranking && <PlacesTabs hasRanking={top.length > 0} rankHref={rankHref} />}
       </div>
       {!isPublic && isAdmin && (
         <p className="box">Podgląd administratora: katalog jest jeszcze wyłączony dla klientów, a Ty widzisz też szkice i ukryte miejsca.</p>
       )}
 
-      {cfg.ranking && <RankingStrip cfg={cfg} top={top} rankHref={rankHref} query={stay} />}
+      {cfg.ranking && top.length > 0 && <RankingStrip cfg={cfg} top={top} rankHref={rankHref} query={stay} />}
 
       <p id="lista-miejsc" className="muted small places-count">
         {data.total === 0 ? cfg.none : `Znaleziono: ${data.total}`}

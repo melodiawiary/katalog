@@ -1291,3 +1291,41 @@ a.home-strip-item:hover .home-strip-label { color: var(--accent-dark); }
 .pchip svg { width: 20px; height: 20px; }
 .pcat-dates label { flex: 1 1 auto; }
 .pcat-dates input[type='date'] { flex: 1; min-width: 0; }
+
+/* Baner weterynarzy i hoteli: wszystko liczone w jednostce makiety u = 1/999 szerokości ekranu, żeby każda kategoria miała identyczny panel i ilustrację w tym samym miejscu */
+.pcat-tab + .pcat-tab { position: relative; }
+.pcat-tab + .pcat-tab::before { content: ''; position: absolute; left: -3px; top: 26%; height: 48%; width: 1px; background: var(--line); }
+.pcat-tab.on::before, .pcat-tab.on + .pcat-tab::before { display: none; }
+@media (max-width: 800px) {
+  .salon-top { --u: calc(100vw / 999); }
+  .pcat-banner { display: block; height: calc(var(--u) * 340); min-height: 0; padding: 0; margin: 0 -3vw; }
+  .pcat-banner .salon-banner-text { position: absolute; left: calc(var(--u) * 42); top: calc(var(--u) * 22); max-width: calc(var(--u) * 410); }
+  .pcat-banner .pcat-chip { font-size: calc(var(--u) * 33); line-height: calc(var(--u) * 54); height: calc(var(--u) * 54); padding: 0 calc(var(--u) * 26); margin: 0; box-sizing: border-box; }
+  .pcat-banner h1 { font-size: calc(var(--u) * 57); line-height: calc(var(--u) * 60); margin: calc(var(--u) * 14) 0 0 calc(var(--u) * 14); }
+  .pcat-banner p { font-size: calc(var(--u) * 31); line-height: calc(var(--u) * 35); margin: calc(var(--u) * 10) 0 0 calc(var(--u) * 14); }
+  .pcat-banner .salon-banner-art { position: absolute; height: calc(var(--u) * var(--ah)); width: auto; right: calc(var(--u) * var(--ar)); bottom: calc(var(--u) * var(--ab)); }
+}
+
+@media (max-width: 800px) {
+  .pcat-rank { padding: 3vw; border-radius: 4vw; margin: 3vw 0; }
+  .pcat-rank-head { flex-wrap: nowrap; gap: 2.4vw; margin-bottom: 2.4vw; align-items: center; }
+  .pcat-rank-head img { width: 9vw; height: auto; }
+  .pcat-rank-head > div { min-width: 0; }
+  .pcat-rank-head h2 { font-size: 0.95rem; line-height: 1.15; }
+  .pcat-rank-head p { font-size: 0.72rem; line-height: 1.25; }
+  .pcat-rank-all { padding: 1.6vw 2.8vw; font-size: 0.78rem; }
+  .pcat-rank-list { gap: 2vw; }
+  .pcat-rank-card { padding: 2.4vw 1vw; border-radius: 3.4vw; }
+  .pcat-rank-card img { width: 11vw; height: auto; }
+  .pcat-rank-card strong { font-size: 0.78rem; }
+  .pcat-rank-card .small { font-size: 0.72rem; }
+}
+
+.pcat-rank-rate { display: inline-flex; align-items: center; gap: 4px; font-size: 0.85rem; }
+.pcat-rank-star { color: #f5a623; font-size: 1.1em; }
+@media (max-width: 800px) {
+  .pcat-rank-head h2 { font-size: 0.88rem; }
+  .pcat-rank-head p { font-size: 0.68rem; }
+  .pcat-rank-all { font-size: 0.72rem; }
+  .pcat-rank-rate { font-size: 0.78rem; }
+}

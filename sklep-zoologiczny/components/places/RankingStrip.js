@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { PlaceRating } from '@/components/places/Rating';
 
 const TROPHY = ['zloty', 'srebrny', 'brazowy'];
 
@@ -23,7 +22,7 @@ export default function RankingStrip({ cfg, top, rankHref, query = '' }) {
               <img src={`/ikony/ranking/${TROPHY[i]}.png`} alt={`Miejsce ${i + 1}`} width="46" height="44" />
               <strong>{p.name}</strong>
               <span className="small muted">{p.city}</span>
-              <PlaceRating avg={p.rating_avg} count={p.rating_count} />
+              <span className="pcat-rank-rate"><span className="pcat-rank-star" aria-hidden="true">★</span><b>{Number(p.rating_avg).toFixed(1).replace('.', ',')}</b><span className="muted">({p.rating_count})</span></span>
             </Link>
           </li>
         ))}

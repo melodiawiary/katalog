@@ -30,7 +30,7 @@ export default function PlacesFilters({ f, cities, services, featureDefs, catego
     if (!navigator.geolocation) { setMsg('Ta przeglądarka nie udostępnia lokalizacji. Wpisz adres.'); return; }
     setBusy(true); setMsg('');
     navigator.geolocation.getCurrentPosition(
-      (pos) => { setBusy(false); go({ lat: pos.coords.latitude.toFixed(5), lng: pos.coords.longitude.toFixed(5), gdzie: 'Twoja lokalizacja', promien: 30, sort: 'odleglosc' }); },
+      (pos) => { setBusy(false); try { sessionStorage.setItem('places-focus-map', '1'); } catch {} go({ lat: pos.coords.latitude.toFixed(5), lng: pos.coords.longitude.toFixed(5), gdzie: 'Twoja lokalizacja', promien: 30, sort: 'odleglosc' }); },
       () => { setBusy(false); setMsg('Nie mamy dostępu do lokalizacji. Wpisz adres albo miasto.'); },
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 300000 },
     );

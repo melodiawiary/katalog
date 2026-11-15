@@ -23,6 +23,16 @@ export default function PlacesBrowser({ items, me, total, children, base = '/sal
   const [mapOpen, setMapOpen] = useState(false);
   const open = mobile && mapOpen;
 
+  // Po "blisko mnie" strona się przeładowuje: przesuń widok do mapy z miejscami w okolicy
+  useEffect(() => {
+    let focus = false;
+    try { focus = sessionStorage.getItem('places-focus-map') === '1'; sessionStorage.removeItem('places-focus-map'); } catch {}
+    if (!focus || !me) return;
+    const t = setTimeout(() => stageRef.current?.querySelector('.places-map-col')?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 350);
+    return () => clearTimeout(t);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 800px)');
     const upd = () => setMobile(mq.matches);
