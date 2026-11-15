@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { parsePlaces, rpcArgs, priceText } from '@/lib/places-browse';
 import { PLACE_KIND } from '@/lib/places';
-import PlacesMap from '@/components/places/PlacesMap';
+import PlacesBrowser from '@/components/places/PlacesBrowser';
 import PlacesFilters from '@/components/places/PlacesFilters';
 import { PlaceRating, PlaceBadges } from '@/components/places/Rating';
 
@@ -58,13 +58,10 @@ export default async function SalonyPage({ searchParams }) {
         {f.where && f.lat != null && <> · blisko: {f.where}</>}
       </p>
 
-      <div className="places-layout">
-        <div className="places-map-col">
-          <PlacesMap items={items} me={me} height={380} />
-        </div>
+      <PlacesBrowser items={items} me={me} total={data.total}>
         <ul className="places-list">
           {items.map((p) => (
-            <li key={p.id} className="place-card">
+            <li key={p.id} className="place-card" data-slug={p.slug}>
               <div className="place-card-top">
                 <Link href={`/salony/${p.slug}`} className="place-card-name">{p.name}</Link>
                 {p.status && p.status !== 'opublikowany' && <span className="badge-test">{p.status}</span>}
@@ -84,7 +81,7 @@ export default async function SalonyPage({ searchParams }) {
             </li>
           ))}
         </ul>
-      </div>
+      </PlacesBrowser>
 
       <p className="center-text small muted">
         Mapa i część danych o salonach: © autorzy <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> (licencja ODbL).

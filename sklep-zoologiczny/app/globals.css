@@ -912,3 +912,20 @@ a.home-strip-item:hover .home-strip-label { color: var(--accent-dark); }
 .subcat-tile.active { border-color: var(--accent); background: #fff1e3; color: var(--accent-dark); }
 .subcat-all { display: block; margin-top: 10px; padding: 10px; border: 1.5px solid var(--accent); border-radius: 999px; text-align: center; color: var(--accent-dark); font-weight: 700; font-size: 0.9rem; text-decoration: none; }
 @media (min-width: 641px) { .subcat-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); } }
+
+/* ---- Salony: mapa na cały ekran i przeciągany panel z listą (telefon) ---- */
+.places-stage { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+.places-stage .places-map-col { position: sticky; top: 76px; }
+.sheet-grip { display: none; }
+.sheet-list { position: relative; }
+.place-card.is-selected { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
+.places-here { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); z-index: 6; padding: 8px 16px; border-radius: 999px; border: 0; background: #fff; color: var(--accent-dark); font: inherit; font-weight: 700; font-size: 0.9rem; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25); cursor: pointer; }
+@media (max-width: 800px) {
+  .places-stage { display: block; position: relative; height: calc(100dvh - 200px); min-height: 460px; width: 100vw; margin-left: calc(50% - 50vw); overflow: hidden; border-top: 1px solid var(--line); }
+  .places-stage .places-map-col { position: absolute; inset: 0; top: 0; z-index: 0; }
+  .places-sheet { position: absolute; left: 0; right: 0; top: 0; height: 100%; z-index: 5; background: var(--bg, #faf6f0); border-radius: 18px 18px 0 0; box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.18); will-change: transform; }
+  .sheet-grip { display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 52px; padding: 8px 0 6px; touch-action: none; cursor: grab; user-select: none; }
+  .sheet-handle { width: 42px; height: 5px; border-radius: 3px; background: #cfc8bd; }
+  .sheet-count { font-weight: 700; font-size: 0.95rem; }
+  .sheet-list { padding: 0 12px 12px; overscroll-behavior: contain; }
+}
