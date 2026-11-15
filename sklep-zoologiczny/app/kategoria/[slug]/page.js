@@ -69,7 +69,7 @@ export default async function CategoryPage({ params, searchParams }) {
 
       {subs.length > 0 && (
         <SubcategoryPanel
-          title={`Kategorie: ${path[0]?.name}`}
+          title={`Kategorie: ${children.length > 0 ? current.name : (parent?.name || current.name)}`}
           items={subs.map((c) => ({
             slug: c.slug,
             name: c.name,
@@ -78,8 +78,8 @@ export default async function CategoryPage({ params, searchParams }) {
             active: c.id === current.id,
             href: browseHref(`/kategoria/${c.slug}`, query, {}),
           }))}
-          allHref={children.length === 0 && parent ? browseHref(`/kategoria/${parent.slug}`, query, {}) : null}
-          allLabel={parent ? `‹ Wszystkie kategorie: ${parent.name}` : ''}
+          allHref={parent ? browseHref(`/kategoria/${parent.slug}`, query, {}) : null}
+          allLabel={parent ? `‹ Wróć do: ${parent.name}` : ''}
         />
       )}
 

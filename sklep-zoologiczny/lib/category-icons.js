@@ -11,9 +11,19 @@ const BY_SUFFIX = {
 };
 const DOG_ONLY = new Set(['przysmaki', 'spacer']);
 
+const CAT = {
+  karma: 'koty-karma',
+  przysmaki: 'koty-przysmaki',
+  zabawki: 'koty-kluebek',
+  drapaki: 'koty-drapak',
+  miski: 'koty-miski',
+  pielegnacja: 'koty-pielegnacja',
+};
+
 export function subcategoryIcon(slug = '') {
   const [animal, ...rest] = slug.split('-');
   const suffix = rest[0];
+  if (animal === 'koty') return CAT[suffix] ? `/ikony/podkategorie/${CAT[suffix]}.png` : null;
   const icon = BY_SUFFIX[suffix];
   if (!icon) return null;
   if (DOG_ONLY.has(suffix) && animal !== 'psy') return null;
