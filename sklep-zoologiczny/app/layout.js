@@ -44,9 +44,9 @@ export default async function RootLayout({ children }) {
               </Suspense>
               <WishLink />
               <div className="header-actions">
+                <Link href="/">Start</Link>
                 <Link href="/sklep">Sklep</Link>
-                {showSalons && <Link href="/salony">Salony</Link>}
-                <Link href="/akademia">Akademia</Link>
+                <Link href="/uslugi">Usługi</Link>
                 <AccountLink />
                 <CartBadge />
               </div>

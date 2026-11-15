@@ -1,23 +1,20 @@
 import Link from 'next/link';
 import { SERVICE_CATEGORIES, categoryHref } from '@/lib/service-categories';
+import { getSettings } from '@/lib/settings';
+import ServicesBrowser from '@/components/ServicesBrowser';
 
 export const metadata = { title: 'Wszystkie usługi dla psów i kotów' };
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const s = await getSettings();
+  const items = SERVICE_CATEGORIES.map((c) => ({ slug: c.slug, name: c.name, title: c.title || c.name, blurb: c.blurb, icon: c.icon, href: categoryHref(c) }));
+  const contactHref = s.email ? `mailto:${s.email}` : '/salony/polec';
   return (
-    <div className="container">
-      <h1>Wszystkie usługi</h1>
-      <p className="muted">Wybierz, kogo szukasz dla swojego pupila.</p>
-      <ul className="svc-grid svc-grid-all">
-        {SERVICE_CATEGORIES.map((c) => (
-          <li key={c.slug}>
-            <Link href={categoryHref(c)} className="svc-tile">
-              <img src={`/ikony/uslugi/${c.icon}.png`} alt="" loading="lazy" />
-              <span>{c.name}</span>
-            </Link>
-          </li>
-        ))}
-      </ul>
+    <div className="svcpage">
+      <p className="svcpage-back"><Link href="/">← Powrót</Link></p>
+      <h1 className="svcpage-title">Wszystkie usługi</h1>
+      <p className="svcpage-sub">Znajdź najlepszych specjalistów w swojej okolicy</p>
+      <ServicesBrowser items={items} contactHref={contactHref} />
     </div>
   );
 }
