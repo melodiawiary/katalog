@@ -6,14 +6,11 @@ import Link from 'next/link';
 // Strona "Wszystkie usługi": szukanie po nazwie i opisie oraz szybkie filtry kategorii.
 export default function ServicesBrowser({ items, contactHref }) {
   const [q, setQ] = useState('');
-  const [only, setOnly] = useState('');
   const term = q.trim().toLowerCase();
   const list = items.filter((c) => {
-    if (only && c.slug !== only) return false;
     if (!term) return true;
     return `${c.name} ${c.title} ${c.blurb}`.toLowerCase().includes(term);
   });
-  const chips = items.slice(0, 7);
 
   return (
     <>
@@ -21,12 +18,6 @@ export default function ServicesBrowser({ items, contactHref }) {
         <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" /><path d="M15.5 15.5L21 21" /></svg>
         <input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Szukaj usług, np. weterynarz, groomer, hotel..." aria-label="Szukaj usług" />
       </label>
-      <div className="svcpage-chips" role="group" aria-label="Kategorie">
-        <button type="button" className={!only ? 'svcpage-chip active' : 'svcpage-chip'} onClick={() => setOnly('')}>Wszystkie</button>
-        {chips.map((c) => (
-          <button type="button" key={c.slug} className={only === c.slug ? 'svcpage-chip active' : 'svcpage-chip'} onClick={() => setOnly(only === c.slug ? '' : c.slug)}>{c.name}</button>
-        ))}
-      </div>
       {list.length === 0 ? (
         <p className="muted">Nic nie znaleziono. Spróbuj innego słowa albo napisz do nas.</p>
       ) : (

@@ -1196,3 +1196,23 @@ a.home-strip-item:hover .home-strip-label { color: var(--accent-dark); }
   .svcpage-card svg { top: 7px; right: 5px; }
   .svcpage-help div { font-size: 0.74rem; }
 }
+
+/* ===== Skala czcionek telefonu v2 (wspólna: strona główna i /uslugi), 2026-11-15 =====
+   tytuł 1.3rem, podtytuł 0.88rem, pole szukania 0.95rem, podpis kafelka i nazwa usługi 0.85rem, opis usługi 0.78rem */
+@media (max-width: 899px) {
+  .portal-title { font-size: 1.3rem; }
+  .portal-sub { font-size: 0.88rem; }
+  .home-search input { font-size: 0.95rem; }
+  .svc-tile { font-size: 0.85rem; }
+  .portal-h2 { font-size: 1.15rem; }
+  .svcpage-title { font-size: 1.3rem; }
+  .svcpage-sub { font-size: 0.88rem; }
+  .svcpage-search input { font-size: 0.95rem; }
+  .svcpage-card { padding: 7px 6px 7px 7px; min-height: 76px; }
+  .svcpage-card img { width: 42px; height: 42px; margin: 0 6px 2px 0; }
+  .svcpage-text, .svcpage-text span { font-size: 0.78rem; }
+  .svcpage-text strong { font-size: 0.85rem; }
+  .svcpage-card svg { top: auto; bottom: 6px; right: 6px; }
+  .svcpage-help div { font-size: 0.78rem; }
+}
+@media (max-width: 899px) { .svcpage-grid { margin-top: 10px; } }
