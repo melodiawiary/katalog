@@ -691,7 +691,9 @@ label.check span:nth-child(2) { flex: 1; }
   }
   .tab { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 8px 2px 7px; text-decoration: none; color: var(--muted); font-size: 0.68rem; font-weight: 700; min-height: 58px; }
   .tab.active { color: var(--accent-dark); background: #fdf3ea; }
-  .tab-icon { position: relative; font-size: 1.35rem; line-height: 1; }
+  .tab-icon { position: relative; line-height: 1; }
+  .tab-icon-img { display: block; width: 30px; height: 30px; background-color: currentColor;
+    -webkit-mask: var(--ikona) center / contain no-repeat; mask: var(--ikona) center / contain no-repeat; }
   .tab-badge { position: absolute; top: -6px; right: -12px; background: var(--accent); color: #fff; border-radius: 999px; font-size: 0.65rem; padding: 1px 5px; min-width: 16px; text-align: center; }
   .cookie-banner { bottom: 66px; }
 }

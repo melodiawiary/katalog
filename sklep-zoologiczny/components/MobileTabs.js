@@ -10,12 +10,12 @@ export default function MobileTabs({ showSalons }) {
   const { count } = useCart();
 
   const tabs = [
-    { href: '/', icon: '🏠', label: 'Start', match: (p) => p === '/' },
-    { href: '/sklep', icon: '🛍️', label: 'Sklep', match: (p) => p.startsWith('/sklep') || p.startsWith('/kategoria') || p.startsWith('/produkt') || p.startsWith('/szukaj') },
-    ...(showSalons ? [{ href: '/salony', icon: '✂️', label: 'Groomerzy', match: (p) => p.startsWith('/salony') }] : []),
-    { href: '/akademia', icon: '🎓', label: 'Akademia', match: (p) => p.startsWith('/akademia') },
-    { href: '/konto', icon: '👤', label: 'Konto', match: (p) => p.startsWith('/konto') },
-    { href: '/koszyk', icon: '🛒', label: 'Koszyk', badge: count, match: (p) => p.startsWith('/koszyk') || p.startsWith('/zamowienie') },
+    { href: '/', icon: 'start', label: 'Start', match: (p) => p === '/' },
+    { href: '/sklep', icon: 'sklep', label: 'Sklep', match: (p) => p.startsWith('/sklep') || p.startsWith('/kategoria') || p.startsWith('/produkt') || p.startsWith('/szukaj') },
+    ...(showSalons ? [{ href: '/salony', icon: 'groomerzy', label: 'Groomerzy', match: (p) => p.startsWith('/salony') }] : []),
+    { href: '/akademia', icon: 'akademia', label: 'Akademia', match: (p) => p.startsWith('/akademia') },
+    { href: '/konto', icon: 'konto', label: 'Konto', match: (p) => p.startsWith('/konto') },
+    { href: '/koszyk', icon: 'koszyk', label: 'Koszyk', badge: count, match: (p) => p.startsWith('/koszyk') || p.startsWith('/zamowienie') },
   ];
 
   if (pathname.startsWith('/admin')) return null;
@@ -24,7 +24,7 @@ export default function MobileTabs({ showSalons }) {
     <nav className="tabbar" aria-label="Menu główne">
       {tabs.map((t) => (
         <Link key={t.href} href={t.href} className={t.match(pathname) ? 'tab active' : 'tab'} aria-current={t.match(pathname) ? 'page' : undefined}>
-          <span className="tab-icon">{t.icon}{t.badge > 0 && <span className="tab-badge">{t.badge}</span>}</span>
+          <span className="tab-icon"><span className="tab-icon-img" style={{ '--ikona': `url(/ikony/${t.icon}.png)` }} />{t.badge > 0 && <span className="tab-badge">{t.badge}</span>}</span>
           <span className="tab-label">{t.label}</span>
         </Link>
       ))}
