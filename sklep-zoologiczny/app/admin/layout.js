@@ -31,6 +31,11 @@ export default async function AdminLayout({ children }) {
     ? await supabase.from('place_reviews').select('id', { count: 'exact', head: true }).or('status.eq.oczekuje,and(reports_count.gt.0,status.neq.ukryta)')
     : { count: 0 };
 
+  // Etap 5: przejęcia salonów i zdjęcia w opiniach czekające na decyzję
+  const { data: st5 } = isAdmin ? await supabase.rpc('admin_stage5_counts') : { data: null };
+  const claimsCount = st5?.claims || 0;
+  const photosCount = st5?.photos || 0;
+
   return (
     <div className="admin">
       <nav className="admin-nav">
@@ -44,7 +49,8 @@ export default async function AdminLayout({ children }) {
         <Link href="/admin/prosby">Zgłoszenia{newRequests > 0 && <span className="badge">{newRequests}</span>}</Link>
         <Link href="/admin/opinie">Opinie</Link>
         <Link href="/admin/miejsca">Salony{placeRequests > 0 && <span className="badge">{placeRequests}</span>}</Link>
-        <Link href="/admin/opinie-salonow">Opinie salonów{pendingReviews > 0 && <span className="badge">{pendingReviews}</span>}</Link>
+        <Link href="/admin/opinie-salonow">Opinie salonów{(pendingReviews + photosCount) > 0 && <span className="badge">{pendingReviews + photosCount}</span>}</Link>
+        <Link href="/admin/przejecia">Przejęcia{claimsCount > 0 && <span className="badge">{claimsCount}</span>}</Link>
         <Link href="/admin/akademia">Akademia</Link>
         <Link href="/admin/powiadomienia">Powiadomienia{alertsReady > 0 && <span className="badge">{alertsReady}</span>}</Link>
         <Link href="/admin/ustawienia">Ustawienia</Link>

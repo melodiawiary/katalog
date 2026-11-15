@@ -247,3 +247,40 @@ ${button(accountUrl, 'Moje przypomnienia')}
   ].join('\n\n');
   return { subject, html, text };
 }
+
+// Kod potwierdzający przejęcie profilu salonu (Etap 5)
+export function claimCodeMail(code, placeName, settings) {
+  const subject = `Kod do potwierdzenia salonu ${placeName}`;
+  const html = layout(settings, subject, `
+<p>Dzień dobry,</p>
+<p>ktoś (mamy nadzieję, że Ty) zgłosił, że jest właścicielem lub zarządza salonem <strong>${esc(placeName)}</strong> w naszym katalogu. Żeby potwierdzić, wpisz na stronie ten kod:</p>
+<p style="font-size:26px;letter-spacing:6px;font-weight:bold;margin:8px 0;">${esc(code)}</p>
+<p style="color:#7a746b;font-size:13px;">Kod działa krótko i tylko raz. Jeśli to nie Ty, zignoruj tę wiadomość - bez kodu nikt nie dostanie dostępu do profilu salonu.</p>`);
+  const text = `Dzień dobry,\n\nkod do potwierdzenia salonu ${placeName}: ${code}\n\nKod działa krótko i tylko raz. Jeśli to nie Ty, zignoruj tę wiadomość.\n\nPozdrawiamy\n${settings?.shop_name || ''}`;
+  return { subject, html, text };
+}
+
+// Informacja dla dotychczasowego właściciela, że ktoś zgłasza ten sam salon
+export function claimConflictMail(placeName, settings) {
+  const subject = `Ktoś zgłasza ten sam salon: ${placeName}`;
+  const html = layout(settings, subject, `
+<p>Dzień dobry,</p>
+<p>ktoś inny zgłosił prawo do profilu salonu <strong>${esc(placeName)}</strong>, który masz na swoim koncie. Sprawdzimy sprawę ręcznie. Do czasu decyzji nic się nie zmienia, a Twój dostęp zostaje.</p>
+<p style="color:#7a746b;font-size:13px;">Jeśli to Ty lub ktoś z Twojego zespołu, możesz zignorować tę wiadomość. W razie wątpliwości odpisz na ten e-mail.</p>`);
+  const text = `Dzień dobry,\n\nktoś inny zgłosił prawo do profilu salonu ${placeName}, który masz na swoim koncie. Sprawdzimy sprawę ręcznie. Do czasu decyzji nic się nie zmienia.\n\nPozdrawiamy\n${settings?.shop_name || ''}`;
+  return { subject, html, text };
+}
+
+// Nowa opinia o salonie dla właściciela
+export function ownerReviewMail(placeName, rating, body, url, settings) {
+  const subject = `Nowa opinia o salonie ${placeName}`;
+  const snippet = String(body || '').trim().slice(0, 300);
+  const html = layout(settings, subject, `
+<p>Dzień dobry,</p>
+<p>w katalogu pojawiła się nowa opinia o salonie <strong>${esc(placeName)}</strong>: <strong>${esc(String(rating))}/5</strong>.</p>
+${snippet ? `<p style="border-left:3px solid #ece5da;padding-left:10px;">${esc(snippet)}</p>` : ''}
+${button(url, 'Odpowiedz na opinię')}
+<p style="color:#7a746b;font-size:13px;">Powiadomienia możesz wyłączyć w panelu salonu.</p>`);
+  const text = `Nowa opinia o salonie ${placeName}: ${rating}/5.\n${snippet ? `\n"${snippet}"\n` : ''}\nOdpowiedz: ${url}`;
+  return { subject, html, text };
+}

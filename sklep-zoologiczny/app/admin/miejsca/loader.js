@@ -13,12 +13,13 @@ export async function loadPlace(id) {
   const supabase = await createClient();
   const n = Number(id);
   if (!Number.isInteger(n)) return { place: null };
-  const [place, hours, prices, priv, refs] = await Promise.all([
+  const [place, hours, prices, priv, refs, photos] = await Promise.all([
     supabase.from('places').select('*').eq('id', n).maybeSingle(),
     supabase.from('place_hours').select('weekday, opens, closes').eq('place_id', n).order('weekday').order('opens'),
     supabase.from('place_prices').select('*').eq('place_id', n).order('sort').order('id'),
     supabase.from('place_private').select('*').eq('place_id', n).maybeSingle(),
     loadFormRefs(supabase),
+    supabase.from('place_photos').select('id, path, caption').eq('place_id', n).order('sort').order('id'),
   ]);
   return {
     place: place.data,
@@ -26,6 +27,7 @@ export async function loadPlace(id) {
     hours: (hours.data || []).map((h) => ({ weekday: h.weekday, opens: String(h.opens).slice(0, 5), closes: String(h.closes).slice(0, 5) })),
     prices: prices.data || [],
     priv: priv.data || {},
+    photos: photos.data || [],
     services: refs.services,
     featureDefs: refs.featureDefs,
   };

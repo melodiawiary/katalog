@@ -68,6 +68,8 @@ export default async function PlacePage({ params }) {
   };
   const { data: serviceDefs } = await supabase.from('service_defs').select('code, label').order('sort');
   const date = (d) => new Date(d).toLocaleDateString('pl-PL', { timeZone: 'Europe/Warsaw', day: 'numeric', month: 'long', year: 'numeric' });
+  const salonUrl = (path) => supabase.storage.from('salony').getPublicUrl(path).data.publicUrl;
+  const reviewUrl = (path) => supabase.storage.from('opinie-salonow').getPublicUrl(path).data.publicUrl;
   const bd = data.breakdown || {};
   const parts = [['Jakość', bd.quality], ['Podejście do zwierzęcia', bd.care], ['Czystość', bd.clean], ['Cena do jakości', bd.price]].filter(([, v]) => v != null);
 
@@ -82,6 +84,7 @@ export default async function PlacePage({ params }) {
         <span className="status">{PLACE_KIND[p.kind]}</span>
         {p.species.map((s) => <span key={s} className="status">{s === 'kot' ? 'Koty' : 'Psy'}</span>)}
         {data.open_now && <span className="status status-zrealizowane">Otwarte teraz</span>}
+        {data.owner_claimed && <span className="status status-zrealizowane" title="Profil prowadzi właściciel lub osoba zarządzająca salonem">Profil właściciela</span>}
       </div>
       <div className="rating-line" style={{ marginBottom: 8 }}>
         <PlaceRating avg={p.rating_avg} count={p.rating_count} size="1.2em" />
@@ -91,6 +94,16 @@ export default async function PlacePage({ params }) {
 
       <div className="place-profile">
         <div>
+          {data.photos?.length > 0 && (
+            <div className="thumb-row" style={{ display: 'flex', gap: 8, overflowX: 'auto', marginBottom: 12 }}>
+              {data.photos.map((ph) => (
+                <a key={ph.id} href={salonUrl(ph.path)} target="_blank" rel="noopener noreferrer">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={salonUrl(ph.path)} alt={ph.caption || `Zdjęcie salonu ${p.name}`} loading="lazy" style={{ height: 150, width: 'auto', borderRadius: 8, display: 'block' }} />
+                </a>
+              ))}
+            </div>
+          )}
           {p.description && <p className="description">{p.description}</p>}
 
           {data.features.length > 0 && (
@@ -183,7 +196,24 @@ export default async function PlacePage({ params }) {
               <div className="review-head"><Stars value={r.rating} /><strong>{Number(r.rating).toFixed(1).replace('.', ',')}</strong></div>
               {r.body && <p>{r.body}</p>}
               {r.service && <p className="review-paid">Usługa: {r.service}{r.size_class && <>, {SIZE_CLASS[r.size_class]}</>}</p>}
+              {r.photos?.length > 0 && (
+                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', margin: '6px 0' }}>
+                  {r.photos.map((path) => (
+                    <a key={path} href={reviewUrl(path)} target="_blank" rel="noopener noreferrer">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={reviewUrl(path)} alt="Zdjęcie z opinii" loading="lazy" style={{ height: 90, width: 'auto', borderRadius: 6, display: 'block' }} />
+                    </a>
+                  ))}
+                </div>
+              )}
               <p className="small muted">{r.author} · {date(r.created_at)}</p>
+              {r.reply && (
+                <div className="box" style={{ marginTop: 8 }}>
+                  <strong className="small">Odpowiedź salonu</strong>
+                  <p style={{ margin: '4px 0' }}>{r.reply.body}</p>
+                  <p className="small muted">{date(r.reply.updated_at || r.reply.created_at)}</p>
+                </div>
+              )}
               <ReportReview reviewId={r.id} />
             </li>
           ))}
@@ -211,6 +241,7 @@ export default async function PlacePage({ params }) {
           <summary className="link-btn">Dane się zmieniły? Zgłoś poprawkę</summary>
           <PlaceRequestForm kind="korekta" placeId={p.id} />
         </details>
+        <p className="panel"><Link className="link-btn" href={`/salony/${p.slug}/przejmij`}>To mój salon - chcę prowadzić ten profil</Link></p>
         <details className="panel">
           <summary className="link-btn">Jesteś właścicielem i chcesz usunąć ten wpis?</summary>
           <PlaceRequestForm kind="usuniecie" placeId={p.id} />

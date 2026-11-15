@@ -5,7 +5,7 @@ import { REVIEW_STATUS } from '@/lib/places';
 import Stars from '@/components/product/Stars';
 import ActionForm from '@/components/admin/ActionForm';
 import ConfirmButton from '@/components/admin/ConfirmButton';
-import { moderatePlaceReview, setReviewsPremoderation } from './actions';
+import { moderatePlaceReview, setReviewsPremoderation, moderateReviewPhoto, moderateReply } from './actions';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Opinie o salonach' };
@@ -35,9 +35,56 @@ export default async function PlaceReviewsAdmin({ searchParams }) {
   const reports = {};
   for (const r of reportsRes.data || []) (reports[r.review_id] ||= []).push(r);
 
+  const [photosRes, repliesRes] = await Promise.all([
+    supabase.from('place_review_photos').select('id, path, created_at, places(name, slug, city)').eq('status', 'oczekuje').order('created_at').limit(50),
+    supabase.from('place_review_replies').select('review_id, body, status, updated_at, places(name, slug)').order('updated_at', { ascending: false }).limit(20),
+  ]);
+  const pendingPhotos = photosRes.data || [];
+  const replies = repliesRes.data || [];
+  const photoUrl = (path) => supabase.storage.from('opinie-salonow').getPublicUrl(path).data.publicUrl;
+
   return (
     <div>
       <h1>Opinie o salonach</h1>
+      {pendingPhotos.length > 0 && (
+        <div className="box">
+          <h2>Zdjęcia do sprawdzenia ({pendingPhotos.length})</h2>
+          <p className="small muted">Odrzuć zdjęcia z ludźmi, cudzymi danymi, reklamą albo niezwiązane z salonem.</p>
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+            {pendingPhotos.map((ph) => (
+              <div key={ph.id} style={{ width: 180 }}>
+                <a href={photoUrl(ph.path)} target="_blank" rel="noopener noreferrer">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={photoUrl(ph.path)} alt="" style={{ width: '100%', borderRadius: 6 }} />
+                </a>
+                <p className="small muted">{ph.places?.name}, {ph.places?.city}</p>
+                <div className="row-actions">
+                  <form action={moderateReviewPhoto}><input type="hidden" name="id" value={ph.id} /><input type="hidden" name="op" value="approve" /><button className="btn btn-small">Zatwierdź</button></form>
+                  <form action={moderateReviewPhoto}><input type="hidden" name="id" value={ph.id} /><input type="hidden" name="op" value="reject" /><button className="btn btn-small btn-light">Odrzuć</button></form>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      {replies.length > 0 && (
+        <details className="box">
+          <summary><strong>Ostatnie odpowiedzi właścicieli ({replies.length})</strong></summary>
+          <ul className="plain">
+            {replies.map((r) => (
+              <li key={r.review_id} className={r.status === 'ukryta' ? 'row-off' : ''} style={{ margin: '8px 0' }}>
+                <p style={{ margin: 0 }}>{r.body}</p>
+                <p className="small muted">{r.places?.name} · {r.status === 'ukryta' ? 'ukryta' : 'widoczna'}</p>
+                <form action={moderateReply}>
+                  <input type="hidden" name="review_id" value={r.review_id} />
+                  <input type="hidden" name="op" value={r.status === 'ukryta' ? 'show' : 'hide'} />
+                  <button className="btn btn-small btn-light">{r.status === 'ukryta' ? 'Przywróć' : 'Ukryj'}</button>
+                </form>
+              </li>
+            ))}
+          </ul>
+        </details>
+      )}
       <div className="box">
         <ActionForm action={setReviewsPremoderation} submitLabel="Zapisz">
           <label className="radio">

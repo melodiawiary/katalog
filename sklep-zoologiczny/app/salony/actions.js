@@ -1,6 +1,8 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
+import { siteUrl } from '@/lib/site';
+import { sendOwnerReviewMails } from '@/lib/order-mail';
 
 const text = (fd, key, max) => String(fd.get(key) ?? '').trim().slice(0, max);
 
@@ -55,6 +57,9 @@ export async function submitPlaceReview(prev, fd) {
     p_paid: null,
   });
   if (error) return { error: error.code === 'P0001' ? error.message : 'Nie udało się zapisać opinii. Spróbuj ponownie.' };
+  if (data !== 'oczekuje') {
+    try { await sendOwnerReviewMails(place, await siteUrl()); } catch { /* mail nie blokuje opinii */ }
+  }
   return {
     ok: data === 'oczekuje' ? 'Dziękujemy! Opinia pojawi się po sprawdzeniu przez nas.' : 'Dziękujemy za opinię!',
     at: Date.now(),

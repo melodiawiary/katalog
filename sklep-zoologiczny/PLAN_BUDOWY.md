@@ -125,5 +125,9 @@ Opinie o salonach (zalogowani, 1 na salon, jakość + 3 oceny nieobowiązkowe, t
 profil i "sprawdzony"), odznaki Polecany / Top w mieście, sortowanie listy salonów, strona miasta `/salony/miasto/<miasto>`, zasady opinii `/salony/zasady-opinii`, ulubione salony,
 nowa strona główna (lista produktów jest teraz pod `/sklep`), zapis na Akademię (`/akademia`, `/admin/akademia`), panel `/admin/opinie-salonow`.
 NIE zrobione z mapy: zdjęcie efektu w opinii (Etap 5), mapka na stronie głównej, działająca pamięć podręczna stron miast, filtr "ocena" na liście, ceny salonów (dane do wpisania ręcznie).
-## ETAP 5: konta salonów, odpowiedzi na opinie
+## ETAP 5: konta salonów, odpowiedzi na opinie, zdjęcia - ZROBIONE 2026-11-15 (`supabase/13_konta_salonow.sql`)
+Przejęcie profilu ("To mój salon" `/salony/<slug>/przejmij`): kod 6-cyfrowy na adres salonu z katalogu albo na adres w domenie jego strony (poczta publiczna odrzucana), albo weryfikacja ręczna (zdjęcie szyldu / opis, zatwierdza Mariusz w `/admin/przejecia`); spór z obecnym opiekunem trafia do Mariusza, obecny opiekun dostaje maila.
+Panel właściciela `/konto/salon`: "Sprawdź swój ranking" (miejsce, braki w profilu, warunki odznak), odpowiedzi na opinie (widoczne jako "Odpowiedź salonu", Mariusz może ukryć), edycja opisu, kontaktu, godzin, cennika, udogodnień, zdjęcia salonu (do 8), powiadomienia mailem o nowych opiniach, zwolnienie salonu (wraca stan sprzed zmian), "Wizytówka Plus (wkrótce)" tylko jako zapis na listę.
+Zdjęcia w opiniach (do 3, moderowane w `/admin/opinie-salonow`). Właściciel nie może oceniać własnego salonu. Dowody przejęć kasuje cron po 30 dniach.
+## ETAP 6: Akademia
 ## ETAP 6: Akademia

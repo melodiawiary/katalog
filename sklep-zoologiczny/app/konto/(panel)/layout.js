@@ -18,10 +18,12 @@ export default async function AccountLayout({ children }) {
   const { supabase, user } = await requireUser('/konto');
   // zamówienia złożone wcześniej na ten e-mail (bez konta) dopinają się do konta
   await supabase.rpc('claim_orders');
+  const { data: mine } = await supabase.rpc('owner_my_places');
+  const links = mine?.length ? [...LINKS.slice(0, 4), { href: '/konto/salon', label: 'Mój salon' }, ...LINKS.slice(4)] : LINKS;
   return (
     <div className="account">
       <nav className="account-nav" aria-label="Konto">
-        {LINKS.map((l) => <Link key={l.href} href={l.href}>{l.label}</Link>)}
+        {links.map((l) => <Link key={l.href} href={l.href}>{l.label}</Link>)}
         <span className="muted account-mail">{user.email}</span>
         <form action={signOutCustomer}><button className="link-btn">Wyloguj</button></form>
       </nav>

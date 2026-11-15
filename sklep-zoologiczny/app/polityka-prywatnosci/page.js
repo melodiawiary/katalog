@@ -76,6 +76,18 @@ export default async function PrivacyPage() {
             <td>do usunięcia opinii lub konta</td>
           </tr>
           <tr>
+            <td>Opinie o salonach i zdjęcia w opiniach (nieobowiązkowe)</td>
+            <td>treść opinii, ocena, imię i pierwsza litera nazwiska, data, dodane zdjęcia</td>
+            <td>prawnie uzasadniony interes: rzetelna informacja dla innych użytkowników katalogu (art. 6 ust. 1 lit. f RODO)</td>
+            <td>do usunięcia opinii lub konta</td>
+          </tr>
+          <tr>
+            <td>Zgłoszenie salonu przez właściciela („To mój salon”)</td>
+            <td>imię i nazwisko, rola, telefon (nieobowiązkowo), adres e-mail konta, kod weryfikacyjny, przy weryfikacji ręcznej zdjęcie szyldu lub opis</td>
+            <td>prawnie uzasadniony interes: sprawdzenie, czy profil salonu prowadzi uprawniona osoba (art. 6 ust. 1 lit. f RODO) oraz zgoda na weryfikację</td>
+            <td>kod do kilkunastu minut; zdjęcie dowodowe 30 dni od decyzji; dane opiekuna profilu do zwolnienia salonu lub usunięcia konta</td>
+          </tr>
+          <tr>
             <td>Korespondencja e-mailowa i telefoniczna</td>
             <td>dane podane w wiadomości</td>
             <td>prawnie uzasadniony interes (art. 6 ust. 1 lit. f RODO) albo wykonanie umowy</td>

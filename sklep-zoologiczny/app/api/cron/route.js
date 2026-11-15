@@ -24,5 +24,16 @@ export async function GET(request) {
   const reminders = await runFoodReminders(site);
   // ranking salonów: starsze opinie liczą się mniej, więc przeliczamy raz dziennie (przed 11_opinie_salonow.sql: błąd, pomijamy)
   const { error: rankError } = await db.rpc('refresh_place_ranking', { p_city: null });
-  return NextResponse.json({ alerts, payments, reminders, ranking: rankError ? 'błąd' : 'ok' });
+  // dowody przejęć (zdjęcia szyldów) kasujemy po 30 dniach od decyzji
+  let purged = 0;
+  try {
+    const { data: due } = await db.rpc('claims_due_purge');
+    const paths = (due || []).map((x) => x.evidence_path).filter(Boolean);
+    if (paths.length) await db.storage.from('przejecia').remove(paths);
+    if (due?.length) {
+      await db.rpc('claims_mark_purged', { p_ids: due.map((x) => x.id) });
+      purged = due.length;
+    }
+  } catch { /* przed 13_konta_salonow.sql funkcji nie ma */ }
+  return NextResponse.json({ alerts, payments, reminders, ranking: rankError ? 'błąd' : 'ok', purged });
 }

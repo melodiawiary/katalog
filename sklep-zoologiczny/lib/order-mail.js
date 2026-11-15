@@ -3,7 +3,7 @@ import { serviceClient } from '@/lib/supabase/service';
 import { getIntegrations } from '@/lib/integrations';
 import { sendMail, sendBatch, canSend } from '@/lib/mail';
 import {
-  orderConfirmation, adminNewOrder, orderStatusMail, hasStatusMail, backInStockMail, loginMail, foodReminderMail,
+  orderConfirmation, adminNewOrder, orderStatusMail, hasStatusMail, backInStockMail, loginMail, foodReminderMail, claimCodeMail, claimConflictMail, ownerReviewMail,
 } from '@/lib/mail-templates';
 
 async function loadSettings(db) {
@@ -155,4 +155,42 @@ export async function runFoodReminders(site, fallbackDb) {
   const sentIds = mails.filter((m) => m.ok).flatMap((m) => m.ids);
   if (sentIds.length) await db.rpc('reminders_mark_sent', { p_ids: sentIds });
   return { sent: mails.filter((m) => m.ok).length, error: result.ok ? undefined : result.error };
+}
+
+// Etap 5: maile salonów. Zawsze przez klienta serwisowego.
+export async function sendClaimCode(to, code, placeName) {
+  const ctx = await context(null);
+  if (ctx.error) return { ok: false, unavailable: true, error: ctx.error };
+  const { db, integ, settings } = ctx;
+  const mail = claimCodeMail(code, placeName, settings);
+  const r = await sendMail(db, integ, settings, { ...mail, to, kind: 'przejecie_kod', replyTo: settings.email || undefined });
+  return r.ok ? { ok: true } : { ok: false, error: r.error };
+}
+
+export async function sendClaimConflict(placeId, placeName) {
+  const ctx = await context(null);
+  if (ctx.error) return { ok: false, error: ctx.error };
+  const { db, integ, settings } = ctx;
+  const { data } = await db.rpc('place_owner_emails_all', { p_place: placeId });
+  const list = [...new Set((data || []).map((r) => (typeof r === 'string' ? r : r.email)).filter(Boolean))];
+  const mail = claimConflictMail(placeName, settings);
+  for (const to of list) await sendMail(db, integ, settings, { ...mail, to, kind: 'przejecie_spor', replyTo: settings.email || undefined });
+  return { ok: true, sent: list.length };
+}
+
+// Nowa opublikowana opinia: wiadomość do właścicieli z włączonym powiadomieniem
+export async function sendOwnerReviewMails(placeId, site) {
+  const ctx = await context(null);
+  if (ctx.error) return { ok: false, error: ctx.error };
+  const { db, integ, settings } = ctx;
+  const { data: place } = await db.from('places').select('name, slug').eq('id', placeId).maybeSingle();
+  if (!place) return { ok: false };
+  const { data: rev } = await db.from('place_reviews').select('rating, body')
+    .eq('place_id', placeId).eq('status', 'opublikowana').order('created_at', { ascending: false }).limit(1).maybeSingle();
+  if (!rev) return { ok: false };
+  const { data } = await db.rpc('place_owner_emails', { p_place: placeId });
+  const list = [...new Set((data || []).map((r) => (typeof r === 'string' ? r : r.email)).filter(Boolean))];
+  const mail = ownerReviewMail(place.name, rev.rating, rev.body, `${site}/konto/salon/${place.slug}`, settings);
+  for (const to of list) await sendMail(db, integ, settings, { ...mail, to, kind: 'opinia_salon', replyTo: settings.email || undefined });
+  return { ok: true, sent: list.length };
 }

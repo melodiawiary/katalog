@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { loadPlace } from '../loader';
 import PlaceForm from '../PlaceForm';
+import PhotoManager from '@/components/places/PhotoManager';
 import ConfirmButton from '@/components/admin/ConfirmButton';
 import { deletePlace } from '../actions';
 import { PLACE_STATUS, PLACE_STATUS_CLASS } from '@/lib/places';
@@ -24,6 +25,7 @@ export default async function EditPlacePage({ params, searchParams }) {
       </div>
       <p><span className={`status ${PLACE_STATUS_CLASS[p.status]}`}>{PLACE_STATUS[p.status]}</span> <span className="muted">adres strony: /salony/{p.slug}</span></p>
       {zapisano && <p className="ok">Zapisano.</p>}
+      <PhotoManager placeId={p.id} slug={p.slug} photos={data.photos} />
       {/* key: po zapisie formularz wczytuje świeże dane z bazy */}
       <PlaceForm key={p.updated_at || p.id} place={p} hours={data.hours} prices={data.prices} priv={data.priv} services={data.services} featureDefs={data.featureDefs} />
       <div className="danger-zone">

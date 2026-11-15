@@ -100,16 +100,17 @@ Fundament (prawo, nazwa, płatności, hosting) leży pod wszystkim.
 - [ETAP 3] Zaproszenia dla salonów: NIE wysyłamy masowo e-maili reklamowych do wszystkich salonów z listy (Prawo komunikacji elektronicznej wymaga zgody także od firm). Zaproszenie idzie innymi drogami: strona "Prowadzisz salon? Dołącz za darmo", list pocztowy na adres salonu, social media salonu przez formularz kontaktowy po konsultacji z prawnikiem, reklama lokalna; a zgody na kontakt zbieramy w formularzu zgłoszenia
 - [ETAP 3] Salony, które publikujemy sami (5 na miasto), a prowadzone jako jednoosobowa firma: wysyłamy im krótką, neutralną informację o przetwarzaniu danych (RODO art. 14: skąd mamy dane, cel, prawa, jak poprawić lub usunąć, jak przejąć profil) najpóźniej w miesiąc od publikacji; pocztą lub e-mailem, treść do sprawdzenia przez prawnika
 - [ZASADA] Nie kopiujemy danych z Map Google i nie scrapujemy serwisów typu Panorama Firm (łamie ich regulaminy). Salony spoza OSM dodajemy ręcznie, z poleceń klientów i ze zgłoszeń właścicieli
-- [ETAP 5] Właściciel przejmuje profil ("To mój salon"): zasady poniżej
-  - Wymaga konta (e-mail lub Google). Formularz: imię, rola (właściciel / zarządzający), kontakt, zgoda na weryfikację
-  - Weryfikacja, trzy drogi od najłatwiejszej: (1) kod e-mailem na adres ze strony internetowej salonu; (2) kod SMS na telefon salonu z jego publicznej wizytówki (SMS dodajemy później, płatna bramka); (3) gdy te nie działają: zdjęcie szyldu lub drzwi salonu albo zgodność z wpisem w CEIDG (nazwa + adres), a Mariusz zatwierdza w panelu
+- [ETAP 5] Właściciel przejmuje profil ("To mój salon", strona `/salony/<salon>/przejmij`): zasady poniżej (uszczegółowione 2026-11-15)
+  - Wymaga konta (e-mail lub Google). Formularz: imię, rola (właściciel / zarządzający), telefon kontaktowy, zgoda na weryfikację
+  - Weryfikacja, trzy drogi od najłatwiejszej: (1) kod 6-cyfrowy e-mailem; adres musi być albo adresem salonu z wpisu (publicznym lub prywatnym), albo leżeć w domenie strony www salonu (nie liczą się portale: Facebook, Instagram, Booksy itp. ani poczta darmowa typu gmail); kod ważny 15 minut, 5 prób, najwyżej 3 kody na godzinę; (2) kod SMS na telefon salonu (SMS dodajemy później, płatna bramka); (3) gdy te nie działają: zdjęcie szyldu lub drzwi salonu (prywatny zasobnik, widzi tylko Mariusz) albo opis zgodności z CEIDG (nazwa + adres), a Mariusz zatwierdza w panelu `/admin/przejecia`
+  - Droga (1): gdy salon nie ma jeszcze właściciela, poprawny kod zatwierdza przejęcie od razu (Mariusz widzi je na liście i może cofnąć); gdy ma, zgłoszenie idzie do Mariusza, a dotychczasowy właściciel dostaje e-mail i 14 dni na sprzeciw. Droga (3) zawsze przez Mariusza
   - Nie prosimy o dowód osobisty ani skan dokumentów tożsamości
-  - Dwie osoby chcą ten sam salon: decyduje Mariusz; dotychczasowy właściciel profilu ma 14 dni na sprzeciw
-  - Dane z weryfikacji: kod ważny 15 minut; zdjęcia i dokumenty z drogi (3) kasowane po 30 dniach od decyzji; zostaje tylko wpis: kto, kiedy, którą drogą, wynik
-  - Przycisk "Zwolnij salon i usuń moje dane": profil wraca do "niezweryfikowany", teksty i zdjęcia właściciela kasujemy (na życzenie najpierw wysyłamy mu kopię), opinie klientów zostają (to nie jego dane)
-  - Po przejęciu salon dostaje odznakę "Profil właściciela"; zasady rankingu i opinii bez zmian
-  - Za darmo dla właściciela: godziny, telefon, opis, cennik, kilka zdjęć, odpowiedzi na opinie, podgląd miejsca w rankingu swojego miasta
-- [PÓŹNIEJ] Wizytówka Plus (płatna): rozszerzona podstrona salonu, którą właściciel sam układa i upiększa. Dziś budujemy tylko furtkę: w panelu właściciela zakładka "Wizytówka Plus (wkrótce)" z zapisem chętnych (pokazuje nam zainteresowanie) oraz w bazie pole planu salonu (darmowy / plus, ważny do daty). Co dokładnie w niej będzie i ile kosztuje: ustalimy po sprawdzeniu zainteresowania
+  - Do 3 osób na jeden salon (właściciel i zarządzający); Mariusz może każdą odłączyć
+  - Dane z weryfikacji: kod ważny 15 minut; zdjęcia i opisy z drogi (3) kasowane po 30 dniach od decyzji (automat dzienny); zostaje wpis: kto, kiedy, którą drogą, wynik
+  - Przycisk "Zwolnij salon": właściciel odchodzi; gdy to ostatni, profil wraca do "niezweryfikowany" (o ile zweryfikował go właściciel, nie Mariusz); z opcją "usuń też moje teksty, cennik, godziny i zdjęcia" profil wraca do stanu sprzed przejęcia (kopia stanu zapisana przy przejęciu); przed usunięciem można pobrać kopię swoich danych; opinie klientów zostają (to nie dane właściciela)
+  - Po przejęciu salon dostaje odznakę "Profil właściciela" i status "zweryfikowany" (bonus rankingu i dostęp do odznak jak dla sprawdzonego przez nas); zasady rankingu i opinii bez zmian
+  - Za darmo dla właściciela: opis, telefon, e-mail, linki, udogodnienia, godziny, cennik, do 8 zdjęć, odpowiedzi na opinie, powiadomienie e-mailem o nowej opinii, podgląd miejsca w rankingu swojego miasta ("Sprawdź swój ranking": miejsce, średnia, co jeszcze uzupełnić); nazwę, adres, pinezkę i rodzaj zmienia się przez "Zgłoś poprawkę" (zatwierdza Mariusz)
+- [PÓŹNIEJ] Wizytówka Plus (płatna): rozszerzona podstrona salonu, którą właściciel sam układa i upiększa. Dziś (Etap 5) budujemy tylko furtkę: w panelu właściciela zakładka "Wizytówka Plus (wkrótce)" z zapisem chętnych (lista w `/admin/przejecia`) oraz w bazie pola `places.plan` (darmowy / plus) i `places.plan_until` (nic jeszcze z nich nie wynika). Co dokładnie w niej będzie i ile kosztuje: ustalimy po sprawdzeniu zainteresowania
 - [ZASADA] Wizytówka Plus zawsze oznaczona "Promowane", nie zmienia miejsca w rankingu, nie ukrywa ani nie edytuje opinii klientów
 
 ## 3. Mapa i szukanie w okolicy
@@ -127,7 +128,7 @@ Fundament (prawo, nazwa, płatności, hosting) leży pod wszystkim.
 - [ETAP 2] Moje zwierzęta (imię, rasa, wiek, waga) -> dopasowane produkty
 - [ETAP 2] Przypomnienie "kończy się karma?" (e-mail po wyliczonym czasie)
 - [ETAP 4] Ulubione salony (serduszko na profilu, lista w koncie)
-- [ETAP 5] Rola "właściciel salonu" (razem z przejmowaniem profilu); dziś role: klient i admin
+- [ETAP 5] Rola "właściciel salonu" = wpis w `place_owners` (razem z przejmowaniem profilu); w koncie klienta pojawia się zakładka "Mój salon"; role: klient, właściciel salonu (jeden użytkownik może być obojgiem), admin
 - [PÓŹNIEJ] Kolejne role: kursant, instruktor, weterynarz
 
 ## 5. Opinie
@@ -137,7 +138,8 @@ Fundament (prawo, nazwa, płatności, hosting) leży pod wszystkim.
 - [ETAP 4] Tekst opinii (do 2000 znaków); nieobowiązkowo: usługa i wielkość psa (kwoty NIE pytamy - decyzja Mariusza 2026-11-14, ze względów podatkowych; kolumna paid_amount zostaje pusta) (ale nie zmienia cennika salonu)
 - [ETAP 4] Moderacja: przełącznik w panelu "Opinie o salonach: najpierw sprawdzam / publikuj od razu" (domyślnie najpierw sprawdzam, bo salony to małe firmy, a fałszywe opinie psują ranking); "Zgłoś nadużycie" pod każdą opinią (e-mail + powód, limit zgłoszeń); ukrywamy tylko wpisy łamiące zasady (wulgaryzmy, dane osobowe, spam, treści niedotyczące usług salonu), nie dlatego, że są negatywne
 - [ETAP 4] Strona "Zasady opinii" (jak sprawdzamy opinie: nie weryfikujemy faktu wizyty, wymagamy konta, moderujemy, nie bierzemy płatności za opinie) z linkiem pod opiniami; do sprawdzenia z prawnikiem razem z regulaminem
-- [ETAP 5] Odpowiedź właściciela salonu; zdjęcie efektu (wymaga bucketu na zdjęcia i moderacji zdjęć)
+- [ETAP 5] Odpowiedź właściciela salonu: jedna na opinię (można poprawić i usunąć), tylko pod opinią opublikowaną, widoczna od razu z napisem "Odpowiedź salonu"; Mariusz może ją ukryć (`/admin/opinie-salonow`); odpowiedź nie zmienia opinii ani rankingu; właściciel dostaje e-mail o każdej nowej opinii (wyłączany w panelu)
+- [ETAP 5] Zdjęcie efektu w opinii: autor opinii dodaje do 3 zdjęć (zmniejszane w przeglądarce); KAŻDE zdjęcie czeka na zatwierdzenie przez Mariusza (bez wyjątku, także gdy opinie publikują się od razu); zasada: zdjęcie pupila, bez osób trzecich; odrzucone zdjęcie jest kasowane z zasobnika
 
 ## 6. Ranking i odznaki
 - [ETAP 4] Sortowanie listy: najlepiej oceniane, najwięcej opinii, najbliżej, najtańsze (bez pozycji: domyślnie najlepiej oceniane)
@@ -148,7 +150,7 @@ Fundament (prawo, nazwa, płatności, hosting) leży pod wszystkim.
 - [ETAP 4] Bonus (tylko dla salonu z opinią, żeby nie przebił ocen klientów): do +0,10 za pełny profil (opis, telefon, godziny, cennik, po 0,025) i +0,05 za "zweryfikowany" (pole w panelu: sprawdzony przez nas)
 - [ETAP 4] Klientowi pokazujemy zwykłą średnią i liczbę opinii (nie wynik rankingu)
 - [ETAP 4] Odznaki (tylko salony zweryfikowane, min. 3 opinie): "Polecany" = średnia co najmniej 4,3; "Top w mieście" = 3 najlepsze w mieście do 30 salonów w rankingu, w większym 10% najlepszych (min. 3)
-- [ETAP 5] [ZMIANA] "Sprawdź swój ranking": właściciel przejmuje profil ("To mój salon": zgłoszenie, potwierdzenie telefonem lub e-mailem, zatwierdza admin), potem widzi miejsce w mieście, opinie, odpowiada i uzupełnia cennik
+- [ETAP 5] [ZMIANA] "Sprawdź swój ranking": po przejęciu profilu właściciel widzi miejsce w mieście ("3. z 12"), średnią, liczbę opinii, brakujące elementy profilu (każdy daje bonus) i warunki odznak; NIE widzi wyników ani nazw konkurencji
 - [PÓŹNIEJ] Certyfikowany przez Akademię
 - [PÓŹNIEJ] Płatne wyróżnienie, zawsze oznaczone "Promowane" (pierwsze źródło przychodu z katalogu: oferta pokazuje się salonom, które przejęły profil; nie wpływa na ocenę ani miejsce w rankingu)
 
@@ -166,7 +168,7 @@ Fundament (prawo, nazwa, płatności, hosting) leży pod wszystkim.
 - [ETAP 1] ZUS: ulga na start 6 mies. (tylko zdrowotna), potem preferencyjny 24 mies., potem pełny; płaci się raz na osobę, nie na firmę
 - [ETAP 1] Regulaminy (sklep, katalog, opinie), polityka prywatności (RODO), cookies, zwroty
 - [ETAP 1] Płatności online: BLIK / Przelewy24 (lub PayU), e-mail z potwierdzeniem zamówienia
-- [ETAP 1] [ZMIANA 2026-11-15] E-maile do klientów (logowanie, zamówienia, przypomnienia) idą do czasu zakupu domeny przez SMTP Gmaila z konta mormecs@gmail.com (hasło aplikacji wpisywane w `/admin/integracje`, limit ok. 500 maili dziennie; Resend bez domeny dostarcza tylko na adres właściciela konta). Po zakupie domeny wracamy do Resend z adresem sklepu
+- [ETAP 1] [ZMIANA 2026-11-15] E-maile do klientów (logowanie, zamówienia, przypomnienia) idą do czasu zakupu domeny przez SMTP Gmaila z konta mario.suze@gmail.com (hasło aplikacji wpisywane w `/admin/integracje`, limit ok. 500 maili dziennie; Resend bez domeny dostarcza tylko na adres właściciela konta). Po zakupie domeny wracamy do Resend z adresem sklepu
 - [GOTOWE] Logowanie przez Google działa (klient OAuth w Google Cloud, dostawca w Supabase) - potwierdzone 2026-11-15
 - [ETAP 1] Vercel: plan Hobby tylko niekomercyjnie, przy sprzedaży plan Pro
 - [ETAP 3] [ZMIANA] Przed publikacją mapy: 20-30 salonów z Trójmiasta (import z OSM + ręczny przegląd adresów i cen); wcześniej zakładaliśmy wpisywanie ręczne

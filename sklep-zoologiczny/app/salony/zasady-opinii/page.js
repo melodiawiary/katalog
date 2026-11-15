@@ -13,6 +13,10 @@ export default function ReviewRules() {
       <p>Opinie są weryfikowane przez nas przed publikacją albo po niej (zależnie od ustawień serwisu), a każdą opublikowaną opinię można zgłosić jako naruszającą zasady. Nie przyjmujemy płatności za opinie i nie usuwamy opinii tylko dlatego, że są negatywne. Ukrywamy wyłącznie wpisy, które zawierają wulgaryzmy, groźby, dane osobowe, reklamy lub spam, dotyczą czegoś innego niż usługi salonu albo wyglądają na fałszywe.</p>
       <h2>Jak liczymy ranking</h2>
       <p>Przy salonie pokazujemy zwykłą średnią ocen i liczbę opinii. Kolejność w rankingu miasta uwzględnia liczbę opinii (jedna ocena 5/5 nie wyprzedza salonu z kilkudziesięcioma dobrymi ocenami), nowsze opinie liczą się bardziej niż stare, a niewielki bonus dostają salony z kompletnym profilem i sprawdzone przez nas. Salony bez opinii nie mają miejsca w rankingu. Płatne wyróżnienia, jeśli się pojawią, będą zawsze oznaczone jako „Promowane” i nie wpłyną na ocenę ani miejsce w rankingu.</p>
+      <h2>Zdjęcia w opiniach</h2>
+      <p>Do opinii można dodać do trzech zdjęć. Każde zdjęcie sprawdzamy przed publikacją i odrzucamy te, na których są ludzie, cudze dane, reklamy albo które nie dotyczą salonu.</p>
+      <h2>Odpowiedzi salonu i konta właścicieli</h2>
+      <p>Właściciel lub osoba zarządzająca salonem może potwierdzić swoje prawo do profilu (kodem na adres e-mail salonu albo ręcznie) i odpowiadać na opinie. Odpowiedź jest oznaczona jako „Odpowiedź salonu”. Właściciel nie może oceniać własnego salonu ani usuwać opinii, może je tylko zgłosić. Odpowiedzi podlegają tym samym zasadom co opinie. Profil prowadzony przez właściciela nie wpływa na ocenę ani miejsce w rankingu, poza tym, że kompletny profil daje niewielki bonus.</p>
       <h2>Zgłoszenia</h2>
       <p>Jeśli uważasz, że opinia łamie zasady, użyj przycisku „Zgłoś nadużycie” pod opinią. Właściciel salonu może też zgłosić swój salon i poprosić o poprawę lub usunięcie wpisu przez formularz na stronie salonu.</p>
       <p><Link href="/salony">← Salony</Link></p>
