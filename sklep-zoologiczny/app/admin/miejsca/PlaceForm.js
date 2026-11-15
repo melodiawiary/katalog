@@ -4,8 +4,9 @@ import 'leaflet/dist/leaflet.css';
 import { useActionState, useEffect, useRef, useState, startTransition } from 'react';
 import { savePlace, geocodeAddress, reverseGeocode } from './actions';
 import {
-  PLACE_KIND, PLACE_STATUS, SPECIES, DEFAULT_CENTER,
+  PLACE_STATUS, SPECIES, DEFAULT_CENTER,
 } from '@/lib/places';
+import { PLACE_CATEGORIES, kindLabel } from '@/lib/place-categories';
 import { HoursEditor, PricesEditor, toPriceRows } from '@/components/places/Editors';
 
 
@@ -69,11 +70,15 @@ function PinMap({ lat, lng, onMove }) {
 }
 
 // ---------- formularz ----------
-export default function PlaceForm({ place, hours: hoursIn = [], prices: pricesIn = [], priv = {}, services = [], featureDefs = [], requestId = null }) {
+export default function PlaceForm({ place, hours: hoursIn = [], prices: pricesIn = [], priv = {}, services: allServices = [], featureDefs: allFeatures = [], requestId = null, category: categoryIn = 'groomer' }) {
   const isNew = !place?.id;
   const [state, formAction, pending] = useActionState(savePlace, null);
 
-  const [kind, setKind] = useState(place?.kind || 'salon');
+  const [category, setCategory] = useState(place?.category || categoryIn);
+  const catCfg = PLACE_CATEGORIES[category];
+  const [kind, setKind] = useState(place?.kind || catCfg.kinds[0]);
+  const services = allServices.filter((s) => !s.categories || s.categories.includes(category));
+  const featureDefs = allFeatures.filter((f) => !f.categories || f.categories.includes(category));
   const [lat, setLat] = useState(place?.lat ?? NaN);
   const [lng, setLng] = useState(place?.lng ?? NaN);
   const [address, setAddress] = useState(place?.address || '');
@@ -130,6 +135,7 @@ export default function PlaceForm({ place, hours: hoursIn = [], prices: pricesIn
       }}
     >
       {place?.id && <input type="hidden" name="id" value={place.id} />}
+      <input type="hidden" name="category" value={category} />
       {requestId && <input type="hidden" name="request_id" value={requestId} />}
       <input type="hidden" name="hours" value={hoursJson} />
       <input type="hidden" name="prices" value={pricesJson} />
@@ -138,11 +144,18 @@ export default function PlaceForm({ place, hours: hoursIn = [], prices: pricesIn
         <legend>Podstawowe</legend>
         <label>Nazwa *<input name="name" defaultValue={place?.name || ''} required maxLength={120} /></label>
         <div className="grid-2">
-          <label>Rodzaj
-            <select name="kind" value={kind} onChange={(e) => setKind(e.target.value)}>
-              {Object.entries(PLACE_KIND).map(([k, l]) => <option key={k} value={k}>{l}</option>)}
+          <label>Kategoria
+            <select value={category} disabled={!isNew} onChange={(e) => { setCategory(e.target.value); setKind(PLACE_CATEGORIES[e.target.value].kinds[0]); }}>
+              {Object.values(PLACE_CATEGORIES).map((c) => <option key={c.key} value={c.key}>{c.chip}</option>)}
             </select>
           </label>
+          <label>Rodzaj
+            <select name="kind" value={kind} onChange={(e) => setKind(e.target.value)}>
+              {catCfg.kinds.map((k) => <option key={k} value={k}>{kindLabel(k, category)}</option>)}
+            </select>
+          </label>
+        </div>
+        <div className="grid-2">
           <label>Status
             <select name="status" defaultValue={place?.status || 'szkic'}>
               {Object.entries(PLACE_STATUS).map(([k, l]) => <option key={k} value={k}>{l}</option>)}
@@ -150,7 +163,8 @@ export default function PlaceForm({ place, hours: hoursIn = [], prices: pricesIn
           </label>
         </div>
         <label className="radio"><input type="checkbox" name="verified" defaultChecked={Boolean(place?.verified)} /> Sprawdzony przez nas (odznaka „Sprawdzony”, mały bonus w rankingu, wymagany do odznak „Polecany” i „Top w mieście”)</label>
-        <div className="attr-group">
+        {category === 'weterynarz' && <p className="small muted">Weterynarze przyjmują wszystkie zwierzęta, więc rodzaj zwierząt nie jest wybierany.</p>}
+        {category !== 'weterynarz' && <div className="attr-group">
           <span className="attr-name">Przyjmuje *</span>
           <div className="attr-values">
             {Object.entries(SPECIES).map(([k, l]) => (
@@ -159,13 +173,13 @@ export default function PlaceForm({ place, hours: hoursIn = [], prices: pricesIn
               </label>
             ))}
           </div>
-        </div>
+        </div>}
         <label>Opis (do 3000 znaków)<textarea name="description" rows={5} defaultValue={place?.description || ''} maxLength={3000} /></label>
       </fieldset>
 
       <fieldset>
         <legend>Adres i pinezka</legend>
-        <label>Ulica i numer{kind === 'mobilny' ? ' (groomer mobilny: niewymagane)' : ' *'}
+        <label>Ulica i numer{kind === 'mobilny' ? ' (miejsce mobilne: niewymagane)' : ' *'}
           <input name="address" value={address} onChange={(e) => setAddress(e.target.value)} maxLength={200} autoComplete="off" />
         </label>
         <div className="grid-3">

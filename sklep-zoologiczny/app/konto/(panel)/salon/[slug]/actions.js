@@ -20,6 +20,10 @@ function refresh(slug) {
   revalidatePath(`/konto/salon/${slug}`);
   revalidatePath(`/salony/${slug}`);
   revalidatePath('/salony');
+  revalidatePath('/weterynarze');
+  revalidatePath('/hotele');
+  revalidatePath(`/weterynarze/${slug}`);
+  revalidatePath(`/hotele/${slug}`);
 }
 
 export async function saveOwnerData(prev, fd) {

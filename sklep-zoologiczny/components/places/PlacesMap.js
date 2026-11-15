@@ -10,11 +10,12 @@ import { useEffect, useRef } from 'react';
 function pawSvg(w, h, fill) {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 34 42"><path d="M17 41C17 41 3 26 3 15a14 14 0 0 1 28 0c0 11-14 26-14 26z" fill="${fill}" stroke="#fff" stroke-width="2"/><ellipse cx="17" cy="21.5" rx="5.6" ry="4.4" fill="#fff"/><circle cx="10.4" cy="15.6" r="2.4" fill="#fff"/><circle cx="14.4" cy="11.4" r="2.5" fill="#fff"/><circle cx="19.6" cy="11.4" r="2.5" fill="#fff"/><circle cx="23.6" cy="15.6" r="2.4" fill="#fff"/></svg>`;
 }
-const pawIcon = (L, on) => (on
-  ? L.divIcon({ className: 'paw-pin', html: pawSvg(42, 52, '#b4500f'), iconSize: [42, 52], iconAnchor: [21, 51] })
-  : L.divIcon({ className: 'paw-pin', html: pawSvg(34, 42, '#e07a2f'), iconSize: [34, 42], iconAnchor: [17, 41] }));
+const TONES = { orange: ['#e07a2f', '#b4500f'], teal: ['#00a39e', '#00716d'] };
+const pawIcon = (L, on, tone = 'orange') => (on
+  ? L.divIcon({ className: 'paw-pin', html: pawSvg(42, 52, TONES[tone][1]), iconSize: [42, 52], iconAnchor: [21, 51] })
+  : L.divIcon({ className: 'paw-pin', html: pawSvg(34, 42, TONES[tone][0]), iconSize: [34, 42], iconAnchor: [17, 41] }));
 
-export default function PlacesMap({ items, me = null, height = 360, single = false, fill = false, selected = null, onSelect = null, onMove = null, bottomInset = 0, refit = 0, interactive = true }) {
+export default function PlacesMap({ items, me = null, height = 360, single = false, fill = false, selected = null, onSelect = null, onMove = null, bottomInset = 0, refit = 0, interactive = true, base = '/salony', tone = 'orange', linkLabel = 'Zobacz salon' }) {
   const el = useRef(null);
   const map = useRef(null);
   const layer = useRef(null);
@@ -22,7 +23,7 @@ export default function PlacesMap({ items, me = null, height = 360, single = fal
   const markers = useRef(new Map());
   const programmatic = useRef(0);
   const cb = useRef({});
-  cb.current = { onSelect, onMove, bottomInset, single };
+  cb.current = { onSelect, onMove, bottomInset, single, base, tone, linkLabel };
 
   useEffect(() => {
     let alive = true;
@@ -67,7 +68,7 @@ export default function PlacesMap({ items, me = null, height = 360, single = fal
     markers.current = new Map();
     const pts = [];
     for (const p of items) {
-      const mk = L.marker([p.lat, p.lng], { icon: pawIcon(L, false), title: p.name, keyboard: false }).addTo(layer.current);
+      const mk = L.marker([p.lat, p.lng], { icon: pawIcon(L, false, cb.current.tone), title: p.name, keyboard: false }).addTo(layer.current);
       markers.current.set(p.slug, mk);
       if (cb.current.onSelect) {
         mk.on('click', () => cb.current.onSelect(p.slug));
@@ -79,8 +80,8 @@ export default function PlacesMap({ items, me = null, height = 360, single = fal
         if (!single) {
           box.appendChild(document.createElement('br'));
           const a = document.createElement('a');
-          a.href = `/salony/${p.slug}`;
-          a.textContent = 'Zobacz salon';
+          a.href = `${cb.current.base}/${p.slug}`;
+          a.textContent = cb.current.linkLabel;
           box.appendChild(a);
         }
         mk.bindPopup(box);
@@ -124,7 +125,7 @@ export default function PlacesMap({ items, me = null, height = 360, single = fal
     const m = map.current;
     for (const [slug, mk] of markers.current) {
       const on = slug === selected;
-      if (Lf.current) mk.setIcon(pawIcon(Lf.current, on));
+      if (Lf.current) mk.setIcon(pawIcon(Lf.current, on, cb.current.tone));
       mk.setZIndexOffset(on ? 1000 : 0);
     }
     const mk = selected && markers.current.get(selected);

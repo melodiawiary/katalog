@@ -23,12 +23,13 @@ export async function submitPlaceRequest(prev, fd) {
     p_email: email,
     p_contact_name: text(fd, 'contact_name', 100),
     p_phone: text(fd, 'phone', 30),
+    p_category: ['groomer', 'weterynarz', 'hotel'].includes(text(fd, 'category', 20)) ? text(fd, 'category', 20) : 'groomer',
   });
   if (error) {
     if (error.code === 'P0001') return { error: error.message };
     return { error: 'Nie udało się wysłać zgłoszenia. Spróbuj ponownie za chwilę.' };
   }
-  const what = kind === 'polecenie' ? 'Sprawdzimy salon i dodamy go do katalogu' : kind === 'usuniecie' ? 'Zweryfikujemy prośbę i usuniemy wpis' : 'Sprawdzimy i poprawimy dane';
+  const what = kind === 'polecenie' ? 'Sprawdzimy to miejsce i dodamy je do katalogu' : kind === 'usuniecie' ? 'Zweryfikujemy prośbę i usuniemy wpis' : 'Sprawdzimy i poprawimy dane';
   return { ok: true, message: `Dziękujemy! Zgłoszenie nr ${data} przyjęte. ${what}, a odpowiedź wyślemy na ${email}.` };
 }
 

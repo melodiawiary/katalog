@@ -3,8 +3,8 @@ import { createClient } from '@/lib/supabase/server';
 
 export async function loadFormRefs(supabase) {
   const [services, features] = await Promise.all([
-    supabase.from('service_defs').select('code, label').order('sort'),
-    supabase.from('feature_defs').select('code, label').order('sort'),
+    supabase.from('service_defs').select('code, label, categories').order('sort'),
+    supabase.from('feature_defs').select('code, label, categories').order('sort'),
   ]);
   return { services: services.data || [], featureDefs: features.data || [], error: services.error || features.error };
 }

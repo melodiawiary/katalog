@@ -1,10 +1,10 @@
 // Kategorie usług portalu: jedno źródło dla strony głównej, strony "Wszystkie usługi" i dolnego paska.
 // Ikony: public/ikony/uslugi/<icon>.png (arkusze Mariusza, 2026-11-15).
-// open: kategoria ma gotowy katalog (dziś tylko groomerzy; reszta pokazuje stronę zgłoszeń).
+// open: kategoria ma gotowy katalog (groomerzy, weterynarze, hotele; reszta pokazuje stronę zgłoszeń).
 export const SERVICE_CATEGORIES = [
-  { slug: 'weterynarze', name: 'Weterynarze', title: 'Weterynarze', icon: 'weterynarze', blurb: 'Zdrowie pupila' },
+  { slug: 'weterynarze', name: 'Weterynarze', title: 'Weterynarze', icon: 'weterynarze', href: '/weterynarze', open: true, blurb: 'Zdrowie pupila' },
   { slug: 'groomerzy', name: 'Groomerzy', title: 'Groomerzy', icon: 'groomerzy', href: '/salony', open: true, blurb: 'Pielęgnacja' },
-  { slug: 'hotele', name: 'Hotele', title: 'Hotele', icon: 'hotele', blurb: 'Bezpieczny pobyt' },
+  { slug: 'hotele', name: 'Hotele', title: 'Hotele', icon: 'hotele', href: '/hotele', open: true, blurb: 'Bezpieczny pobyt' },
   { slug: 'opiekunowie', name: 'Opiekunowie', title: 'Petsitterzy', icon: 'opiekunowie', blurb: 'Opieka domowa' },
   { slug: 'trenerzy', name: 'Trenerzy', title: 'Trenerzy', icon: 'trenerzy', blurb: 'Szkolenia' },
   { slug: 'behawiorysci', name: 'Behawioryści', title: 'Behawioryści', icon: 'behawiorysci', blurb: 'Zachowanie' },
