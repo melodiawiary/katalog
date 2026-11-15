@@ -1010,3 +1010,49 @@ a.home-strip-item:hover .home-strip-label { color: var(--accent-dark); }
   .place-card-addr, .place-card .rating-line { font-size: 0.88rem; }
   .place-tag { font-size: 0.78rem; padding: 1px 3vw; }
 }
+
+/* ===== Nowa strona główna portalu (2026-11-15) ===== */
+.logo { display: inline-flex; align-items: center; gap: 8px; font-weight: 800; color: #1d4ed8; }
+.logo-paw { width: 34px; height: 34px; object-fit: contain; }
+.portal-hero { text-align: center; padding: 18px 0 8px; background: linear-gradient(180deg, #eaf3ff 0%, #f6faff 70%, transparent 100%); border-radius: 0 0 28px 28px; margin: 0 -16px; padding-left: 16px; padding-right: 16px; }
+.portal-title { font-size: 2rem; line-height: 1.15; color: #1d3a8a; margin: 4px 0 6px; font-weight: 800; }
+.portal-sparks { vertical-align: top; margin-left: 4px; }
+.portal-sub { color: #3b4a6b; margin: 0 0 8px; font-size: 1.05rem; }
+.portal-stage { display: flex; justify-content: center; }
+.portal-art { width: min(100%, 460px); height: auto; display: block; }
+.portal-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 6px auto 12px; max-width: 760px; }
+.portal-btn { display: flex; align-items: center; gap: 8px; padding: 12px 14px; border-radius: 16px; font-weight: 700; text-align: left; text-decoration: none; }
+.portal-btn-main { background: var(--accent); color: #fff; }
+.portal-btn-alt { background: #fff; color: #1d4ed8; border: 2px solid #2563eb; }
+.portal-btn-text { flex: 1; line-height: 1.15; }
+.portal-btn .short { display: none; }
+.portal-ico { width: 32px; height: 32px; flex: none; background-color: currentColor; -webkit-mask: var(--ikona) center / contain no-repeat; mask: var(--ikona) center / contain no-repeat; }
+.portal-specialists { margin: 16px 0; }
+.portal-h2 { font-size: 1.35rem; color: #1d3a8a; display: flex; align-items: center; gap: 6px; margin: 8px 0 10px; }
+.svc-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.svc-grid-all { grid-template-columns: repeat(3, 1fr); margin-top: 12px; }
+.svc-tile { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 6px; background: #fff; border: 1.5px solid #dbe6f7; border-radius: 16px; padding: 12px 6px 10px; height: 100%; text-align: center; color: #1d3a8a; font-weight: 700; font-size: 0.92rem; line-height: 1.15; text-decoration: none; }
+.svc-tile img { width: 62%; max-width: 96px; height: auto; aspect-ratio: 1; object-fit: contain; }
+.svc-tile:hover { border-color: #2563eb; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.15); }
+.portal-wide-btn { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 12px; padding: 14px; border-radius: 16px; border: 2px solid #2563eb; color: #1d4ed8; background: #fff; font-weight: 800; font-size: 1.05rem; text-decoration: none; }
+.reorder-strip { display: flex; align-items: center; gap: 12px; margin-top: 12px; padding: 10px 16px; border-radius: 16px; background: #fff3e6; border: 1.5px solid #f3c79a; color: #b45309; font-weight: 800; font-size: 1.1rem; text-decoration: none; }
+.reorder-sep { width: 1.5px; align-self: stretch; background: #f3c79a; }
+.reorder-text { flex: 1; }
+.trust-row { list-style: none; margin: 16px 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.trust-row li { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 4px; font-size: 0.8rem; color: #3b4a6b; font-weight: 600; line-height: 1.2; }
+.trust-row img { width: auto; max-width: 100%; }
+.svc-empty-icon { display: block; margin: 8px 0; }
+@media (max-width: 640px) {
+  .portal-title { font-size: 1.7rem; }
+  .portal-btn .long { display: none; }
+  .portal-btn .short { display: inline; }
+  .trust-row { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 900px) {
+  .portal-hero { margin: 0; border-radius: 28px; padding-bottom: 20px; }
+  .portal-title { font-size: 2.8rem; }
+  .svc-grid { grid-template-columns: repeat(6, 1fr); }
+  .svc-grid-all { grid-template-columns: repeat(4, 1fr); }
+  .reorder-strip { display: none; }
+  .portal-wide-btn { max-width: 340px; margin-left: auto; margin-right: auto; }
+}

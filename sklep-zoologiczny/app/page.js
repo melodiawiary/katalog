@@ -1,13 +1,12 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
-import { topCategories, visibleCategories } from '@/lib/categories';
 import { browseHref, flatParams } from '@/lib/browse';
 import { FREE_SHIPPING_FROM } from '@/lib/shop';
 import { getSettings } from '@/lib/settings';
 import ProductCard from '@/components/browse/ProductCard';
 import AcademyForm from '@/components/AcademyForm';
-import HomeStrip from '@/components/HomeStrip';
+import { SERVICE_CATEGORIES, HOME_CATEGORY_SLUGS, categoryHref } from '@/lib/service-categories';
 import { PlaceRating, PlaceBadges } from '@/components/places/Rating';
 import { PLACE_KIND } from '@/lib/places';
 
@@ -16,8 +15,8 @@ export const dynamic = 'force-dynamic';
 export async function generateMetadata() {
   const s = await getSettings();
   return {
-    title: `${s.shop_name}: sklep zoologiczny i katalog groomerów`,
-    description: 'Karma i akcesoria dla psów i kotów, ranking salonów groomerskich z opiniami klientów i zapisy na kursy pielęgnacji.',
+    title: `${s.shop_name}: sklep i sprawdzone usługi dla psów i kotów`,
+    description: 'Karma i akcesoria dla psów i kotów oraz sprawdzone usługi: weterynarze, groomerzy, hotele, opiekunowie, trenerzy i behawioryści, z opiniami klientów.',
   };
 }
 
@@ -34,14 +33,12 @@ export default async function HomePage({ searchParams }) {
   if (Object.keys(params).length > 0) redirect(browseHref('/sklep', params, {}));
 
   const supabase = await createClient();
-  const [{ data: cats }, { data: popular }, { data: isPublic }, { data: { user } }, s] = await Promise.all([
-    supabase.from('categories').select('*').order('sort'),
+  const [{ data: popular }, { data: isPublic }, s] = await Promise.all([
     supabase.rpc('search_products', { p_q: '', p_category: null, p_filters: {}, p_sort: 'popularne', p_page: 1, p_per_page: 8 }),
     supabase.rpc('places_public'),
-    supabase.auth.getUser(),
     getSettings(),
   ]);
-  const categories = topCategories(visibleCategories(cats || []));
+  const homeCats = HOME_CATEGORY_SLUGS.map((slug) => SERVICE_CATEGORIES.find((c) => c.slug === slug));
   const products = (popular?.items || []).filter((p) => p.stock > 0).slice(0, 8);
 
   let places = [];
@@ -52,34 +49,62 @@ export default async function HomePage({ searchParams }) {
 
   return (
     <>
-      <HomeStrip freeFrom={FREE_SHIPPING_FROM} categories={categories} showSalons={Boolean(isPublic)} />
-
-      <section className="home-banner">
-        <svg className="home-banner-bg" viewBox="0 0 360 210" preserveAspectRatio="none" aria-hidden="true">
-          <path d="M8 72C8 44 26 30 54 29L112 28C126 28 134 36 150 34C190 28 232 20 272 22C330 24 352 46 352 86L352 170C352 196 338 205 314 205L46 205C22 205 8 196 8 172Z" fill="#fdf8f0" stroke="#f0dbbf" strokeWidth="3" vectorEffect="non-scaling-stroke" />
-        </svg>
-        <img src="/ikony/start/hero.png" alt="" className="home-banner-art" width="465" height="397" />
-        <h1 className="home-banner-title"><span>Wszystko dla</span> <span>psa i kota</span> <span>w jednym miejscu</span></h1>
-        <svg className="home-banner-sparks" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#e8801f" strokeWidth="2.6" strokeLinecap="round" aria-hidden="true"><path d="M4 6l5 5M16 3l1.5 6" /></svg>
-        <div className="home-banner-btns">
-          <Link href="/sklep" className="home-banner-btn home-banner-btn-main">
-            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M2 3h3l2.6 11.2a2 2 0 0 0 2 1.5h7.6a2 2 0 0 0 2-1.5L21 7H6" /><circle cx="10" cy="20" r="1.5" /><circle cx="17" cy="20" r="1.5" /></svg>
-            <span>Zakupy dla pupila</span>
+      <section className="portal-hero">
+        <h1 className="portal-title">
+          Wszystko dla Twojego pupila
+          <svg className="portal-sparks" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#e8801f" strokeWidth="2.6" strokeLinecap="round" aria-hidden="true"><path d="M5 4l4 6M13 2l1.6 7M20 5l-5 4" /></svg>
+        </h1>
+        <p className="portal-sub">Zakupy i sprawdzone usługi w jednym miejscu</p>
+        <div className="portal-stage">
+          <img src="/ilustracje/pies-kot-serce.png" alt="" className="portal-art" width="700" height="472" />
+        </div>
+        <div className="portal-btns">
+          <Link href="/sklep" className="portal-btn portal-btn-main">
+            <span className="portal-ico" style={{ '--ikona': 'url(/ikony/sklep.png)' }} aria-hidden="true" />
+            <span className="portal-btn-text"><span className="long">Zakupy dla pupila</span><span className="short">Zakupy</span></span>
+            <svg className="portal-chev" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg>
           </Link>
-          {isPublic ? (
-            <Link href="/salony" className="home-banner-btn home-banner-btn-alt">
-              <svg viewBox="0 0 30 26" width="30" height="26" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="6" cy="17" r="3" /><circle cx="6" cy="6.5" r="3" /><path d="M8.5 8.4l10 9.4M8.5 15l10-9.4" /><g fill="currentColor" stroke="none"><circle cx="20.5" cy="6" r="1.5" /><circle cx="24" cy="4" r="1.5" /><circle cx="27.4" cy="6" r="1.4" /><ellipse cx="24" cy="9.2" rx="3" ry="2.3" /></g></svg>
-              <span>Znajdź groomera</span>
-            </Link>
-          ) : (
-            <Link href="/akademia" className="home-banner-btn home-banner-btn-alt"><span>Akademia</span></Link>
-          )}
+          <Link href="/uslugi" className="portal-btn portal-btn-alt">
+            <span className="portal-ico" style={{ '--ikona': 'url(/ikony/uslugi.png)' }} aria-hidden="true" />
+            <span className="portal-btn-text"><span className="long">Znajdź usługę w pobliżu</span><span className="short">Usługi w pobliżu</span></span>
+            <svg className="portal-chev" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg>
+          </Link>
         </div>
       </section>
 
-      {user && (
-        <p className="box">Kupowałeś już u nas? <Link href="/konto/zamowienia">Zamów ponownie</Link> jednym kliknięciem z historii zamówień.</p>
-      )}
+      <section className="portal-specialists" aria-labelledby="znajdz-specjaliste">
+        <h2 id="znajdz-specjaliste" className="portal-h2">
+          Znajdź specjalistę
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#e8801f" strokeWidth="2.6" strokeLinecap="round" aria-hidden="true"><path d="M5 4l4 6M13 2l1.6 7M20 5l-5 4" /></svg>
+        </h2>
+        <ul className="svc-grid">
+          {homeCats.map((c) => (
+            <li key={c.slug}>
+              <Link href={categoryHref(c)} className="svc-tile">
+                <img src={`/ikony/uslugi/${c.icon}.png`} alt="" loading="eager" />
+                <span>{c.name}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <Link href="/uslugi" className="portal-wide-btn">
+          Wszystkie usługi
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6" /></svg>
+        </Link>
+        <Link href="/konto/zamowienia" className="reorder-strip">
+          <svg viewBox="0 0 64 64" width="52" height="52" fill="none" stroke="#e8801f" strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M8 22l24-10 24 10v26L32 58 8 48z" /><path d="M8 22l24 10 24-10M32 32v26" /><g fill="#e8801f" stroke="none"><circle cx="42" cy="40" r="2" /><circle cx="46" cy="37" r="2" /><circle cx="50" cy="40" r="2" /><ellipse cx="46" cy="44" rx="3.4" ry="2.6" /></g></svg>
+          <span className="reorder-sep" aria-hidden="true" />
+          <span className="reorder-text">Zamów ponownie</span>
+          <svg className="portal-chev" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#e8801f" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg>
+        </Link>
+      </section>
+
+      <ul className="trust-row" aria-label="Informacje o zakupach">
+        <li><img src="/ikony/start/dostawa.png" alt="" height="44" /><span>Darmowa dostawa od {FREE_SHIPPING_FROM} zł</span></li>
+        <li><img src="/ikony/start/wysylka.png" alt="" height="44" /><span>Szybka wysyłka</span></li>
+        <li><img src="/ikony/start/zwrot.png" alt="" height="44" /><span>14 dni na zwrot</span></li>
+        <li><img src="/ikony/start/blik.png" alt="" height="44" /><span>BLIK i szybkie przelewy</span></li>
+      </ul>
 
       {products.length > 0 && (
         <section className="home-section">

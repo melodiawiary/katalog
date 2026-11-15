@@ -38,7 +38,7 @@ export default async function RootLayout({ children }) {
         <CartProvider>
           <header className="site-header">
             <div className="container header-inner">
-              <Link href="/" className="logo">🐾 {s.shop_name}</Link>
+              <Link href="/" className="logo"><img src="/ikony/uslugi/logo-lapka.png" alt="" className="logo-paw" width="34" height="34" />{s.shop_name}</Link>
               <Suspense fallback={<div className="searchbox" />}>
                 <SearchBox />
               </Suspense>
