@@ -23,7 +23,7 @@ export async function submitPlaceRequest(prev, fd) {
     p_email: email,
     p_contact_name: text(fd, 'contact_name', 100),
     p_phone: text(fd, 'phone', 30),
-    p_category: ['groomer', 'weterynarz', 'hotel', 'trener', 'petsitter'].includes(text(fd, 'category', 20)) ? text(fd, 'category', 20) : 'groomer',
+    p_category: ['groomer', 'weterynarz', 'hotel', 'trener', 'petsitter', 'behawiorysta'].includes(text(fd, 'category', 20)) ? text(fd, 'category', 20) : 'groomer',
   });
   if (error) {
     if (error.code === 'P0001') return { error: error.message };

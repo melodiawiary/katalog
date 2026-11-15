@@ -169,6 +169,7 @@ export async function savePlace(prev, fd) {
   revalidatePath('/hotele', 'layout');
   revalidatePath('/trenerzy', 'layout');
   revalidatePath('/petsitterzy', 'layout');
+  revalidatePath('/behawiorysci', 'layout');
   redirect(`/admin/miejsca/${placeId}?zapisano=1`);
 }
 
@@ -186,6 +187,7 @@ export async function setPlaceStatus(prev, fd) {
   revalidatePath('/hotele', 'layout');
   revalidatePath('/trenerzy', 'layout');
   revalidatePath('/petsitterzy', 'layout');
+  revalidatePath('/behawiorysci', 'layout');
   return { ok: true, message: 'Zmieniono.', at: Date.now() };
 }
 
@@ -199,6 +201,7 @@ export async function deletePlace(fd) {
   revalidatePath('/hotele', 'layout');
   revalidatePath('/trenerzy', 'layout');
   revalidatePath('/petsitterzy', 'layout');
+  revalidatePath('/behawiorysci', 'layout');
   redirect('/admin/miejsca');
 }
 
@@ -213,6 +216,7 @@ export async function setCatalogPublic(prev, fd) {
   revalidatePath('/hotele', 'layout');
   revalidatePath('/trenerzy', 'layout');
   revalidatePath('/petsitterzy', 'layout');
+  revalidatePath('/behawiorysci', 'layout');
   return { ok: true, message: enabled ? 'Katalog jest publiczny.' : 'Katalog jest wyłączony (klienci go nie widzą).', at: Date.now() };
 }
 

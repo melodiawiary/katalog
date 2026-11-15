@@ -71,7 +71,8 @@ export default async function PlacesAdminPage({ searchParams }) {
           <Link href="/admin/miejsca/nowe?kategoria=weterynarz" className="btn btn-small">+ Weterynarz</Link>{' '}
           <Link href="/admin/miejsca/nowe?kategoria=hotel" className="btn btn-small">+ Hotel</Link>{' '}
           <Link href="/admin/miejsca/nowe?kategoria=trener" className="btn btn-small">+ Trener</Link>{' '}
-          <Link href="/admin/miejsca/nowe?kategoria=petsitter" className="btn btn-small">+ Petsitter</Link>
+          <Link href="/admin/miejsca/nowe?kategoria=petsitter" className="btn btn-small">+ Petsitter</Link>{' '}
+          <Link href="/admin/miejsca/nowe?kategoria=behawiorysta" className="btn btn-small">+ Behawiorysta</Link>
         </span>
       </div>
 
@@ -81,12 +82,12 @@ export default async function PlacesAdminPage({ searchParams }) {
           Opublikowane miejsca: <strong>{published}</strong>. Próg włączenia: {cfg.min_published} w jednym mieście
           {best[1] > 0 && <> (najwięcej: {best[0]}, {best[1]})</>}.
           {!cfg.public_enabled && !enough && <> Katalog da się włączyć po opublikowaniu jeszcze {cfg.min_published - best[1]} w jednym mieście.</>}
-          {' '}Dopóki jest wyłączony, strony /salony, /weterynarze, /hotele, /trenerzy i /petsitterzy widzisz tylko Ty (jako podgląd).
+          {' '}Dopóki jest wyłączony, strony /salony, /weterynarze, /hotele, /trenerzy, /petsitterzy i /behawiorysci widzisz tylko Ty (jako podgląd).
         </p>
         <ActionForm action={setCatalogPublic} submitLabel="Zapisz">
           <label className="radio">
             <input type="checkbox" name="public_enabled" defaultChecked={cfg.public_enabled} disabled={!cfg.public_enabled && !enough} />
-            Katalog publiczny (klienci widzą /salony, /weterynarze, /hotele, /trenerzy, /petsitterzy)
+            Katalog publiczny (klienci widzą /salony, /weterynarze, /hotele, /trenerzy, /petsitterzy, /behawiorysci)
           </label>
         </ActionForm>
       </div>

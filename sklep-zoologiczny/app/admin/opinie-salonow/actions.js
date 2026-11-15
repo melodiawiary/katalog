@@ -12,6 +12,7 @@ const done = () => {
   revalidatePath('/hotele', 'layout');
   revalidatePath('/trenerzy', 'layout');
   revalidatePath('/petsitterzy', 'layout');
+  revalidatePath('/behawiorysci', 'layout');
 };
 
 // Zatwierdzenie / ukrycie / przywrócenie / usunięcie opinii o salonie (ranking przelicza baza sama)

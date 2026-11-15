@@ -1,14 +1,14 @@
--- Etap 8: kategorie miejsc "trener" i "petsitter" w tym samym systemie co groomerzy, weterynarze i hotele.
+-- Etap 8: kategorie miejsc "trener", "petsitter" i "behawiorysta" w tym samym systemie co groomerzy, weterynarze i hotele.
 -- Dodaje rodzaje i kategorie do ograniczeń, słowniki usług i udogodnień oraz zgłoszenia z nowymi kategoriami.
 -- Bezpieczne do ponownego uruchomienia (nie kasuje danych). Wymaga wcześniejszego 16_kategorie_miejsc.sql.
 
 -- ---------- KATEGORIE I RODZAJE -------------------------------------------
 
 alter table public.places drop constraint if exists places_category_ck;
-alter table public.places add constraint places_category_ck check (category in ('groomer','weterynarz','hotel','trener','petsitter'));
+alter table public.places add constraint places_category_ck check (category in ('groomer','weterynarz','hotel','trener','petsitter','behawiorysta'));
 
 alter table public.places drop constraint if exists places_kind_ck;
-alter table public.places add constraint places_kind_ck check (kind in ('salon','mobilny','domowy','gabinet','hotel','trener','szkola','petsitter'));
+alter table public.places add constraint places_kind_ck check (kind in ('salon','mobilny','domowy','gabinet','hotel','trener','szkola','petsitter','behawiorysta'));
 
 alter table public.places drop constraint if exists places_category_kind_ck;
 alter table public.places add constraint places_category_kind_ck check (
@@ -16,16 +16,17 @@ alter table public.places add constraint places_category_kind_ck check (
   or (category = 'weterynarz' and kind in ('gabinet','mobilny'))
   or (category = 'hotel'      and kind in ('hotel','domowy'))
   or (category = 'trener'     and kind in ('trener','szkola','mobilny'))
-  or (category = 'petsitter'  and kind in ('petsitter','domowy')));
+  or (category = 'petsitter'  and kind in ('petsitter','domowy'))
+  or (category = 'behawiorysta' and kind in ('behawiorysta','mobilny')));
 
 alter table public.place_requests drop constraint if exists place_requests_category_ck;
-alter table public.place_requests add constraint place_requests_category_ck check (category in ('groomer','weterynarz','hotel','trener','petsitter'));
+alter table public.place_requests add constraint place_requests_category_ck check (category in ('groomer','weterynarz','hotel','trener','petsitter','behawiorysta'));
 
 -- ---------- SŁOWNIKI USŁUG I UDOGODNIEŃ -----------------------------------
 
-update public.feature_defs set categories = array['groomer','weterynarz','hotel','trener','petsitter']::text[]
+update public.feature_defs set categories = array['groomer','weterynarz','hotel','trener','petsitter','behawiorysta']::text[]
  where code in ('rezerwacja-online','karta','parking');
-update public.feature_defs set categories = array['groomer','hotel','trener','petsitter']::text[]
+update public.feature_defs set categories = array['groomer','hotel','trener','petsitter','behawiorysta']::text[]
  where code in ('szczeniaki','trudne-zwierzeta');
 update public.feature_defs set categories = array['groomer','hotel','petsitter']::text[]
  where code in ('duze-rasy');
@@ -40,6 +41,15 @@ insert into public.service_defs (code, label, sort, categories) values
   ('trn_kot',           'Trening kotów',                         460, array['trener']),
   ('trn_sporty',        'Agility i sporty psie',                 470, array['trener']),
   ('trn_dojazd',        'Szkolenie u klienta w domu',            480, array['trener']),
+  ('beh_konsultacja',  'Konsultacja behawioralna',              600, array['behawiorysta']),
+  ('beh_terapia',      'Terapia zachowań',                      610, array['behawiorysta']),
+  ('beh_lek',          'Lęk separacyjny i fobie',               620, array['behawiorysta']),
+  ('beh_agresja',      'Agresja i reaktywność',                 630, array['behawiorysta']),
+  ('beh_szczeniak',    'Konsultacja dla szczeniąt',             640, array['behawiorysta']),
+  ('beh_kot',          'Behawiorysta kotów',                    650, array['behawiorysta']),
+  ('beh_online',       'Konsultacja online',                    660, array['behawiorysta']),
+  ('beh_dom',          'Wizyta w domu klienta',                 670, array['behawiorysta']),
+  ('beh_adopcja',      'Wsparcie po adopcji',                   680, array['behawiorysta']),
   ('pet_dom_klienta',   'Opieka w domu klienta',                 500, array['petsitter']),
   ('pet_u_opiekuna',    'Opieka u opiekuna (nocleg)',            510, array['petsitter']),
   ('pet_wizyta',        'Wizyta w domu: karmienie i zabawa',     520, array['petsitter']),
@@ -56,6 +66,12 @@ insert into public.feature_defs (code, label, sort, categories) values
   ('trn-teren',         'Teren do ćwiczeń',                      430, array['trener']),
   ('trn-dojazd',        'Dojazd do klienta',                     440, array['trener']),
   ('trn-certyfikat',    'Certyfikaty i kursy trenera',           450, array['trener']),
+  ('beh-online',       'Konsultacje online',                    600, array['behawiorysta']),
+  ('beh-dojazd',       'Dojazd do klienta',                     610, array['behawiorysta']),
+  ('beh-certyfikat',   'Certyfikaty i wykształcenie',           620, array['behawiorysta']),
+  ('beh-lekarz',       'Współpraca z weterynarzem',             630, array['behawiorysta']),
+  ('beh-pozytywne',    'Metody pozytywne',                      640, array['behawiorysta']),
+  ('beh-plan',         'Pisemny plan terapii',                  650, array['behawiorysta']),
   ('ps-ogrod',          'Ogrodzony ogród',                       500, array['petsitter']),
   ('ps-bez-dzieci',     'Spokojny dom bez małych dzieci',        510, array['petsitter']),
   ('ps-aktualizacje',   'Zdjęcia i wieści z opieki',             520, array['petsitter']),
@@ -114,7 +130,7 @@ begin
           left(trim(coalesce(p_name, '')), 120), left(trim(coalesce(p_city, '')), 80),
           left(trim(coalesce(p_details, '')), 2000), left(trim(coalesce(p_contact_name, '')), 100),
           v_email, left(trim(coalesce(p_phone, '')), 30),
-          case when p_category in ('groomer','weterynarz','hotel','trener','petsitter') then p_category else 'groomer' end)
+          case when p_category in ('groomer','weterynarz','hotel','trener','petsitter','behawiorysta') then p_category else 'groomer' end)
   returning id into v_id;
   return v_id;
 end;
