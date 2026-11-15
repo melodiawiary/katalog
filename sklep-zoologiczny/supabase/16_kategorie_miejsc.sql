@@ -36,24 +36,24 @@ update public.feature_defs set categories = array['groomer','hotel']::text[]
  where code in ('szczeniaki','duze-rasy','trudne-zwierzeta','bez-klatek');
 
 insert into public.service_defs (code, label, sort, categories) values
-  ('wet-wizyta',       'Wizyta i konsultacja',                 100, array['weterynarz']),
-  ('wet-szczepienie',  'Szczepienia',                          110, array['weterynarz']),
-  ('wet-profilaktyka', 'Odrobaczanie i profilaktyka',          120, array['weterynarz']),
-  ('wet-chip',         'Chipowanie i paszport',                130, array['weterynarz']),
-  ('wet-badania',      'Badania krwi i laboratorium',          140, array['weterynarz']),
-  ('wet-usg',          'USG',                                  150, array['weterynarz']),
-  ('wet-rtg',          'RTG',                                  160, array['weterynarz']),
-  ('wet-stomatologia', 'Stomatologia i skaling',               170, array['weterynarz']),
-  ('wet-chirurgia',    'Zabiegi chirurgiczne',                 180, array['weterynarz']),
-  ('wet-sterylizacja', 'Sterylizacja i kastracja',             190, array['weterynarz']),
-  ('wet-dom',          'Wizyta domowa',                        200, array['weterynarz']),
-  ('wet-nagle',        'Pomoc w nagłych przypadkach',          210, array['weterynarz']),
-  ('hot-nocleg',       'Nocleg (doba)',                        300, array['hotel']),
-  ('hot-dzien',        'Opieka dzienna',                       310, array['hotel']),
-  ('hot-spacer',       'Dodatkowy spacer',                     320, array['hotel']),
-  ('hot-leki',         'Podawanie leków',                      330, array['hotel']),
-  ('hot-transport',    'Odbiór i dowóz zwierzęcia',            340, array['hotel']),
-  ('hot-kapiel',       'Kąpiel w czasie pobytu',               350, array['hotel'])
+  ('wet_wizyta',       'Wizyta i konsultacja',                 100, array['weterynarz']),
+  ('wet_szczepienie',  'Szczepienia',                          110, array['weterynarz']),
+  ('wet_profilaktyka', 'Odrobaczanie i profilaktyka',          120, array['weterynarz']),
+  ('wet_chip',         'Chipowanie i paszport',                130, array['weterynarz']),
+  ('wet_badania',      'Badania krwi i laboratorium',          140, array['weterynarz']),
+  ('wet_usg',          'USG',                                  150, array['weterynarz']),
+  ('wet_rtg',          'RTG',                                  160, array['weterynarz']),
+  ('wet_stomatologia', 'Stomatologia i skaling',               170, array['weterynarz']),
+  ('wet_chirurgia',    'Zabiegi chirurgiczne',                 180, array['weterynarz']),
+  ('wet_sterylizacja', 'Sterylizacja i kastracja',             190, array['weterynarz']),
+  ('wet_dom',          'Wizyta domowa',                        200, array['weterynarz']),
+  ('wet_nagle',        'Pomoc w nagłych przypadkach',          210, array['weterynarz']),
+  ('hot_nocleg',       'Nocleg (doba)',                        300, array['hotel']),
+  ('hot_dzien',        'Opieka dzienna',                       310, array['hotel']),
+  ('hot_spacer',       'Dodatkowy spacer',                     320, array['hotel']),
+  ('hot_leki',         'Podawanie leków',                      330, array['hotel']),
+  ('hot_transport',    'Odbiór i dowóz zwierzęcia',            340, array['hotel']),
+  ('hot_kapiel',       'Kąpiel w czasie pobytu',               350, array['hotel'])
 on conflict (code) do update set categories = excluded.categories;
 
 insert into public.feature_defs (code, label, sort, categories) values
