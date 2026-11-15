@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { SERVICE_CATEGORIES, categoryHref } from '@/lib/service-categories';
 import { getSettings } from '@/lib/settings';
 import ServicesBrowser from '@/components/ServicesBrowser';
@@ -11,7 +10,6 @@ export default async function ServicesPage() {
   const contactHref = s.email ? `mailto:${s.email}` : '/salony/polec';
   return (
     <div className="svcpage">
-      <p className="svcpage-back"><Link href="/">← Powrót</Link></p>
       <h1 className="svcpage-title">Wszystkie usługi</h1>
       <p className="svcpage-sub">Znajdź najlepszych specjalistów w swojej okolicy</p>
       <ServicesBrowser items={items} contactHref={contactHref} />
