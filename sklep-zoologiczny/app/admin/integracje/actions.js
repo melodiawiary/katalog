@@ -1,6 +1,6 @@
 'use server';
 
-// Klucze usług: Resend (e-maile), Przelewy24, InPost (tabela integrations z 06_zamowienie.sql)
+// Klucze usług: Gmail albo Resend (e-maile), Przelewy24, InPost (tabela integrations z 06_zamowienie.sql)
 import { revalidatePath } from 'next/cache';
 import { adminClient } from '@/lib/admin-server';
 import { getSettings } from '@/lib/settings';
@@ -11,8 +11,8 @@ import { testAccess } from '@/lib/p24';
 import { needsSql } from '@/lib/admin';
 
 const SQL_06 = 'Wklej najpierw w Supabase plik supabase/06_zamowienie.sql.';
-const SECRETS = ['resend_api_key', 'p24_crc', 'p24_api_key'];
-const PLAIN = ['mail_from', 'notify_email', 'p24_merchant_id', 'p24_pos_id', 'inpost_geowidget_token'];
+const SECRETS = ['resend_api_key', 'gmail_app_password', 'p24_crc', 'p24_api_key'];
+const PLAIN = ['gmail_user', 'mail_from', 'notify_email', 'p24_merchant_id', 'p24_pos_id', 'inpost_geowidget_token'];
 
 export async function saveIntegrations(prevState, formData) {
   const supabase = await adminClient();
@@ -33,6 +33,9 @@ export async function saveIntegrations(prevState, formData) {
 
   if (patch.mail_from && !/^[^<>]*<[^@\s<>]+@[^@\s<>]+\.[^@\s<>]+>$|^[^@\s<>]+@[^@\s<>]+\.[^@\s<>]+$/.test(patch.mail_from)) {
     return { error: 'Nadawca: wpisz adres (sklep@domena.pl) albo "Nazwa <sklep@domena.pl>".' };
+  }
+  if (patch.gmail_user && !/^[^@\s]+@gmail\.com$|^[^@\s]+@googlemail\.com$/i.test(patch.gmail_user)) {
+    return { error: 'Adres Gmail: wpisz pełny adres kończący się na @gmail.com.' };
   }
   if (patch.notify_email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(patch.notify_email)) {
     return { error: 'Podaj poprawny e-mail do kopii zamówień.' };

@@ -25,7 +25,17 @@ export default function IntegrationsForm({ data, defaultTo, shopEmail }) {
     <>
       <form action={action} className="checkout" key={state?.at || 'f'}>
         <fieldset>
-          <legend>E-maile (Resend)</legend>
+          <legend>E-maile przez Gmail (do czasu własnej domeny)</legend>
+          <p className="small muted">
+            Gdy wpiszesz adres i hasło aplikacji, e-maile do wszystkich klientów idą z tego konta Gmail (limit ok. 500 dziennie) i to ma pierwszeństwo przed Resend.
+            Hasło aplikacji (16 znaków) utworzysz w koncie Google: myaccount.google.com/apppasswords (wymaga włączonej weryfikacji dwuetapowej). Nie wpisuj zwykłego hasła do Gmaila.
+          </p>
+          <label>Adres Gmail<input name="gmail_user" type="email" defaultValue={d.gmail_user} placeholder="mormecs@gmail.com" autoComplete="off" /></label>
+          <Secret name="gmail_app_password" label="Hasło aplikacji Google" masked={d.masked.gmail_app_password} />
+        </fieldset>
+
+        <fieldset>
+          <legend>E-maile (Resend, po zakupie domeny)</legend>
           <p className="small muted">
             Darmowe konto: resend.com (3000 e-maili miesięcznie). Klucz: Resend → API Keys → Create API Key.
             Dopóki nie dodasz w Resend własnej domeny, e-maile dochodzą tylko na adres, którym założono konto Resend (do testów wystarczy).

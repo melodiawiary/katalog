@@ -23,6 +23,7 @@ export default async function IntegrationsPage() {
   }
 
   const view = {
+    gmail_user: integ.gmail_user,
     mail_from: integ.mail_from,
     notify_email: integ.notify_email,
     p24_enabled: integ.p24_enabled,
@@ -32,6 +33,7 @@ export default async function IntegrationsPage() {
     inpost_geowidget_token: integ.inpost_geowidget_token,
     masked: {
       resend_api_key: maskSecret(integ.resend_api_key),
+      gmail_app_password: maskSecret(integ.gmail_app_password),
       p24_crc: maskSecret(integ.p24_crc),
       p24_api_key: maskSecret(integ.p24_api_key),
     },

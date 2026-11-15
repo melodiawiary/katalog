@@ -133,6 +133,7 @@ Fundament (prawo, nazwa, płatności, hosting) leży pod wszystkim.
 ## 5. Opinie
 - [ETAP 4] Tylko zalogowani, 1 opinia na salon (można poprawić); oceniać można także salon niezweryfikowany; limit 5 nowych opinii o salonach na dobę z jednego konta
 - [ETAP 4] Gwiazdki: jakość (wymagana), podejście do zwierzęcia, czystość, cena (nieobowiązkowe); ocena ogólna = średnia z podanych
+- [ZASADA 2026-11-15] Cena usługi nie jest wyznacznikiem jakości groomera, właścicieli psów i kotów obchodzi głównie podejście do zwierząt. Do rozważenia: wyłączyć gwiazdki "Cena do jakości" ze średniej i rankingu albo je usunąć (decyzja Mariusza odłożona)
 - [ETAP 4] Tekst opinii (do 2000 znaków); nieobowiązkowo: usługa i wielkość psa (kwoty NIE pytamy - decyzja Mariusza 2026-11-14, ze względów podatkowych; kolumna paid_amount zostaje pusta) (ale nie zmienia cennika salonu)
 - [ETAP 4] Moderacja: przełącznik w panelu "Opinie o salonach: najpierw sprawdzam / publikuj od razu" (domyślnie najpierw sprawdzam, bo salony to małe firmy, a fałszywe opinie psują ranking); "Zgłoś nadużycie" pod każdą opinią (e-mail + powód, limit zgłoszeń); ukrywamy tylko wpisy łamiące zasady (wulgaryzmy, dane osobowe, spam, treści niedotyczące usług salonu), nie dlatego, że są negatywne
 - [ETAP 4] Strona "Zasady opinii" (jak sprawdzamy opinie: nie weryfikujemy faktu wizyty, wymagamy konta, moderujemy, nie bierzemy płatności za opinie) z linkiem pod opiniami; do sprawdzenia z prawnikiem razem z regulaminem
@@ -165,6 +166,8 @@ Fundament (prawo, nazwa, płatności, hosting) leży pod wszystkim.
 - [ETAP 1] ZUS: ulga na start 6 mies. (tylko zdrowotna), potem preferencyjny 24 mies., potem pełny; płaci się raz na osobę, nie na firmę
 - [ETAP 1] Regulaminy (sklep, katalog, opinie), polityka prywatności (RODO), cookies, zwroty
 - [ETAP 1] Płatności online: BLIK / Przelewy24 (lub PayU), e-mail z potwierdzeniem zamówienia
+- [ETAP 1] [ZMIANA 2026-11-15] E-maile do klientów (logowanie, zamówienia, przypomnienia) idą do czasu zakupu domeny przez SMTP Gmaila z konta mormecs@gmail.com (hasło aplikacji wpisywane w `/admin/integracje`, limit ok. 500 maili dziennie; Resend bez domeny dostarcza tylko na adres właściciela konta). Po zakupie domeny wracamy do Resend z adresem sklepu
+- [GOTOWE] Logowanie przez Google działa (klient OAuth w Google Cloud, dostawca w Supabase) - potwierdzone 2026-11-15
 - [ETAP 1] Vercel: plan Hobby tylko niekomercyjnie, przy sprzedaży plan Pro
 - [ETAP 3] [ZMIANA] Przed publikacją mapy: 20-30 salonów z Trójmiasta (import z OSM + ręczny przegląd adresów i cen); wcześniej zakładaliśmy wpisywanie ręczne
 - [ETAP 3] Koszty i obciążenie przy bazie całej Polski (pomiar z 2026-11-14, patrz sekcja "Koszty i obciążenie" niżej)

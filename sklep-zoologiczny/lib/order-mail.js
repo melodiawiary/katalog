@@ -1,7 +1,7 @@
 // TYLKO NA SERWERZE. E-maile związane z zamówieniem i automat "Produkt znów dostępny".
 import { serviceClient } from '@/lib/supabase/service';
 import { getIntegrations } from '@/lib/integrations';
-import { sendMail, sendBatch } from '@/lib/mail';
+import { sendMail, sendBatch, canSend } from '@/lib/mail';
 import {
   orderConfirmation, adminNewOrder, orderStatusMail, hasStatusMail, backInStockMail, loginMail, foodReminderMail,
 } from '@/lib/mail-templates';
@@ -16,7 +16,7 @@ async function context(fallbackDb) {
   const db = serviceClient() || fallbackDb;
   if (!db) return { error: 'Brak klucza SUPABASE_SERVICE_ROLE_KEY na Vercelu - e-maile nie wychodzą.' };
   const integ = await getIntegrations(db);
-  if (!integ.resend_api_key) return { error: 'Brak klucza Resend (panel: Integracje) - e-maile nie wychodzą.' };
+  if (!canSend(integ)) return { error: 'Brak ustawień poczty (panel: Integracje) - e-maile nie wychodzą.' };
   const settings = await loadSettings(db);
   return { db, integ, settings };
 }

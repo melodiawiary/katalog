@@ -4,6 +4,8 @@ import { serviceClient } from '@/lib/supabase/service';
 export const INTEGRATION_DEFAULTS = {
   resend_api_key: '',
   mail_from: '',
+  gmail_user: '',
+  gmail_app_password: '',
   notify_email: '',
   p24_enabled: false,
   p24_sandbox: true,
