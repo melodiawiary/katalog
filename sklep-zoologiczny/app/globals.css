@@ -1148,3 +1148,35 @@ a.home-strip-item:hover .home-strip-label { color: var(--accent-dark); }
   .reorder-strip svg:first-child { width: 36px; height: 36px; }
   .trust-row { margin: 10px 0; }
 }
+
+/* ===== Wszystkie usługi: telefon, 2 kolumny jak na makiecie (2026-11-15) ===== */
+.svcpage-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.svcpage-grid > li { min-width: 0; }
+.svcpage-text strong, .svcpage-text span { overflow-wrap: anywhere; }
+@media (max-width: 899px) {
+  .svcpage-back { font-size: 0.9rem; margin: 0; }
+  .svcpage-title { font-size: 1.45rem; margin: 0; }
+  .svcpage-sub { font-size: 0.82rem; margin: 0 0 8px; }
+  .svcpage-search { padding: 0 14px; gap: 8px; }
+  .svcpage-search svg { width: 18px; height: 18px; }
+  .svcpage-search input { font-size: 0.9rem; padding: 7px 0; }
+  .svcpage-chips { padding: 8px 0; gap: 6px; }
+  .svcpage-chip { padding: 6px 12px; font-size: 0.88rem; }
+  .svcpage-grid { gap: 8px; margin-top: 0; }
+  .svcpage-card { min-height: 74px; padding: 6px 8px 6px 6px; gap: 4px; border-radius: 14px; align-items: center; }
+  .svcpage-card img { width: 46px; height: 46px; }
+  .svcpage-text { font-size: 0.72rem; line-height: 1.15; gap: 1px; }
+  .svcpage-text strong { font-size: 0.9rem; line-height: 1.1; }
+  .svcpage-card svg { width: 14px; height: 14px; flex: none; align-self: flex-start; margin-top: 4px; }
+  .svcpage-help { padding: 8px 12px; margin: 10px 0; gap: 8px; }
+  .svcpage-help div { font-size: 0.75rem; }
+  .svcpage-help-btn { padding: 5px 12px; font-size: 0.85rem; }
+}
+@media (max-width: 899px) {
+  .svcpage-card { position: relative; padding: 6px 6px 6px 4px; gap: 3px; }
+  .svcpage-card img { width: 44px; height: 44px; flex: none; }
+  .svcpage-text strong, .svcpage-text span { overflow-wrap: normal; }
+  .svcpage-text strong { font-size: 0.84rem; padding-right: 10px; }
+  .svcpage-text { font-size: 0.7rem; }
+  .svcpage-card svg { position: absolute; top: 6px; right: 5px; width: 13px; height: 13px; margin: 0; }
+}
