@@ -166,6 +166,21 @@ Fundament (prawo, nazwa, płatności, hosting) leży pod wszystkim.
 - [PÓŹNIEJ] Egzaminy i certyfikaty
 - [PÓŹNIEJ] Zestawy startowe w sklepie
 
+## 8. Wygląd na telefonie (decyzje Mariusza z 2026-11-15)
+Zasada pracy: przegląd strona po stronie na telefonie, Mariusz wysyła własne makiety; każda zmiana to osobny commit z opisem "Do cofnięcia".
+- [GOTOWE] Strona główna: baner z falistą ramką, 3-wierszowy tytuł, przyciski z aureolą; pasek `HomeStrip`; dolny pasek ikon `MobileTabs`
+- [GOTOWE] `/sklep`: siatka 2 kolumny na telefonie, przełącznik kafelki / lista (zapamiętany), przycisk "Filtry" z licznikiem, kafelki kategorii z ikonami zwierząt (wszystkie 5 widoczne naraz), wyszukiwarka widoczna na `/sklep` i w kategoriach
+- [GOTOWE] Zapamiętywanie wyborów: kategoria, filtry, sortowanie, widok (localStorage), ulubione produkty (serduszka, `/ulubione`)
+- [GOTOWE] Strona kategorii: tytuł z ikoną, zwijany panel podkategorii z ikonami ("Kategorie: Psy", bez dopełniacza), przycisk "Wróć do: ..." na każdym poziomie; dalsze podkategorie i parametry przez filtry
+- [GOTOWE] Ikony podkategorii wycięte z arkuszy Mariusza (psy, koty, ptaki, gryzonie, akwarystyka); ikona dobierana po końcówce adresu kategorii (`<zwierzę>-<rodzaj>`, `lib/category-icons.js`)
+- [GOTOWE] Kategorie startowe (25): gryzonie, ptaki, akwarystyka (`15_kategorie_startowe.sql`). Zasada: nie tworzymy pustych działów dla równej liczby ikon; akwarystyka może dostać dodatkowy poziom podkategorii technicznych. Nazwy i kolejność zmieniamy po imporcie z hurtowni
+- [GOTOWE] Salony `/salony` na telefonie: baner z psem i kotem w wannie (`public/ilustracje/pies-kot-kapiel.png`), pole adresu i osobny przycisk "Szukaj", przyciski "Salony blisko mnie (30 km)", "Dla psów", "Dla kotów", wiersz "Sortuj"; BEZ przycisków "Filtry" i "Usługi" (decyzja: zysk miejsca i większe napisy, rozmiary jak na pozostałych stronach)
+- [GOTOWE] "Blisko mnie" = promień 30 km od pozycji klienta (lista i mapa), sortowanie od najbliższego, drugie dotknięcie wyłącza
+- [GOTOWE] Mapa salonów: karta nad listą z pinezkami łapek i przyciskiem "Pokaż mapę"; po dotknięciu mapa na cały ekran z wysuwanym panelem listy (zwinięty, w połowie, rozwinięty), "Szukaj w tym obszarze", zaznaczanie salonu, krzyżyk zamyka; na komputerze mapa obok listy
+- [GOTOWE] Karty salonów: ikona w kafelku, adres z odległością, gwiazdki, tagi (psy, koty, cena od)
+- [PÓŹNIEJ] Z makiet jeszcze nie zrobione: serduszko ulubionych salonów na karcie (potrzebuje zapisu), gwiazdki i liczba opinii na kartach produktów (zmiana `search_products`), ikona skanera kodu, kropki i strzałki pod paskiem kategorii, mniejsze marginesy boczne
+- [PÓŹNIEJ] "Moje konto" według makiety Mariusza (baner z psem i kotem zza krawędzi, kafelki: Zamówienia, Moje zwierzęta, Przypomnienia o karmie, Ulubione salony, Ustawienia konta, Wyloguj; "Moje rabaty" dopiero gdy będą kupony). Ilustracja przygotowana: `public/ilustracje/pies-kot.png`
+
 ## Fundament pod wszystko
 - [ETAP 1] Nazwa serwisu i domena
 - [ETAP 1] Firma: jednoosobowa działalność (CEIDG) albo dopisanie sklepu do istniejącej; działalność nierejestrowana za mała (limit 10 813,50 zł przychodu na kwartał w 2026)
