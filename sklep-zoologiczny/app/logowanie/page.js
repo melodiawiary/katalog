@@ -9,6 +9,16 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [pending, setPending] = useState(false);
 
+  async function withGoogle() {
+    setError('');
+    const supabase = createClient();
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent('/admin')}` },
+    });
+    if (error) setError('Logowanie przez Google jest chwilowo niedostępne.');
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
     setPending(true);
@@ -35,6 +45,8 @@ export default function LoginPage() {
       <label>Hasło<input name="password" type="password" required autoComplete="current-password" /></label>
       {error && <p className="alert">{error}</p>}
       <button className="btn btn-big" disabled={pending}>{pending ? 'Logowanie…' : 'Zaloguj'}</button>
+      <p className="muted small" style={{ textAlign: 'center', margin: '6px 0' }}>albo</p>
+      <button type="button" className="btn btn-light btn-big" onClick={withGoogle}>Zaloguj przez Google</button>
     </form>
   );
 }
