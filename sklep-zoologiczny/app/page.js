@@ -55,20 +55,24 @@ export default async function HomePage({ searchParams }) {
       <HomeStrip freeFrom={FREE_SHIPPING_FROM} categories={categories} showSalons={Boolean(isPublic)} />
 
       <section className="home-banner">
+        <svg className="home-banner-bg" viewBox="0 0 360 210" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M8 72C8 44 26 30 54 29L112 28C126 28 134 36 150 34C190 28 232 20 272 22C330 24 352 46 352 86L352 170C352 196 338 205 314 205L46 205C22 205 8 196 8 172Z" fill="#fdf8f0" stroke="#f0dbbf" strokeWidth="3" vectorEffect="non-scaling-stroke" />
+        </svg>
         <img src="/ikony/start/hero.png" alt="" className="home-banner-art" width="465" height="397" />
-        <h1 className="home-banner-title">Wszystko dla psa i kota w jednym miejscu</h1>
+        <h1 className="home-banner-title"><span>Wszystko dla</span> <span>psa i kota</span> <span>w jednym miejscu</span></h1>
+        <svg className="home-banner-sparks" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#e8801f" strokeWidth="2.6" strokeLinecap="round" aria-hidden="true"><path d="M4 6l5 5M16 3l1.5 6" /></svg>
         <div className="home-banner-btns">
           <Link href="/sklep" className="home-banner-btn home-banner-btn-main">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M2 3h3l2.6 11.2a2 2 0 0 0 2 1.5h7.6a2 2 0 0 0 2-1.5L21 7H6" /><circle cx="10" cy="20" r="1.4" /><circle cx="17" cy="20" r="1.4" /></svg>
-            Zakupy dla pupila
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M2 3h3l2.6 11.2a2 2 0 0 0 2 1.5h7.6a2 2 0 0 0 2-1.5L21 7H6" /><circle cx="10" cy="20" r="1.5" /><circle cx="17" cy="20" r="1.5" /></svg>
+            <span>Zakupy dla pupila</span>
           </Link>
           {isPublic ? (
             <Link href="/salony" className="home-banner-btn home-banner-btn-alt">
-              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="6" cy="6.5" r="2.6" /><circle cx="6" cy="17.5" r="2.6" /><path d="M8.2 8l11 8.5M8.2 16l11-8.5" /></svg>
-              Znajdź groomera
+              <svg viewBox="0 0 30 26" width="30" height="26" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="6" cy="17" r="3" /><circle cx="6" cy="6.5" r="3" /><path d="M8.5 8.4l10 9.4M8.5 15l10-9.4" /><g fill="currentColor" stroke="none"><circle cx="20.5" cy="6" r="1.5" /><circle cx="24" cy="4" r="1.5" /><circle cx="27.4" cy="6" r="1.4" /><ellipse cx="24" cy="9.2" rx="3" ry="2.3" /></g></svg>
+              <span>Znajdź groomera</span>
             </Link>
           ) : (
-            <Link href="/akademia" className="home-banner-btn home-banner-btn-alt">Akademia</Link>
+            <Link href="/akademia" className="home-banner-btn home-banner-btn-alt"><span>Akademia</span></Link>
           )}
         </div>
       </section>
