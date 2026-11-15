@@ -4,7 +4,7 @@ Wersja graficzna (tablica): https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
 Ten plik jest wersją tekstową tej samej mapy. Przy zmianach planu aktualizować oba.
 Uzasadnienie zmian z 2026-11-13: `KRYTYKA_KLIENTA.md` (dokumenty projektu Claude).
 
-Legenda: [GOTOWE] zrobione · [ETAP 1-5] budujemy · [PÓŹNIEJ] plan na przyszłość
+Legenda: [GOTOWE] zrobione · [ETAP 1-6] budujemy · [PÓŹNIEJ] plan na przyszłość
 (Decyzje z 2026-11-14 potwierdzone przez Mariusza: próg miasta, "Brak opinii", weryfikacja właściciela.)
 
 **Zasada od 2026-11-13: najpierw sklep, który sprzedaje, potem salony.**
@@ -100,7 +100,7 @@ Fundament (prawo, nazwa, płatności, hosting) leży pod wszystkim.
 - [ETAP 3] Zaproszenia dla salonów: NIE wysyłamy masowo e-maili reklamowych do wszystkich salonów z listy (Prawo komunikacji elektronicznej wymaga zgody także od firm). Zaproszenie idzie innymi drogami: strona "Prowadzisz salon? Dołącz za darmo", list pocztowy na adres salonu, social media salonu przez formularz kontaktowy po konsultacji z prawnikiem, reklama lokalna; a zgody na kontakt zbieramy w formularzu zgłoszenia
 - [ETAP 3] Salony, które publikujemy sami (5 na miasto), a prowadzone jako jednoosobowa firma: wysyłamy im krótką, neutralną informację o przetwarzaniu danych (RODO art. 14: skąd mamy dane, cel, prawa, jak poprawić lub usunąć, jak przejąć profil) najpóźniej w miesiąc od publikacji; pocztą lub e-mailem, treść do sprawdzenia przez prawnika
 - [ZASADA] Nie kopiujemy danych z Map Google i nie scrapujemy serwisów typu Panorama Firm (łamie ich regulaminy). Salony spoza OSM dodajemy ręcznie, z poleceń klientów i ze zgłoszeń właścicieli
-- [ETAP 5] Właściciel przejmuje profil ("To mój salon", strona `/salony/<salon>/przejmij`): zasady poniżej (uszczegółowione 2026-11-15)
+- [GOTOWE 2026-11-15] Właściciel przejmuje profil ("To mój salon", strona `/salony/<salon>/przejmij`): zasady poniżej (uszczegółowione 2026-11-15)
   - Wymaga konta (e-mail lub Google). Formularz: imię, rola (właściciel / zarządzający), telefon kontaktowy, zgoda na weryfikację
   - Weryfikacja, trzy drogi od najłatwiejszej: (1) kod 6-cyfrowy e-mailem; adres musi być albo adresem salonu z wpisu (publicznym lub prywatnym), albo leżeć w domenie strony www salonu (nie liczą się portale: Facebook, Instagram, Booksy itp. ani poczta darmowa typu gmail); kod ważny 15 minut, 5 prób, najwyżej 3 kody na godzinę; (2) kod SMS na telefon salonu (SMS dodajemy później, płatna bramka); (3) gdy te nie działają: zdjęcie szyldu lub drzwi salonu (prywatny zasobnik, widzi tylko Mariusz) albo opis zgodności z CEIDG (nazwa + adres), a Mariusz zatwierdza w panelu `/admin/przejecia`
   - Droga (1): gdy salon nie ma jeszcze właściciela, poprawny kod zatwierdza przejęcie od razu (Mariusz widzi je na liście i może cofnąć); gdy ma, zgłoszenie idzie do Mariusza, a dotychczasowy właściciel dostaje e-mail i 14 dni na sprzeciw. Droga (3) zawsze przez Mariusza
@@ -128,7 +128,7 @@ Fundament (prawo, nazwa, płatności, hosting) leży pod wszystkim.
 - [ETAP 2] Moje zwierzęta (imię, rasa, wiek, waga) -> dopasowane produkty
 - [ETAP 2] Przypomnienie "kończy się karma?" (e-mail po wyliczonym czasie)
 - [ETAP 4] Ulubione salony (serduszko na profilu, lista w koncie)
-- [ETAP 5] Rola "właściciel salonu" = wpis w `place_owners` (razem z przejmowaniem profilu); w koncie klienta pojawia się zakładka "Mój salon"; role: klient, właściciel salonu (jeden użytkownik może być obojgiem), admin
+- [GOTOWE 2026-11-15] Rola "właściciel salonu" = wpis w `place_owners` (razem z przejmowaniem profilu); w koncie klienta pojawia się zakładka "Mój salon"; role: klient, właściciel salonu (jeden użytkownik może być obojgiem), admin
 - [PÓŹNIEJ] Kolejne role: kursant, instruktor, weterynarz
 
 ## 5. Opinie
@@ -138,8 +138,8 @@ Fundament (prawo, nazwa, płatności, hosting) leży pod wszystkim.
 - [ETAP 4] Tekst opinii (do 2000 znaków); nieobowiązkowo: usługa i wielkość psa (kwoty NIE pytamy - decyzja Mariusza 2026-11-14, ze względów podatkowych; kolumna paid_amount zostaje pusta) (ale nie zmienia cennika salonu)
 - [ETAP 4] Moderacja: przełącznik w panelu "Opinie o salonach: najpierw sprawdzam / publikuj od razu" (domyślnie najpierw sprawdzam, bo salony to małe firmy, a fałszywe opinie psują ranking); "Zgłoś nadużycie" pod każdą opinią (e-mail + powód, limit zgłoszeń); ukrywamy tylko wpisy łamiące zasady (wulgaryzmy, dane osobowe, spam, treści niedotyczące usług salonu), nie dlatego, że są negatywne
 - [ETAP 4] Strona "Zasady opinii" (jak sprawdzamy opinie: nie weryfikujemy faktu wizyty, wymagamy konta, moderujemy, nie bierzemy płatności za opinie) z linkiem pod opiniami; do sprawdzenia z prawnikiem razem z regulaminem
-- [ETAP 5] Odpowiedź właściciela salonu: jedna na opinię (można poprawić i usunąć), tylko pod opinią opublikowaną, widoczna od razu z napisem "Odpowiedź salonu"; Mariusz może ją ukryć (`/admin/opinie-salonow`); odpowiedź nie zmienia opinii ani rankingu; właściciel dostaje e-mail o każdej nowej opinii (wyłączany w panelu)
-- [ETAP 5] Zdjęcie efektu w opinii: autor opinii dodaje do 3 zdjęć (zmniejszane w przeglądarce); KAŻDE zdjęcie czeka na zatwierdzenie przez Mariusza (bez wyjątku, także gdy opinie publikują się od razu); zasada: zdjęcie pupila, bez osób trzecich; odrzucone zdjęcie jest kasowane z zasobnika
+- [GOTOWE 2026-11-15] Odpowiedź właściciela salonu: jedna na opinię (można poprawić i usunąć), tylko pod opinią opublikowaną, widoczna od razu z napisem "Odpowiedź salonu"; Mariusz może ją ukryć (`/admin/opinie-salonow`); odpowiedź nie zmienia opinii ani rankingu; właściciel dostaje e-mail o każdej nowej opinii (wyłączany w panelu)
+- [GOTOWE 2026-11-15] Zdjęcie efektu w opinii: autor opinii dodaje do 3 zdjęć (zmniejszane w przeglądarce); KAŻDE zdjęcie czeka na zatwierdzenie przez Mariusza (bez wyjątku, także gdy opinie publikują się od razu); zasada: zdjęcie pupila, bez osób trzecich; odrzucone zdjęcie jest kasowane z zasobnika
 
 ## 6. Ranking i odznaki
 - [ETAP 4] Sortowanie listy: najlepiej oceniane, najwięcej opinii, najbliżej, najtańsze (bez pozycji: domyślnie najlepiej oceniane)
@@ -150,7 +150,7 @@ Fundament (prawo, nazwa, płatności, hosting) leży pod wszystkim.
 - [ETAP 4] Bonus (tylko dla salonu z opinią, żeby nie przebił ocen klientów): do +0,10 za pełny profil (opis, telefon, godziny, cennik, po 0,025) i +0,05 za "zweryfikowany" (pole w panelu: sprawdzony przez nas)
 - [ETAP 4] Klientowi pokazujemy zwykłą średnią i liczbę opinii (nie wynik rankingu)
 - [ETAP 4] Odznaki (tylko salony zweryfikowane, min. 3 opinie): "Polecany" = średnia co najmniej 4,3; "Top w mieście" = 3 najlepsze w mieście do 30 salonów w rankingu, w większym 10% najlepszych (min. 3)
-- [ETAP 5] [ZMIANA] "Sprawdź swój ranking": po przejęciu profilu właściciel widzi miejsce w mieście ("3. z 12"), średnią, liczbę opinii, brakujące elementy profilu (każdy daje bonus) i warunki odznak; NIE widzi wyników ani nazw konkurencji
+- [GOTOWE 2026-11-15] [ZMIANA] "Sprawdź swój ranking": po przejęciu profilu właściciel widzi miejsce w mieście ("3. z 12"), średnią, liczbę opinii, brakujące elementy profilu (każdy daje bonus) i warunki odznak; NIE widzi wyników ani nazw konkurencji
 - [PÓŹNIEJ] Certyfikowany przez Akademię
 - [PÓŹNIEJ] Płatne wyróżnienie, zawsze oznaczone "Promowane" (pierwsze źródło przychodu z katalogu: oferta pokazuje się salonom, które przejęły profil; nie wpływa na ocenę ani miejsce w rankingu)
 

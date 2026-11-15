@@ -130,4 +130,3 @@ Przejęcie profilu ("To mój salon" `/salony/<slug>/przejmij`): kod 6-cyfrowy na
 Panel właściciela `/konto/salon`: "Sprawdź swój ranking" (miejsce, braki w profilu, warunki odznak), odpowiedzi na opinie (widoczne jako "Odpowiedź salonu", Mariusz może ukryć), edycja opisu, kontaktu, godzin, cennika, udogodnień, zdjęcia salonu (do 8), powiadomienia mailem o nowych opiniach, zwolnienie salonu (wraca stan sprzed zmian), "Wizytówka Plus (wkrótce)" tylko jako zapis na listę.
 Zdjęcia w opiniach (do 3, moderowane w `/admin/opinie-salonow`). Właściciel nie może oceniać własnego salonu. Dowody przejęć kasuje cron po 30 dniach.
 ## ETAP 6: Akademia
-## ETAP 6: Akademia

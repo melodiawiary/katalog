@@ -121,7 +121,7 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
   Każdy push do `main` automatycznie aktualizuje sklep.
 - **Zmienne na Vercelu:** `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` (od kroku 6, tajna), `NEXT_PUBLIC_SHOP_NAME`
   (ta ostatnia tylko zapasowo). Dane firmy, konto, kontakt: panel `/admin/ustawienia` (tabela `settings`).
-- **Pliki SQL:** `supabase/schema.sql`, potem po kolei `01_ustawienia.sql`, `02_produkty.sql`, `03_import.sql`, `04_szukanie.sql`, `05_karta.sql`, `06_zamowienie.sql`, `07_zgody.sql`, `08_konto.sql`, `09_miejsca.sql`, `10_prog_miasta.sql`, `11_opinie_salonow.sql`
+- **Pliki SQL:** `supabase/schema.sql`, potem po kolei `01_ustawienia.sql`, `02_produkty.sql`, `03_import.sql`, `04_szukanie.sql`, `05_karta.sql`, `06_zamowienie.sql`, `07_zgody.sql`, `08_konto.sql`, `09_miejsca.sql`, `10_prog_miasta.sql`, `11_opinie_salonow.sql`, `12_poczta_gmail.sql`, `13_konta_salonow.sql`
   (każdy można uruchomić ponownie).
 - **Adres sklepu:** https://sklep-zoologiczny.vercel.app (panel: `/admin`, ustawienia: `/admin/ustawienia`).
   Strony: `/kategoria/<slug>`, `/szukaj?q=...`, filtry w adresie (np. `?marka=brit,josera&wiek=senior&waga=1-3-kg&cena_od=20&dostepne=1&sort=cena-rosnaco&strona=2`).
@@ -299,7 +299,7 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
 - [ ] Etap 3: katalog groomerów + mapa (PostGIS, OpenStreetMap), panel admina do salonów;
       publicznie dopiero z 5 przejrzanymi salonami w jednym mieście (potem miasto po mieście, cała Polska z OSM). Baza, panel, strony publiczne, link z Moich zwierząt i próg miasta zrobione (2026-11-14), zostaje przegląd szkiców i włączenie katalogu, patrz NASTĘPNY KROK.
 - [x] Etap 4: opinie o salonach, ranking i odznaki, nowa strona główna (sklep + salony, zapis do Akademii) - zrobione 2026-11-14, patrz NASTĘPNY KROK.
-- [ ] Etap 5: konta salonów, odpowiedzi na opinie.
+- [x] Etap 5: konta salonów, przejmowanie profilu, odpowiedzi na opinie, zdjęcia - zrobione 2026-11-15, patrz NASTĘPNY KROK.
 - [ ] Etap 6: Akademia.
 - [ ] Później (gdy produktów będzie > 20 tys.): przyspieszyć `search_products` (np. cechy produktu zapisane w kolumnie
       zamiast liczenia przy każdym zapytaniu). Synonimy można dopisywać w tabeli `search_synonyms` (na razie bez panelu).
@@ -357,3 +357,4 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
   Etykiety usług i udogodnień: tabele `service_defs`, `feature_defs` (na razie bez panelu). Opinie o salonach i ranking: `11_opinie_salonow.sql` (kolumn `rating_*`, `rank_score`, `city_rank`, `badges` nie zapisywać ręcznie; liczy je `_refresh_place_ranking`). Opinie salonów czyta klient tylko przez `place_reviews_json` (bez identyfikatora konta autora).
 - Strona `/` to nowa strona główna; lista produktów z filtrami jest pod `/sklep` (`Listing path="/sklep"`). Nowe linki do "wszystkich produktów" kierować na `/sklep`.
 - Po każdym etapie aktualizować ten plik w repo i w dokumentach projektu Claude.
+- Konta salonów (`13_konta_salonow.sql`): uprawnienia właściciela liczą funkcje `is_place_owner` / `can_edit_place` (admin też edytuje); właściciel zmienia dane tylko przez RPC `owner_*`, nie przez tabele. Kod weryfikacyjny generuje serwer (`randomInt`), do bazy trafia tylko skrót (`claim_issue_code`, wołana kluczem serwisowym); `place_claim_codes` bez dostępu klienta. Pliki: salon `salony/<id salonu>/`, opinia `opinie-salonow/<id użytkownika>/`, dowód `przejecia/<id użytkownika>/` (prywatny). Usuwając opinię albo zdjęcie, zawsze kasować też plik w Storage.
