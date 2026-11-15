@@ -25,8 +25,8 @@ export default async function SalonyPage({ searchParams }) {
   if (!isPublic && !isAdmin) {
     return (
       <div className="center">
-        <h1>Katalog salonów wkrótce</h1>
-        <p className="muted">Zbieramy sprawdzonych groomerów z Trójmiasta. Znasz dobry salon? Podpowiedz nam go.</p>
+        <h1>Katalog salonów</h1>
+        <p className="muted">Znasz dobry salon groomerski? Podpowiedz nam go.</p>
         <Link href="/salony/polec" className="btn">Poleć salon</Link>
       </div>
     );

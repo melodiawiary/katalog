@@ -6,7 +6,6 @@ export default function ReviewRules() {
   return (
     <article className="legal">
       <h1>Zasady opinii o salonach</h1>
-      <p className="legal-draft">Wersja robocza: tekst nie został jeszcze sprawdzony przez prawnika.</p>
       <h2>Kto może dodać opinię</h2>
       <p>Opinię może dodać każdy zalogowany użytkownik, jedną o danym salonie (można ją później poprawić). <strong>Nie sprawdzamy, czy autor korzystał z usług salonu</strong>, dlatego prosimy o pisanie wyłącznie o własnych doświadczeniach. W jednym dniu można dodać do 5 nowych opinii.</p>
       <h2>Jak sprawdzamy opinie</h2>

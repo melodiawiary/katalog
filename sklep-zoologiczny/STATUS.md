@@ -360,3 +360,5 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
 - Konta salonów (`13_konta_salonow.sql`): uprawnienia właściciela liczą funkcje `is_place_owner` / `can_edit_place` (admin też edytuje); właściciel zmienia dane tylko przez RPC `owner_*`, nie przez tabele. Kod weryfikacyjny generuje serwer (`randomInt`), do bazy trafia tylko skrót (`claim_issue_code`, wołana kluczem serwisowym); `place_claim_codes` bez dostępu klienta. Pliki: salon `salony/<id salonu>/`, opinia `opinie-salonow/<id użytkownika>/`, dowód `przejecia/<id użytkownika>/` (prywatny). Usuwając opinię albo zdjęcie, zawsze kasować też plik w Storage.
 
 - 2026-11-15: nawigacja na telefonie, dolny pasek (Start, Sklep, Groomerzy, Akademia, Konto, Koszyk), górne linki ukryte na telefonie.
+
+- 2026-11-15: usunięto z widoku klienta wszystkie napisy o tymczasowości ("wkrótce", "wersja robocza", pasek "Sklep wkrótce"). Blokada zamówień przy wyłączonej sprzedaży działa bez zmian.

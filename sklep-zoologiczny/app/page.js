@@ -107,7 +107,7 @@ export default async function HomePage({ searchParams }) {
 
       <section className="home-section academy-box">
         <h2>Akademia: kursy pielęgnacji psów i kotów</h2>
-        <p>Planujemy kursy dla właścicieli i przyszłych groomerów. Zapisz się, a damy znać, gdy ruszą zapisy.</p>
+        <p>Kursy dla właścicieli i przyszłych groomerów. Zapisz się na listę, a damy znać o terminach.</p>
         <AcademyForm />
       </section>
 

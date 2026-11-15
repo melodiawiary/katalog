@@ -95,7 +95,7 @@ export default async function OwnerSalonPage({ params }) {
       </section>
 
       <section className="box">
-        <h2>Wizytówka Plus (wkrótce)</h2>
+        <h2>Wizytówka Plus</h2>
         <PlusDoor placeId={p.id} slug={slug} interested={d.plus_interest} note={d.plus_note} />
       </section>
 

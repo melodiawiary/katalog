@@ -70,7 +70,7 @@ export function orderConfirmation(order, settings, extra = {}) {
   let payHtml = '';
   let payText = '';
   if (order.payment_method === 'przelew') {
-    const acc = s.bank_account ? formatAccount(s.bank_account) : '(numer konta wkrótce)';
+    const acc = s.bank_account ? formatAccount(s.bank_account) : '(numer konta w osobnej wiadomości)';
     payHtml = `<div style="background:#fff7ee;border:1px solid #f3d7bb;border-radius:12px;padding:12px 14px;margin:14px 0;">
 <strong>Dane do przelewu</strong><br>Kwota: <strong>${esc(price(order.total))}</strong><br>Tytuł: <strong>Zamówienie nr ${order.number}</strong><br>
 Numer konta: <strong>${esc(acc)}</strong>${s.company_name ? `<br>Odbiorca: ${esc(s.company_name)}, ${esc(s.address)}, ${esc(s.postal_code)} ${esc(s.city)}` : ''}<br>

@@ -34,9 +34,6 @@ export default async function RootLayout({ children }) {
     <html lang="pl">
       <body>
         <CartProvider>
-          {!s.sales_enabled && (
-            <div className="soon-bar">Sklep wkrótce! Możesz już oglądać produkty, zamówienia ruszą niebawem.</div>
-          )}
           <header className="site-header">
             <div className="container header-inner">
               <Link href="/" className="logo">🐾 {s.shop_name}</Link>

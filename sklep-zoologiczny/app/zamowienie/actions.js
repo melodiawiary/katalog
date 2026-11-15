@@ -22,7 +22,7 @@ export async function placeOrder(prevState, formData) {
   if (!settings.sales_enabled) {
     // przy wyłączonej sprzedaży zamawiać może tylko administrator (zamówienie testowe; sprawdza też baza)
     const { data: isAdmin } = await supabase.rpc('is_admin');
-    if (!isAdmin) return fail('Sklep jeszcze nie przyjmuje zamówień. Zapraszamy wkrótce!');
+    if (!isAdmin) return fail('Składanie zamówień jest teraz niedostępne.');
   }
 
   let items;

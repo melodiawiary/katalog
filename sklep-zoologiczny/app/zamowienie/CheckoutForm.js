@@ -191,11 +191,8 @@ export default function CheckoutForm({ salesEnabled, testMode, features, ship, a
         {blocked.length > 0 && (
           <p className="alert">Część produktów jest niedostępna. <Link href="/koszyk">Popraw koszyk</Link>, żeby zamówić.</p>
         )}
-        {!canOrder && (
-          <p className="alert">Sklep jeszcze nie przyjmuje zamówień. Koszyk zostanie zapamiętany, zapraszamy wkrótce!</p>
-        )}
         <button className="btn btn-big" disabled={pending || !canOrder || !checked || blocked.length > 0}>
-          {!canOrder ? 'Zamówienia wkrótce' : pending ? 'Wysyłanie…' : 'Zamawiam z obowiązkiem zapłaty'}
+          {pending ? 'Wysyłanie…' : 'Zamawiam z obowiązkiem zapłaty'}
         </button>
         <p className="small muted center-text">Masz 14 dni na odstąpienie od umowy. <Link href="/zwroty" target="_blank">Zwroty i reklamacje</Link></p>
         {payment === 'p24' && canOrder && <p className="small muted center-text">Po kliknięciu przejdziesz do bezpiecznej płatności Przelewy24.</p>}

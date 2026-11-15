@@ -90,7 +90,7 @@ export async function setPlus(prev, fd) {
   });
   if (error) return { error: friendly(error, 'Nie udało się zapisać.') };
   refresh(slug);
-  return { ok: fd.get('on') === '1' ? 'Dziękujemy, dopisaliśmy Cię do listy. Odezwiemy się, gdy ruszy Wizytówka Plus.' : 'Usunięto z listy.', at: Date.now() };
+  return { ok: fd.get('on') === '1' ? 'Dziękujemy, dopisaliśmy Cię do listy. Odezwiemy się ze szczegółami Wizytówki Plus.' : 'Usunięto z listy.', at: Date.now() };
 }
 
 // Zdjęcia: pliki wgrywa przeglądarka (jak w sklepie), tu zapisujemy wpis albo usuwamy

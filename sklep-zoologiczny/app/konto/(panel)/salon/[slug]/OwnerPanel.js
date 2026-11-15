@@ -125,7 +125,7 @@ export function PlusDoor({ placeId, slug, interested, note }) {
       <input type="hidden" name="slug" value={slug} />
       <input type="hidden" name="place_id" value={placeId} />
       <input type="hidden" name="on" value={interested ? '0' : '1'} />
-      <p>Pracujemy nad płatnym planem z dodatkowymi możliwościami dla salonów. <strong>Nic nie kupujesz teraz</strong> - zapisujesz się tylko na listę, a my odezwiemy się, gdy ruszy.</p>
+      <p>Płatny plan z dodatkowymi możliwościami dla salonów. <strong>Nic nie kupujesz teraz</strong> - zapisujesz się tylko na listę zainteresowanych, a my odezwiemy się ze szczegółami.</p>
       {!interested && <label>Co byłoby dla Ciebie najważniejsze? (nieobowiązkowo)<textarea name="note" rows={2} maxLength={500} defaultValue={note || ''} /></label>}
       {state?.error && <p className="alert">{state.error}</p>}
       {state?.ok && <p className="small ok">{state.ok}</p>}

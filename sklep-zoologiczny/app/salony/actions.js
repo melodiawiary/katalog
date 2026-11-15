@@ -97,5 +97,5 @@ export async function joinAcademy(prev, fd) {
     p_consent: fd.get('consent') === 'on',
   });
   if (error) return { error: error.code === 'P0001' ? error.message : 'Nie udało się zapisać. Spróbuj ponownie za chwilę.' };
-  return { ok: true, message: data === 'juz' ? 'Ten adres jest już na liście. Zapisaliśmy Twoje zainteresowanie.' : 'Dziękujemy! Damy znać, gdy ruszą kursy.' };
+  return { ok: true, message: data === 'juz' ? 'Ten adres jest już na liście. Zapisaliśmy Twoje zainteresowanie.' : 'Dziękujemy! Damy znać o terminach kursów.' };
 }
