@@ -37,6 +37,9 @@ export default function IntegrationsForm({ data, defaultTo, shopEmail }) {
           </p>
           <label>Adres Gmail<input name="gmail_user" type="email" defaultValue={d.gmail_user} placeholder="mormecs@gmail.com" autoComplete="off" /></label>
           <Secret name="gmail_app_password" label="Hasło aplikacji Google" masked={d.masked.gmail_app_password} />
+          <button className="btn btn-big" disabled={pending}>{pending ? 'Zapisywanie…' : 'Zapisz (Gmail)'}</button>
+          {state?.error && <p className="alert">{state.error}</p>}
+          {state?.ok && <p className="ok">{state.message}</p>}
         </fieldset>
 
         <fieldset>
