@@ -889,3 +889,9 @@ a.home-strip-item:hover .home-strip-label { color: var(--accent-dark); }
   .product-grid .btn-cart-icon svg { width: 16px; height: 16px; }
   .searchbox.is-expanded .searchbox-body { margin-bottom: 2px; }
 }
+
+/* Kategorie: wszystkie pięć zwierząt widoczne naraz (kafelki same wypełniają szerokość; przy większej liczbie kategorii pasek się przewija) */
+@media (max-width: 640px) {
+  .cat-tiles { gap: 4px; }
+  .cat-tile { flex: 1 0 auto; min-width: 0; padding: 3px 4px; font-size: 10px; letter-spacing: -0.01em; }
+}
