@@ -159,19 +159,19 @@ export default async function PlaceProfilePage({ params, searchParams, routeCate
             {p.phone && <p className="small"><a href={`tel:${phone}`}>📞 {p.phone}</a></p>}
             {p.email && <p className="small"><a href={`mailto:${p.email}`}>{p.email}</a></p>}
             {links.map(([label, url]) => <p key={label} className="small"><a href={url} target="_blank" rel="noopener noreferrer nofollow">{label} ↗</a></p>)}
-            {p.booking_url && <a href={p.booking_url} target="_blank" rel="noopener noreferrer nofollow" className="btn btn-small">{category === 'hotel' ? 'Zarezerwuj pobyt' : 'Umów wizytę'}</a>}
+            {p.booking_url && <a href={p.booking_url} target="_blank" rel="noopener noreferrer nofollow" className="btn btn-small">{category === 'hotel' ? 'Zarezerwuj pobyt' : category === 'petsitter' ? 'Zarezerwuj opiekę' : category === 'trener' ? 'Zapisz się na szkolenie' : 'Umów wizytę'}</a>}
           </div>
 
-          {category === 'hotel' && (
+          {cfg.dates && (
             <div className="box pcat-stay">
-              <strong>Termin pobytu</strong>
+              <strong>{cfg.datesLabel || 'Termin'}</strong>
               {stayFrom ? (
                 <p className="small">
-                  {date(stayFrom)}{stayTo ? <> - {date(stayTo)} ({Math.max(1, Math.round((new Date(stayTo) - new Date(stayFrom)) / 86400000))} {Math.round((new Date(stayTo) - new Date(stayFrom)) / 86400000) === 1 ? 'doba' : 'dób'})</> : null}
+                  {date(stayFrom)}{stayTo ? <> - {date(stayTo)}{category === 'hotel' ? <> ({Math.max(1, Math.round((new Date(stayTo) - new Date(stayFrom)) / 86400000))} {Math.round((new Date(stayTo) - new Date(stayFrom)) / 86400000) === 1 ? 'doba' : 'dób'})</> : null}</> : null}
                 </p>
-              ) : <p className="small muted">Wybierz daty na liście hoteli, a przeniesiemy je tutaj.</p>}
+              ) : <p className="small muted">Wybierz daty na liście, a przeniesiemy je tutaj.</p>}
               {stayFrom && p.email && (
-                <a className="btn btn-small" href={`mailto:${p.email}?subject=${encodeURIComponent('Zapytanie o pobyt zwierzaka')}&body=${encodeURIComponent(`Dzień dobry, proszę o informację o wolnym miejscu w terminie ${stayFrom}${stayTo ? ` - ${stayTo}` : ''}.`)}`}>Zapytaj o termin</a>
+                <a className="btn btn-small" href={`mailto:${p.email}?subject=${encodeURIComponent('Zapytanie o termin')}&body=${encodeURIComponent(`Dzień dobry, proszę o informację o dostępności w terminie ${stayFrom}${stayTo ? ` - ${stayTo}` : ''}.`)}`}>Zapytaj o termin</a>
               )}
               {stayFrom && !p.email && p.phone && <a className="btn btn-small" href={`tel:${phone}`}>Zadzwoń i zapytaj o termin</a>}
             </div>
@@ -200,7 +200,7 @@ export default async function PlaceProfilePage({ params, searchParams, routeCate
       )}
 
       <section id="opinie" className="reviews">
-        <h2>Opinie{cfg.nounGen === 'salonu' ? ' o salonie' : cfg.nounGen === 'gabinetu' ? ' o gabinecie' : ' o hotelu'}</h2>
+        <h2>Opinie{cfg.reviewsOf || ' o salonie'}</h2>
         {p.rating_count > 0 ? (
           <>
             <p className="reviews-sum"><PlaceRating avg={p.rating_avg} count={p.rating_count} size="1.3em" /></p>

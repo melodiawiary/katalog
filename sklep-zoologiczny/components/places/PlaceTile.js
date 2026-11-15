@@ -1,5 +1,28 @@
 // Kafelek z ikoną na karcie miejsca: nożyczki i łapka (groomer), krzyż (weterynarz), domek z łapką (hotel)
 export default function PlaceTile({ kind = 'salon', category = 'groomer' }) {
+  if (category === 'trener') {
+    return (
+      <span className="place-tile" aria-hidden="true">
+        <svg viewBox="0 0 64 64" fill="none" stroke="#4d2290" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M32 12 6 24l26 12 26-12z" fill="#7c3fcf" />
+          <path d="M16 31v10c0 4 7 8 16 8s16-4 16-8V31" />
+          <path d="M58 24v14" />
+          {kind === 'mobilny' && <path d="M8 60h48" />}
+        </svg>
+      </span>
+    );
+  }
+  if (category === 'petsitter') {
+    return (
+      <span className="place-tile" aria-hidden="true">
+        <svg viewBox="0 0 64 64" fill="none" stroke="#146428" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M6 30 32 8l26 22" />
+          <path d="M12 27v27h40V27" />
+          <path fill="#1f9a3d" stroke="none" d="M32 49c-8-5.500-12-9-12-13.500a6.500 6.500 0 0 1 12-3.300 6.500 6.500 0 0 1 12 3.300c0 4.500-4 8-12 13.500z" />
+        </svg>
+      </span>
+    );
+  }
   if (category === 'weterynarz') {
     return (
       <span className="place-tile" aria-hidden="true">

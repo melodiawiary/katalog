@@ -85,10 +85,21 @@ export default function PlacesFilters({ f, cities, services, featureDefs, catego
       {cfg.dates && (
         <div className="pcat-dates">
           <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3.500" y="5" width="17" height="15.500" rx="3" /><path d="M3.500 10h17M8 3v4M16 3v4" /></svg>
-          <strong>Termin pobytu</strong>
+          <strong>{cfg.datesLabel || 'Termin'}</strong>
           <label>Od<input type="date" value={f.from} min={today} onChange={(e) => go({ od: e.target.value, do: f.to && e.target.value && f.to < e.target.value ? e.target.value : f.to })} /></label>
           <label>Do<input type="date" value={f.to} min={f.from || today} onChange={(e) => go({ do: e.target.value })} /></label>
           {(f.from || f.to) && <button type="button" className="link-btn" onClick={() => go({ od: '', do: '' })}>Wyczyść</button>}
+        </div>
+      )}
+      {cfg.serviceLabel && services.length > 0 && (
+        <div className="places-toolbar">
+          <label className="places-sort"><span>{cfg.serviceLabel}:</span>
+            <select value={f.service} onChange={(e) => go({ usluga: e.target.value })}>
+              <option value="">Wszystkie</option>
+              {services.map((sv) => <option key={sv.code} value={sv.code}>{sv.label}</option>)}
+            </select>
+            {chev}
+          </label>
         </div>
       )}
       {msg && <p className="alert small">{msg}</p>}

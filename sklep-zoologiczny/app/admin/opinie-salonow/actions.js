@@ -10,6 +10,8 @@ const done = () => {
   revalidatePath('/salony', 'layout');
   revalidatePath('/weterynarze', 'layout');
   revalidatePath('/hotele', 'layout');
+  revalidatePath('/trenerzy', 'layout');
+  revalidatePath('/petsitterzy', 'layout');
 };
 
 // Zatwierdzenie / ukrycie / przywrócenie / usunięcie opinii o salonie (ranking przelicza baza sama)

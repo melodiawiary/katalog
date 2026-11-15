@@ -51,7 +51,7 @@ export default async function PlacesIndexPage({ category, searchParams }) {
   return (
     <div className={`place-theme ${cfg.theme}`}>
       <div className="salon-top">
-        <section className={`salon-banner${cfg.artBox ? ' pcat-banner' : ''}`} style={cfg.artBox ? { '--ah': cfg.artBox.h, '--ar': cfg.artBox.right, '--ab': cfg.artBox.bottom } : undefined}>
+        <section className={`salon-banner${cfg.artBox ? ' pcat-banner' : ''}`} style={cfg.artBox ? { '--ah': cfg.artBox.h, '--ar': cfg.artBox.right, '--ab': cfg.artBox.bottom, '--tw': cfg.artBox.text || 410 } : undefined}>
           <div className="salon-banner-text">
             {cfg.key !== 'groomer' && <span className="pcat-chip">{cfg.chip}</span>}
             <h1>{cfg.artBox ? <>{cfg.h1.split(' ')[0]}<br />{cfg.h1.split(' ').slice(1).join(' ')}</> : cfg.h1}</h1>
@@ -74,7 +74,7 @@ export default async function PlacesIndexPage({ category, searchParams }) {
         {f.from && <> • termin: {f.from}{f.to ? ` - ${f.to}` : ''}</>}
       </p>
 
-      <PlacesBrowser items={items} me={me} total={data.total} base={cfg.base} tone={category === 'weterynarz' ? 'teal' : 'orange'} noun={noun} linkLabel={`Zobacz: ${cfg.nounAcc}`}>
+      <PlacesBrowser items={items} me={me} total={data.total} base={cfg.base} tone={cfg.tone} noun={noun} linkLabel={`Zobacz: ${cfg.nounAcc}`}>
         <ul className="places-list">
           {items.map((p) => (
             <li key={p.id} className="place-card" data-slug={p.slug}>

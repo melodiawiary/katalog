@@ -32,7 +32,7 @@ export default async function NewPlacePage({ searchParams }) {
       <p className="muted"><Link href="/admin/miejsca">← Salony</Link></p>
       <h1>Nowe miejsce</h1>
       {requestId && <p className="box">Szkic z zgłoszenia nr {requestId}. Szczegóły zgłoszenia są w notatkach prywatnych.</p>}
-      <PlaceForm place={place} priv={priv} services={refs.services} featureDefs={refs.featureDefs} requestId={requestId} category={['groomer', 'weterynarz', 'hotel'].includes(sp.kategoria) ? sp.kategoria : 'groomer'} />
+      <PlaceForm place={place} priv={priv} services={refs.services} featureDefs={refs.featureDefs} requestId={requestId} category={['groomer', 'weterynarz', 'hotel', 'trener', 'petsitter'].includes(sp.kategoria) ? sp.kategoria : 'groomer'} />
     </>
   );
 }

@@ -7,6 +7,9 @@ export const PLACE_KIND = {
   domowy: 'Domowy',
   gabinet: 'Gabinet weterynaryjny',
   hotel: 'Hotel dla zwierząt',
+  trener: 'Trener',
+  szkola: 'Szkoła szkolenia',
+  petsitter: 'Petsitter',
 };
 
 export const PLACE_STATUS = {

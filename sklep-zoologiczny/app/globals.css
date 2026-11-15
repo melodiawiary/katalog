@@ -1299,7 +1299,7 @@ a.home-strip-item:hover .home-strip-label { color: var(--accent-dark); }
 @media (max-width: 800px) {
   .salon-top { --u: calc(100vw / 999); }
   .pcat-banner { display: block; height: calc(var(--u) * 340); min-height: 0; padding: 0; margin: 0 -3vw; }
-  .pcat-banner .salon-banner-text { position: absolute; left: calc(var(--u) * 42); top: calc(var(--u) * 22); max-width: calc(var(--u) * 410); }
+  .pcat-banner .salon-banner-text { position: absolute; left: calc(var(--u) * 42); top: calc(var(--u) * 22); max-width: calc(var(--u) * var(--tw, 410)); }
   .pcat-banner .pcat-chip { font-size: calc(var(--u) * 33); line-height: calc(var(--u) * 54); height: calc(var(--u) * 54); padding: 0 calc(var(--u) * 26); margin: 0; box-sizing: border-box; }
   .pcat-banner h1 { font-size: calc(var(--u) * 57); line-height: calc(var(--u) * 60); margin: calc(var(--u) * 14) 0 0 calc(var(--u) * 14); }
   .pcat-banner p { font-size: calc(var(--u) * 31); line-height: calc(var(--u) * 35); margin: calc(var(--u) * 10) 0 0 calc(var(--u) * 14); }
@@ -1331,3 +1331,19 @@ a.home-strip-item:hover .home-strip-label { color: var(--accent-dark); }
 }
 
 .pcat-rank-card.is-empty { opacity: 0.75; }
+
+/* Trenerzy (fiolet) i petsitterzy (zieleń) */
+.theme-trainer { --accent: #7c3fcf; --accent-dark: #5c2aa8; }
+.theme-trainer .salon-banner { background: radial-gradient(ellipse 60% 90% at 78% 60%, #ddd0f6 0%, rgba(221, 208, 246, 0) 100%), linear-gradient(180deg, #f2ecfc, #e8defa); }
+.theme-trainer .pchip.on, .theme-trainer .pchip-pop button.on, .theme-trainer .places-filters-btn.on { background: #e7dcf8; }
+.theme-trainer .place-tile { background: #e7dcf8; }
+.theme-trainer .place-tag.price { background: #f1eafb; border-color: #d8c8f2; }
+.theme-trainer .status.status-zrealizowane { background: #e7dcf8; color: #4d2290; }
+.theme-trainer .pcat-rank { background: #f6f1fd; border-color: #e3d7f6; }
+.theme-petsitter { --accent: #1f9a3d; --accent-dark: #167a2f; }
+.theme-petsitter .salon-banner { background: radial-gradient(ellipse 60% 90% at 78% 60%, #d3f1d0 0%, rgba(211, 241, 208, 0) 100%), linear-gradient(180deg, #eefaed, #e2f6df); }
+.theme-petsitter .pchip.on, .theme-petsitter .pchip-pop button.on, .theme-petsitter .places-filters-btn.on { background: #dcf3d9; }
+.theme-petsitter .place-tile { background: #dcf3d9; }
+.theme-petsitter .place-tag.price { background: #ecf8ea; border-color: #c6e8c1; }
+.theme-petsitter .status.status-zrealizowane { background: #dcf3d9; color: #146428; }
+.theme-petsitter .pcat-rank { background: #f1faf0; border-color: #d6eed2; }

@@ -22,8 +22,12 @@ function refresh(slug) {
   revalidatePath('/salony');
   revalidatePath('/weterynarze');
   revalidatePath('/hotele');
+  revalidatePath('/trenerzy');
+  revalidatePath('/petsitterzy');
   revalidatePath(`/weterynarze/${slug}`);
   revalidatePath(`/hotele/${slug}`);
+  revalidatePath(`/trenerzy/${slug}`);
+  revalidatePath(`/petsitterzy/${slug}`);
 }
 
 export async function saveOwnerData(prev, fd) {
