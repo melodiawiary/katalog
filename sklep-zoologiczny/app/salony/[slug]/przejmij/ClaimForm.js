@@ -93,11 +93,11 @@ export default function ClaimForm({ info, slug }) {
         </form>
       ) : (
         <>
-          <div className="tabs" role="tablist">
+          <div className="method-tabs" role="tablist">
             {(info.known_email_hint || info.website_domain) && (
-              <button type="button" className={`tab ${method === 'mail' ? 'active' : ''}`} onClick={() => setMethod('mail')}>Kod na e-mail salonu</button>
+              <button type="button" className={`method-tab ${method === 'mail' ? 'on' : ''}`} onClick={() => setMethod('mail')}>Kod na e-mail salonu</button>
             )}
-            <button type="button" className={`tab ${method === 'reczna' ? 'active' : ''}`} onClick={() => setMethod('reczna')}>Weryfikacja ręczna</button>
+            <button type="button" className={`method-tab ${method === 'reczna' ? 'on' : ''}`} onClick={() => setMethod('reczna')}>Weryfikacja ręczna</button>
           </div>
 
           {method === 'mail' ? (

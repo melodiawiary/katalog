@@ -695,3 +695,10 @@ label.check span:nth-child(2) { flex: 1; }
   .tab-badge { position: absolute; top: -6px; right: -12px; background: var(--accent); color: #fff; border-radius: 999px; font-size: 0.65rem; padding: 1px 5px; min-width: 16px; text-align: center; }
   .cookie-banner { bottom: 66px; }
 }
+
+/* Strona przejęcia salonu: własne klasy, bez kolizji z .narrow, .tabs i .tab */
+.claim-page { max-width: 680px; }
+.method-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.method-tabs:has(> :only-child) { grid-template-columns: 1fr; }
+.method-tab { font: inherit; font-weight: 600; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 10px 8px; color: var(--muted); cursor: pointer; }
+.method-tab.on { color: var(--accent-dark); background: #fdf3ea; border-color: var(--accent); }

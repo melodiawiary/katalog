@@ -16,7 +16,7 @@ export default async function ClaimPage({ params }) {
   const c = info.claim;
 
   return (
-    <div className="container narrow">
+    <div className="container claim-page">
       <nav className="breadcrumbs"><Link href={`/salony/${slug}`}>{p.name}</Link> / To mój salon</nav>
       <h1>To mój salon</h1>
       <p className="muted">{p.name}, {p.city}</p>
