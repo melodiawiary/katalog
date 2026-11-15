@@ -54,12 +54,22 @@ export default async function HomePage({ searchParams }) {
     <>
       <HomeStrip freeFrom={FREE_SHIPPING_FROM} categories={categories} showSalons={Boolean(isPublic)} />
 
-      <section className="home-hero">
-        <h1>Wszystko dla psa i kota w jednym miejscu</h1>
-        <p className="muted">Sklep z karmą i akcesoriami oraz ranking sprawdzonych groomerów z opiniami klientów.</p>
-        <div className="hero-btns">
-          <Link href="/sklep" className="btn">Zakupy dla pupila</Link>
-          {isPublic ? <Link href="/salony" className="btn btn-light">Znajdź groomera w pobliżu</Link> : <Link href="/akademia" className="btn btn-light">Akademia: zapisz się</Link>}
+      <section className="home-banner">
+        <img src="/ikony/start/hero.png" alt="" className="home-banner-art" width="465" height="397" />
+        <h1 className="home-banner-title">Wszystko dla psa i kota w jednym miejscu</h1>
+        <div className="home-banner-btns">
+          <Link href="/sklep" className="home-banner-btn home-banner-btn-main">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M2 3h3l2.6 11.2a2 2 0 0 0 2 1.5h7.6a2 2 0 0 0 2-1.5L21 7H6" /><circle cx="10" cy="20" r="1.4" /><circle cx="17" cy="20" r="1.4" /></svg>
+            Zakupy dla pupila
+          </Link>
+          {isPublic ? (
+            <Link href="/salony" className="home-banner-btn home-banner-btn-alt">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="6" cy="6.5" r="2.6" /><circle cx="6" cy="17.5" r="2.6" /><path d="M8.2 8l11 8.5M8.2 16l11-8.5" /></svg>
+              Znajdź groomera
+            </Link>
+          ) : (
+            <Link href="/akademia" className="home-banner-btn home-banner-btn-alt">Akademia</Link>
+          )}
         </div>
       </section>
 
