@@ -102,6 +102,22 @@ export default function PlacesFilters({ f, cities, services, featureDefs, catego
           </label>
         </div>
       )}
+      {(cfg.featureSelects || []).map((g) => {
+        const opts = featureDefs.filter((d) => g.codes.includes(d.code));
+        if (!opts.length) return null;
+        const cur = f.features.find((c) => g.codes.includes(c)) || '';
+        return (
+          <div className="places-toolbar" key={g.label}>
+            <label className="places-sort"><span>{g.label}:</span>
+              <select value={cur} onChange={(e) => go({ udogodnienia: [...f.features.filter((c) => !g.codes.includes(c)), e.target.value].filter(Boolean).join(',') })}>
+                <option value="">Wszystkie</option>
+                {opts.map((d) => <option key={d.code} value={d.code}>{d.label}</option>)}
+              </select>
+              {chev}
+            </label>
+          </div>
+        );
+      })}
       {msg && <p className="alert small">{msg}</p>}
       <div className="places-toolbar">
         <label className="places-sort"><span>Sortuj:</span>

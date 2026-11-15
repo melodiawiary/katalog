@@ -14,6 +14,7 @@ const done = () => {
   revalidatePath('/trenerzy', 'layout');
   revalidatePath('/petsitterzy', 'layout');
   revalidatePath('/behawiorysci', 'layout');
+  revalidatePath('/spacerowicze', 'layout');
 };
 
 // Decyzja w sprawie zgłoszenia: zatwierdź (dodaj opiekuna albo zastąp dotychczasowych) / odrzuć

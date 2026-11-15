@@ -1356,3 +1356,18 @@ a.home-strip-item:hover .home-strip-label { color: var(--accent-dark); }
 .theme-behaviorist .place-tag.price { background: #e8f8f5; border-color: #b9e4de; }
 .theme-behaviorist .status.status-zrealizowane { background: #d3f0eb; color: #0f655d; }
 .theme-behaviorist .pcat-rank { background: #eefaf8; border-color: #cdeae5; }
+
+/* Spacery z psami (pomarańcz jak groomerzy, baner w parku) */
+.theme-walker { --accent: #e8801f; --accent-dark: #c4631c; }
+.theme-walker .salon-banner { background: radial-gradient(ellipse 60% 90% at 78% 60%, #fde7cf 0%, rgba(253, 231, 207, 0) 100%), linear-gradient(180deg, #fff6ec, #fdf1e4); }
+.theme-walker .pchip.on, .theme-walker .pchip-pop button.on, .theme-walker .places-filters-btn.on { background: #fde7cf; }
+.theme-walker .place-tile { background: #fde7cf; }
+.theme-walker .pcat-rank { background: #fff7ef; border-color: #f6dcc0; }
+
+/* Komputer: duży baner z ilustracją (pies z klipsem) zamiast małej ikonki */
+@media (min-width: 801px) {
+  .theme-walker .pcat-banner { min-height: 250px; padding: 22px 28px; }
+  .theme-walker .pcat-banner h1 { font-size: 2.6rem; line-height: 1.05; }
+  .theme-walker .pcat-banner p { font-size: 1.05rem; max-width: 420px; }
+  .theme-walker .pcat-banner .salon-banner-art { position: absolute; right: 36px; bottom: 0; height: 270px; width: auto; }
+}

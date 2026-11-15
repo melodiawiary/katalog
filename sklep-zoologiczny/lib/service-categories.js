@@ -8,7 +8,7 @@ export const SERVICE_CATEGORIES = [
   { slug: 'opiekunowie', name: 'Opiekunowie', title: 'Petsitterzy', icon: 'opiekunowie', href: '/petsitterzy', open: true, blurb: 'Opieka domowa' },
   { slug: 'trenerzy', name: 'Trenerzy', title: 'Trenerzy', icon: 'trenerzy', href: '/trenerzy', open: true, blurb: 'Szkolenia' },
   { slug: 'behawiorysci', name: 'Behawioryści', title: 'Behawioryści', icon: 'behawiorysci', href: '/behawiorysci', open: true, blurb: 'Zachowanie' },
-  { slug: 'spacery', name: 'Spacery z psami', title: 'Spacery', icon: 'spacery', blurb: 'Dla psów' },
+  { slug: 'spacery', name: 'Spacery z psami', title: 'Spacery', icon: 'spacery', href: '/spacerowicze', open: true, blurb: 'Dla psów' },
   { slug: 'fizjoterapia', name: 'Fizjoterapia i rehabilitacja', title: 'Rehabilitacja', icon: 'fizjoterapia', blurb: 'Powrót do formy' },
   { slug: 'transport', name: 'Transport zwierząt', title: 'Transport', icon: 'transport', blurb: 'Bezpieczny przewóz' },
   { slug: 'fotografia', name: 'Fotografie zwierząt', title: 'Fotografia', icon: 'fotografia', blurb: 'Sesje zdjęciowe' },

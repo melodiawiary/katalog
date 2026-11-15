@@ -390,3 +390,10 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
 - Po każdym etapie aktualizować ten plik w repo i w dokumentach projektu Claude.
 - Konta salonów (`13_konta_salonow.sql`): uprawnienia właściciela liczą funkcje `is_place_owner` / `can_edit_place` (admin też edytuje); właściciel zmienia dane tylko przez RPC `owner_*`, nie przez tabele. Kod weryfikacyjny generuje serwer (`randomInt`), do bazy trafia tylko skrót (`claim_issue_code`, wołana kluczem serwisowym); `place_claim_codes` bez dostępu klienta. Pliki: salon `salony/<id salonu>/`, opinia `opinie-salonow/<id użytkownika>/`, dowód `przejecia/<id użytkownika>/` (prywatny). Usuwając opinię albo zdjęcie, zawsze kasować też plik w Storage.
 - Pakiet bezpieczeństwa przejęć (`14_bezpieczenstwo_przejec.sql`): `verified` (premia +0,05 i odznaki) tylko po kodzie na adres z katalogu (`place_claims.strength = 'silna'`); każda nowa funkcja serwerowa wymaga jawnego `revoke ... from public, anon, authenticated` (domyślne uprawnienia Supabase dają EXECUTE wszystkim). Wysyłkę powiadomień o przejęciach robi `sendPendingTakeoverNotices` (czyta `takeover_pending_notices`, oznacza `takeover_mark_notified`), nie funkcje SQL. Zmieniając `owner_update_place`, pamiętać o 6 polach krytycznych wstrzymywanych na 48 h.
+
+
+## Spacery z psami (spacerowicze)
+- Kategoria `spacerowicz`, adres `/spacerowicze`, kolor pomarańczowy (`theme-walker`), grafika `public/ilustracje/pies-spacer.png` (pies z klipsem, wycięty z 3. zdjęcia, ta sama na telefonie i komputerze).
+- Telefon: `artBox` w `lib/place-categories.js` (jednostka makiety). Komputer: większy baner (reguły `.theme-walker .pcat-banner` na końcu `globals.css`).
+- Filtry: Termin spaceru, Rodzaj spaceru (usługi `spc_*`), Czas spaceru i Wielkość psa (listy z udogodnień `spc-czas-*`, `spc-psy-*`, konfiguracja `featureSelects`).
+- Migracja `supabase/18_spacerowicze.sql` CZEKA na uruchomienie (17 też, jeśli jeszcze nie była). Kolejność obojętna, obie są powtarzalne.

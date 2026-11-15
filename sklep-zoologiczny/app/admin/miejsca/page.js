@@ -72,7 +72,8 @@ export default async function PlacesAdminPage({ searchParams }) {
           <Link href="/admin/miejsca/nowe?kategoria=hotel" className="btn btn-small">+ Hotel</Link>{' '}
           <Link href="/admin/miejsca/nowe?kategoria=trener" className="btn btn-small">+ Trener</Link>{' '}
           <Link href="/admin/miejsca/nowe?kategoria=petsitter" className="btn btn-small">+ Petsitter</Link>{' '}
-          <Link href="/admin/miejsca/nowe?kategoria=behawiorysta" className="btn btn-small">+ Behawiorysta</Link>
+          <Link href="/admin/miejsca/nowe?kategoria=behawiorysta" className="btn btn-small">+ Behawiorysta</Link>{' '}
+          <Link href="/admin/miejsca/nowe?kategoria=spacerowicz" className="btn btn-small">+ Spacerowicz</Link>
         </span>
       </div>
 

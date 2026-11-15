@@ -25,7 +25,7 @@ export function DataForm({ place, hours: hoursIn, prices: pricesIn, services, fe
       <input type="hidden" name="prices" value={JSON.stringify(prices.map(({ key, ...p }) => p))} />
 
       <fieldset>
-        <legend>{{ weterynarz: 'O gabinecie', hotel: 'O hotelu', trener: 'O trenerze', petsitter: 'O petsitterze', behawiorysta: 'O behawioryście' }[place.category] || 'O salonie'}</legend>
+        <legend>{{ weterynarz: 'O gabinecie', hotel: 'O hotelu', trener: 'O trenerze', petsitter: 'O petsitterze', behawiorysta: 'O behawioryście', spacerowicz: 'O spacerowiczu' }[place.category] || 'O salonie'}</legend>
         {place.category === 'weterynarz' && SPECIES_ALL.map((k) => <input key={k} type="hidden" name="species" value={k} />)}
         {place.category !== 'weterynarz' && <div className="attr-group">
           <span className="attr-name">Przyjmujemy *</span>

@@ -11,6 +11,8 @@ export const PLACE_KIND = {
   szkola: 'Szkoła szkolenia',
   petsitter: 'Petsitter',
   behawiorysta: 'Behawiorysta',
+  spacerowicz: 'Spacerowicz',
+  grupowy: 'Spacery grupowe',
 };
 
 export const PLACE_STATUS = {

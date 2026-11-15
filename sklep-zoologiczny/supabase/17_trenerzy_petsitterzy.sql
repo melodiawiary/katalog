@@ -1,14 +1,14 @@
--- Etap 8: kategorie miejsc "trener", "petsitter" i "behawiorysta" w tym samym systemie co groomerzy, weterynarze i hotele.
+-- Etap 8 (obejmuje też dopuszczenie kategorii spacerowicz, jej słowniki dodaje 18_spacerowicze.sql): kategorie miejsc "trener", "petsitter" i "behawiorysta" w tym samym systemie co groomerzy, weterynarze i hotele.
 -- Dodaje rodzaje i kategorie do ograniczeń, słowniki usług i udogodnień oraz zgłoszenia z nowymi kategoriami.
 -- Bezpieczne do ponownego uruchomienia (nie kasuje danych). Wymaga wcześniejszego 16_kategorie_miejsc.sql.
 
 -- ---------- KATEGORIE I RODZAJE -------------------------------------------
 
 alter table public.places drop constraint if exists places_category_ck;
-alter table public.places add constraint places_category_ck check (category in ('groomer','weterynarz','hotel','trener','petsitter','behawiorysta'));
+alter table public.places add constraint places_category_ck check (category in ('groomer','weterynarz','hotel','trener','petsitter','behawiorysta','spacerowicz'));
 
 alter table public.places drop constraint if exists places_kind_ck;
-alter table public.places add constraint places_kind_ck check (kind in ('salon','mobilny','domowy','gabinet','hotel','trener','szkola','petsitter','behawiorysta'));
+alter table public.places add constraint places_kind_ck check (kind in ('salon','mobilny','domowy','gabinet','hotel','trener','szkola','petsitter','behawiorysta','spacerowicz','grupowy'));
 
 alter table public.places drop constraint if exists places_category_kind_ck;
 alter table public.places add constraint places_category_kind_ck check (
@@ -17,10 +17,11 @@ alter table public.places add constraint places_category_kind_ck check (
   or (category = 'hotel'      and kind in ('hotel','domowy'))
   or (category = 'trener'     and kind in ('trener','szkola','mobilny'))
   or (category = 'petsitter'  and kind in ('petsitter','domowy'))
-  or (category = 'behawiorysta' and kind in ('behawiorysta','mobilny')));
+  or (category = 'behawiorysta' and kind in ('behawiorysta','mobilny'))
+  or (category = 'spacerowicz' and kind in ('spacerowicz','grupowy')));
 
 alter table public.place_requests drop constraint if exists place_requests_category_ck;
-alter table public.place_requests add constraint place_requests_category_ck check (category in ('groomer','weterynarz','hotel','trener','petsitter','behawiorysta'));
+alter table public.place_requests add constraint place_requests_category_ck check (category in ('groomer','weterynarz','hotel','trener','petsitter','behawiorysta','spacerowicz'));
 
 -- ---------- SŁOWNIKI USŁUG I UDOGODNIEŃ -----------------------------------
 
@@ -130,7 +131,7 @@ begin
           left(trim(coalesce(p_name, '')), 120), left(trim(coalesce(p_city, '')), 80),
           left(trim(coalesce(p_details, '')), 2000), left(trim(coalesce(p_contact_name, '')), 100),
           v_email, left(trim(coalesce(p_phone, '')), 30),
-          case when p_category in ('groomer','weterynarz','hotel','trener','petsitter','behawiorysta') then p_category else 'groomer' end)
+          case when p_category in ('groomer','weterynarz','hotel','trener','petsitter','behawiorysta','spacerowicz') then p_category else 'groomer' end)
   returning id into v_id;
   return v_id;
 end;

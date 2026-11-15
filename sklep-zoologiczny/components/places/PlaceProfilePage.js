@@ -159,7 +159,7 @@ export default async function PlaceProfilePage({ params, searchParams, routeCate
             {p.phone && <p className="small"><a href={`tel:${phone}`}>📞 {p.phone}</a></p>}
             {p.email && <p className="small"><a href={`mailto:${p.email}`}>{p.email}</a></p>}
             {links.map(([label, url]) => <p key={label} className="small"><a href={url} target="_blank" rel="noopener noreferrer nofollow">{label} ↗</a></p>)}
-            {p.booking_url && <a href={p.booking_url} target="_blank" rel="noopener noreferrer nofollow" className="btn btn-small">{category === 'hotel' ? 'Zarezerwuj pobyt' : category === 'petsitter' ? 'Zarezerwuj opiekę' : category === 'trener' ? 'Zapisz się na szkolenie' : category === 'behawiorysta' ? 'Umów konsultację' : 'Umów wizytę'}</a>}
+            {p.booking_url && <a href={p.booking_url} target="_blank" rel="noopener noreferrer nofollow" className="btn btn-small">{category === 'hotel' ? 'Zarezerwuj pobyt' : category === 'petsitter' ? 'Zarezerwuj opiekę' : category === 'trener' ? 'Zapisz się na szkolenie' : category === 'behawiorysta' ? 'Umów konsultację' : category === 'spacerowicz' ? 'Umów spacer' : 'Umów wizytę'}</a>}
           </div>
 
           {cfg.dates && (
