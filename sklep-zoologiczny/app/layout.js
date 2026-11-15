@@ -5,6 +5,7 @@ import { CartProvider } from '@/components/CartProvider';
 import CartBadge from '@/components/CartBadge';
 import AccountLink from '@/components/account/AccountLink';
 import SearchBox from '@/components/SearchBox';
+import MobileTabs from '@/components/MobileTabs';
 import CookieBanner from '@/components/CookieBanner';
 import CookieSettingsLink from '@/components/CookieSettingsLink';
 import { LEGAL_LINKS } from '@/lib/legal';
@@ -83,6 +84,7 @@ export default async function RootLayout({ children }) {
               <div className="footer-copy">© {new Date().getFullYear()} {s.shop_name}</div>
             </div>
           </footer>
+          <MobileTabs showSalons={showSalons} />
           <CookieBanner />
         </CartProvider>
       </body>

@@ -675,3 +675,23 @@ label.check span:nth-child(2) { flex: 1; }
 .home-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; list-style: none; padding: 0; }
 .academy-box { background: #eef6ff; border: 1px solid #cfe0f7; border-radius: var(--radius); padding: 18px; }
 .academy-box form { display: grid; gap: 8px; max-width: 460px; }
+
+/* ===== Nawigacja na telefonie: dolny pasek ===== */
+.tabbar { display: none; }
+@media (max-width: 760px) {
+  .header-actions { display: none; }
+  .header-inner { justify-content: flex-start; }
+  body { padding-bottom: 76px; }
+  .tabbar {
+    display: grid; grid-auto-flow: column; grid-auto-columns: 1fr;
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+    background: var(--card); border-top: 1px solid var(--line);
+    padding-bottom: env(safe-area-inset-bottom);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.06);
+  }
+  .tab { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 8px 2px 7px; text-decoration: none; color: var(--muted); font-size: 0.68rem; font-weight: 700; min-height: 58px; }
+  .tab.active { color: var(--accent-dark); background: #fdf3ea; }
+  .tab-icon { position: relative; font-size: 1.35rem; line-height: 1; }
+  .tab-badge { position: absolute; top: -6px; right: -12px; background: var(--accent); color: #fff; border-radius: 999px; font-size: 0.65rem; padding: 1px 5px; min-width: 16px; text-align: center; }
+  .cookie-banner { bottom: 66px; }
+}

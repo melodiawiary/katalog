@@ -358,3 +358,5 @@ Tablica z mapą myśli: https://claude.ai/artifact/9yrgVbMTMZvu52PGc9Zd5Y
 - Strona `/` to nowa strona główna; lista produktów z filtrami jest pod `/sklep` (`Listing path="/sklep"`). Nowe linki do "wszystkich produktów" kierować na `/sklep`.
 - Po każdym etapie aktualizować ten plik w repo i w dokumentach projektu Claude.
 - Konta salonów (`13_konta_salonow.sql`): uprawnienia właściciela liczą funkcje `is_place_owner` / `can_edit_place` (admin też edytuje); właściciel zmienia dane tylko przez RPC `owner_*`, nie przez tabele. Kod weryfikacyjny generuje serwer (`randomInt`), do bazy trafia tylko skrót (`claim_issue_code`, wołana kluczem serwisowym); `place_claim_codes` bez dostępu klienta. Pliki: salon `salony/<id salonu>/`, opinia `opinie-salonow/<id użytkownika>/`, dowód `przejecia/<id użytkownika>/` (prywatny). Usuwając opinię albo zdjęcie, zawsze kasować też plik w Storage.
+
+- 2026-11-15: nawigacja na telefonie, dolny pasek (Start, Sklep, Groomerzy, Akademia, Konto, Koszyk), górne linki ukryte na telefonie.
