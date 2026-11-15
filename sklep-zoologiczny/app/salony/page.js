@@ -45,15 +45,23 @@ export default async function SalonyPage({ searchParams }) {
 
   return (
     <>
-      <h1>Salony groomerskie</h1>
+      <section className="salon-banner">
+        <div className="salon-banner-text">
+          <h1>Salony groomerskie</h1>
+          <p>Polecani groomerzy dla psów i kotów. Wybierz salon z mapy lub z listy.</p>
+        </div>
+        <div className="salon-banner-art" aria-hidden="true">
+          <img src="/ikony/pies.svg" alt="" width="84" height="84" />
+          <img src="/ikony/kot.svg" alt="" width="66" height="66" />
+        </div>
+      </section>
       {!isPublic && isAdmin && (
         <p className="box">Podgląd administratora: katalog jest jeszcze wyłączony dla klientów, a Ty widzisz też szkice i ukryte miejsca.</p>
       )}
-      <p className="muted">Polecani groomerzy dla psów i kotów. Wybierz salon z mapy albo z listy.</p>
 
       <PlacesFilters f={f} cities={cities.data || []} services={services.data || []} featureDefs={features.data || []} />
 
-      <p className="muted small" style={{ margin: '10px 0' }}>
+      <p className="muted small places-count">
         {data.total === 0 ? 'Brak salonów dla tych filtrów.' : `Znaleziono: ${data.total}`}
         {f.where && f.lat != null && <> · blisko: {f.where}</>}
       </p>

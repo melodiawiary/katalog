@@ -64,25 +64,54 @@ export default function PlacesFilters({ f, cities, services, featureDefs }) {
     }
   };
 
+  const active = [f.city, f.kind, f.size, f.maxPrice, f.openNow, f.features.length ? 'x' : ''].filter(Boolean).length;
+  const sortVal = f.sort || (f.lat != null ? 'odleglosc' : 'najlepsze');
+  const svcLabel = services.find((x) => x.code === f.service)?.label;
+
   return (
     <div className="places-filters">
-      <form onSubmit={findAddress} className="locker-search">
-        <input value={where} onChange={(e) => setWhere(e.target.value)} placeholder="Szukaj blisko adresu, np. Gdynia Świętojańska" aria-label="Adres" enterKeyHint="search" />
-        <button className="btn btn-small" disabled={busy}>Szukaj</button>
+      <form onSubmit={findAddress} className="places-search">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z" /><circle cx="12" cy="9.5" r="2.5" /></svg>
+        <input value={where} onChange={(e) => setWhere(e.target.value)} placeholder="Szukaj salonu, miasta lub adresu" aria-label="Adres lub miasto" enterKeyHint="search" />
+        <button className="places-search-btn" disabled={busy}>Szukaj</button>
       </form>
-      <div className="places-filter-line">
-        <button type="button" className="link-btn" onClick={nearMe} disabled={busy}>📍 Salony blisko mnie</button>
-        {f.lat != null && <button type="button" className="link-btn" onClick={() => go({ lat: '', lng: '', gdzie: '', promien: '', sort: f.sort === 'odleglosc' ? '' : f.sort })}>Wyczyść pozycję</button>}
+      <div className="places-chips">
+        <button type="button" className={`pchip${f.lat != null && f.where === 'Twoja lokalizacja' ? ' on' : ''}`} onClick={nearMe} disabled={busy}>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true"><circle cx="12" cy="12" r="3.5" /><circle cx="12" cy="12" r="8" /><path d="M12 2v3M12 19v3M2 12h3M19 12h3" /></svg>
+          Blisko mnie
+        </button>
+        <button type="button" className={`pchip${f.species === 'pies' ? ' on' : ''}`} onClick={() => go({ gatunek: f.species === 'pies' ? '' : 'pies' })}>
+          <img src="/ikony/pies.svg" alt="" width="20" height="20" /> Dla psów
+        </button>
+        <button type="button" className={`pchip${f.species === 'kot' ? ' on' : ''}`} onClick={() => go({ gatunek: f.species === 'kot' ? '' : 'kot' })}>
+          <img src="/ikony/kot.svg" alt="" width="20" height="20" /> Dla kotów
+        </button>
+        <details className="pchip-menu">
+          <summary className={`pchip${f.service ? ' on' : ''}`}>{svcLabel || 'Usługi'} <span aria-hidden="true">▾</span></summary>
+          <div className="pchip-pop">
+            <button type="button" className={!f.service ? 'on' : ''} onClick={() => go({ usluga: '' })}>Dowolna usługa</button>
+            {services.map((x) => (
+              <button type="button" key={x.code} className={f.service === x.code ? 'on' : ''} onClick={() => go({ usluga: x.code })}>{x.label}</button>
+            ))}
+          </div>
+        </details>
+        {f.lat != null && <button type="button" className="pchip" onClick={() => go({ lat: '', lng: '', gdzie: '', promien: '', sort: f.sort === 'odleglosc' ? '' : f.sort })}>Wyczyść pozycję ✕</button>}
       </div>
-      <label className="places-sort small">Sortuj:{' '}
-        <select value={f.sort || (f.lat != null ? 'odleglosc' : 'najlepsze')} onChange={(e) => go({ sort: e.target.value })}>
-          {Object.entries(PLACE_SORT).filter(([k]) => k !== 'odleglosc' || f.lat != null).map(([k, l]) => <option key={k} value={k}>{l}</option>)}
-        </select>
-      </label>
       {msg && <p className="alert small">{msg}</p>}
+      <div className="places-toolbar">
+        <label className="places-sort small">Sortuj:{' '}
+          <select value={sortVal} onChange={(e) => go({ sort: e.target.value })}>
+            {Object.entries(PLACE_SORT).filter(([k]) => k !== 'odleglosc' || f.lat != null).map(([k, l]) => <option key={k} value={k}>{l}</option>)}
+          </select>
+        </label>
+        <button type="button" className={`places-filters-btn${open ? ' on' : ''}`} onClick={() => setOpen((v) => !v)} aria-expanded={open}>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10" /><circle cx="16" cy="7" r="2" /><circle cx="8" cy="17" r="2" /></svg>
+          Filtry{active > 0 && <span className="filters-badge">{active}</span>}
+        </button>
+      </div>
 
-      <details className="panel" open={open} onToggle={(e) => setOpen(e.currentTarget.open)}>
-        <summary className="chip" style={{ display: 'inline-block', cursor: 'pointer' }}>Filtry</summary>
+      {open && (
+      <div className="panel">
         <form onSubmit={submitFilters} className="stack-form places-filter-form">
           <label>Nazwa, dzielnica, ulica<input name="q" value={q} onChange={(e) => setQ(e.target.value)} maxLength={80} /></label>
           <div className="grid-2">
@@ -141,7 +170,8 @@ export default function PlacesFilters({ f, cities, services, featureDefs }) {
             <button type="button" className="link-btn" onClick={() => router.push('/salony')}>Wyczyść wszystko</button>
           </div>
         </form>
-      </details>
+      </div>
+      )}
     </div>
   );
 }
