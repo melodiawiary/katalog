@@ -60,7 +60,7 @@ export default async function PlacesIndexPage({ category, searchParams }) {
           <img className="salon-banner-art" src={cfg.art} alt="" width={cfg.artSize[0]} height={cfg.artSize[1]} />
         </section>
         <PlacesFilters f={f} cities={cityList} services={services.data || []} featureDefs={features.data || []} category={category} />
-        {cfg.ranking && <PlacesTabs hasRanking={top.length > 0} rankHref={rankHref} />}
+        {cfg.ranking && <PlacesTabs hasRanking rankHref={rankHref} />}
       </div>
       {!isPublic && isAdmin && (
         <p className="box">Podgląd administratora: katalog jest jeszcze wyłączony dla klientów, a Ty widzisz też szkice i ukryte miejsca.</p>
@@ -101,6 +101,8 @@ export default async function PlacesIndexPage({ category, searchParams }) {
           ))}
         </ul>
       </PlacesBrowser>
+
+      {cfg.ranking && top.length === 0 && <RankingStrip cfg={cfg} top={[]} rankHref={rankHref} query={stay} />}
 
       <p className="center-text small muted">
         Mapa i część danych: © autorzy <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> (licencja ODbL).

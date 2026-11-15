@@ -1329,3 +1329,5 @@ a.home-strip-item:hover .home-strip-label { color: var(--accent-dark); }
   .pcat-rank-all { font-size: 0.72rem; }
   .pcat-rank-rate { font-size: 0.78rem; }
 }
+
+.pcat-rank-card.is-empty { opacity: 0.75; }
