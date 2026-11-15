@@ -20,8 +20,6 @@ export async function generateMetadata() {
   };
 }
 
-const emoji = (name = '') => (/pies|psy|psa/i.test(name) ? '🐶' : /kot/i.test(name) ? '🐱' : /gryz|chomik|królik/i.test(name) ? '🐹' : /ptak|ptaki/i.test(name) ? '🐦' : /ryb|akwar/i.test(name) ? '🐠' : '🐾');
-
 export default async function HomePage({ searchParams }) {
   const sp = await searchParams;
   const params = flatParams(sp);
@@ -43,6 +41,8 @@ export default async function HomePage({ searchParams }) {
     getSettings(),
   ]);
   const categories = topCategories(visibleCategories(cats || []));
+  const mainCategories = categories.filter((c) => c.slug === 'psy' || c.slug === 'koty');
+  const otherCategories = categories.filter((c) => c.slug !== 'psy' && c.slug !== 'koty');
   const products = (popular?.items || []).filter((p) => p.stock > 0).slice(0, 8);
 
   let places = [];
@@ -63,18 +63,25 @@ export default async function HomePage({ searchParams }) {
       </section>
 
       <ul className="trust-bar">
-        <li>🚚 Darmowa dostawa od {FREE_SHIPPING_FROM} zł</li>
-        <li>📦 Szybka wysyłka</li>
-        <li>↩️ 14 dni na zwrot</li>
-        <li>💳 BLIK i szybkie przelewy</li>
+        <li>Darmowa dostawa od {FREE_SHIPPING_FROM} zł</li>
+        <li>14 dni na zwrot</li>
+        <li>BLIK i szybkie przelewy</li>
       </ul>
 
-      {categories.length > 0 && (
-        <section className="tile-row" aria-label="Kategorie">
-          {categories.map((c) => (
-            <Link key={c.id} href={`/kategoria/${c.slug}`} className="tile"><span className="tile-emoji">{emoji(c.name)}</span>{c.name}</Link>
+      {mainCategories.length > 0 && (
+        <section className="home-main-tiles" aria-label="Kategorie">
+          {mainCategories.map((c) => (
+            <Link key={c.id} href={`/kategoria/${c.slug}`} className="home-main-tile">
+              <img src={`/ikony/${c.slug === 'koty' ? 'kot' : 'pies'}.svg`} alt="" width="72" height="72" />
+              {c.name}
+            </Link>
           ))}
         </section>
+      )}
+      {otherCategories.length > 0 && (
+        <nav className="home-chip-row" aria-label="Pozostałe kategorie">
+          {otherCategories.map((c) => <Link key={c.id} href={`/kategoria/${c.slug}`} className="home-chip">{c.name}</Link>)}
+        </nav>
       )}
 
       {user && (
