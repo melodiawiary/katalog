@@ -1121,3 +1121,30 @@ a.home-strip-item:hover .home-strip-label { color: var(--accent-dark); }
   .portal-art { width: min(34%, 360px); }
   .portal-btn-alt { border-color: #f3b27a; }
 }
+
+/* ===== Strona główna na telefonie: proporcje jak na makiecie (2026-11-15) ===== */
+.portal-title { position: relative; }
+.portal-sparks { position: absolute; width: 18px; height: 18px; right: 2px; top: -2px; margin: 0; }
+@media (max-width: 899px) {
+  .home-search { padding: 0 14px; margin: 8px 0 0; gap: 8px; }
+  .home-search svg { width: 18px; height: 18px; }
+  .home-search input { font-size: 0.85rem; padding: 7px 0; }
+  .portal-hero { padding-top: 8px; }
+  .portal-title { font-size: 1.15rem; margin: 4px 0 0; padding: 0 14px; }
+  .portal-sub { font-size: 0.8rem; margin: 0 0 2px; }
+  .portal-art { width: 40%; max-width: 190px; }
+  .portal-btns { gap: 8px; margin: 2px 0 6px; }
+  .portal-btn { padding: 6px 8px; gap: 6px; font-size: 0.98rem; border-radius: 14px; min-height: 58px; }
+  .portal-btn .portal-ico { width: 30px; height: 30px; }
+  .portal-chev { width: 15px; height: 15px; flex: none; }
+  .portal-btn-text { line-height: 1.1; }
+  .portal-specialists { margin: 8px 0; }
+  .portal-h2 { font-size: 1.05rem; margin: 6px 0 6px; }
+  .svc-grid { gap: 6px; }
+  .svc-tile { padding: 6px 2px 6px; border-radius: 12px; font-size: 0.74rem; gap: 2px; }
+  .svc-tile img { width: 56%; max-width: 64px; }
+  .portal-wide-btn { margin-top: 8px; padding: 9px; font-size: 0.95rem; }
+  .reorder-strip { margin-top: 8px; padding: 6px 14px; font-size: 0.98rem; gap: 10px; border-radius: 14px; }
+  .reorder-strip svg:first-child { width: 36px; height: 36px; }
+  .trust-row { margin: 10px 0; }
+}
