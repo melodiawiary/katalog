@@ -1248,3 +1248,6 @@ a.home-strip-item:hover .home-strip-label { color: var(--accent-dark); }
   .svcpage-text, .svcpage-text span { font-size: 0.74rem; }
   .svcpage-card svg { width: 9px; height: 14px; }
 }
+@media (max-width: 899px) {
+  .svcpage-text span { font-size: calc(0.74rem + 2px); }
+}
