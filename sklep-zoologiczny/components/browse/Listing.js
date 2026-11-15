@@ -6,6 +6,7 @@ import {
 } from '@/lib/browse';
 import { price } from '@/lib/shop';
 import ProductCard from './ProductCard';
+import ProductGrid from './ProductGrid';
 import FilterPanel from './FilterPanel';
 import SortSelect from './SortSelect';
 import RequestForm from './RequestForm';
@@ -148,9 +149,9 @@ export default async function Listing({ path, searchParams, categorySlug = null,
           </div>
         ) : (
           <>
-            <div className="grid">
+            <ProductGrid>
               {items.map((p) => <ProductCard key={p.id} p={p} />)}
-            </div>
+            </ProductGrid>
             <Pagination path={path} params={params} page={state.page} pages={pages} />
             {state.page > pages && <p className="muted">Ta strona jest pusta. <Link href={browseHref(path, params, {})}>Wróć na pierwszą</Link>.</p>}
             {state.q && (

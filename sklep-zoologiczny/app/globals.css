@@ -340,6 +340,25 @@ label.check span:nth-child(2) { flex: 1; }
 .unit-price { font-size: 0.78rem; color: var(--muted); flex-basis: 100%; }
 .omnibus { font-size: 0.72rem; color: var(--muted); flex-basis: 100%; line-height: 1.3; }
 
+/* Przełącznik widoku produktów: kafelki (2 kolumny na telefonie) lub lista */
+.view-toggle { display: flex; gap: 6px; margin: 0 0 12px; }
+.view-toggle button { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--text, #2b2a28); font: inherit; font-size: 0.9rem; font-weight: 600; cursor: pointer; }
+.view-toggle button.is-on { background: var(--accent); border-color: var(--accent); color: #fff; }
+@media (max-width: 640px) {
+  .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .product-grid .card-body { padding: 8px 9px 10px; gap: 8px; }
+  .product-grid .card-title { font-size: 0.85rem; line-height: 1.25; }
+  .product-grid .card-brand { font-size: 0.7rem; }
+  .product-grid .card-price .price { font-size: 1rem; }
+  .product-grid .omnibus { display: none; }
+  .product-grid.is-list { grid-template-columns: minmax(0, 1fr); }
+}
+.product-grid.is-list .card { flex-direction: row; }
+.product-grid.is-list .card-img { flex: none; width: 112px; }
+.product-grid.is-list .card-img .product-img { height: 100%; aspect-ratio: auto; min-height: 112px; }
+.product-grid.is-list .card-body { padding: 10px 12px; }
+.product-grid.is-list .card-title { font-size: 0.92rem; }
+
 /* Stronicowanie */
 .pagination { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin: 24px 0 8px; flex-wrap: wrap; }
 .pagination a { text-decoration: none; font-weight: 600; color: var(--accent-dark); }
