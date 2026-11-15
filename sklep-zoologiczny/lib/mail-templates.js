@@ -284,3 +284,63 @@ ${button(url, 'Odpowiedz na opinię')}
   const text = `Nowa opinia o salonie ${placeName}: ${rating}/5.\n${snippet ? `\n"${snippet}"\n` : ''}\nOdpowiedz: ${url}`;
   return { subject, html, text };
 }
+
+// ETAP 5a: pakiet bezpieczeństwa przejęć
+const FIELD_LABELS = { phone: 'telefon', email: 'e-mail', website: 'strona WWW', booking_url: 'link do rezerwacji', instagram: 'Instagram', facebook: 'Facebook' };
+const fmtDate = (d) => new Date(d).toLocaleString('pl-PL', { dateStyle: 'long', timeStyle: 'short', timeZone: 'Europe/Warsaw' });
+
+// Do dotychczasowych właścicieli i na adres salonu z katalogu: ktoś przejął profil
+export function takeoverNoticeMail(n, objectUrl, settings) {
+  const subject = `Ktoś przejął profil salonu: ${n.place_name}`;
+  const who = n.claimant_name ? `${n.claimant_name} (${n.role === 'zarzadzajacy' ? 'zarządzający' : 'właściciel'})` : 'ktoś';
+  const html = layout(settings, subject, `
+<p>Dzień dobry,</p>
+<p>profil salonu <strong>${esc(n.place_name)}</strong> w naszym katalogu został przejęty przez: <strong>${esc(who)}</strong>.</p>
+<p>Przez pierwsze 48 godzin (do ${esc(fmtDate(n.hold_until))}) nowy opiekun nie może zmienić telefonu, e-maila ani linków do strony, rezerwacji i social mediów.</p>
+<p><strong>Jeśli to nie Ty ani nikt z Twojego zespołu, kliknij poniżej.</strong> Natychmiast wstrzymamy konto tej osoby i sprawdzimy sprawę.</p>
+${button(objectUrl, 'To nie ja')}
+<p style="color:#7a746b;font-size:13px;">Jeśli to Ty lub Twój pracownik, nic nie musisz robić. Link jest ważny 30 dni.</p>`);
+  const text = `Dzień dobry,\n\nprofil salonu ${n.place_name} został przejęty przez: ${who}.\nPrzez 48 godzin (do ${fmtDate(n.hold_until)}) nowy opiekun nie zmieni telefonu, e-maila ani linków.\n\nJeśli to nie Ty ani nikt z Twojego zespołu, otwórz: ${objectUrl}\nNatychmiast wstrzymamy to konto i sprawdzimy sprawę. Link jest ważny 30 dni.\n\nPozdrawiamy\n${settings?.shop_name || ''}`;
+  return { subject, html, text };
+}
+
+// Ktoś w okresie wstrzymania próbował zmienić dane kontaktowe
+export function pendingChangeMail(n, objectUrl, settings) {
+  const fields = (n.fields || []).map((f) => FIELD_LABELS[f] || f).join(', ');
+  const subject = `Zmiana danych salonu czeka na zatwierdzenie: ${n.place_name}`;
+  const html = layout(settings, subject, `
+<p>Dzień dobry,</p>
+<p>nowy opiekun profilu <strong>${esc(n.place_name)}</strong> chce zmienić: <strong>${esc(fields)}</strong>. Zmiana wejdzie w życie ${esc(fmtDate(n.apply_at))}, dopóki jej nie zablokujesz.</p>
+${objectUrl ? button(objectUrl, 'To nie ja') : ''}
+<p style="color:#7a746b;font-size:13px;">Jeśli to Ty lub Twój pracownik, zignoruj tę wiadomość.</p>`);
+  const text = `Dzień dobry,\n\nnowy opiekun profilu ${n.place_name} chce zmienić: ${fields}. Zmiana wejdzie w życie ${fmtDate(n.apply_at)}.\n${objectUrl ? `Jeśli to nie Ty: ${objectUrl}\n` : ''}\nPozdrawiamy\n${settings?.shop_name || ''}`;
+  return { subject, html, text };
+}
+
+// Do administratora: nowy sprzeciw „To nie ja”
+export function takeoverObjectionAdminMail(placeName, claimantName, adminUrl, settings) {
+  const subject = `Sprzeciw „To nie ja”: ${placeName}`;
+  const html = layout(settings, subject, `
+<p>Właściciel zgłosił, że przejęcie profilu <strong>${esc(placeName)}</strong> przez <strong>${esc(claimantName || 'nieznaną osobę')}</strong> to nie on. Konto nowego opiekuna jest wstrzymane. Czeka na Twoją decyzję.</p>
+${button(adminUrl, 'Otwórz panel przejęć')}`);
+  const text = `Sprzeciw „To nie ja” w sprawie profilu ${placeName} (${claimantName || 'nieznana osoba'}). Konto nowego opiekuna wstrzymane. Panel: ${adminUrl}`;
+  return { subject, html, text };
+}
+
+// Do zgłaszającego: jego dostęp został wstrzymany albo rozstrzygnięty
+export function takeoverClaimantMail(kind, placeName, settings) {
+  const titles = {
+    wstrzymane: `Dostęp do salonu wstrzymany: ${placeName}`,
+    przywrocono: `Dostęp do salonu przywrócony: ${placeName}`,
+    odrzucono: `Przejęcie salonu odrzucone: ${placeName}`,
+  };
+  const bodies = {
+    wstrzymane: `dotychczasowy właściciel zgłosił sprzeciw wobec przejęcia profilu <strong>${esc(placeName)}</strong>. Na czas sprawdzenia Twój dostęp do edycji jest wstrzymany. Sprawdzimy sprawę i damy znać.`,
+    przywrocono: `sprawdziliśmy zgłoszenie sprzeciwu wobec przejęcia profilu <strong>${esc(placeName)}</strong> i przywróciliśmy Twój dostęp.`,
+    odrzucono: `po sprawdzeniu zgłoszenia sprzeciwu nie mogliśmy potwierdzić Twojego prawa do profilu <strong>${esc(placeName)}</strong>. Dostęp został odebrany. Jeśli to pomyłka, odpisz na ten e-mail.`,
+  };
+  const subject = titles[kind];
+  const html = layout(settings, subject, `<p>Dzień dobry,</p><p>${bodies[kind]}</p><p style="color:#7a746b;font-size:13px;">W razie pytań odpisz na ten e-mail.</p>`);
+  const text = `Dzień dobry,\n\n${bodies[kind].replace(/<[^>]+>/g, '')}\n\nPozdrawiamy\n${settings?.shop_name || ''}`;
+  return { subject, html, text };
+}

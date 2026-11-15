@@ -4,10 +4,22 @@ import { randomInt } from 'node:crypto';
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { serviceClient } from '@/lib/supabase/service';
-import { sendClaimCode, sendClaimConflict } from '@/lib/order-mail';
+import { sendClaimCode, sendClaimConflict, sendPendingTakeoverNotices } from '@/lib/order-mail';
+import { siteUrl } from '@/lib/site';
+import { claimIpAllowed, IP_LIMIT_MESSAGE } from '@/lib/claim-ip';
 
 const text = (fd, key, max) => String(fd.get(key) ?? '').trim().slice(0, max);
 const friendly = (error, fallback) => (error?.code === 'P0001' ? error.message : fallback);
+
+// Po przejęciu: mail do dotychczasowych właścicieli i na adres salonu z katalogu (z przyciskiem „To nie ja”)
+async function notifyTakeover() {
+  try {
+    const db = serviceClient();
+    if (!db) return;
+    const { data: settings } = await db.from('settings').select('domain').eq('id', 1).maybeSingle();
+    await sendPendingTakeoverNotices(await siteUrl(settings));
+  } catch { /* resztę dosyła automat dzienny */ }
+}
 
 async function claimInfo(supabase, slug) {
   const { data } = await supabase.rpc('place_claim_info', { p_slug: slug });
@@ -32,6 +44,7 @@ export async function startClaim(prev, fd) {
   // zgłoszenie (zostaje to samo, jeśli ktoś wraca do kroku z kodem)
   let claimId = info.claim?.status === 'nowe' ? info.claim.id : null;
   if (!claimId) {
+    if (!(await claimIpAllowed())) return { error: IP_LIMIT_MESSAGE };
     const { data, error } = await supabase.rpc('start_place_claim', {
       p_place: info.place.id,
       p_name: text(fd, 'name', 120),
@@ -75,6 +88,7 @@ export async function verifyClaim(prev, fd) {
     const info = await claimInfo(supabase, slug);
     if (info?.owners_count > 0) await sendClaimConflict(info.place.id, info.place.name).catch(() => {});
   }
+  if (data === 'zatwierdzone') await notifyTakeover();
   revalidatePath(`/salony/${slug}`);
   revalidatePath(`/salony/${slug}/przejmij`);
   revalidatePath('/konto', 'layout');
@@ -92,6 +106,7 @@ export async function submitManual(prev, fd) {
 
   let claimId = info.claim?.status === 'nowe' ? info.claim.id : null;
   if (!claimId) {
+    if (!(await claimIpAllowed())) return { error: IP_LIMIT_MESSAGE };
     const { data, error } = await supabase.rpc('start_place_claim', {
       p_place: info.place.id,
       p_name: text(fd, 'name', 120),
@@ -121,6 +136,7 @@ export async function createDraft(prev, fd) {
   const info = await claimInfo(supabase, slug);
   if (!info) return { error: 'Nie znaleziono salonu.' };
   if (info.claim?.status === 'nowe') return { draft: info.claim.id, userId: user.id };
+  if (!(await claimIpAllowed())) return { error: IP_LIMIT_MESSAGE };
   const { data, error } = await supabase.rpc('start_place_claim', {
     p_place: info.place.id,
     p_name: text(fd, 'name', 120),

@@ -4,6 +4,7 @@ import { getIntegrations } from '@/lib/integrations';
 import { sendMail, sendBatch, canSend } from '@/lib/mail';
 import {
   orderConfirmation, adminNewOrder, orderStatusMail, hasStatusMail, backInStockMail, loginMail, foodReminderMail, claimCodeMail, claimConflictMail, ownerReviewMail,
+  takeoverNoticeMail, pendingChangeMail, takeoverObjectionAdminMail, takeoverClaimantMail,
 } from '@/lib/mail-templates';
 
 async function loadSettings(db) {
@@ -193,4 +194,54 @@ export async function sendOwnerReviewMails(placeId, site) {
   const mail = ownerReviewMail(place.name, rev.rating, rev.body, `${site}/konto/salon/${place.slug}`, settings);
   for (const to of list) await sendMail(db, integ, settings, { ...mail, to, kind: 'opinia_salon', replyTo: settings.email || undefined });
   return { ok: true, sent: list.length };
+}
+
+// ETAP 5a: powiadomienia o przejęciach i wstrzymanych zmianach (wołane po przejęciu i przez cron; każde idzie raz)
+export async function sendPendingTakeoverNotices(site) {
+  const ctx = await context(null);
+  if (ctx.error) return { ok: false, error: ctx.error };
+  const { db, integ, settings } = ctx;
+  const { data: list } = await db.rpc('takeover_pending_notices');
+  const doneEvents = [];
+  const doneChanges = [];
+  for (const n of list || []) {
+    const objectUrl = n.token ? `${site}/salony/przejecie?t=${n.token}` : '';
+    const mail = n.kind === 'przejecie' ? takeoverNoticeMail(n, objectUrl, settings) : pendingChangeMail(n, objectUrl, settings);
+    const to = [...new Set(n.notify || [])];
+    let ok = true;
+    for (const addr of to) {
+      const r = await sendMail(db, integ, settings, { ...mail, to: addr, kind: n.kind === 'przejecie' ? 'przejecie_info' : 'przejecie_zmiana', replyTo: settings.email || undefined });
+      if (!r.ok) ok = false;
+    }
+    // brak adresatów albo wszystkie wysłane: oznaczamy, żeby nie wracać w kółko; błąd wysyłki zostawia do ponowienia
+    if (ok) (n.kind === 'przejecie' ? doneEvents : doneChanges).push(n.id);
+  }
+  if (doneEvents.length || doneChanges.length) await db.rpc('takeover_mark_notified', { p_events: doneEvents, p_changes: doneChanges });
+  return { ok: true, events: doneEvents.length, changes: doneChanges.length };
+}
+
+export async function sendTakeoverObjectionMails(site, { placeName, claimantName, claimantEmail }) {
+  const ctx = await context(null);
+  if (ctx.error) return { ok: false, error: ctx.error };
+  const { db, integ, settings } = ctx;
+  const adminTo = settings.email;
+  if (adminTo) {
+    const m = takeoverObjectionAdminMail(placeName, claimantName, `${site}/admin/przejecia`, settings);
+    await sendMail(db, integ, settings, { ...m, to: adminTo, kind: 'przejecie_sprzeciw' });
+  }
+  if (claimantEmail) {
+    const m = takeoverClaimantMail('wstrzymane', placeName, settings);
+    await sendMail(db, integ, settings, { ...m, to: claimantEmail, kind: 'przejecie_wstrzymane', replyTo: settings.email || undefined });
+  }
+  return { ok: true };
+}
+
+export async function sendTakeoverDecisionMail(kind, to, placeName) {
+  if (!to) return { ok: false };
+  const ctx = await context(null);
+  if (ctx.error) return { ok: false, error: ctx.error };
+  const { db, integ, settings } = ctx;
+  const m = takeoverClaimantMail(kind, placeName, settings);
+  await sendMail(db, integ, settings, { ...m, to, kind: `przejecie_${kind}`, replyTo: settings.email || undefined });
+  return { ok: true };
 }

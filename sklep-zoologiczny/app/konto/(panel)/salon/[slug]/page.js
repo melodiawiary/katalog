@@ -19,7 +19,7 @@ function tips(d) {
   if (!d.photos.length) out.push('Dodaj zdjęcia salonu.');
   if (!p.website && !p.booking_url) out.push('Dodaj stronę www albo link do rezerwacji.');
   if (p.rating_count < 3) out.push('Odznaki „Polecany” i „Top w mieście” wymagają co najmniej 3 opinii. Poproś zadowolonych klientów o opinię (link do salonu możesz wysłać w wiadomości).');
-  if (!p.verified) out.push('Odznaki „Polecany” i „Top w mieście” wymagają statusu „Sprawdzony”. Nadajemy go po sprawdzeniu salonu - napisz do nas, jeśli chcesz o to poprosić.');
+  if (!p.verified) out.push('Odznaki „Polecany” i „Top w mieście” wymagają statusu „Sprawdzony”. Dostaje go salon przejęty kodem wysłanym na adres e-mail z naszego katalogu. Jeśli przejęcie poszło inną drogą (adres w domenie strony albo ręczna weryfikacja), napisz do nas, a sprawdzimy salon.');
   if (p.rating_count >= 3 && Number(p.rating_avg) < 4.3) out.push('Odznaka „Polecany” wymaga średniej oceny co najmniej 4,3. Odpowiadanie na opinie pomaga budować zaufanie.');
   return out;
 }
@@ -47,6 +47,12 @@ export default async function OwnerSalonPage({ params }) {
         <Link href={`/salony/${p.slug}`} className="muted" target="_blank">Zobacz stronę salonu ↗</Link>
       </div>
       {d.is_admin && <p className="box small">Widok administratora.</p>}
+      {d.hold_until && (
+        <p className="box small">
+          <strong>Pierwsze 48 godzin po przejęciu.</strong> Do {new Date(d.hold_until).toLocaleString('pl-PL', { timeZone: 'Europe/Warsaw', dateStyle: 'long', timeStyle: 'short' })} zmiany telefonu, e-maila i linków (strona, rezerwacje, social media) czekają, a dotychczasowi opiekunowie dostali o przejęciu wiadomość. Opis, godziny, cennik i zdjęcia możesz zmieniać od razu.
+          {d.pending_changes && <> Czekają: {d.pending_changes.fields.map((f) => ({ phone: 'telefon', email: 'e-mail', website: 'strona WWW', booking_url: 'rezerwacje', instagram: 'Instagram', facebook: 'Facebook' }[f] || f)).join(', ')}.</>}
+        </p>
+      )}
 
       <section className="box">
         <h2>Sprawdź swój ranking</h2>

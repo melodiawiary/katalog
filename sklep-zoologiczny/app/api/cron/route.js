@@ -3,7 +3,7 @@
 // (Vercel dodaje go sam). Bez CRON_SECRET adres działa dla każdego - to bezpieczne, bo każda wiadomość idzie tylko raz.
 import { NextResponse } from 'next/server';
 import { serviceClient } from '@/lib/supabase/service';
-import { runStockAlerts, runFoodReminders } from '@/lib/order-mail';
+import { runStockAlerts, runFoodReminders, sendPendingTakeoverNotices } from '@/lib/order-mail';
 import { checkRecentUnpaid } from '@/lib/payments';
 import { siteUrl } from '@/lib/site';
 
@@ -35,5 +35,13 @@ export async function GET(request) {
       purged = due.length;
     }
   } catch { /* przed 13_konta_salonow.sql funkcji nie ma */ }
-  return NextResponse.json({ alerts, payments, reminders, ranking: rankError ? 'błąd' : 'ok', purged });
+  // pakiet bezpieczeństwa przejęć: zmiany wstrzymane na 48 h wchodzą w życie, a niewysłane powiadomienia idą dalej
+  let applied = 0;
+  let takeover = null;
+  try {
+    const r = await db.rpc('apply_due_place_changes');
+    applied = r.data || 0;
+    takeover = await sendPendingTakeoverNotices(site);
+  } catch { /* przed 14_bezpieczenstwo_przejec.sql funkcji nie ma */ }
+  return NextResponse.json({ alerts, payments, reminders, ranking: rankError ? 'błąd' : 'ok', purged, applied, takeover });
 }

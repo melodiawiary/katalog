@@ -2,13 +2,15 @@ import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import ConfirmButton from '@/components/admin/ConfirmButton';
 import EvidenceLink from './EvidenceLink';
-import { decideClaim, revokeOwner } from './actions';
+import { decideClaim, revokeOwner, resolveTakeover } from './actions';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Przejęcia salonów' };
 
 const date = (d) => (d ? new Date(d).toLocaleDateString('pl-PL', { timeZone: 'Europe/Warsaw', day: 'numeric', month: 'long', year: 'numeric' }) : '');
 const METHOD = { email: 'kod z e-maila', reczna: 'ręcznie' };
+const STRENGTH = { silna: 'kod na adres z katalogu', slaba: 'słaby dowód (bez premii w rankingu)' };
+const RESOLUTION = { przywrocono: 'dostęp przywrócony', odrzucono: 'przejęcie odrzucone' };
 
 export default async function ClaimsAdmin() {
   const supabase = await createClient();
@@ -19,6 +21,28 @@ export default async function ClaimsAdmin() {
     <div>
       <h1>Przejęcia salonów</h1>
       <p className="small muted">Zgłoszenia z poprawnym kodem na adres salonu zatwierdzają się same. Tu trafiają tylko weryfikacje ręczne i spory z obecnym opiekunem.</p>
+
+      <h2>Sprzeciwy „To nie ja” ({data.objections.length})</h2>
+      {data.objections.length === 0 && <p className="box">Brak sprzeciwów.</p>}
+      <ul className="plain">
+        {data.objections.map((e) => (
+          <li key={e.id} className="box">
+            <p><strong><Link href={`/salony/${e.place_slug}`}>{e.place_name}</Link></strong>, {e.city} <span className="status status-nowe">wstrzymane</span></p>
+            <p className="small">
+              Przejął(a): {e.claimant_name} ({e.claimant_email || 'konto usunięte'}) · {STRENGTH[e.strength]} · przejęcie {date(e.created_at)}, sprzeciw {date(e.objected_at)}
+            </p>
+            {e.note && <p className="small">Uwagi zgłaszającego sprzeciw: {e.note}</p>}
+            {e.others.length > 0 && <p className="small">Pozostali opiekunowie: {e.others.map((o) => `${o.name || '-'} (${o.email})`).join(', ')}.</p>}
+            <p className="small muted">Odrzucenie odbiera dostęp. Jeśli to był jedyny opiekun, profil wraca do stanu sprzed przejęcia (dane, zdjęcia i odpowiedzi właściciela znikają).</p>
+            <form action={resolveTakeover} className="inline-form">
+              <input type="hidden" name="id" value={e.id} />
+              <input name="note" placeholder="Notatka" maxLength={500} />
+              <button name="op" value="reject" className="btn btn-small">Odrzuć przejęcie</button>
+              <button name="op" value="uphold" className="btn btn-small btn-light">Przywróć dostęp</button>
+            </form>
+          </li>
+        ))}
+      </ul>
 
       <h2>Do decyzji ({data.pending.length})</h2>
       {data.pending.length === 0 && <p className="box">Brak zgłoszeń do sprawdzenia.</p>}
@@ -56,7 +80,7 @@ export default async function ClaimsAdmin() {
               <tr key={`${o.place_id}-${o.user_id}`}>
                 <td><Link href={`/salony/${o.place_slug}`}>{o.place_name}</Link>, {o.city}</td>
                 <td>{o.name || '-'} ({o.role === 'zarzadzajacy' ? 'zarządza' : 'właściciel'})</td>
-                <td>{o.email}</td>
+                <td>{o.email}{o.suspended && <span className="status status-nowe"> wstrzymany</span>}{o.verified && <span className="small muted"> ✓ zweryfikowany salon</span>}</td>
                 <td>{date(o.since)}</td>
                 <td>
                   <form action={revokeOwner}>
@@ -76,6 +100,19 @@ export default async function ClaimsAdmin() {
         <ul className="plain">
           {data.plus.map((p, i) => (
             <li key={i} className="small">{p.place_name}, {p.city} · {p.email}{p.note && <> · „{p.note}”</>} · {date(p.created_at)}</li>
+          ))}
+        </ul>
+      )}
+
+      <h2>Dziennik przejęć</h2>
+      {data.log.length === 0 ? <p className="muted">Brak.</p> : (
+        <ul className="plain">
+          {data.log.map((e) => (
+            <li key={e.id} className="small">
+              {date(e.created_at)} · {e.place_name}, {e.city} · {e.claimant_name} ({e.claimant_email || 'konto usunięte'}) · {STRENGTH[e.strength]}
+              {e.objected_at && <> · sprzeciw {date(e.objected_at)}{e.resolution ? `: ${RESOLUTION[e.resolution]}` : ' (czeka)'}</>}
+              {e.admin_note && <> · {e.admin_note}</>}
+            </li>
           ))}
         </ul>
       )}
