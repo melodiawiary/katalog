@@ -84,7 +84,7 @@ export default async function HomePage({ searchParams }) {
       {products.length > 0 && (
         <section className="home-section">
           <h2>Najpopularniejsze</h2>
-          <div className="grid">{products.map((p) => <ProductCard key={p.id} p={p} />)}</div>
+          <div className="grid product-grid">{products.map((p) => <ProductCard key={p.id} p={p} />)}</div>
           <p className="center-text"><Link href="/sklep" className="btn btn-light">Zobacz wszystkie produkty</Link></p>
         </section>
       )}
