@@ -1087,3 +1087,37 @@ a.home-strip-item:hover .home-strip-label { color: var(--accent-dark); }
   .svcpage-text strong { font-size: 1.3rem; }
   .svcpage-title { font-size: 2.8rem; }
 }
+
+/* ===== Strona główna: dopasowanie do makiety (brąz i pomarańcz, 2026-11-15) ===== */
+.logo { color: #2b1608; }
+.home-search { display: none; align-items: center; gap: 10px; background: #fff; border: 1.5px solid #d9cfc6; border-radius: 999px; padding: 2px 16px; margin: 10px 0 0; color: #4a3b30; }
+.home-search input { border: 0; outline: 0; background: transparent; flex: 1; min-width: 0; font-size: 1rem; padding: 10px 0; }
+.portal-hero { background: none; margin: 0; padding: 12px 0 0; border-radius: 0; position: relative; }
+.portal-hero::before { content: ''; position: absolute; left: 0; right: 0; top: 38%; bottom: 0; background: #fdf0e2; border-radius: 50% 50% 0 0 / 40px 40px 0 0; z-index: 0; }
+.portal-hero > * { position: relative; z-index: 1; }
+.portal-title { color: #2b1608; font-size: 1.5rem; margin: 6px 0 2px; }
+.portal-sub { color: #4a3b30; font-size: 0.95rem; margin: 0 0 4px; }
+.portal-art { width: min(52%, 250px); }
+.portal-btns { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; margin: 4px 0 8px; }
+.portal-btn { min-width: 0; padding: 10px 12px; font-size: 1.05rem; }
+.portal-btn-main { background: #e8801f; }
+.portal-btn-alt { background: #fff; color: #2b1608; border: 2px solid #f3b27a; }
+.portal-btn-alt .portal-ico { color: #e8801f; }
+.portal-ico { width: 36px; height: 36px; }
+.portal-h2 { color: #2b1608; font-size: 1.3rem; }
+.svc-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.svc-tile { background: #fdf3e8; border: 1px solid #f6e6d4; color: #2b1608; font-size: 0.85rem; padding: 8px 4px 8px; }
+.svc-tile:hover { border-color: #f3b27a; box-shadow: none; }
+.svc-tile img { width: 74%; max-width: 110px; }
+.portal-wide-btn { background: #e8801f; color: #fff; border: 0; border-radius: 999px; }
+.reorder-strip { background: #fdf3e8; border: 1px solid #f6e6d4; color: #2b1608; }
+.reorder-strip .portal-chev { stroke: #e8801f; }
+.trust-row li { color: #4a3b30; }
+@media (max-width: 899px) { .home-search { display: flex; } }
+@media (max-width: 640px) { .portal-title { font-size: 1.35rem; } }
+@media (min-width: 900px) {
+  .portal-hero::before { top: 30%; bottom: 40px; }
+  .portal-title { font-size: 2.6rem; }
+  .portal-art { width: min(34%, 360px); }
+  .portal-btn-alt { border-color: #f3b27a; }
+}

@@ -49,6 +49,11 @@ export default async function HomePage({ searchParams }) {
 
   return (
     <>
+      <form action="/szukaj" method="get" role="search" className="home-search">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" /><path d="M15.5 15.5L21 21" /></svg>
+        <input type="search" name="q" placeholder="Czego szukasz dla pupila?" aria-label="Szukaj produktów" enterKeyHint="search" />
+      </form>
+
       <section className="portal-hero">
         <h1 className="portal-title">
           Wszystko dla Twojego pupila
