@@ -102,7 +102,7 @@ export default async function PlacePage({ params }) {
           {groups.length === 0 && (
             <>
               <h2>Cennik</h2>
-              <p className="muted">Salon nie podał jeszcze cennika. Zapytaj o cenę telefonicznie; jeśli już u nich byłeś, możesz dodać, ile zapłaciłeś, w swojej opinii.</p>
+              <p className="muted">Salon nie podał jeszcze cennika. Zapytaj o cenę telefonicznie w salonie.</p>
             </>
           )}
           {groups.length > 0 && (

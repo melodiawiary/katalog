@@ -82,7 +82,7 @@ export default function PlaceReviewForm({ placeId, services = [] }) {
           <textarea name="body" rows={4} maxLength={2000} defaultValue={mine?.body || ''} />
         </label>
         <details>
-          <summary className="small">Dodaj, ile zapłaciłeś (nieobowiązkowo, pomaga innym)</summary>
+          <summary className="small">Dodaj, jakiej usługi dotyczy opinia (nieobowiązkowo)</summary>
           <div className="grid-2" style={{ marginTop: 8 }}>
             <label>Usługa
               <select name="service" defaultValue={mine?.service || ''}>
