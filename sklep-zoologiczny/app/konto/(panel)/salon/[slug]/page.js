@@ -1,3 +1,4 @@
+import { placeHref, placeBase } from '@/lib/place-categories';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { requireUser } from '@/lib/account';
@@ -29,9 +30,10 @@ export default async function OwnerSalonPage({ params }) {
   const { supabase } = await requireUser(`/konto/salon`);
   const { data: d } = await supabase.rpc('owner_dashboard', { p_slug: slug });
   if (!d) notFound();
+  const cat = d.place.category || 'groomer';
   const [{ data: services }, { data: featureDefs }] = await Promise.all([
-    supabase.from('service_defs').select('code, label').order('sort'),
-    supabase.from('feature_defs').select('code, label').order('sort'),
+    supabase.from('service_defs').select('code, label').contains('categories', [cat]).order('sort'),
+    supabase.from('feature_defs').select('code, label').contains('categories', [cat]).order('sort'),
   ]);
   const p = d.place;
   const advice = tips(d);
@@ -44,7 +46,7 @@ export default async function OwnerSalonPage({ params }) {
       <p className="muted"><Link href="/konto/salon">← Moje salony</Link></p>
       <div className="title-row">
         <h1>{p.name}</h1>
-        <Link href={`/salony/${p.slug}`} className="muted" target="_blank">Zobacz stronę salonu ↗</Link>
+        <Link href={placeHref(cat, p.slug)} className="muted" target="_blank">Zobacz stronę salonu ↗</Link>
       </div>
       {d.is_admin && <p className="box small">Widok administratora.</p>}
       {d.hold_until && (
@@ -70,7 +72,7 @@ export default async function OwnerSalonPage({ params }) {
           </>
         ) : <p className="ok small">Profil jest kompletny. Najlepsze, co możesz teraz zrobić, to zbierać opinie i na nie odpowiadać.</p>}
         <p className="small muted">Ranking liczymy z opinii (im więcej i lepsze, tym wyżej), kompletności profilu i statusu „Sprawdzony”. Nie pokazujemy danych innych salonów.</p>
-        {d.city_slug && <Link className="small" href={`/salony/miasto/${d.city_slug}`}>Zobacz ranking miasta ↗</Link>}
+        {d.city_slug && <Link className="small" href={`${placeBase(cat)}/miasto/${d.city_slug}`}>Zobacz ranking miasta ↗</Link>}
       </section>
 
       <section id="opinie">

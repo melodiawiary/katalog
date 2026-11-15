@@ -9,7 +9,7 @@ const PEEK = 76; // zwinięty panel: widać tylko uchwyt i liczbę salonów
 
 // Telefon: mapa w karcie nad listą z przyciskiem "Pokaż mapę"; po dotknięciu mapa na cały ekran i przeciągany panel z listą.
 // Komputer: mapa po prawej, lista obok (układ z CSS).
-export default function PlacesBrowser({ items, me, total, children }) {
+export default function PlacesBrowser({ items, me, total, children, base = '/salony', tone = 'orange', noun = { none: 'Brak salonów', one: 'salon', few: 'salony', many: 'salonów' }, linkLabel = 'Zobacz salon' }) {
   const router = useRouter();
   const stageRef = useRef(null);
   const listRef = useRef(null);
@@ -49,6 +49,16 @@ export default function PlacesBrowser({ items, me, total, children }) {
     window.addEventListener('keydown', esc);
     return () => { document.body.style.overflow = prev; window.removeEventListener('keydown', esc); };
   }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // przycisk "Mapa" w zakładkach: na telefonie mapa na cały ekran, na komputerze przewinięcie do mapy
+  useEffect(() => {
+    const h = () => {
+      if (mobile) openMap();
+      else stageRef.current?.querySelector('.places-map-col')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    };
+    window.addEventListener('places:open-map', h);
+    return () => window.removeEventListener('places:open-map', h);
+  }); // eslint-disable-line react-hooks/exhaustive-deps
 
   function openMap() { setSnap('half'); setSelected(null); setMoved(null); setMapOpen(true); }
   function closeMap() { setMapOpen(false); setMoved(null); setSelected(null); }
@@ -113,7 +123,7 @@ export default function PlacesBrowser({ items, me, total, children }) {
     p.set('sort', 'odleglosc');
     setMoved(null);
     setSelected(null);
-    router.push(`/salony?${p.toString()}`);
+    router.push(`${base}?${p.toString()}`);
   }
 
   const sheetStyle = open ? { transform: `translateY(${top}px)`, transition: dragTop == null ? 'transform 0.25s ease' : 'none' } : undefined;
@@ -133,6 +143,9 @@ export default function PlacesBrowser({ items, me, total, children }) {
           bottomInset={open ? Math.max(0, h - top) : 0}
           refit={mapOpen ? 1 : 0}
           interactive={!mobile || open}
+          base={base}
+          tone={tone}
+          linkLabel={linkLabel}
         />
         {mobile && !open && (
           <button type="button" className="places-show-map" onClick={openMap}>
@@ -158,11 +171,11 @@ export default function PlacesBrowser({ items, me, total, children }) {
           onPointerCancel={onUp}
           role="button"
           tabIndex={0}
-          aria-label="Panel z listą salonów: dotknij lub przeciągnij, aby zmienić wysokość"
+          aria-label="Panel z listą: dotknij lub przeciągnij, aby zmienić wysokość"
           onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSnap((s) => (s === 'half' ? 'full' : 'half')); } }}
         >
           <span className="sheet-handle" aria-hidden="true" />
-          <span className="sheet-count">{total === 0 ? 'Brak salonów' : `${total} ${total === 1 ? 'salon' : total < 5 ? 'salony' : 'salonów'}`}</span>
+          <span className="sheet-count">{total === 0 ? noun.none : `${total} ${total === 1 ? noun.one : total % 10 >= 2 && total % 10 <= 4 && (total % 100 < 10 || total % 100 >= 20) ? noun.few : noun.many}`}</span>
         </div>
         <div
           className="sheet-list"

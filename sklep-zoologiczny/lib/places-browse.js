@@ -7,6 +7,8 @@ const num = (v) => {
 };
 const one = (v) => (Array.isArray(v) ? v[0] : v);
 
+const isoDate = (v) => (/^\d{4}-\d{2}-\d{2}$/.test(String(v || '')) && !Number.isNaN(Date.parse(v)) ? String(v) : '');
+
 export function parsePlaces(sp = {}) {
   const lat = num(one(sp.lat));
   const lng = num(one(sp.lng));
@@ -29,10 +31,12 @@ export function parsePlaces(sp = {}) {
     where: String(one(sp.gdzie) || '').trim().slice(0, 100),
     radius: radius != null && radius > 0 && radius <= 200 ? radius : null,
     sort,
+    from: isoDate(one(sp.od)),
+    to: isoDate(one(sp.do)),
   };
 }
 
-export function rpcArgs(f, perPage = 200) {
+export function rpcArgs(f, perPage = 200, category = null) {
   return {
     p_lat: f.lat,
     p_lng: f.lng,
@@ -49,6 +53,7 @@ export function rpcArgs(f, perPage = 200) {
     p_sort: f.sort || null,
     p_page: 1,
     p_per_page: perPage,
+    ...(category ? { p_category: category } : {}),
   };
 }
 

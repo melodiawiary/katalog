@@ -19,7 +19,7 @@ export default async function NewPlacePage({ searchParams }) {
     const { data: r } = await supabase.from('place_requests').select('*').eq('id', reqId).maybeSingle();
     if (r) {
       requestId = r.id;
-      place = { name: r.place_name, city: r.city, status: 'szkic' };
+      place = { name: r.place_name, city: r.city, status: 'szkic', category: r.category || 'groomer' };
       priv = {
         notes: [r.details, `Zgłosił(a): ${[r.contact_name, r.contact_email, r.contact_phone].filter(Boolean).join(', ')}`].filter(Boolean).join('\n'),
         source_url: '',
@@ -32,7 +32,7 @@ export default async function NewPlacePage({ searchParams }) {
       <p className="muted"><Link href="/admin/miejsca">← Salony</Link></p>
       <h1>Nowe miejsce</h1>
       {requestId && <p className="box">Szkic z zgłoszenia nr {requestId}. Szczegóły zgłoszenia są w notatkach prywatnych.</p>}
-      <PlaceForm place={place} priv={priv} services={refs.services} featureDefs={refs.featureDefs} requestId={requestId} />
+      <PlaceForm place={place} priv={priv} services={refs.services} featureDefs={refs.featureDefs} requestId={requestId} category={['groomer', 'weterynarz', 'hotel'].includes(sp.kategoria) ? sp.kategoria : 'groomer'} />
     </>
   );
 }

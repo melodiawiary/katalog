@@ -1,6 +1,7 @@
 'use server';
 
 // Panel katalogu groomerów (tabele z 09_miejsca.sql)
+import { PLACE_CATEGORIES } from '@/lib/place-categories';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { adminClient } from '@/lib/admin-server';
@@ -60,12 +61,15 @@ export async function savePlace(prev, fd) {
   const name = str(fd, 'name', 120);
   if (name.length < 2) return { error: 'Wpisz nazwę (min. 2 znaki).' };
 
-  const kind = String(fd.get('kind') || 'salon');
-  if (!PLACE_KIND[kind]) return { error: 'Nieznany rodzaj miejsca.' };
+  const category = String(fd.get('category') || 'groomer');
+  if (!PLACE_CATEGORIES[category]) return { error: 'Nieznana kategoria.' };
+  const kind = String(fd.get('kind') || PLACE_CATEGORIES[category].kinds[0]);
+  if (!PLACE_KIND[kind] || !PLACE_CATEGORIES[category].kinds.includes(kind)) return { error: 'Ten rodzaj nie pasuje do wybranej kategorii.' };
   const status = String(fd.get('status') || 'szkic');
   if (!PLACE_STATUS[status]) return { error: 'Nieznany status.' };
 
-  const species = fd.getAll('species').map(String).filter((s) => SPECIES[s]);
+  let species = fd.getAll('species').map(String).filter((s) => SPECIES[s]);
+  if (category === 'weterynarz' && species.length === 0) species = Object.keys(SPECIES); // weterynarze przyjmują wszystkie zwierzęta
   if (species.length === 0) return { error: 'Zaznacz, jakie zwierzęta przyjmuje (psy, koty).' };
   const features = fd.getAll('features').map(String).filter((f) => /^[a-z0-9-]+$/.test(f)).slice(0, 20);
 
@@ -85,7 +89,7 @@ export async function savePlace(prev, fd) {
     if (!Number.isInteger(radius) || radius < 1 || radius > 100) return { error: 'Zasięg dojazdu: liczba km od 1 do 100.' };
   }
   if (kind === 'mobilny' && radius == null) {
-    return { error: 'Groomer mobilny: wpisz zasięg dojazdu w km (bez niego nie pokaże się w „blisko mnie”).' };
+    return { error: 'Miejsce mobilne: wpisz zasięg dojazdu w km (bez niego nie pokaże się w „blisko mnie”).' };
   }
 
   const vh = validateHours(parseJson(fd, 'hours'));
@@ -96,7 +100,7 @@ export async function savePlace(prev, fd) {
   const prices = vp.prices;
 
   const row = {
-    name, kind, status, species, features, lat, lng,
+    name, category, kind, status, species, features, lat, lng,
     verified: fd.get('verified') === 'on',
     description: str(fd, 'description', 3000),
     address: str(fd, 'address', 200),
@@ -161,6 +165,8 @@ export async function savePlace(prev, fd) {
 
   revalidatePath('/admin', 'layout');
   revalidatePath('/salony', 'layout');
+  revalidatePath('/weterynarze', 'layout');
+  revalidatePath('/hotele', 'layout');
   redirect(`/admin/miejsca/${placeId}?zapisano=1`);
 }
 
@@ -174,6 +180,8 @@ export async function setPlaceStatus(prev, fd) {
   if (error) return { error: friendly(error) };
   revalidatePath('/admin', 'layout');
   revalidatePath('/salony', 'layout');
+  revalidatePath('/weterynarze', 'layout');
+  revalidatePath('/hotele', 'layout');
   return { ok: true, message: 'Zmieniono.', at: Date.now() };
 }
 
@@ -183,6 +191,8 @@ export async function deletePlace(fd) {
   if (error) throw new Error(friendly(error));
   revalidatePath('/admin', 'layout');
   revalidatePath('/salony', 'layout');
+  revalidatePath('/weterynarze', 'layout');
+  revalidatePath('/hotele', 'layout');
   redirect('/admin/miejsca');
 }
 
@@ -193,6 +203,8 @@ export async function setCatalogPublic(prev, fd) {
   if (error) return { error: friendly(error) };
   revalidatePath('/admin', 'layout');
   revalidatePath('/salony', 'layout');
+  revalidatePath('/weterynarze', 'layout');
+  revalidatePath('/hotele', 'layout');
   return { ok: true, message: enabled ? 'Katalog jest publiczny.' : 'Katalog jest wyłączony (klienci go nie widzą).', at: Date.now() };
 }
 

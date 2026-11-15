@@ -1251,3 +1251,43 @@ a.home-strip-item:hover .home-strip-label { color: var(--accent-dark); }
 @media (max-width: 899px) {
   .svcpage-text span { font-size: calc(0.74rem + 2px); }
 }
+
+/* ===== Kategorie miejsc: weterynarze (turkus) i hotele (pomarańcz), wspólny układ z groomerami ===== */
+.theme-vet { --accent: #00a39e; --accent-dark: #007f7b; }
+.theme-vet .salon-banner { background: radial-gradient(ellipse 60% 90% at 78% 60%, #c8efe5 0%, rgba(200, 239, 229, 0) 100%), linear-gradient(180deg, #eaf8f4, #def3ed); }
+.theme-vet .pchip.on, .theme-vet .pchip-pop button.on, .theme-vet .places-filters-btn.on { background: #d6f1ec; }
+.theme-vet .place-tile { background: #d6f1ec; }
+.theme-vet .place-tag.price { background: #eaf8f5; border-color: #bfe6df; }
+.theme-vet .status.status-zrealizowane { background: #d6f1ec; color: #00716d; }
+.theme-hotel { --accent: #e8801f; --accent-dark: #c4631c; }
+.theme-hotel .salon-banner { background: radial-gradient(ellipse 60% 90% at 78% 60%, #fde7cf 0%, rgba(253, 231, 207, 0) 100%), linear-gradient(180deg, #fff6ec, #fdf1e4); }
+
+.pcat-chip { display: inline-block; background: var(--accent); color: #fff; font-weight: 800; font-size: 0.8rem; padding: 4px 12px; border-radius: 999px; margin-bottom: 6px; }
+
+.pcat-dates { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 8px 12px; }
+.pcat-dates svg { color: var(--accent); flex: 0 0 auto; }
+.pcat-dates label { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 0.85rem; }
+.pcat-dates input[type='date'] { font: inherit; border: 1px solid var(--line); border-radius: 10px; padding: 5px 8px; background: #fff; color: var(--text); }
+
+.pcat-tabs { display: flex; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 4px; gap: 4px; margin: 6px 0 2px; }
+.pcat-tab { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: 0; background: transparent; border-radius: 11px; padding: 9px 6px; font: inherit; font-weight: 800; font-size: 0.9rem; color: var(--text); cursor: pointer; }
+.pcat-tab.on { background: var(--accent); color: #fff; }
+
+.pcat-rank { background: #fff8f0; border: 1px solid #f6e6d4; border-radius: 18px; padding: 12px; margin: 10px 0; scroll-margin-top: 70px; }
+.theme-vet .pcat-rank { background: #f0faf8; border-color: #d3eee9; }
+.pcat-rank-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+.pcat-rank-head img { display: block; flex: 0 0 auto; }
+.pcat-rank-head > div { flex: 1; min-width: 150px; }
+.pcat-rank-head h2 { margin: 0; font-size: 1.05rem; }
+.pcat-rank-head p { margin: 0; color: var(--muted); font-size: 0.82rem; }
+.pcat-rank-all { border: 1.5px solid var(--accent); color: var(--accent-dark); border-radius: 999px; padding: 6px 12px; font-weight: 800; font-size: 0.85rem; text-decoration: none; white-space: nowrap; background: #fff; }
+.pcat-rank-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.pcat-rank-card { display: grid; justify-items: center; text-align: center; gap: 2px; background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 10px 6px; text-decoration: none; color: inherit; height: 100%; box-sizing: border-box; }
+.pcat-rank-card img { display: block; }
+.pcat-rank-card strong { font-size: 0.92rem; line-height: 1.2; }
+.pcat-stay { display: grid; gap: 6px; }
+#lista-miejsc { scroll-margin-top: 70px; }
+@media (max-width: 380px) { .pcat-rank-card strong { font-size: 0.82rem; } }
+.pchip svg { width: 20px; height: 20px; }
+.pcat-dates label { flex: 1 1 auto; }
+.pcat-dates input[type='date'] { flex: 1; min-width: 0; }

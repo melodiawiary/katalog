@@ -8,6 +8,8 @@ import { sendOwnerReviewMails } from '@/lib/order-mail';
 const done = () => {
   revalidatePath('/admin', 'layout');
   revalidatePath('/salony', 'layout');
+  revalidatePath('/weterynarze', 'layout');
+  revalidatePath('/hotele', 'layout');
 };
 
 // Zatwierdzenie / ukrycie / przywrócenie / usunięcie opinii o salonie (ranking przelicza baza sama)

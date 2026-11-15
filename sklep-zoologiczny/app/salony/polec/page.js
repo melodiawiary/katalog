@@ -1,15 +1,18 @@
 import Link from 'next/link';
 import PlaceRequestForm from '@/components/places/PlaceRequestForm';
+import { PLACE_CATEGORIES } from '@/lib/place-categories';
 
-export const metadata = { title: 'Poleć salon groomerski' };
+const cfg = PLACE_CATEGORIES.groomer;
+
+export const metadata = { title: cfg.recommend };
 
 export default function RecommendPage() {
   return (
-    <div className="checkout">
-      <p className="muted"><Link href="/salony">← Salony</Link></p>
-      <h1>Poleć salon</h1>
-      <p className="muted">Znasz groomera, któremu ufasz? Napisz o nim, a sprawdzimy i dodamy do katalogu. Właściciele salonów też mogą zgłosić siebie.</p>
-      <PlaceRequestForm kind="polecenie" />
+    <div className={`checkout place-theme ${cfg.theme}`}>
+      <p className="muted"><Link href={cfg.base}>← {cfg.back}</Link></p>
+      <h1>{cfg.recommend}</h1>
+      <p className="muted">{cfg.recommendLead}</p>
+      <PlaceRequestForm kind="polecenie" category="groomer" />
     </div>
   );
 }

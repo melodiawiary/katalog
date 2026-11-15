@@ -1,9 +1,12 @@
 // Katalog groomerów: stałe wspólne dla panelu i stron publicznych (zgodne z check-ami w 09_miejsca.sql)
 
+// Wszystkie rodzaje (do walidacji adresu i formularzy); etykiety zależne od kategorii: kindLabel() w lib/place-categories.js
 export const PLACE_KIND = {
   salon: 'Salon',
-  mobilny: 'Groomer mobilny',
-  domowy: 'Groomer domowy',
+  mobilny: 'Mobilny (dojazd do klienta)',
+  domowy: 'Domowy',
+  gabinet: 'Gabinet weterynaryjny',
+  hotel: 'Hotel dla zwierząt',
 };
 
 export const PLACE_STATUS = {

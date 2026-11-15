@@ -6,6 +6,7 @@ import PhotoManager from '@/components/places/PhotoManager';
 import ConfirmButton from '@/components/admin/ConfirmButton';
 import { deletePlace } from '../actions';
 import { PLACE_STATUS, PLACE_STATUS_CLASS } from '@/lib/places';
+import { placeHref, placeBase } from '@/lib/place-categories';
 
 export const metadata = { title: 'Edycja miejsca' };
 
@@ -21,9 +22,9 @@ export default async function EditPlacePage({ params, searchParams }) {
       <p className="muted"><Link href="/admin/miejsca">← Salony</Link></p>
       <div className="title-row">
         <h1>{p.name}</h1>
-        <Link href={`/salony/${p.slug}`} className="muted" target="_blank">Podgląd strony ↗</Link>
+        <Link href={placeHref(p.category, p.slug)} className="muted" target="_blank">Podgląd strony ↗</Link>
       </div>
-      <p><span className={`status ${PLACE_STATUS_CLASS[p.status]}`}>{PLACE_STATUS[p.status]}</span> <span className="muted">adres strony: /salony/{p.slug}</span></p>
+      <p><span className={`status ${PLACE_STATUS_CLASS[p.status]}`}>{PLACE_STATUS[p.status]}</span> <span className="muted">adres strony: {placeBase(p.category)}/{p.slug}</span></p>
       {zapisano && <p className="ok">Zapisano.</p>}
       <PhotoManager placeId={p.id} slug={p.slug} photos={data.photos} />
       {/* key: po zapisie formularz wczytuje świeże dane z bazy */}

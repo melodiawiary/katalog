@@ -2,14 +2,16 @@
 
 import { useActionState } from 'react';
 import { submitPlaceRequest } from '@/app/salony/actions';
+import { placeCategory } from '@/lib/place-categories';
 
 const COPY = {
-  polecenie: { details: 'Dlaczego go polecasz? Adres, strona, telefon (cokolwiek pomoże nam go znaleźć)', button: 'Poleć salon', req: false },
+  polecenie: { details: 'Dlaczego go polecasz? Adres, strona, telefon (cokolwiek pomoże nam go znaleźć)', button: 'Poleć', req: false },
   korekta: { details: 'Co trzeba poprawić? (adres, godziny, cennik, telefon...) *', button: 'Wyślij poprawkę', req: true },
-  usuniecie: { details: 'Dlaczego prosisz o usunięcie? Napisz, czy jesteś właścicielem salonu', button: 'Poproś o usunięcie', req: false },
+  usuniecie: { details: 'Dlaczego prosisz o usunięcie? Napisz, czy jesteś właścicielem', button: 'Poproś o usunięcie', req: false },
 };
 
-export default function PlaceRequestForm({ kind, placeId = null }) {
+export default function PlaceRequestForm({ kind, placeId = null, category = 'groomer' }) {
+  const cfg = placeCategory(category);
   const [state, action, pending] = useActionState(submitPlaceRequest, null);
   const c = COPY[kind];
   if (state?.ok) return <p className="box ok-box">{state.message}</p>;
@@ -17,10 +19,11 @@ export default function PlaceRequestForm({ kind, placeId = null }) {
   return (
     <form action={action} className="request-form">
       <input type="hidden" name="kind" value={kind} />
+      <input type="hidden" name="category" value={category} />
       {placeId && <input type="hidden" name="place_id" value={placeId} />}
       {kind === 'polecenie' && (
         <div className="grid-2">
-          <label>Nazwa salonu / groomera *<input name="place_name" required maxLength={120} /></label>
+          <label>{cfg.nameLabel} *<input name="place_name" required maxLength={120} /></label>
           <label>Miasto *<input name="city" required maxLength={80} /></label>
         </div>
       )}

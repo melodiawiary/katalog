@@ -2,10 +2,11 @@ import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { needsSql, cleanSearch } from '@/lib/admin';
 import { PLACE_KIND, PLACE_STATUS, PLACE_STATUS_CLASS } from '@/lib/places';
+import { PLACE_CATEGORIES, kindLabel } from '@/lib/place-categories';
 import ActionForm from '@/components/admin/ActionForm';
 import { setPlaceStatus, setCatalogPublic } from './actions';
 
-export const metadata = { title: 'Salony i groomerzy' };
+export const metadata = { title: 'Miejsca w katalogu' };
 
 const PER_PAGE = 40;
 
@@ -14,21 +15,23 @@ export default async function PlacesAdminPage({ searchParams }) {
   const q = cleanSearch(sp.q);
   const status = PLACE_STATUS[sp.status] ? sp.status : '';
   const kind = PLACE_KIND[sp.kind] ? sp.kind : '';
+  const category = PLACE_CATEGORIES[sp.kategoria] ? sp.kategoria : '';
   const page = Math.max(Number(sp.strona) || 1, 1);
 
   const supabase = await createClient();
   const cfgRes = await supabase.from('places_config').select('public_enabled, min_published').maybeSingle();
   if (needsSql(cfgRes.error)) {
-    return (<><h1>Salony i groomerzy</h1><p className="alert">Baza nie ma tabel katalogu. Uruchom supabase/09_miejsca.sql.</p></>);
+    return (<><h1>Miejsca w katalogu</h1><p className="alert">Baza nie ma tabel katalogu. Uruchom supabase/09_miejsca.sql.</p></>);
   }
   const cfg = cfgRes.data || { public_enabled: false, min_published: 5 };
 
   let query = supabase.from('places')
-    .select('id, slug, name, kind, status, city, district, address, species, updated_at', { count: 'exact' })
+    .select('id, slug, name, kind, category, status, city, district, address, species, updated_at', { count: 'exact' })
     .order('updated_at', { ascending: false })
     .range((page - 1) * PER_PAGE, page * PER_PAGE - 1);
   if (status) query = query.eq('status', status);
   if (kind) query = query.eq('kind', kind);
+  if (category) query = query.eq('category', category);
   if (q) query = query.or(`name.ilike.%${q}%,city.ilike.%${q}%,district.ilike.%${q}%,address.ilike.%${q}%`);
 
   const [list, pub, drafts, hidden, news, pubCities] = await Promise.all([
@@ -53,7 +56,7 @@ export default async function PlacesAdminPage({ searchParams }) {
 
   const link = (patch) => {
     const p = new URLSearchParams();
-    const m = { q, status, kind, strona: page > 1 ? String(page) : '', ...patch };
+    const m = { q, status, kind, kategoria: category, strona: page > 1 ? String(page) : '', ...patch };
     for (const [k, v] of Object.entries(m)) if (v) p.set(k, v);
     const s = p.toString();
     return `/admin/miejsca${s ? `?${s}` : ''}`;
@@ -62,8 +65,12 @@ export default async function PlacesAdminPage({ searchParams }) {
   return (
     <>
       <div className="title-row">
-        <h1>Salony i groomerzy</h1>
-        <Link href="/admin/miejsca/nowe" className="btn btn-small">+ Dodaj miejsce</Link>
+        <h1>Miejsca w katalogu</h1>
+        <span className="inline-form">
+          <Link href="/admin/miejsca/nowe?kategoria=groomer" className="btn btn-small">+ Groomer</Link>{' '}
+          <Link href="/admin/miejsca/nowe?kategoria=weterynarz" className="btn btn-small">+ Weterynarz</Link>{' '}
+          <Link href="/admin/miejsca/nowe?kategoria=hotel" className="btn btn-small">+ Hotel</Link>
+        </span>
       </div>
 
       <div className="box catalog-switch">
@@ -72,16 +79,21 @@ export default async function PlacesAdminPage({ searchParams }) {
           Opublikowane miejsca: <strong>{published}</strong>. Próg włączenia: {cfg.min_published} w jednym mieście
           {best[1] > 0 && <> (najwięcej: {best[0]}, {best[1]})</>}.
           {!cfg.public_enabled && !enough && <> Katalog da się włączyć po opublikowaniu jeszcze {cfg.min_published - best[1]} w jednym mieście.</>}
-          {' '}Dopóki jest wyłączony, strony /salony widzisz tylko Ty (jako podgląd).
+          {' '}Dopóki jest wyłączony, strony /salony, /weterynarze i /hotele widzisz tylko Ty (jako podgląd).
         </p>
         <ActionForm action={setCatalogPublic} submitLabel="Zapisz">
           <label className="radio">
             <input type="checkbox" name="public_enabled" defaultChecked={cfg.public_enabled} disabled={!cfg.public_enabled && !enough} />
-            Katalog publiczny (klienci widzą /salony)
+            Katalog publiczny (klienci widzą /salony, /weterynarze, /hotele)
           </label>
         </ActionForm>
       </div>
 
+      <nav className="chips">
+        {Object.values(PLACE_CATEGORIES).map((c) => (
+          <Link key={c.key} href={link({ kategoria: category === c.key ? '' : c.key, kind: '', strona: '' })} className={category === c.key ? 'chip active' : 'chip'}>{c.chip}</Link>
+        ))}
+      </nav>
       <nav className="chips">
         <Link href={link({ status: '', strona: '' })} className={!status ? 'chip active' : 'chip'}>Wszystkie</Link>
         <Link href={link({ status: 'opublikowany', strona: '' })} className={status === 'opublikowany' ? 'chip active' : 'chip'}>Opublikowane ({published})</Link>
@@ -93,6 +105,7 @@ export default async function PlacesAdminPage({ searchParams }) {
       <form className="search" action="/admin/miejsca">
         <input type="search" name="q" defaultValue={q} placeholder="Szukaj: nazwa, miasto, dzielnica, ulica" />
         {status && <input type="hidden" name="status" value={status} />}
+        {category && <input type="hidden" name="kategoria" value={category} />}
         <select name="kind" defaultValue={kind} aria-label="Rodzaj">
           <option value="">Każdy rodzaj</option>
           {Object.entries(PLACE_KIND).map(([k, l]) => <option key={k} value={k}>{l}</option>)}
@@ -109,8 +122,8 @@ export default async function PlacesAdminPage({ searchParams }) {
           <div className="place-row-main">
             <Link href={`/admin/miejsca/${p.id}`}><strong>{p.name}</strong></Link>
             <span className="small muted">
-              {PLACE_KIND[p.kind]} · {[p.district, p.city].filter(Boolean).join(', ') || 'brak miasta'}
-              {p.address && <> · {p.address}</>} · {p.species.map((s) => (s === 'kot' ? 'koty' : 'psy')).join(' i ')}
+              {PLACE_CATEGORIES[p.category]?.chip} · {kindLabel(p.kind, p.category)} · {[p.district, p.city].filter(Boolean).join(', ') || 'brak miasta'}
+              {p.address && <> · {p.address}</>} · {p.category === 'weterynarz' ? 'wszystkie zwierzęta' : p.species.map((s) => (s === 'kot' ? 'koty' : 'psy')).join(' i ')}
             </span>
           </div>
           <div className="place-row-end">

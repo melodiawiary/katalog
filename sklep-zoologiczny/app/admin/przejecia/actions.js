@@ -9,6 +9,8 @@ import { sendPendingTakeoverNotices, sendTakeoverDecisionMail } from '@/lib/orde
 const done = () => {
   revalidatePath('/admin', 'layout');
   revalidatePath('/salony', 'layout');
+  revalidatePath('/weterynarze', 'layout');
+  revalidatePath('/hotele', 'layout');
 };
 
 // Decyzja w sprawie zgłoszenia: zatwierdź (dodaj opiekuna albo zastąp dotychczasowych) / odrzuć

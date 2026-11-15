@@ -5,6 +5,8 @@ import { saveOwnerData, replyToReview, deleteReply, setNotify, setPlus, releaseP
 import { HoursEditor, PricesEditor, toPriceRows, newKey } from '@/components/places/Editors';
 import { SPECIES } from '@/lib/places';
 
+const SPECIES_ALL = Object.keys(SPECIES);
+
 export function DataForm({ place, hours: hoursIn, prices: pricesIn, services, featureDefs, slug }) {
   const [state, action, pending] = useActionState(saveOwnerData, null);
   const [species, setSpecies] = useState(place.species || ['pies']);
@@ -23,8 +25,9 @@ export function DataForm({ place, hours: hoursIn, prices: pricesIn, services, fe
       <input type="hidden" name="prices" value={JSON.stringify(prices.map(({ key, ...p }) => p))} />
 
       <fieldset>
-        <legend>O salonie</legend>
-        <div className="attr-group">
+        <legend>{{ weterynarz: 'O gabinecie', hotel: 'O hotelu' }[place.category] || 'O salonie'}</legend>
+        {place.category === 'weterynarz' && SPECIES_ALL.map((k) => <input key={k} type="hidden" name="species" value={k} />)}
+        {place.category !== 'weterynarz' && <div className="attr-group">
           <span className="attr-name">Przyjmujemy *</span>
           <div className="attr-values">
             {Object.entries(SPECIES).map(([k, l]) => (
@@ -33,7 +36,7 @@ export function DataForm({ place, hours: hoursIn, prices: pricesIn, services, fe
               </label>
             ))}
           </div>
-        </div>
+        </div>}
         <label>Opis (do 3000 znaków)<textarea name="description" rows={5} defaultValue={place.description || ''} maxLength={3000} /></label>
         <div className="attr-values">
           {featureDefs.map((f) => (
