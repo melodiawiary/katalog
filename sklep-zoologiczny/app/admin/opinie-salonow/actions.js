@@ -14,6 +14,8 @@ const done = () => {
   revalidatePath('/petsitterzy', 'layout');
   revalidatePath('/behawiorysci', 'layout');
   revalidatePath('/spacerowicze', 'layout');
+  revalidatePath('/transport', 'layout');
+  revalidatePath('/fotografowie', 'layout');
 };
 
 // Zatwierdzenie / ukrycie / przywrócenie / usunięcie opinii o salonie (ranking przelicza baza sama)

@@ -26,12 +26,16 @@ function refresh(slug) {
   revalidatePath('/petsitterzy');
   revalidatePath('/behawiorysci');
   revalidatePath('/spacerowicze');
+  revalidatePath('/transport');
+  revalidatePath('/fotografowie');
   revalidatePath(`/weterynarze/${slug}`);
   revalidatePath(`/hotele/${slug}`);
   revalidatePath(`/trenerzy/${slug}`);
   revalidatePath(`/petsitterzy/${slug}`);
   revalidatePath(`/behawiorysci/${slug}`);
   revalidatePath(`/spacerowicze/${slug}`);
+  revalidatePath(`/transport/${slug}`);
+  revalidatePath(`/fotografowie/${slug}`);
 }
 
 export async function saveOwnerData(prev, fd) {

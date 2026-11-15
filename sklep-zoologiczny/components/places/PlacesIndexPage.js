@@ -51,7 +51,7 @@ export default async function PlacesIndexPage({ category, searchParams }) {
   return (
     <div className={`place-theme ${cfg.theme}`}>
       <div className="salon-top">
-        <section className={`salon-banner${cfg.artBox ? ' pcat-banner' : ''}`} style={cfg.artBox ? { '--ah': cfg.artBox.h, '--ar': cfg.artBox.right, '--ab': cfg.artBox.bottom, '--tw': cfg.artBox.text || 410 } : undefined}>
+        <section className={`salon-banner${cfg.artBox ? ' pcat-banner' : ''}`} style={cfg.artBox ? { '--ah': cfg.artBox.h, '--ar': cfg.artBox.right, '--ab': cfg.artBox.bottom, '--tw': cfg.artBox.text || 410, '--bh': cfg.artBox.bh || 340 } : undefined}>
           <div className="salon-banner-text">
             {cfg.key !== 'groomer' && <span className="pcat-chip">{cfg.chip}</span>}
             <h1>{cfg.artBox ? <>{cfg.h1.split(' ')[0]}<br />{cfg.h1.split(' ').slice(1).join(' ')}</> : cfg.h1}</h1>

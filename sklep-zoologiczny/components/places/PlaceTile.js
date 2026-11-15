@@ -1,5 +1,36 @@
 // Kafelek z ikoną na karcie miejsca: nożyczki i łapka (groomer), krzyż (weterynarz), domek z łapką (hotel)
 export default function PlaceTile({ kind = 'salon', category = 'groomer' }) {
+  if (category === 'transport') {
+    return (
+      <span className="place-tile" aria-hidden="true">
+        <svg viewBox="0 0 64 64" fill="none" stroke="#0f4fa8" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M6 44V22a4 4 0 0 1 4-4h28a4 4 0 0 1 3.600 2.300L48 30h6a4 4 0 0 1 4 4v10" />
+          <path d="M6 44h6M24 44h20M54 44h4" />
+          <circle cx="18" cy="46" r="5.500" fill="#fff" />
+          <circle cx="49" cy="46" r="5.500" fill="#fff" />
+          <g fill="#1769d9" stroke="none">
+            <ellipse cx="22" cy="31" rx="5" ry="3.800" />
+            <circle cx="16.500" cy="25.500" r="2" />
+            <circle cx="20.500" cy="22.500" r="2.100" />
+            <circle cx="25.500" cy="22.500" r="2.100" />
+            <circle cx="28.500" cy="26.500" r="2" />
+          </g>
+        </svg>
+      </span>
+    );
+  }
+  if (category === 'fotograf') {
+    return (
+      <span className="place-tile" aria-hidden="true">
+        <svg viewBox="0 0 64 64" fill="none" stroke="#5a1fa8" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M8 22a4 4 0 0 1 4-4h8l4-6h16l4 6h8a4 4 0 0 1 4 4v28a4 4 0 0 1-4 4H12a4 4 0 0 1-4-4z" />
+          <circle cx="32" cy="35" r="10" fill="#8a3fd0" />
+          <circle cx="32" cy="35" r="4.500" fill="#fff" stroke="none" />
+          {kind === 'studio' && <path d="M8 60h48" />}
+        </svg>
+      </span>
+    );
+  }
   if (category === 'spacerowicz') {
     return (
       <span className="place-tile" aria-hidden="true">

@@ -1298,7 +1298,7 @@ a.home-strip-item:hover .home-strip-label { color: var(--accent-dark); }
 .pcat-tab.on::before, .pcat-tab.on + .pcat-tab::before { display: none; }
 @media (max-width: 800px) {
   .salon-top { --u: calc(100vw / 999); }
-  .pcat-banner { display: block; height: calc(var(--u) * 340); min-height: 0; padding: 0; margin: 0 -3vw; }
+  .pcat-banner { display: block; height: calc(var(--u) * var(--bh, 340)); min-height: 0; padding: 0; margin: 0 -3vw; }
   .pcat-banner .salon-banner-text { position: absolute; left: calc(var(--u) * 42); top: calc(var(--u) * 22); max-width: calc(var(--u) * var(--tw, 410)); }
   .pcat-banner .pcat-chip { white-space: nowrap; font-size: calc(var(--u) * 33); line-height: calc(var(--u) * 54); height: calc(var(--u) * 54); padding: 0 calc(var(--u) * 26); margin: 0; box-sizing: border-box; }
   .pcat-banner h1 { font-size: calc(var(--u) * 57); line-height: calc(var(--u) * 60); margin: calc(var(--u) * 14) 0 0 calc(var(--u) * 14); }
@@ -1370,4 +1370,30 @@ a.home-strip-item:hover .home-strip-label { color: var(--accent-dark); }
   .theme-walker .pcat-banner h1 { font-size: 2.6rem; line-height: 1.05; }
   .theme-walker .pcat-banner p { font-size: 1.05rem; max-width: 420px; }
   .theme-walker .pcat-banner .salon-banner-art { position: absolute; right: 36px; bottom: 0; height: 270px; width: auto; }
+}
+
+/* Transport zwierząt (niebieski) */
+.theme-transport { --accent: #1769d9; --accent-dark: #0f4fa8; }
+.theme-transport .salon-banner { background: radial-gradient(ellipse 60% 90% at 78% 60%, #cfe4fb 0%, rgba(207, 228, 251, 0) 100%), linear-gradient(180deg, #eef6fe, #e3f0fc); }
+.theme-transport .pchip.on, .theme-transport .pchip-pop button.on, .theme-transport .places-filters-btn.on { background: #d6e8fb; }
+.theme-transport .place-tile { background: #d6e8fb; }
+.theme-transport .place-tag.price { background: #e8f2fd; border-color: #bcd8f6; }
+.theme-transport .status.status-zrealizowane { background: #d6e8fb; color: #0d4590; }
+.theme-transport .pcat-rank { background: #f1f7fe; border-color: #d3e5f9; }
+
+/* Fotografia zwierząt (fiolet, głębszy niż trenerzy) */
+.theme-photographer { --accent: #6b2fc4; --accent-dark: #51209a; }
+.theme-photographer .salon-banner { background: radial-gradient(ellipse 60% 90% at 78% 60%, #e1d3f7 0%, rgba(225, 211, 247, 0) 100%), linear-gradient(180deg, #f4eefc, #ece2fa); }
+.theme-photographer .pchip.on, .theme-photographer .pchip-pop button.on, .theme-photographer .places-filters-btn.on { background: #e8dcf8; }
+.theme-photographer .place-tile { background: #e8dcf8; }
+.theme-photographer .place-tag.price { background: #f2eafc; border-color: #d9c8f2; }
+.theme-photographer .status.status-zrealizowane { background: #e8dcf8; color: #461a8a; }
+.theme-photographer .pcat-rank { background: #f7f2fd; border-color: #e4d8f6; }
+
+/* Komputer: duży baner z ilustracją (transport, fotografia), jak u spacerowiczów */
+@media (min-width: 801px) {
+  .theme-transport .pcat-banner, .theme-photographer .pcat-banner { min-height: 296px; padding: 22px 28px; }
+  .theme-transport .pcat-banner h1, .theme-photographer .pcat-banner h1 { font-size: 2.6rem; line-height: 1.05; }
+  .theme-transport .pcat-banner p, .theme-photographer .pcat-banner p { font-size: 1.05rem; max-width: 420px; }
+  .theme-transport .pcat-banner .salon-banner-art, .theme-photographer .pcat-banner .salon-banner-art { position: absolute; right: 36px; bottom: 0; height: 270px; width: auto; }
 }

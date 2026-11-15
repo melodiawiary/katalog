@@ -10,7 +10,7 @@ import { useEffect, useRef } from 'react';
 function pawSvg(w, h, fill) {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 34 42"><path d="M17 41C17 41 3 26 3 15a14 14 0 0 1 28 0c0 11-14 26-14 26z" fill="${fill}" stroke="#fff" stroke-width="2"/><ellipse cx="17" cy="21.5" rx="5.6" ry="4.4" fill="#fff"/><circle cx="10.4" cy="15.6" r="2.4" fill="#fff"/><circle cx="14.4" cy="11.4" r="2.5" fill="#fff"/><circle cx="19.6" cy="11.4" r="2.5" fill="#fff"/><circle cx="23.6" cy="15.6" r="2.4" fill="#fff"/></svg>`;
 }
-const TONES = { orange: ['#e07a2f', '#b4500f'], teal: ['#00a39e', '#00716d'], purple: ['#7c3fcf', '#5c2aa8'], green: ['#1f9a3d', '#167a2f'], sea: ['#1b9a8e', '#12766c'] };
+const TONES = { orange: ['#e07a2f', '#b4500f'], teal: ['#00a39e', '#00716d'], purple: ['#7c3fcf', '#5c2aa8'], green: ['#1f9a3d', '#167a2f'], sea: ['#1b9a8e', '#12766c'], blue: ['#1769d9', '#0f4fa8'], violet: ['#8a3fd0', '#6a28a8'] };
 const pawIcon = (L, on, tone = 'orange') => (on
   ? L.divIcon({ className: 'paw-pin', html: pawSvg(42, 52, TONES[tone][1]), iconSize: [42, 52], iconAnchor: [21, 51] })
   : L.divIcon({ className: 'paw-pin', html: pawSvg(34, 42, TONES[tone][0]), iconSize: [34, 42], iconAnchor: [17, 41] }));

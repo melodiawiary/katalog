@@ -13,6 +13,10 @@ export const PLACE_KIND = {
   behawiorysta: 'Behawiorysta',
   spacerowicz: 'Spacerowicz',
   grupowy: 'Spacery grupowe',
+  przewoznik: 'Przewoźnik',
+  taxi: 'Taxi dla zwierząt',
+  fotograf: 'Fotograf',
+  studio: 'Studio fotograficzne',
 };
 
 export const PLACE_STATUS = {
