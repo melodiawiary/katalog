@@ -2,18 +2,18 @@
 // Ikony: public/ikony/uslugi/<icon>.png (arkusze Mariusza, 2026-11-15).
 // open: kategoria ma gotowy katalog (dziś tylko groomerzy; reszta pokazuje stronę zgłoszeń).
 export const SERVICE_CATEGORIES = [
-  { slug: 'weterynarze', name: 'Weterynarze', icon: 'weterynarze', blurb: 'Opieka zdrowotna dla Twojego pupila' },
-  { slug: 'groomerzy', name: 'Groomerzy', icon: 'groomerzy', href: '/salony', open: true, blurb: 'Pielęgnacja i stylizacja' },
-  { slug: 'hotele', name: 'Hotele', title: 'Hotele dla zwierząt', icon: 'hotele', blurb: 'Bezpieczny pobyt podczas Twojej nieobecności' },
-  { slug: 'opiekunowie', name: 'Opiekunowie', title: 'Petsitterzy', icon: 'opiekunowie', blurb: 'Opieka nad pupilem w Twoim domu' },
-  { slug: 'trenerzy', name: 'Trenerzy', title: 'Trenerzy psów', icon: 'trenerzy', blurb: 'Szkolenia i posłuszeństwo' },
-  { slug: 'behawiorysci', name: 'Behawioryści', icon: 'behawiorysci', blurb: 'Pomoc w problemach z zachowaniem' },
-  { slug: 'spacery', name: 'Spacery z psami', icon: 'spacery', blurb: 'Regularne spacery i aktywność' },
-  { slug: 'fizjoterapia', name: 'Fizjoterapia i rehabilitacja', icon: 'fizjoterapia', blurb: 'Powrót do sprawności' },
-  { slug: 'transport', name: 'Transport zwierząt', icon: 'transport', blurb: 'Bezpieczny przewóz' },
-  { slug: 'fotografia', name: 'Fotografie zwierząt', icon: 'fotografia', blurb: 'Profesjonalne sesje zdjęciowe' },
-  { slug: 'adopcje', name: 'Adopcje', icon: 'adopcje', blurb: 'Znajdź nowy dom' },
-  { slug: 'hodowle', name: 'Hodowle', icon: 'hodowle', blurb: 'Odpowiedzialne hodowle' },
+  { slug: 'weterynarze', name: 'Weterynarze', title: 'Weterynarze', icon: 'weterynarze', blurb: 'Zdrowie pupila' },
+  { slug: 'groomerzy', name: 'Groomerzy', title: 'Groomerzy', icon: 'groomerzy', href: '/salony', open: true, blurb: 'Pielęgnacja' },
+  { slug: 'hotele', name: 'Hotele', title: 'Hotele', icon: 'hotele', blurb: 'Bezpieczny pobyt' },
+  { slug: 'opiekunowie', name: 'Opiekunowie', title: 'Petsitterzy', icon: 'opiekunowie', blurb: 'Opieka domowa' },
+  { slug: 'trenerzy', name: 'Trenerzy', title: 'Trenerzy', icon: 'trenerzy', blurb: 'Szkolenia' },
+  { slug: 'behawiorysci', name: 'Behawioryści', title: 'Behawioryści', icon: 'behawiorysci', blurb: 'Zachowanie' },
+  { slug: 'spacery', name: 'Spacery z psami', title: 'Spacery', icon: 'spacery', blurb: 'Dla psów' },
+  { slug: 'fizjoterapia', name: 'Fizjoterapia i rehabilitacja', title: 'Rehabilitacja', icon: 'fizjoterapia', blurb: 'Powrót do formy' },
+  { slug: 'transport', name: 'Transport zwierząt', title: 'Transport', icon: 'transport', blurb: 'Bezpieczny przewóz' },
+  { slug: 'fotografia', name: 'Fotografie zwierząt', title: 'Fotografia', icon: 'fotografia', blurb: 'Sesje zdjęciowe' },
+  { slug: 'adopcje', name: 'Adopcje', title: 'Adopcje', icon: 'adopcje', blurb: 'Nowy dom' },
+  { slug: 'hodowle', name: 'Hodowle', title: 'Hodowle', icon: 'hodowle', blurb: 'Sprawdzone hodowle' },
 ];
 
 // Na stronie głównej: sześć głównych specjalistów.

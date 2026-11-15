@@ -1216,3 +1216,13 @@ a.home-strip-item:hover .home-strip-label { color: var(--accent-dark); }
   .svcpage-help div { font-size: 0.78rem; }
 }
 @media (max-width: 899px) { .svcpage-grid { margin-top: 10px; } }
+
+/* Skala v3: większe podpisy, krótkie opisy (2026-11-15): podpis kafelka / nazwa usługi 0.92rem, opis 0.85rem */
+@media (max-width: 899px) {
+  .svc-tile { font-size: 0.92rem; }
+  .svcpage-text strong { font-size: 0.92rem; }
+  .svcpage-text, .svcpage-text span { font-size: 0.85rem; }
+  .svcpage-card { min-height: 70px; }
+  .svcpage-help div { font-size: 0.85rem; }
+}
+@media (max-width: 899px) { .svcpage-card img { width: 38px; height: 38px; margin-right: 5px; } }
