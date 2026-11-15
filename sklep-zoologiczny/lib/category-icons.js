@@ -20,9 +20,21 @@ const CAT = {
   pielegnacja: 'koty-pielegnacja',
 };
 
+// Ikony pozostałych zwierząt: dobór po końcówce adresu (np. ptaki-klatki, akwarystyka-filtry).
+// Kategorii nie zakładamy na zapas: ikona jest użyta dopiero, gdy kategoria istnieje w sklepie.
+const OTHER = {
+  ptaki: { karma: 'karma', proso: 'proso', klatki: 'klatki', zerdzie: 'zerdzie', zabawki: 'zabawki', higiena: 'higiena', pielegnacja: 'higiena', zdrowie: 'zdrowie', poidla: 'poidla', miski: 'poidla' },
+  gryzonie: { karma: 'karma', przysmaki: 'przysmaki', klatki: 'klatki', domki: 'domki', sciolka: 'sciolka', zabawki: 'kolowrotek', miski: 'miski', pielegnacja: 'pielegnacja', transportery: 'transporter' },
+  akwarystyka: { karma: 'karma', akwaria: 'akwaria', filtry: 'filtry', grzalki: 'grzalki', oswietlenie: 'oswietlenie', napowietrzanie: 'napowietrzanie', dekoracje: 'dekoracje', woda: 'woda', uzdatniacze: 'woda', akcesoria: 'akcesoria' },
+};
+
 export function subcategoryIcon(slug = '') {
   const [animal, ...rest] = slug.split('-');
   const suffix = rest[0];
+  if (OTHER[animal]) {
+    const name = OTHER[animal][suffix];
+    return name ? `/ikony/podkategorie/${animal}-${name}.png` : null;
+  }
   if (animal === 'koty') return CAT[suffix] ? `/ikony/podkategorie/${CAT[suffix]}.png` : null;
   const icon = BY_SUFFIX[suffix];
   if (!icon) return null;
