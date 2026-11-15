@@ -965,7 +965,7 @@ a.home-strip-item:hover .home-strip-label { color: var(--accent-dark); }
   .salon-banner-text { align-self: center; flex: 1 1 auto; min-width: 0; }
   .salon-banner h1 { font-size: 5.1vw; margin: 0 0 1vw; line-height: 1.15; font-weight: 800; white-space: nowrap; }
   .salon-banner p { font-size: max(10.5px, 2.75vw); line-height: 1.45; margin: 0; max-width: none; }
-  .salon-banner-art { display: block; flex: 0 0 auto; width: 38vw; height: auto; align-self: flex-end; background: none; border: 0; padding: 0; border-radius: 0; margin: 0; }
+  .salon-banner-art { display: block; flex: 0 0 auto; width: auto; height: 20.5vw; align-self: center; background: none; border: 0; padding: 0; border-radius: 0; margin: 0; }
   .places-search { margin-top: 1.4vw; height: 10vw; border-radius: 2.2vw; padding: 0 1.2vw 0 3.3vw; gap: 2.2vw; }
   .places-search svg { width: 3.4vw; height: 3.4vw; flex: 0 0 auto; }
   .places-search input { font-size: max(11px, 3vw); padding: 0; }

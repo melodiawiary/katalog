@@ -51,7 +51,7 @@ export default async function SalonyPage({ searchParams }) {
             <h1>Salony groomerskie</h1>
             <p>Polecani groomerzy dla psów i kotów.<br />Wybierz salon z mapy lub z listy.</p>
           </div>
-          <img className="salon-banner-art" src="/ilustracje/pies-kot.png" alt="" width="700" height="350" />
+          <img className="salon-banner-art" src="/ilustracje/pies-kot-kapiel.png" alt="" width="640" height="505" />
         </section>
         <PlacesFilters f={f} cities={cities.data || []} services={services.data || []} featureDefs={features.data || []} />
       </div>
