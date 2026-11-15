@@ -895,3 +895,20 @@ a.home-strip-item:hover .home-strip-label { color: var(--accent-dark); }
   .cat-tiles { gap: 4px; }
   .cat-tile { flex: 1 0 auto; min-width: 0; padding: 3px 4px; font-size: 10px; letter-spacing: -0.01em; }
 }
+
+/* Strona kategorii: tytuł z ikoną i panel podkategorii */
+.category-title { display: flex; align-items: center; gap: 10px; margin: 6px 0 10px; }
+.category-title-img { width: 40px; height: 40px; object-fit: contain; flex: none; }
+.subcat-panel { background: var(--card); border: 1px solid var(--line); border-radius: 18px; margin: 0 0 12px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); overflow: hidden; }
+.subcat-head { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 48px; padding: 8px 14px; border: 0; background: transparent; font: inherit; color: var(--text); cursor: pointer; text-align: left; }
+.subcat-head > svg { color: var(--accent); flex: none; }
+.subcat-head strong { flex: 1; font-size: 1rem; }
+.subcat-toggle { display: inline-flex; align-items: center; gap: 4px; color: var(--muted); font-size: 0.85rem; }
+.subcat-body { padding: 4px 12px 12px; border-top: 1px solid var(--line); }
+.subcat-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 10px; }
+.subcat-tile { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; min-height: 76px; padding: 6px 4px; border-radius: 14px; background: #fffaf3; border: 1px solid var(--line); color: var(--text); text-decoration: none; font-size: 0.78rem; font-weight: 700; line-height: 1.15; text-align: center; }
+.subcat-tile img { width: 40px; height: 40px; object-fit: contain; }
+.subcat-emoji { font-size: 1.7rem; line-height: 40px; }
+.subcat-tile.active { border-color: var(--accent); background: #fff1e3; color: var(--accent-dark); }
+.subcat-all { display: block; margin-top: 10px; padding: 10px; border: 1.5px solid var(--accent); border-radius: 999px; text-align: center; color: var(--accent-dark); font-weight: 700; font-size: 0.9rem; text-decoration: none; }
+@media (min-width: 641px) { .subcat-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); } }

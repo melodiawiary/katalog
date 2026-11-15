@@ -6,6 +6,8 @@ import { visibleCategories, categoryPath } from '@/lib/categories';
 import { flatParams, browseHref } from '@/lib/browse';
 import Listing from '@/components/browse/Listing';
 import CategoryChips from '@/components/browse/CategoryChips';
+import SubcategoryPanel from '@/components/browse/SubcategoryPanel';
+import { subcategoryIcon, ANIMAL_ICONS } from '@/lib/category-icons';
 
 export const dynamic = 'force-dynamic';
 
@@ -57,20 +59,28 @@ export default async function CategoryPage({ params, searchParams }) {
           <span key={c.id}> › {c.id === current.id ? <span>{c.name}</span> : <Link href={`/kategoria/${c.slug}`}>{c.name}</Link>}</span>
         ))}
       </nav>
-      <h1>{path[0]?.emoji} {path.length > 1 ? `${current.name} - ${path[0].name}` : current.name}</h1>
+      <h1 className="category-title">
+        {ANIMAL_ICONS.has(path[0]?.slug)
+          ? <img src={`/ikony/zwierzeta/${path[0].slug}.png`} alt="" width="40" height="40" className="category-title-img" />
+          : <span aria-hidden="true">{path[0]?.emoji}</span>}
+        <span>{path.length > 1 ? `${current.name} - ${path[0].name}` : current.name}</span>
+      </h1>
       {current.description && <p className="category-desc">{current.description}</p>}
 
       {subs.length > 0 && (
-        <nav className="chips" aria-label="Podkategorie">
-          {children.length === 0 && parent && (
-            <Link href={browseHref(`/kategoria/${parent.slug}`, query, {})} className="chip">‹ {parent.name}</Link>
-          )}
-          {subs.map((c) => (
-            <Link key={c.id} href={browseHref(`/kategoria/${c.slug}`, query, {})} className={c.id === current.id ? 'chip active' : 'chip'}>
-              {c.name}
-            </Link>
-          ))}
-        </nav>
+        <SubcategoryPanel
+          title={`Kategorie: ${path[0]?.name}`}
+          items={subs.map((c) => ({
+            slug: c.slug,
+            name: c.name,
+            emoji: c.emoji,
+            icon: subcategoryIcon(c.slug),
+            active: c.id === current.id,
+            href: browseHref(`/kategoria/${c.slug}`, query, {}),
+          }))}
+          allHref={children.length === 0 && parent ? browseHref(`/kategoria/${parent.slug}`, query, {}) : null}
+          allLabel={parent ? `‹ Wszystkie kategorie: ${parent.name}` : ''}
+        />
       )}
 
       <Listing path={`/kategoria/${current.slug}`} searchParams={sp} categorySlug={current.slug} categories={categories} />
